@@ -4,38 +4,81 @@
  * Class DB helper class for MySQL database handling functions
  *
  * @version v1.0
- *
  */
 
-require_once 'DatabaseConfig.php';
+require_once 'DatabaseConfig.inc.php';
 
 /**
  * Class DB helper class for MySQL database handling functions
- *
- * @property int $conn MySQL Connection
- *
- * @property int $Debug Prints error messages if set to 1.
+ * using mysqli php extension
+ * @todo Make the class MySQLi Extension based from MySQL Extension
  */
 class DB {
 
+  /**
+   * Database connection resource
+   * @var resource
+   * @access private
+   */
   private $conn;
+
+  /**
+   * Result resourse
+   *
+   * @var resource
+   * @access private
+   */
   private $RecSet;
+
+  /**
+   * Set debuging On if set to 1.
+   *
+   * @var int
+   */
   private $Debug;
+
+  /**
+   * Number of rows returned by the executed query.
+   *
+   * @var int $RowCount
+   * @access private
+   */
   private $RowCount;
+
+  /**
+   * Number of fields returned by the executed query.
+   *
+   * @var int
+   * @access private
+   */
   private $ColCount;
+
+  /**
+   * Set to 1 if no result returned by query.
+   *
+   * @var boolean
+   * @access private
+   */
   private $NoResult;
 
   function __get($var) {
     switch ($var) {
       case 'RowCount' :
         return $this->RowCount;
+        break;
+      case 'ColCount' :
+        return $this->ColCount;
+        break;
+      case 'NoResult' :
+        return $this->NoResult;
+        break;
     }
   }
 
   function __set($var, $val) {
     switch ($var) {
       case 'Debug' :
-        $this->_bar = $val;
+        $this->Debug = $val;
         break;
     }
   }
