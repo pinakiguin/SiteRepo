@@ -11,6 +11,7 @@ require_once 'DatabaseConfig.inc.php';
 /**
  * Class DB helper class for MySQL database handling functions
  * using mysqli php extension
+ *
  * @todo Make the class MySQLi Extension based from MySQL Extension
  */
 class DB {
@@ -83,6 +84,18 @@ class DB {
     }
   }
 
+  public function __sleep() {
+    $this->do_close();
+    return array('conn', 'result', 'Debug');
+  }
+
+  public function __wakeup() {
+    $this->do_connect();
+  }
+
+  /**
+   * Initiates connection to the database
+   */
   private function do_connect() {
     //$this->Debug=1;
     $this->conn = mysql_connect(HOST_Name, MySQL_User, MySQL_Pass);
@@ -93,20 +106,41 @@ class DB {
     $this->NoResult = 1;
   }
 
-  public function __sleep() {
-    $this->do_close();
-    return array('conn', 'result', 'Debug');
-  }
-
-  public function __wakeup() {
-    $this->do_connect();
-  }
-
+  /**
+   * Converts/escapes a string to mysql safe string
+   *
+   * @param string $StrValue
+   * @return string
+   */
   public function SqlSafe($StrValue) {
     $this->do_connect();
     return mysql_real_escape_string(htmlspecialchars($StrValue));
   }
 
+  /**
+   * Executes a select query and returns the first field value of the top row
+   *
+   * @param string $Query
+   * @return int|string Returns 0 if Max is null otherwise Max Value
+   */
+  public function do_max_query($Query) {
+    $this->do_sel_query($Query);
+    $row = $this->get_n_row();
+    //echo "Whole Row: ".$row[0].$row[1];
+    if ($row[0] == null)
+      return 0;
+    else
+      return htmlspecialchars($row[0]);
+  }
+
+  /**
+   * Executes a insert/update query
+   *
+   * Returns the number of rows affected
+   *
+   * @param string $querystr
+   * @return int
+   */
   public function do_ins_query($querystr) {
     $this->do_connect();
     $this->RecSet = mysql_query($querystr, $this->conn);
@@ -123,6 +157,14 @@ class DB {
     return $this->RowCount;
   }
 
+  /**
+   * Executes a select query
+   *
+   * Returns the number of rows fetched
+   *
+   * @param string $querystr
+   * @return int
+   */
   public function do_sel_query($querystr) {
     $this->do_connect();
     $this->RecSet = mysql_query($querystr, $this->conn);
@@ -139,16 +181,35 @@ class DB {
     return $this->RowCount;
   }
 
+  /**
+   * Returns the top associative row from the result
+   * that is fetched by previous select query
+   *
+   * @return array
+   */
   public function get_row() {
     if (!$this->NoResult)
       return mysql_fetch_assoc($this->RecSet);
   }
 
+  /**
+   * Returns the top numeric indexed row from the result
+   * that is fetched by previous select query
+   *
+   * @return type
+   */
   public function get_n_row() {
     if (!$this->NoResult)
       return mysql_fetch_row($this->RecSet);
   }
 
+  /**
+   * Returns the FieldName of specified index from the result
+   * that is fetched by previous select query
+   *
+   * @param int $ColPos
+   * @return string
+   */
   public function GetFieldName($ColPos) {
     if (mysql_errno())
       return "ERROR!";
@@ -167,6 +228,16 @@ class DB {
       return "Offset Error!";
   }
 
+  /**
+   * Displays a HTML Combo filled with options specified by $txt & $val
+   *
+   * @param string $val Name of the Field which will be used as value
+   * @param string $txt Name of the Field which will be shown in options
+   * @param string $query Should select the $val & $txt fields
+   * @param string $sel_val Value of the Option to be selected
+   * @example Output: <option value="$row[$val]"> $row[$txt] < /option>;
+   * htmlspecialchars() applied to all the values
+   */
   public function show_sel($val, $txt, $query, $sel_val = "-- Choose --") {
     $this->do_sel_query($query);
     $opt = $this->RowCount;
@@ -181,16 +252,6 @@ class DB {
       echo '<option value="' . htmlspecialchars($row[$val])
       . '"' . $sel . '>' . htmlspecialchars($row[$txt]) . '</option>';
     }
-  }
-
-  public function do_max_query($Query) {
-    $this->do_sel_query($Query);
-    $row = $this->get_n_row();
-    //echo "Whole Row: ".$row[0].$row[1];
-    if ($row[0] == null)
-      return 0;
-    else
-      return htmlspecialchars($row[0]);
   }
 
   public function ShowTable($QueryString) {
