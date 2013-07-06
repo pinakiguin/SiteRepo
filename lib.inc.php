@@ -305,4 +305,43 @@ function CreateDB($ForWhat = "WebSite") {
   }
 }
 
+function CheckAuth() {
+  $_SESSION['Debug'] = GetVal($_SESSION, 'Debug') . "CheckAuth";
+  if ((!isset($_SESSION['UserName'])) && (!isset($_SESSION['UserMapID']))) {
+    return "Browsing";
+  }
+  if (isset($_REQUEST['LogOut'])) {
+    return "LogOut";
+  } else if ($_SESSION['LifeTime'] < (time() - (LifeTime * 60))) {
+    return "TimeOut(" . $_SESSION['LifeTime'] . "-" . (time() - (LifeTime * 60)) . ")";
+  } else if ($_SESSION['SESSION_TOKEN'] != $_COOKIE['SESSION_TOKEN']) {
+    $_SESSION['Debug'] = "(" . $_SESSION['SESSION_TOKEN'] . "=" . $_COOKIE['SESSION_TOKEN'] . ")";
+    return "INVALID SESSION (" . $_SESSION['SESSION_TOKEN'] . "=" . $_COOKIE['SESSION_TOKEN'] . ")";
+  } elseif ($_SESSION['ID'] !== session_id()) {
+    $_SESSION['Debug'] = "(" . $_SESSION['ID'] . "=" . session_id() . ")";
+    return "INVALID SESSION (" . $_SESSION['ID'] . "=" . session_id() . ")";
+  } else {
+    return "Valid";
+  }
+}
+
+function initSess() {
+  $sess_id = md5(microtime());
+
+  $_SESSION['Debug'] = GetVal($_SESSION, 'Debug') . "InInitPage(" . GetVal($_SESSION, 'SESSION_TOKEN') . "=" . GetVal($_COOKIE, 'SESSION_TOKEN') . ")";
+  setcookie("SESSION_TOKEN", $sess_id, (time() + (LifeTime * 60)));
+  $_SESSION['SESSION_TOKEN'] = $sess_id;
+  $_SESSION['LifeTime'] = time();
+  $t = (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : "");
+  $reg = new MySQLiDB();
+  $reg->do_ins_query("INSERT INTO " . MySQL_Pre . "Logs(IP,URL,UserAgent,Referrer) values"
+          . "('" . $_SERVER['REMOTE_ADDR'] . "','" . htmlspecialchars($_SERVER['PHP_SELF']) . "','" . $_SERVER['HTTP_USER_AGENT']
+          . "','<" . $t . ">');");
+  if (isset($_REQUEST['show_src'])) {
+    if ($_REQUEST['show_src'] == "me")
+      show_source(substr($_SERVER['PHP_SELF'], 1, strlen($_SERVER['PHP_SELF'])));
+  }
+  return;
+}
+
 ?>
