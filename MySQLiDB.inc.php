@@ -14,7 +14,7 @@ require_once 'DatabaseConfig.inc.php';
  *
  * @todo Make the class MySQLi Extension based from MySQL Extension
  */
-class DB {
+class MySQLiDB {
 
   /**
    * Database connection resource
@@ -219,6 +219,13 @@ class DB {
       return "Offset Error!";
   }
 
+  /**
+   * Returns the TableName of specified index from the result
+   * that is fetched by previous select query
+   *
+   * @param int $ColPos
+   * @return string
+   */
   public function GetTableName($ColPos) {
     if (mysql_errno())
       return "ERROR!";
@@ -226,6 +233,20 @@ class DB {
       return mysql_field_table($this->RecSet, $ColPos);
     else
       return "Offset Error!";
+  }
+
+  /**
+   * Returns the descriptive caption of the field from a table
+   *
+   * @param string $ColName Name of the database field
+   * @return string
+   */
+  function GetCaption($ColName) {
+    $Fields = new DB();
+    $ColHead = $Fields->do_max_query("Select Caption from " . MySQL_Pre . "Fields where FieldName='{$ColName}'");
+    $Fields->do_close();
+    unset($Fields);
+    return (!$ColHead ? $ColName : $ColHead);
   }
 
   /**
@@ -304,6 +325,9 @@ class DB {
     return ($i);
   }
 
+  /**
+   * Closes the current database connection
+   */
   public function do_close() {
     // Free resultset
     if (!$this->NoResult)

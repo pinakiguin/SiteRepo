@@ -1,0 +1,18 @@
+[submodule "fpdf"]
+	path = fpdf
+	url = https://github.com/abusalam/FPDF.git
+[submodule "login"]
+	path = login
+	url = https://github.com/abusalam/UserAuth.git
+[submodule "smsgw"]
+	path = smsgw
+	url = https://github.com/abusalam/SMS-Gateway.git
+[submodule "Jcrop"]
+	path = Jcrop
+	url = https://github.com/tapmodo/Jcrop.git
+[submodule "captcha"]
+	path = captcha
+	url = https://github.com/dapphp/securimage.git
+[submodule "SRER-2014"]
+	path = SRER-2014
+	url = https://github.com/abusalam/SRER-2014.git

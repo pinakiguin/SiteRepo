@@ -28,6 +28,8 @@ function jQueryInclude() {
 }
 
 /**
+ * IncludeJS($JavaScript)
+ *
  * Generates Script tag
  *
  * @param string $JavaScript src including path
@@ -37,6 +39,8 @@ function IncludeJS($JavaScript) {
 }
 
 /**
+ * IncludeCSS([$CSS = "css/Style.css"])
+ *
  * Generates link to css specified by $CSS
  *
  * @param string $CSS href including path
@@ -46,9 +50,13 @@ function IncludeCSS($CSS = "css/Style.css") {
 }
 
 /**
+ * initHTML5page([$PageTitle = ""])
+ *
  * Starts a Session and Html5Header function
+ *
+ * @param string $PageTitle Title of the page
  */
-function initHTML5page() {
+function initHTML5page($PageTitle = "") {
   session_start();
   $sess_id = md5(microtime());
 
@@ -56,9 +64,9 @@ function initHTML5page() {
   setcookie("Client_SID", $sess_id, (time() + (LifeTime * 60)));
   $_SESSION['Client_SID'] = $sess_id;
   $_SESSION['LifeTime'] = time();
-  Html5Header();
+  Html5Header($PageTitle);
   $t = (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : "");
-  $reg = new DB();
+  $reg = new MySQLiDB();
   $reg->do_ins_query("INSERT INTO " . MySQL_Pre . "Logs(IP,URL,UserAgent,Referrer,SessionID) values"
           . "('" . $_SERVER['REMOTE_ADDR'] . "','" . $_SERVER['PHP_SELF'] . "','" . $_SERVER['HTTP_USER_AGENT'] . "','<" . $t . ">','" . session_id() . "');");
   if (isset($_REQUEST['show_src'])) {
@@ -136,6 +144,144 @@ function GetAbsoluteURLFolder() {
   $scriptFolder = (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on')) ? 'https://' : 'http://';
   $scriptFolder .= $_SERVER['HTTP_HOST'] . BaseDIR;
   return $scriptFolder;
+}
+
+/**
+ * InpSanitize($PostData)
+ *
+ * Sanitize the Inputs for inserting into mysql
+ *
+ * @param array $PostData
+ * @return array
+ */
+function InpSanitize($PostData) {
+  $Fields = "";
+  $Data = new MySQLiDB();
+  foreach ($PostData as $FieldName => &$Value) {
+    $Value = $Data->SqlSafe($Value);
+    $Fields = $Fields . "<br />" . $FieldName;
+    if ($Value == "") {
+      $_SESSION['Msg'] = '<b>Message:</b> Field ' . GetColHead($FieldName) . ' left unfilled.';
+    }
+  }
+  unset($Value);
+  $PostData['Fields'] = $Fields;
+  //echo "Total Fields:".count($PostData);
+  return $PostData;
+}
+
+/*
+ * Shows the content of $_SESSION['Msg']
+ */
+
+function ShowMsg() {
+  if (GetVal($_SESSION, "Msg") != "") {
+    echo '<span class="Message">' . $_SESSION['Msg'] . '</span><br/>';
+    $_SESSION['Msg'] = "";
+  }
+}
+
+/**
+ * Displays visit Count and also logs the Visits in MySQL_Pre.Visits table
+ *
+ */
+function pageinfo() {
+  $strfile = strtok($_SERVER['PHP_SELF'], "/");
+  //echo $_SERVER['PHP_SELF'].' | '.$strfile;
+  $str = strtok("/");
+  //echo ' | '.$str;
+  while ($str) {
+    $strfile = $str;
+    //echo ' | '.$strfile;
+    $str = strtok("/");
+  }
+  $reg = new MySQLiDB();
+  $visitor_num = $reg->do_max_query("select VisitCount from " . MySQL_Pre . "Visits where PageURL='" . $_SERVER['PHP_SELF'] . "'");
+  $LastVisit = $reg->do_max_query("select timestamp(LastVisit) from " . MySQL_Pre . "Visits where PageURL like '" . $_SERVER['PHP_SELF'] . "'");
+  if ($visitor_num > 0)
+    $reg->do_ins_query("update " . MySQL_Pre . "Visits set `VisitCount`=`VisitCount`+1, VisitorIP='" . $_SERVER['REMOTE_ADDR'] . "' where PageURL='" . $_SERVER['PHP_SELF'] . "'");
+  else
+    $reg->do_ins_query("Insert into " . MySQL_Pre . "Visits(PageURL,VisitorIP) values('" . $_SERVER['PHP_SELF'] . "','" . $_SERVER['REMOTE_ADDR'] . "')");
+  $_SESSION['LifeTime'] = time();
+  echo "<strong > Last Updated On:</strong> &nbsp;&nbsp;" . date("l d F Y g:i:s A ", filemtime($strfile))
+  . " IST &nbsp;&nbsp;&nbsp;<b>Your IP: </b>" . $_SERVER['REMOTE_ADDR']
+  . "&nbsp;&nbsp;&nbsp;<b>Visits:</b>&nbsp;&nbsp;" . $visitor_num
+  . " <b>Last Visit:</b> " . date(" g:i:s A ", strtotime($LastVisit))
+  . "";
+  $reg->do_close();
+}
+
+/**
+ * Static footer information
+ */
+function footerinfo() {
+  echo 'Designed and Developed By <strong>National Informatics Centre</strong>, Paschim Medinipur District Centre<br/>'
+  . 'L. A. Building (2nd floor), Collectorate Compound, Midnapore<br/>'
+  . 'West Bengal - 721101 , India Phone : 91-3222-263506, Email: wbmdp(a)nic.in<br/>';
+  //."DB_SID: ".$_SESSION['ID']." ORG: ".session_id()." Cookie:".$_COOKIE['LMS_SID']." VALID=".$_SESSION['Validity']." | ".LifeTime.$_SESSION['LMS_AUTH'];
+}
+
+function GetTableDefs($TableName) {
+  $SqlDB = "";
+  switch ($TableName) {
+    case "Visits":
+      $SqlDB = "CREATE TABLE IF NOT EXISTS `" . MySQL_Pre . "Visits` ("
+              . "`PageID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,"
+              . "`PageURL` text NOT NULL,"
+              . "`VisitCount` bigint(20) NOT NULL DEFAULT '1',"
+              . "`LastVisit` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,"
+              . "`PageTitle` text,"
+              . "`VisitorIP` text NOT NULL,"
+              . " PRIMARY KEY (`PageID`)"
+              . ") ENGINE = InnoDB DEFAULT CHARSET = utf8;";
+      break;
+    case "Logs":
+      $SqlDB = "CREATE TABLE IF NOT EXISTS `" . MySQL_Pre . "Logs` ("
+              . "`LogID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,"
+              . "`SessionID` varchar(32) DEFAULT NULL,"
+              . "`IP` varchar(15) DEFAULT NULL,"
+              . "`Referrer` longtext,"
+              . "`UserAgent` longtext,"
+              . "`UserID` varchar(20) DEFAULT NULL,"
+              . "`URL` longtext,"
+              . "`Action` longtext,"
+              . "`Method` varchar(10) DEFAULT NULL,"
+              . "`URI` longtext,"
+              . "`AccessTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,"
+              . "  PRIMARY KEY (`LogID`)"
+              . ") ENGINE=InnoDB  DEFAULT CHARSET=utf8;";
+      break;
+    case "Uploads":
+      $SqlDB = "CREATE TABLE IF NOT EXISTS `" . MySQL_Pre . "Uploads` ("
+              . "`UploadID` int(11) NOT NULL AUTO_INCREMENT,"
+              . "`Dept` text NOT NULL,"
+              . "`Subject` varchar(250) NOT NULL,"
+              . "`Topic` int(11) NOT NULL,"
+              . "`Dated` date NOT NULL,"
+              . "`Expiry` date DEFAULT NULL,"
+              . "`Attachment` text NOT NULL,"
+              . "`size` int(11) NOT NULL,"
+              . "`mime` text NOT NULL,"
+              . "`file` longblob,"
+              . "`UploadedOn` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,"
+              . "`Deleted` tinyint(1) NOT NULL,"
+              . " PRIMARY KEY (`UploadID`)"
+              . ") ENGINE=InnoDB  DEFAULT CHARSET=utf8;";
+      break;
+  }
+  return $SqlDB;
+}
+
+function CreateDB($ForWhat = "WebSite") {
+  switch ($ForWhat) {
+    case "WebSite":
+      $ObjDB = new MySQLiDB();
+      $ObjDB->do_ins_query(GetTableDefs("Visits"));
+      $ObjDB->do_ins_query(GetTableDefs("Logs"));
+      $ObjDB->do_ins_query(GetTableDefs("Uploads"));
+      $ObjDB->do_close();
+      break;
+  }
 }
 
 ?>

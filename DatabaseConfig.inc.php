@@ -31,9 +31,15 @@ define("LifeTime", "20");
 /**
  * Defines path after Hostname of the script to generate menu links
  */
-define("BaseDIR", "/");
+define("BaseDIR", "/SiteRepo/");
 /**
  * Defines Title of the page
  */
-define("AppTitle", "Official Website");
+define("AppTitle", "Paschim Medinipur");
+/**
+ * Defines Existence of tables
+ *
+ * If set to TRUE then Databse will be created
+ */
+define("NeedsDB", TRUE);
 ?>
