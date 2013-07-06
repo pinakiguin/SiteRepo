@@ -268,6 +268,25 @@ function GetTableDefs($TableName) {
               . " PRIMARY KEY (`UploadID`)"
               . ") ENGINE=InnoDB  DEFAULT CHARSET=utf8;";
       break;
+    case "Users":
+      $SqlDB = "CREATE TABLE `" . MySQL_Pre . "Users` ("
+              . "`UserID` varchar(255) DEFAULT NULL,"
+              . "`UserName` varchar(255) DEFAULT NULL,"
+              . "`UserPass` varchar(255) DEFAULT NULL,"
+              . "`UserMapID` int(10) NOT NULL,"
+              . "`Remarks` varchar(255) DEFAULT NULL,"
+              . "`LoginCount` int(10) DEFAULT '0',"
+              . "`LastLoginTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,"
+              . "`Registered` tinyint(1) NOT NULL,"
+              . "`Activated` tinyint(1) NOT NULL,"
+              . " PRIMARY KEY (`UserMapID`)"
+              . ") ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+      break;
+    case "UsersData":
+      $SqlDB = "INSERT INTO `" . MySQL_Pre . "Users` "
+              . "VALUES ('admin','Administrator','ceb6c970658f31504a901b89dcd3e461',"
+              . "0,NULL,14,'2013-05-03 22:47:45',1,1);";
+      break;
   }
   return $SqlDB;
 }
@@ -279,6 +298,8 @@ function CreateDB($ForWhat = "WebSite") {
       $ObjDB->do_ins_query(GetTableDefs("Visits"));
       $ObjDB->do_ins_query(GetTableDefs("Logs"));
       $ObjDB->do_ins_query(GetTableDefs("Uploads"));
+      $ObjDB->do_ins_query(GetTableDefs("Users"));
+      $ObjDB->do_ins_query(GetTableDefs("UsersData"));
       $ObjDB->do_close();
       break;
   }
