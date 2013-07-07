@@ -60,17 +60,17 @@ function initHTML5page($PageTitle = "") {
   session_start();
   $sess_id = md5(microtime());
 
-  //$_SESSION['Debug']=$_SESSION['Debug']."InInitPage(".$_SESSION['Client_SID']."=".$_COOKIE['Client_SID'].")";
+  //$_SESSION['Debug']=GetVal($_SESSION,'Debug')."InInitPage(".GetVal($_SESSION,'Client_SID')."=".GetVal($_COOKIE,'Client_SID').")";
   setcookie("Client_SID", $sess_id, (time() + (LifeTime * 60)));
   $_SESSION['Client_SID'] = $sess_id;
   $_SESSION['LifeTime'] = time();
   Html5Header($PageTitle);
-  $t = (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : "");
+  $t = GetVal($_SERVER, 'HTTP_REFERER');
   $reg = new MySQLiDB();
   $reg->do_ins_query("INSERT INTO " . MySQL_Pre . "Logs(IP,URL,UserAgent,Referrer,SessionID) values"
           . "('" . $_SERVER['REMOTE_ADDR'] . "','" . $_SERVER['PHP_SELF'] . "','" . $_SERVER['HTTP_USER_AGENT'] . "','<" . $t . ">','" . session_id() . "');");
-  if (isset($_REQUEST['show_src'])) {
-    if ($_REQUEST['show_src'] == "me")
+  if (GetVal($_REQUEST, 'show_src')) {
+    if (GetVal($_REQUEST, 'show_src') == "me")
       show_source(substr($_SERVER['PHP_SELF'], 1, strlen($_SERVER['PHP_SELF'])));
   }
 }
@@ -176,7 +176,7 @@ function InpSanitize($PostData) {
 
 function ShowMsg() {
   if (GetVal($_SESSION, "Msg") != "") {
-    echo '<span class="Message">' . $_SESSION['Msg'] . '</span><br/>';
+    echo '<span class="Message">' . GetVal($_SESSION, 'Msg') . '</span><br/>';
     $_SESSION['Msg'] = "";
   }
 }
@@ -323,20 +323,20 @@ function CreateDB($ForWhat = "WebSite") {
  */
 function CheckAuth() {
   $_SESSION['Debug'] = GetVal($_SESSION, 'Debug') . "CheckAuth";
-  if ((!isset($_SESSION['UserName'])) && (!isset($_SESSION['UserMapID']))) {
+  if (GetVal($_SESSION, 'UserName') && GetVal($_SESSION, 'UserMapID')) {
     return "Browsing";
   }
-  if (isset($_REQUEST['LogOut'])) {
+  if (GetVal($_REQUEST, 'LogOut')) {
     return "LogOut";
-  } else if ($_SESSION['LifeTime'] < (time() - (LifeTime * 60))) {
-    return "TimeOut(" . $_SESSION['LifeTime'] . "-" . (time() - (LifeTime * 60)) . ")";
-  } else if ($_SESSION['SESSION_TOKEN'] != $_COOKIE['SESSION_TOKEN']) {
-    $_SESSION['Debug'] = "(" . $_SESSION['SESSION_TOKEN'] . "=" . $_COOKIE['SESSION_TOKEN'] . ")";
-    return "INVALID SESSION (" . $_SESSION['SESSION_TOKEN'] . "=" . $_COOKIE['SESSION_TOKEN'] . ")";
-  } elseif ($_SESSION['ID'] !== session_id()) {
-    $_SESSION['Debug'] = "(" . $_SESSION['ID'] . "=" . session_id() . ")";
-    return "INVALID SESSION (" . $_SESSION['ID'] . "=" . session_id() . ")";
-  } else {
+  } else if (GetVal($_SESSION, 'LifeTime') < (time() - (LifeTime * 60))) {
+    return "TimeOut(" . GetVal($_SESSION, 'LifeTime') . "-" . (time() - (LifeTime * 60)) . ")";
+  } else if (GetVal($_SESSION, 'SESSION_TOKEN') != GetVal($_COOKIE, 'SESSION_TOKEN')) {
+    $_SESSION['Debug'] = "(" . GetVal($_SESSION, 'SESSION_TOKEN') . "=" . GetVal($_COOKIE, 'SESSION_TOKEN') . ")";
+    return "INVALID SESSION (" . GetVal($_SESSION, 'SESSION_TOKEN') . "=" . GetVal($_COOKIE, 'SESSION_TOKEN') . ")";
+  } elseif (GetVal($_SESSION, 'ID') !== session_id()) {
+    $_SESSION['Debug'] = "(" . GetVal($_SESSION, 'ID') . "=" . session_id() . ")";
+    return "INVALID SESSION (" . GetVal($_SESSION, 'ID') . "=" . session_id() . ")";
+  } elseif (GetVal($_SESSION, 'UserMapID') !== NULL) {
     return "Valid";
   }
 }
@@ -357,7 +357,7 @@ function initSess() {
   $reg->do_ins_query("INSERT INTO " . MySQL_Pre . "Logs(IP,URL,UserAgent,Referrer) values"
           . "('" . $_SERVER['REMOTE_ADDR'] . "','" . htmlspecialchars($_SERVER['PHP_SELF']) . "','" . $_SERVER['HTTP_USER_AGENT']
           . "','<" . $t . ">');");
-  if (isset($_REQUEST['show_src'])) {
+  if (GetVal($_REQUEST, 'show_src')) {
     if ($_REQUEST['show_src'] == "me")
       show_source(substr($_SERVER['PHP_SELF'], 1, strlen($_SERVER['PHP_SELF'])));
   }

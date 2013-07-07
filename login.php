@@ -68,7 +68,6 @@ if ((GetVal($_POST, 'UserID') !== NULL) && (GetVal($_POST, 'UserPass') !== NULL)
   }
 }
 $_SESSION['Token'] = md5($_SERVER['REMOTE_ADDR'] . $ID . time());
-
 Html5Header("Login");
 IncludeCSS();
 jQueryInclude();
