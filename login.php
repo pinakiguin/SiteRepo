@@ -84,13 +84,7 @@ IncludeJS("js/md5.js");
   <div class="Header">
   </div>
   <?php
-  if (GetVal($_SESSION, 'UserName') !== NULL) {
-    require_once('topmenu.php');
-  } else {
-    ?>
-    <div class="MenuBar"></div>
-    <?php
-  }
+  ShowMenuBar();
   ?>
   <div class="content">
     <?php

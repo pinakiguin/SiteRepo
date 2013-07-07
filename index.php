@@ -17,7 +17,7 @@ IncludeCSS();
   <div class="Header">
   </div>
   <?php
-  require_once("topmenu.php");
+  ShowMenuBar();
   ?>
   <div class="content">
   </div>

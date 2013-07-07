@@ -221,6 +221,12 @@ function footerinfo() {
   //."DB_SID: ".$_SESSION['ID']." ORG: ".session_id()." Cookie:".$_COOKIE['LMS_SID']." VALID=".$_SESSION['Validity']." | ".LifeTime.$_SESSION['LMS_AUTH'];
 }
 
+/**
+ * Returns SQL Query of the specified object
+ *
+ * @param string $TableName
+ * @return string SQL Query for the requested object
+ */
 function GetTableDefs($TableName) {
   $SqlDB = "";
   switch ($TableName) {
@@ -291,6 +297,11 @@ function GetTableDefs($TableName) {
   return $SqlDB;
 }
 
+/**
+ * Excutes DDL Queried for creating database objects
+ *
+ * @param string $ForWhat
+ */
 function CreateDB($ForWhat = "WebSite") {
   switch ($ForWhat) {
     case "WebSite":
@@ -305,6 +316,11 @@ function CreateDB($ForWhat = "WebSite") {
   }
 }
 
+/**
+ * Checks if the current session is Valid
+ *
+ * @return string <b>(Browsing|LogOut|TimeOut|INVALID SESSION|Valid)</b>
+ */
 function CheckAuth() {
   $_SESSION['Debug'] = GetVal($_SESSION, 'Debug') . "CheckAuth";
   if ((!isset($_SESSION['UserName'])) && (!isset($_SESSION['UserMapID']))) {
@@ -325,6 +341,10 @@ function CheckAuth() {
   }
 }
 
+/**
+ * Initiates an UnAuthenticated Session
+ *
+ */
 function initSess() {
   $sess_id = md5(microtime());
 
@@ -341,7 +361,24 @@ function initSess() {
     if ($_REQUEST['show_src'] == "me")
       show_source(substr($_SERVER['PHP_SELF'], 1, strlen($_SERVER['PHP_SELF'])));
   }
-  return;
+}
+
+function ShowMenuBar() {
+  echo '<div class="MenuBar"><ul>';
+  ShowMenuitem("Home", "index.php");
+  if (CheckAuth() !== "Valid") {
+    ShowMenuitem("Log In!", "login.php");
+  } else {
+    ShowMenuitem("Log Out!", "login.php?LogOut=1");
+  }
+  echo '</ul></div>';
+}
+
+function ShowMenuitem($Caption, $URL) {
+  $Class = ($_SERVER['SCRIPT_NAME'] === BaseDIR . $URL) ? "SelMenuitems" : "Menuitems";
+  echo '<li class="' . $Class . '">'
+  . '<a href = "' . GetAbsoluteURLFolder() . $URL . '">' . $Caption . '</a>'
+  . '</li>';
 }
 
 ?>
