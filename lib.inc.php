@@ -363,12 +363,65 @@ function initSess() {
   }
 }
 
+/**
+ * Verify Session Authentication
+ */
+function session_auth() {
+  if (!isset($_SESSION))
+    session_start();
+  $_SESSION['Debug'] = GetVal($_SESSION, 'Debug') . "InSession_AUTH";
+  $SessRet = CheckAuth();
+  $reg = new MySQLiDB();
+  //$reg->do_max_query("Select 1");
+  if (GetVal($_REQUEST, 'NoAuth'))
+    initSess();
+  else {
+    if ($SessRet != "Valid") {
+      $reg->do_ins_query("INSERT INTO " . MySQL_Pre . "logs (`SessionID`,`IP`,`Referrer`,`UserAgent`,`UserID`,`URL`,`Action`,`Method`,`URI`) values"
+              . "('" . GetVal($_SESSION, 'ID') . "','" . $_SERVER['REMOTE_ADDR'] . "','" . $reg->SqlSafe($_SERVER['HTTP_REFERER']) . "','" . $reg->SqlSafe($_SERVER['HTTP_USER_AGENT'])
+              . "','" . GetVal($_SESSION, 'UserName') . "','" . $reg->SqlSafe($_SERVER['PHP_SELF']) . "','" . $SessRet . ": ("
+              . $_SERVER['SCRIPT_NAME'] . ")','" . $reg->SqlSafe($_SERVER['REQUEST_METHOD']) . "','" . $reg->SqlSafe($_SERVER['REQUEST_URI']) . "');");
+      session_unset();
+      session_destroy();
+      session_start();
+      $_SESSION = array();
+      $_SESSION['Debug'] = GetVal($_SESSION, 'Debug') . $SessRet . "SESSION_TOKEN-!Valid";
+      header("Location: " . BaseDIR . "login.php");
+      exit;
+    } else {
+      $_SESSION['Debug'] = GetVal($_SESSION, 'Debug') . "SESSION_TOKEN-IsValid";
+      $sess_id = md5(microtime());
+      setcookie("SESSION_TOKEN", $sess_id, (time() + (LifeTime * 60)));
+      $_SESSION['SESSION_TOKEN'] = $sess_id;
+      $_SESSION['LifeTime'] = time();
+      $t = (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : "");
+      $reg->do_ins_query("INSERT INTO " . MySQL_Pre . "Visitors(ip,vpage,uagent,referrer) values"
+              . "('" . $_SERVER['REMOTE_ADDR'] . "','" . htmlspecialchars($_SERVER['PHP_SELF']) . "','" . $_SERVER['HTTP_USER_AGENT']
+              . "','<" . $t . ">');");
+      $LogQuery = "INSERT INTO " . MySQL_Pre . "logs (`SessionID`,`IP`,`Referrer`,`UserAgent`,`UserID`,`URL`,`Action`,`Method`,`URI`) values"
+              . "('" . GetVal($_SESSION, 'ID') . "','" . $_SERVER['REMOTE_ADDR'] . "','" . $reg->SqlSafe($t) . "','" . $_SERVER['HTTP_USER_AGENT']
+              . "','" . GetVal($_SESSION, 'UserName') . "','" . $reg->SqlSafe($_SERVER['PHP_SELF']) . "','Process (" . $_SERVER['SCRIPT_NAME'] . ")','"
+              . $reg->SqlSafe($_SERVER['REQUEST_METHOD']) . "','" . $reg->SqlSafe($_SERVER['REQUEST_URI']) . "');";
+      $reg->do_ins_query($LogQuery);
+    }
+  }
+  if (GetVal($_REQUEST, 'show_src') !== NULL) {
+    echo $LogQuery;
+    if ($_REQUEST['show_src'] == "me")
+      show_source(substr($_SERVER['PHP_SELF'], 1, strlen($_SERVER['PHP_SELF'])));
+  }
+}
+
+/**
+ * Shows the menubar and menu items depending on the session
+ */
 function ShowMenuBar() {
   echo '<div class="MenuBar"><ul>';
   ShowMenuitem("Home", "index.php");
   if (CheckAuth() !== "Valid") {
     ShowMenuitem("Log In!", "login.php");
   } else {
+    ShowMenuitem("Change Password", "changepwd.php");
     ShowMenuitem("Log Out!", "login.php?LogOut=1");
   }
   echo '</ul></div>';
