@@ -59,8 +59,7 @@ function IncludeCSS($CSS = "css/Style.css") {
 function initHTML5page($PageTitle = "") {
   session_start();
   $sess_id = md5(microtime());
-
-  //$_SESSION['Debug']=GetVal($_SESSION,'Debug')."InInitPage(".GetVal($_SESSION,'Client_SID')."=".GetVal($_COOKIE,'Client_SID').")";
+  $_SESSION['ET'] = microtime(TRUE);
   setcookie("Client_SID", $sess_id, (time() + (LifeTime * 60)));
   $_SESSION['Client_SID'] = $sess_id;
   $_SESSION['LifeTime'] = time();
@@ -68,7 +67,8 @@ function initHTML5page($PageTitle = "") {
   $t = GetVal($_SERVER, 'HTTP_REFERER');
   $reg = new MySQLiDB();
   $reg->do_ins_query("INSERT INTO " . MySQL_Pre . "Logs(IP,URL,UserAgent,Referrer,SessionID) values"
-          . "('" . $_SERVER['REMOTE_ADDR'] . "','" . $_SERVER['PHP_SELF'] . "','" . $_SERVER['HTTP_USER_AGENT'] . "','<" . $t . ">','" . session_id() . "');");
+          . "('" . $_SERVER['REMOTE_ADDR'] . "','" . $_SERVER['PHP_SELF'] . "','"
+          . $_SERVER['HTTP_USER_AGENT'] . "','<" . $t . ">','" . session_id() . "');");
   if (GetVal($_REQUEST, 'show_src')) {
     if (GetVal($_REQUEST, 'show_src') == "me")
       show_source(substr($_SERVER['PHP_SELF'], 1, strlen($_SERVER['PHP_SELF'])));
@@ -79,14 +79,22 @@ function initHTML5page($PageTitle = "") {
  * Returns value of an array element without cousing warning/error
  *
  * @param array $Array eg. $_SESSION
- * @param string $Index eg.
+ * @param string $Index eg. "index"
+ * @param bool $ForSQL If set to true  then htmlspecialchars else SQLSafe will be applied
  * @return null|$Array[$Index]
  */
-function GetVal($Array, $Index) {
+function GetVal($Array, $Index, $ForSQL = FALSE) {
   if (!isset($Array[$Index])) {
-    return NULL;
+    return ($ForSQL) ? "" : NULL;
   } else {
-    return $Array[$Index];
+    if ($ForSQL) {
+      $Data = new MySQLiDB();
+      $Value = $Data->SqlSafe($Array[$Index]);
+      $Data->do_close();
+      return $Value;
+    } else {
+      return htmlspecialchars($Array[$Index]);
+    }
   }
 }
 
@@ -197,7 +205,7 @@ function pageinfo() {
   }
   $reg = new MySQLiDB();
   $visitor_num = $reg->do_max_query("select VisitCount from " . MySQL_Pre . "Visits where PageURL='" . $_SERVER['PHP_SELF'] . "'");
-  $LastVisit = $reg->do_max_query("select timestamp(LastVisit) from " . MySQL_Pre . "Visits where PageURL like '" . $_SERVER['PHP_SELF'] . "'");
+  //$LastVisit = $reg->do_max_query("select timestamp(LastVisit) from " . MySQL_Pre . "Visits where PageURL like '" . $_SERVER['PHP_SELF'] . "'");
   if ($visitor_num > 0)
     $reg->do_ins_query("update " . MySQL_Pre . "Visits set `VisitCount`=`VisitCount`+1, VisitorIP='" . $_SERVER['REMOTE_ADDR'] . "' where PageURL='" . $_SERVER['PHP_SELF'] . "'");
   else
@@ -206,8 +214,7 @@ function pageinfo() {
   echo "<strong > Last Updated On:</strong> &nbsp;&nbsp;" . date("l d F Y g:i:s A ", filemtime($strfile))
   . " IST &nbsp;&nbsp;&nbsp;<b>Your IP: </b>" . $_SERVER['REMOTE_ADDR']
   . "&nbsp;&nbsp;&nbsp;<b>Visits:</b>&nbsp;&nbsp;" . $visitor_num
-  . " <b>Last Visit:</b> " . date(" g:i:s A ", strtotime($LastVisit))
-  . "";
+  . " <b>Loaded In:</b> " . (microtime(TRUE) - GetVal($_SESSION, 'ET')) . " Sec";
   $reg->do_close();
 }
 
@@ -218,7 +225,6 @@ function footerinfo() {
   echo 'Designed and Developed By <strong>National Informatics Centre</strong>, Paschim Medinipur District Centre<br/>'
   . 'L. A. Building (2nd floor), Collectorate Compound, Midnapore<br/>'
   . 'West Bengal - 721101 , India Phone : 91-3222-263506, Email: wbmdp(a)nic.in<br/>';
-  //."DB_SID: ".$_SESSION['ID']." ORG: ".session_id()." Cookie:".$_COOKIE['LMS_SID']." VALID=".$_SESSION['Validity']." | ".LifeTime.$_SESSION['LMS_AUTH'];
 }
 
 /**
@@ -369,8 +375,10 @@ function initSess() {
 function session_auth() {
   if (!isset($_SESSION))
     session_start();
+  $_SESSION['ET'] = microtime(TRUE);
   $_SESSION['Debug'] = GetVal($_SESSION, 'Debug') . "InSession_AUTH";
   $SessRet = CheckAuth();
+  $_SESSION['CheckAuth'] = $SessRet;
   $reg = new MySQLiDB();
   //$reg->do_max_query("Select 1");
   if (GetVal($_REQUEST, 'NoAuth'))
@@ -418,12 +426,13 @@ function session_auth() {
 function ShowMenuBar() {
   echo '<div class="MenuBar"><ul>';
   ShowMenuitem("Home", "index.php");
-  if (CheckAuth() !== "Valid") {
+  if (GetVal($_SESSION, 'CheckAuth') !== "Valid") {
     ShowMenuitem("Log In!", "login.php");
   } else {
     ShowMenuitem("Change Password", "changepwd.php");
     ShowMenuitem("Log Out!", "login.php?LogOut=1");
   }
+  ShowMenuitem(GetVal($_SESSION, 'CheckAuth'), "#");
   echo '</ul></div>';
 }
 

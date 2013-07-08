@@ -6,7 +6,7 @@
  * @version v1.0
  */
 
-require_once 'DatabaseConfig.inc.php';
+require_once 'config.inc.php';
 
 /**
  * Class DB helper class for MySQL database handling functions

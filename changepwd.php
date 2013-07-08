@@ -35,47 +35,39 @@ IncludeJS("js/md5.js");
   </div>
   <?php
   ShowMenuBar();
-  $action = -1;
+  $action = 0;
   $Data = new MySQLiDB();
-  if (GetVal($_POST, 'LoginToken') !== $_SESSION['Token']) {
-    $action = 2;
-  } else {
-    ;
-    if (GetVal($_POST, 'NewPassWD') !== md5(GetVal($_POST, 'CNewPassWD') . md5($_SESSION['Token']))) {
-      $action = 3;
+  if (GetVal($_POST, 'FormToken') !== NULL) {
+    if (GetVal($_POST, 'FormToken') !== GetVal($_SESSION, 'FormToken')) {
+      $action = 4;
     } else {
-      $Qry = "Update `" . MySQL_Pre . "Users` set UserPass='" . $Data->SqlSafe(GetVal($_POST, 'CNewPassWD'))
-              . "' where UserMapID=" . $_SESSION['UserMapID'] . " AND md5(concat(`UserPass`,md5('" . GetVal($_POST, 'LoginToken') . "')))='"
-              . GetVal($_POST, 'OldPassWD') . "'";
-      $rows = $Data->do_ins_query($Qry);
-      if ($rows > 0) {
-        $action = 1;
+      if (GetVal($_POST, 'NewPassWD') !== md5(GetVal($_POST, 'CNewPassWD') . md5(GetVal($_SESSION, 'FormToken')))) {
+        $action = 3;
       } else {
-        $action = 2;
+        $Qry = "Update `" . MySQL_Pre . "Users` set UserPass='" . $Data->SqlSafe(GetVal($_POST, 'CNewPassWD'))
+                . "' where UserMapID=" . $_SESSION['UserMapID'] . " AND "
+                . "md5(concat(`UserPass`,md5('" . GetVal($_POST, 'FormToken') . "')))='"
+                . GetVal($_POST, 'OldPassWD') . "'";
+        $rows = $Data->do_ins_query($Qry);
+        if ($rows > 0) {
+          $action = 1;
+        } else {
+          $action = 2;
+        }
       }
+      $_SESSION['FormToken'] = md5($_SERVER['REMOTE_ADDR'] . session_id() . microtime());
     }
-    $_SESSION['Token'] = md5($_SERVER['REMOTE_ADDR'] . session_id() . time());
   }
   ?>
   <div class="content">
     <?php
-//echo $action;
-//echo $_POST['OldPassWD']."---".$_POST['NewPassWD']."---".$_POST['CNewPassWD']."<br />".$Qry;
-    switch ($action) {
-      case 1:
-        echo "<h2>Your password changed Successfully!</h2>";
-        break;
-      case 2:
-        echo "<h2>Sorry! Invalid Old Password!</h2>";
-        break;
-      case 3:
-        echo "<h2>New Passwords do not match.</h2>";
-        break;
-      default:
-        echo "<h2>Change Password</h2>";
-        break;
-    }
-    if (($action == 2) || ($action == -1) || ($action == 3)) {
+    $Msg[0] = "<h2>Change Password</h2>";
+    $Msg[1] = "<h2>Your password changed Successfully!</h2>";
+    $Msg[2] = "<h2>Sorry! Invalid Old Password!</h2>";
+    $Msg[3] = "<h2>New Passwords do not match.</h2>";
+    $Msg[4] = "<h2>Un-Authorised " . GetVal($_POST, 'FormToken') . "|" . GetVal($_SESSION, 'FormToken') . "</h2>";
+    echo $Msg[$action];
+    if (($action == 2) || ($action == 0) || ($action == 3)) {
       ?>
       <form name="frmChgPWD" id="frmChgPWD" method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
         <label for="OldPassWD">Old Password:</label><br />
@@ -86,9 +78,9 @@ IncludeJS("js/md5.js");
         <br />
         <label for="CNewPassWD">Confirm New Password:</label> <br />
         <input type="password" name="CNewPassWD" id="CNewPassWD" />
-        <input type="hidden" name="LoginToken" value="<?php echo $_SESSION['Token']; ?>" />
+        <input type="hidden" name="FormToken" value="<?php echo GetVal($_SESSION, 'FormToken') ?>" />
         <br />
-        <input type="button" value="Change" onClick="ChkPwd('<?php echo md5($_SESSION['Token']); ?>');" />
+        <input type="button" value="Change" onClick="ChkPwd('<?php echo md5(GetVal($_SESSION, 'FormToken')); ?>');" />
       </form>
       <?php
     }
