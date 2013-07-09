@@ -12,7 +12,7 @@
 	url = https://github.com/tapmodo/Jcrop.git
 [submodule "captcha"]
 	path = captcha
-	url = https://github.com/dapphp/securimage.git
+	url = https://github.com/abusalam/Captcha.git
 [submodule "SRER-2014"]
 	path = SRER-2014
 	url = https://github.com/abusalam/SRER-2014.git
