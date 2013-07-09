@@ -1,7 +1,7 @@
 <?php
 require_once('lib.inc.php');
-session_auth();
-Html5Header("Change Password");
+AuthSession();
+Html5Header("Profile");
 IncludeCSS();
 IncludeJS("js/md5.js");
 ?>
@@ -80,7 +80,7 @@ IncludeJS("js/md5.js");
         <input type="password" name="CNewPassWD" id="CNewPassWD" />
         <input type="hidden" name="FormToken" value="<?php echo GetVal($_SESSION, 'FormToken') ?>" />
         <br />
-        <input type="button" value="Change" onClick="ChkPwd('<?php echo md5(GetVal($_SESSION, 'FormToken')); ?>');" />
+        <input type="button" value="Change Password" onClick="ChkPwd('<?php echo md5(GetVal($_SESSION, 'FormToken')); ?>');" />
       </form>
       <?php
     }
@@ -94,3 +94,4 @@ IncludeJS("js/md5.js");
   </div>
 </body>
 </html>
+

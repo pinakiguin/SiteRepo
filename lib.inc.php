@@ -286,6 +286,7 @@ function GetTableDefs($TableName) {
               . "`UserName` varchar(255) DEFAULT NULL,"
               . "`UserPass` varchar(255) DEFAULT NULL,"
               . "`UserMapID` int(10) NOT NULL,"
+              . "`CtrlMapID` int(10) NOT NULL,"
               . "`Remarks` varchar(255) DEFAULT NULL,"
               . "`LoginCount` int(10) DEFAULT '0',"
               . "`LastLoginTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,"
@@ -295,9 +296,11 @@ function GetTableDefs($TableName) {
               . ") ENGINE=InnoDB DEFAULT CHARSET=utf8;";
       break;
     case "UsersData":
-      $SqlDB = "INSERT INTO `" . MySQL_Pre . "Users` "
-              . "VALUES ('admin','Administrator','ceb6c970658f31504a901b89dcd3e461',"
-              . "0,NULL,14,'2013-05-03 22:47:45',1,1);";
+      // Super Admin Password "test@123"
+      //
+      $SqlDB = "INSERT INTO `" . MySQL_Pre . "Users`"
+              . "(`UserID`, `UserName`, `UserPass`, `UserMapID`, `CtrlMapID`,`Registered`, `Activated`) "
+              . "VALUES ('Admin','Super Administrator','ceb6c970658f31504a901b89dcd3e461',0,30,1,1);";
       break;
   }
   return $SqlDB;
@@ -337,11 +340,11 @@ function CheckAuth() {
   } else if (GetVal($_SESSION, 'LifeTime') < (time() - (LifeTime * 60))) {
     return "TimeOut(" . GetVal($_SESSION, 'LifeTime') . "-" . (time() - (LifeTime * 60)) . ")";
   } else if (GetVal($_SESSION, 'SESSION_TOKEN') != GetVal($_COOKIE, 'SESSION_TOKEN')) {
-    $_SESSION['Debug'] = "(" . GetVal($_SESSION, 'SESSION_TOKEN') . "=" . GetVal($_COOKIE, 'SESSION_TOKEN') . ")";
-    return "INVALID SESSION (" . GetVal($_SESSION, 'SESSION_TOKEN') . "=" . GetVal($_COOKIE, 'SESSION_TOKEN') . ")";
+    $_SESSION['Debug'] = "(" . GetVal($_SESSION, 'SESSION_TOKEN') . " = " . GetVal($_COOKIE, 'SESSION_TOKEN') . ")";
+    return "INVALID SESSION (" . GetVal($_SESSION, 'SESSION_TOKEN') . " = " . GetVal($_COOKIE, 'SESSION_TOKEN') . ")";
   } elseif (GetVal($_SESSION, 'ID') !== session_id()) {
-    $_SESSION['Debug'] = "(" . GetVal($_SESSION, 'ID') . "=" . session_id() . ")";
-    return "INVALID SESSION (" . GetVal($_SESSION, 'ID') . "=" . session_id() . ")";
+    $_SESSION['Debug'] = "(" . GetVal($_SESSION, 'ID') . " = " . session_id() . ")";
+    return "INVALID SESSION (" . GetVal($_SESSION, 'ID') . " = " . session_id() . ")";
   } elseif (GetVal($_SESSION, 'UserMapID') !== NULL) {
     return "Valid";
   }
@@ -354,15 +357,16 @@ function CheckAuth() {
 function initSess() {
   $sess_id = md5(microtime());
 
-  $_SESSION['Debug'] = GetVal($_SESSION, 'Debug') . "InInitPage(" . GetVal($_SESSION, 'SESSION_TOKEN') . "=" . GetVal($_COOKIE, 'SESSION_TOKEN') . ")";
+  $_SESSION['Debug'] = GetVal($_SESSION, 'Debug') . "InInitPage(" . GetVal($_SESSION, 'SESSION_TOKEN') . " = " . GetVal($_COOKIE, 'SESSION_TOKEN') . ")";
   setcookie("SESSION_TOKEN", $sess_id, (time() + (LifeTime * 60)));
   $_SESSION['SESSION_TOKEN'] = $sess_id;
   $_SESSION['LifeTime'] = time();
   $t = (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : "");
   $reg = new MySQLiDB();
-  $reg->do_ins_query("INSERT INTO " . MySQL_Pre . "Logs(IP,URL,UserAgent,Referrer) values"
-          . "('" . $_SERVER['REMOTE_ADDR'] . "','" . htmlspecialchars($_SERVER['PHP_SELF']) . "','" . $_SERVER['HTTP_USER_AGENT']
-          . "','<" . $t . ">');");
+  $reg->do_ins_query("INSERT INTO " . MySQL_Pre . "Logs(IP, URL, UserAgent, Referrer) values"
+          . "('" . $_SERVER['REMOTE_ADDR'] . "', '" . htmlspecialchars($_SERVER['PHP_SELF']) . "', '" . $_SERVER['HTTP_USER_AGENT']
+          . "', '<" . $t . ">');
+      ");
   if (GetVal($_REQUEST, 'show_src')) {
     if ($_REQUEST['show_src'] == "me")
       show_source(substr($_SERVER['PHP_SELF'], 1, strlen($_SERVER['PHP_SELF'])));
@@ -372,7 +376,7 @@ function initSess() {
 /**
  * Verify Session Authentication
  */
-function session_auth() {
+function AuthSession() {
   if (!isset($_SESSION))
     session_start();
   $_SESSION['ET'] = microtime(TRUE);
@@ -385,10 +389,11 @@ function session_auth() {
     initSess();
   else {
     if ($SessRet != "Valid") {
-      $reg->do_ins_query("INSERT INTO " . MySQL_Pre . "logs (`SessionID`,`IP`,`Referrer`,`UserAgent`,`UserID`,`URL`,`Action`,`Method`,`URI`) values"
-              . "('" . GetVal($_SESSION, 'ID') . "','" . $_SERVER['REMOTE_ADDR'] . "','" . $reg->SqlSafe($_SERVER['HTTP_REFERER']) . "','" . $reg->SqlSafe($_SERVER['HTTP_USER_AGENT'])
-              . "','" . GetVal($_SESSION, 'UserName') . "','" . $reg->SqlSafe($_SERVER['PHP_SELF']) . "','" . $SessRet . ": ("
-              . $_SERVER['SCRIPT_NAME'] . ")','" . $reg->SqlSafe($_SERVER['REQUEST_METHOD']) . "','" . $reg->SqlSafe($_SERVER['REQUEST_URI']) . "');");
+      $reg->do_ins_query("INSERT INTO " . MySQL_Pre . "logs (`SessionID`, `IP`, `Referrer`, `UserAgent`, `UserID`, `URL`, `Action`, `Method`, `URI`) values"
+              . "('" . GetVal($_SESSION, 'ID') . "', '" . $_SERVER['REMOTE_ADDR'] . "', '" . $reg->SqlSafe($_SERVER['HTTP_REFERER']) . "', '" . $reg->SqlSafe($_SERVER['HTTP_USER_AGENT'])
+              . "', '" . GetVal($_SESSION, 'UserName') . "', '" . $reg->SqlSafe($_SERVER['PHP_SELF']) . "', '" . $SessRet . ": ("
+              . $_SERVER['SCRIPT_NAME'] . ")', '" . $reg->SqlSafe($_SERVER['REQUEST_METHOD']) . "', '" . $reg->SqlSafe($_SERVER['REQUEST_URI']) . "');
+      ");
       session_unset();
       session_destroy();
       session_start();
@@ -403,13 +408,15 @@ function session_auth() {
       $_SESSION['SESSION_TOKEN'] = $sess_id;
       $_SESSION['LifeTime'] = time();
       $t = (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : "");
-      $reg->do_ins_query("INSERT INTO " . MySQL_Pre . "Visitors(ip,vpage,uagent,referrer) values"
-              . "('" . $_SERVER['REMOTE_ADDR'] . "','" . htmlspecialchars($_SERVER['PHP_SELF']) . "','" . $_SERVER['HTTP_USER_AGENT']
-              . "','<" . $t . ">');");
-      $LogQuery = "INSERT INTO " . MySQL_Pre . "logs (`SessionID`,`IP`,`Referrer`,`UserAgent`,`UserID`,`URL`,`Action`,`Method`,`URI`) values"
-              . "('" . GetVal($_SESSION, 'ID') . "','" . $_SERVER['REMOTE_ADDR'] . "','" . $reg->SqlSafe($t) . "','" . $_SERVER['HTTP_USER_AGENT']
-              . "','" . GetVal($_SESSION, 'UserName') . "','" . $reg->SqlSafe($_SERVER['PHP_SELF']) . "','Process (" . $_SERVER['SCRIPT_NAME'] . ")','"
-              . $reg->SqlSafe($_SERVER['REQUEST_METHOD']) . "','" . $reg->SqlSafe($_SERVER['REQUEST_URI']) . "');";
+      $reg->do_ins_query("INSERT INTO " . MySQL_Pre . "Visitors(ip, vpage, uagent, referrer) values"
+              . "('" . $_SERVER['REMOTE_ADDR'] . "', '" . htmlspecialchars($_SERVER['PHP_SELF']) . "', '" . $_SERVER['HTTP_USER_AGENT']
+              . "', '<" . $t . ">');
+      ");
+      $LogQuery = "INSERT INTO " . MySQL_Pre . "logs (`SessionID`, `IP`, `Referrer`, `UserAgent`, `UserID`, `URL`, `Action`, `Method`, `URI`) values"
+              . "('" . GetVal($_SESSION, 'ID') . "', '" . $_SERVER['REMOTE_ADDR'] . "', '" . $reg->SqlSafe($t) . "', '" . $_SERVER['HTTP_USER_AGENT']
+              . "', '" . GetVal($_SESSION, 'UserName') . "', '" . $reg->SqlSafe($_SERVER['PHP_SELF']) . "', 'Process (" . $_SERVER['SCRIPT_NAME'] . ")', '"
+              . $reg->SqlSafe($_SERVER['REQUEST_METHOD']) . "', '" . $reg->SqlSafe($_SERVER['REQUEST_URI']) . "');
+      ";
       $reg->do_ins_query($LogQuery);
     }
   }
@@ -429,7 +436,8 @@ function ShowMenuBar() {
   if (GetVal($_SESSION, 'CheckAuth') !== "Valid") {
     ShowMenuitem("Log In!", "login.php");
   } else {
-    ShowMenuitem("Change Password", "changepwd.php");
+    ShowMenuitem(GetVal($_SESSION, 'UserName') . "'s Profile", "Profile.php");
+    ShowMenuitem("Manage Users", "Users.php");
     ShowMenuitem("Log Out!", "login.php?LogOut=1");
   }
   ShowMenuitem(GetVal($_SESSION, 'CheckAuth'), "#");

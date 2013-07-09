@@ -1,4 +1,11 @@
 <?php
+/**
+ * On successful Authentication the following Session Variables are set
+ *
+ *  $_SESSION['CheckAuth'] = "Valid";
+ *  $_SESSION['UserName'] = $Row['UserName'];
+ *  $_SESSION['UserMapID'] = $Row['UserMapID'];
+ */
 require_once('lib.inc.php');
 session_start();
 $_SESSION['ET'] = microtime(TRUE);
@@ -97,7 +104,7 @@ IncludeJS("js/md5.js");
         " You Have Successfully Logged In!</h2>";
         break;
       case "Valid":
-        echo "<h2 align=\"center\">You are already Logged In as {GetVal($_SESSION,'UserName')}!</h2>";
+        echo "<h2 align=\"center\">You are already Logged In as " . GetVal($_SESSION, 'UserName') . "!</h2>";
         break;
       case "NoAccess":
         echo "<h2 align=\"center\">Sorry! Access Denied!</h2>";
