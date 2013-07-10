@@ -275,6 +275,12 @@ class MySQLiDB {
     }
   }
 
+  /**
+   * Displays the data in a table
+   *
+   * @param String $QueryString
+   * @return int Number of Total Rows displayed
+   */
   public function ShowTable($QueryString) {
     // Performing SQL query
     $this->do_sel_query($QueryString);

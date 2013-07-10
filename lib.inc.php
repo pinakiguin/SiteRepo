@@ -473,6 +473,7 @@ function ShowMenuBar() {
   } else {
     ShowMenuitem(GetVal($_SESSION, 'UserName') . "'s Profile", "Profile.php");
     ShowMenuitem("Manage Users", "Users.php");
+    ShowMenuitem("User Activity", "AuditLogs.php");
     ShowMenuitem("Log Out!", "login.php?LogOut=1");
   }
   ShowMenuitem(GetVal($_SESSION, 'CheckAuth'), "#");
