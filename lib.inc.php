@@ -80,10 +80,11 @@ function initHTML5page($PageTitle = "") {
  *
  * @param array $Array eg. $_SESSION
  * @param string $Index eg. "index"
- * @param bool $ForSQL If set to true  then htmlspecialchars else SQLSafe will be applied
+ * @param bool $ForSQL If set to true then htmlspecialchars else SQLSafe will be applied
+ * @param bool $HTMLSafe Raw OutPut without htmlspecialchars
  * @return null|$Array[$Index]
  */
-function GetVal($Array, $Index, $ForSQL = FALSE) {
+function GetVal($Array, $Index, $ForSQL = FALSE, $HTMLSafe = TRUE) {
   if (!isset($Array[$Index])) {
     return ($ForSQL) ? "" : NULL;
   } else {
@@ -93,7 +94,11 @@ function GetVal($Array, $Index, $ForSQL = FALSE) {
       $Data->do_close();
       return $Value;
     } else {
-      return htmlspecialchars($Array[$Index]);
+      if ($HTMLSafe) {
+        return htmlspecialchars($Array[$Index]);
+      } else {
+        return $Array[$Index];
+      }
     }
   }
 }
@@ -184,7 +189,7 @@ function InpSanitize($PostData) {
 
 function ShowMsg() {
   if (GetVal($_SESSION, "Msg") != "") {
-    echo '<span class="Message">' . GetVal($_SESSION, 'Msg') . '</span><br/>';
+    echo '<span class="Message">' . GetVal($_SESSION, 'Msg', FALSE, FALSE) . '</span><br/>';
     $_SESSION['Msg'] = "";
   }
 }
@@ -449,6 +454,29 @@ function ShowMenuitem($Caption, $URL) {
   echo '<li class="' . $Class . '">'
   . '<a href = "' . GetAbsoluteURLFolder() . $URL . '">' . $Caption . '</a>'
   . '</li>';
+}
+
+/**
+ * Shows a Captcha with a text Field
+ *
+ * @param bool $ShowImage If true Shows the captcha otherwise validates
+ * @return bool
+ */
+function StaticCaptcha($ShowImage = FALSE) {
+  require_once 'captcha/securimage.php';
+  if ($ShowImage) {
+    $captchaId = Securimage::getCaptchaId(true);
+    echo '<input type="hidden" id="captchaId" name="captchaId" value="' . $captchaId . '" />'
+    . '<img id="siimage" src="ShowCaptcha.php?captchaId=' . $captchaId . '" alt="captcha image" /><br/>'
+    . '<input type="text" name="captcha_code" value="" />';
+  } else {
+    $captcha_code = GetVal($_POST, 'captcha_code');
+    if ($captcha_code !== NULL) {
+      $VerifyID = GetVal($_POST, 'captchaId');
+      $captcha_code = GetVal($_POST, 'captcha_code');
+      return Securimage::checkByCaptchaId($VerifyID, $captcha_code);
+    }
+  }
 }
 
 ?>

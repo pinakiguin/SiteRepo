@@ -30,9 +30,11 @@ if ($action == "LogOut") {
   header("Location: index.php");
   exit;
 }
+
 if ($action != "Valid") {
   initSess();
 }
+
 if ((GetVal($_POST, 'UserID') !== NULL) && (GetVal($_POST, 'UserPass') !== NULL)) {
   $QueryLogin = "Select UserMapID,UserName from `" . MySQL_Pre . "Users` U "
           . "where `UserID`='" . GetVal($_POST, 'UserID', TRUE) . "' AND MD5(concat(`UserPass`,MD5('"
@@ -108,6 +110,7 @@ IncludeJS("js/md5.js");
         break;
       case "NoAccess":
         echo "<h2 align=\"center\">Sorry! Access Denied!</h2>";
+        $_SESSION['TryCount'] = GetVal($_SESSION, 'TryCount') + 1;
         break;
       default:
         echo "<h2>Login - " . AppTitle . "</h2>";
