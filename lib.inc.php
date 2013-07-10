@@ -76,6 +76,8 @@ function initHTML5page($PageTitle = "") {
 }
 
 /**
+ * <b>GetVal($Array, $Index, [$ForSQL = FALSE, [$HTMLSafe = TRUE]])</b>
+ *
  * Returns value of an array element without cousing warning/error
  *
  * @param array $Array eg. $_SESSION
@@ -468,6 +470,7 @@ function StaticCaptcha($ShowImage = FALSE) {
     $captchaId = Securimage::getCaptchaId(true);
     echo '<input type="hidden" id="captchaId" name="captchaId" value="' . $captchaId . '" />'
     . '<img id="siimage" src="ShowCaptcha.php?captchaId=' . $captchaId . '" alt="captcha image" /><br/>'
+    . '<label for="captcha_code">Solve the above: </label><br/>'
     . '<input type="text" name="captcha_code" value="" />';
   } else {
     $captcha_code = GetVal($_POST, 'captcha_code');

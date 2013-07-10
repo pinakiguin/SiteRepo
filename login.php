@@ -6,6 +6,8 @@
  *  $_SESSION['UserName'] = $Row['UserName'];
  *  $_SESSION['UserMapID'] = $Row['UserMapID'];
  */
+$FailedTry = 2; //No of Allowed failed login without captcha
+
 require_once('lib.inc.php');
 session_start();
 $_SESSION['ET'] = microtime(TRUE);
@@ -35,10 +37,17 @@ if ($action != "Valid") {
   initSess();
 }
 
-if ((GetVal($_POST, 'UserID') !== NULL) && (GetVal($_POST, 'UserPass') !== NULL)) {
-  $QueryLogin = "Select UserMapID,UserName from `" . MySQL_Pre . "Users` U "
-          . "where `UserID`='" . GetVal($_POST, 'UserID', TRUE) . "' AND MD5(concat(`UserPass`,MD5('"
-          . GetVal($_POST, 'LoginToken', TRUE) . "')))='" . GetVal($_POST, 'UserPass', TRUE) . "' AND Activated";
+if (GetVal($_SESSION, 'TryCount') >= $FailedTry) {
+  $ValidCaptcha = StaticCaptcha();
+} else {
+  $ValidCaptcha = TRUE;
+}
+
+if ((GetVal($_POST, 'UserID') !== NULL) && (GetVal($_POST, 'UserPass') !== NULL) && $ValidCaptcha) {
+  $QueryLogin = "Select UserMapID,UserName from `" . MySQL_Pre . "Users` "
+          . " Where `UserID`='" . GetVal($_POST, 'UserID', TRUE) . "' "
+          . " AND MD5(concat(`UserPass`,MD5('" . GetVal($_SESSION, 'Token', TRUE) . "')))='" . GetVal($_POST, 'UserPass', TRUE) . "'"
+          . " AND Activated";
   $rows = $Data->do_sel_query($QueryLogin);
   if ($rows > 0) {
     session_regenerate_id();
@@ -53,27 +62,29 @@ if ((GetVal($_POST, 'UserID') !== NULL) && (GetVal($_POST, 'UserPass') !== NULL)
             'REQUEST_URI'];
     $action = "JustLoggedIn";
     $Data->do_ins_query(
-            "Update " . MySQL_Pre . "Users Set LoginCount=LoginCount+1 where `UserID`='" .
-            GetVal($_POST, 'UserID', TRUE) . "' AND MD5(concat(`UserPass`,MD5('"
-            . GetVal($_POST, 'LoginToken', TRUE) . "')))='" . GetVal($_POST, 'UserPass', TRUE) . "'");
+            "Update " . MySQL_Pre . "Users Set LoginCount=LoginCount+1"
+            . " Where `UserID`='" . GetVal($_POST, 'UserID', TRUE) . "'"
+            . " AND MD5(concat(`UserPass`,MD5('" . GetVal($_POST, 'LoginToken', TRUE) . "')))='" . GetVal($_POST, 'UserPass', TRUE) . "'");
     $Data->do_ins_query(
-            "INSERT INTO " . MySQL_Pre . "Logs (`SessionID`,`IP`,`Referrer`,`UserAgent`,`UserMapID`,`URL`,`Action`,`Method`,`URI`) values"
-            . "('" . GetVal($_SESSION, 'ID', TRUE) . "','" . $_SERVER['REMOTE_ADDR'] . "','"
-            . $Data->SqlSafe($_SERVER['HTTP_REFERER']) . "','" . $_SERVER['HTTP_USER_AGENT']
-            . "','" . GetVal($_SESSION, 'UserMapID', TRUE) . "','" . $Data->SqlSafe($_SERVER['PHP_SELF']) .
-            "','Login: Success','" . $Data->SqlSafe($_SERVER['REQUEST_METHOD'])
-            . "','" . $Data->SqlSafe($_SERVER['REQUEST_URI'] . $_SERVER['QUERY_STRING']) . "');");
+            "INSERT INTO " . MySQL_Pre . "Logs (`SessionID`,`IP`,`Referrer`,`UserAgent`,`UserID`,`URL`,`Action`,`Method`,`URI`) "
+            . "Values ('" . GetVal($_SESSION, 'ID', TRUE) . "','"
+            . $Data->SqlSafe($_SERVER['REMOTE_ADDR']) . "','"
+            . $Data->SqlSafe($_SERVER['HTTP_REFERER']) . "','"
+            . $Data->SqlSafe($_SERVER['HTTP_USER_AGENT']) . "','" . GetVal($_SESSION, 'UserMapID', TRUE) . "','"
+            . $Data->SqlSafe($_SERVER['PHP_SELF']) . "','Login: Success','"
+            . $Data->SqlSafe($_SERVER['REQUEST_METHOD']) . "','"
+            . $Data->SqlSafe($_SERVER['REQUEST_URI'] . $_SERVER['QUERY_STRING']) . "');");
   } else {
     $action = "NoAccess";
     $Data->do_ins_query(
-            "INSERT INTO " . MySQL_Pre . "logs (`SessionID`,`IP`,`Referrer`,`UserAgent`,`UserMapID`,`URL`,`Action`,`Method`,`URI`) values"
-            . "('" . GetVal($_SESSION, 'ID') . "','" . $_SERVER['REMOTE_ADDR'] . "','" .
-            $Data->SqlSafe($_SERVER['HTTP_REFERER']) . "','" .
-            $_SERVER['HTTP_USER_AGENT'] . "','" . GetVal($_POST, 'UserID') . "','" .
-            $Data->SqlSafe($_SERVER['PHP_SELF']) .
-            "','Login: Failed[" . GetVal($_POST, 'UserID') . "]','" . $Data->SqlSafe($_SERVER[
-                    'REQUEST_METHOD']) . "','" . $Data->SqlSafe($_SERVER[
-                    'REQUEST_URI'] . $_SERVER['QUERY_STRING']) . "');");
+            "INSERT INTO " . MySQL_Pre . "Logs (`SessionID`,`IP`,`Referrer`,`UserAgent`,`UserID`,`URL`,`Action`,`Method`,`URI`) "
+            . "Values ('" . GetVal($_SESSION, 'ID', TRUE) . "','"
+            . $Data->SqlSafe($_SERVER['REMOTE_ADDR']) . "','"
+            . $Data->SqlSafe($_SERVER['HTTP_REFERER']) . "','"
+            . $Data->SqlSafe($_SERVER['HTTP_USER_AGENT']) . "','" . GetVal($_POST, 'UserID', TRUE) . "','"
+            . $Data->SqlSafe($_SERVER['PHP_SELF']) . "','Login: Failed[" . GetVal($_POST, 'UserID', TRUE) . "]','"
+            . $Data->SqlSafe($_SERVER['REQUEST_METHOD']) . "','"
+            . $Data->SqlSafe($_SERVER['REQUEST_URI'] . $_SERVER['QUERY_STRING']) . "');");
   }
 }
 $_SESSION['Token'] = md5($_SERVER['REMOTE_ADDR'] . $ID . time());
@@ -111,6 +122,7 @@ IncludeJS("js/md5.js");
       case "NoAccess":
         echo "<h2 align=\"center\">Sorry! Access Denied!</h2>";
         $_SESSION['TryCount'] = GetVal($_SESSION, 'TryCount') + 1;
+        echo "Try Count:" . GetVal($_SESSION, 'TryCount');
         break;
       default:
         echo "<h2>Login - " . AppTitle . "</h2>";
@@ -123,6 +135,11 @@ IncludeJS("js/md5.js");
         <input type="text" id="UserID" name="UserID" value="admin" autocomplete="off"/><br />
         <label for="UserPass">Password:</label><br />
         <input type="password" id="UserPass" name="UserPass" value="test@123" autocomplete="off"/><br />
+        <?php
+        if (GetVal($_SESSION, 'TryCount') >= $FailedTry) {
+          StaticCaptcha(TRUE);
+        }
+        ?>
         <input type="hidden" name="LoginToken" value="<?php echo GetVal($_SESSION, 'Token'); ?>" />
         <input style="width:80px;" type="submit" value="Login" onClick="document.getElementById('UserPass').value = MD5(MD5(document.getElementById('UserPass').value) + '<?php echo md5(GetVal($_SESSION, 'Token')); ?>');"/>
       </form>
