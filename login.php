@@ -18,22 +18,25 @@ if (GetVal($_SESSION, 'LifeTime') === NULL)
   $_SESSION['LifeTime'] = time();
 $action = CheckAuth();
 if ($action == "LogOut") {
-  $Data->do_ins_query("INSERT INTO `" . MySQL_Pre . "Logs` (`SessionID`,`IP`,`Referrer`,`UserAgent`,`UserMapID`,`URL`,`Action`,`Method`,`URI`) values"
-          . "('" . GetVal($_SESSION, 'ID') . "','" . $_SERVER['REMOTE_ADDR'] . "','"
-          . $Data->SqlSafe($_SERVER["HTTP_REFERER"]) . "','" . $_SERVER['HTTP_USER_AGENT']
-          . "','" . GetVal($_SESSION, 'UserMapID') . "','" . $Data->SqlSafe($_SERVER['PHP_SELF']) . "','"
-          . $action . ": (" . $_SERVER['SCRIPT_NAME'] . ")','" . $Data->SqlSafe($_SERVER['REQUEST_METHOD'])
-          . "','" . $Data->SqlSafe($_SERVER['REQUEST_URI']) . "');");
+  $Data->do_ins_query("INSERT INTO `" . MySQL_Pre . "Logs` (`SessionID`,`IP`,`Referrer`,`UserAgent`,`UserID`,`URL`,`Action`,`Method`,`URI`, `ED`)"
+          . " Values('" . GetVal($_SESSION, 'ID') . "','" . $_SERVER['REMOTE_ADDR'] . "','"
+          . $Data->SqlSafe($_SERVER["HTTP_REFERER"]) . "','"
+          . $_SERVER['HTTP_USER_AGENT']
+          . "','" . GetVal($_SESSION, 'UserMapID') . "','"
+          . $Data->SqlSafe($_SERVER['PHP_SELF']) . "','"
+          . $action . ": (" . $_SERVER['SCRIPT_NAME'] . ")','"
+          . $Data->SqlSafe($_SERVER['REQUEST_METHOD']) . "','"
+          . $Data->SqlSafe($_SERVER['REQUEST_URI']) . "',"
+          . GetVal($_SESSION, 'ED', TRUE) . ");");
   session_unset();
   session_destroy();
   session_start();
   $_SESSION = array();
+  $_SESSION['ET'] = microtime(TRUE);
   $_SESSION['Debug'] = GetVal($_SESSION, 'Debug') . $action . "TOKEN-!Valid";
   header("Location: index.php");
   exit;
-}
-
-if ($action != "Valid") {
+} elseif ($action != "Valid") {
   initSess();
 }
 
@@ -77,14 +80,15 @@ if ((GetVal($_POST, 'UserID') !== NULL) && (GetVal($_POST, 'UserPass') !== NULL)
   } else {
     $action = "NoAccess";
     $Data->do_ins_query(
-            "INSERT INTO " . MySQL_Pre . "Logs (`SessionID`,`IP`,`Referrer`,`UserAgent`,`UserID`,`URL`,`Action`,`Method`,`URI`) "
+            "INSERT INTO " . MySQL_Pre . "Logs (`SessionID`,`IP`,`Referrer`,`UserAgent`,`UserID`,`URL`,`Action`,`Method`,`URI`,`ED`) "
             . "Values ('" . GetVal($_SESSION, 'ID', TRUE) . "','"
             . $Data->SqlSafe($_SERVER['REMOTE_ADDR']) . "','"
             . $Data->SqlSafe($_SERVER['HTTP_REFERER']) . "','"
             . $Data->SqlSafe($_SERVER['HTTP_USER_AGENT']) . "','" . GetVal($_POST, 'UserID', TRUE) . "','"
             . $Data->SqlSafe($_SERVER['PHP_SELF']) . "','Login: Failed[" . GetVal($_POST, 'UserID', TRUE) . "]','"
             . $Data->SqlSafe($_SERVER['REQUEST_METHOD']) . "','"
-            . $Data->SqlSafe($_SERVER['REQUEST_URI'] . $_SERVER['QUERY_STRING']) . "');");
+            . $Data->SqlSafe($_SERVER['REQUEST_URI'] . $_SERVER['QUERY_STRING']) . "',"
+            . GetVal($_SESSION, 'ED', TRUE) . ");");
   }
 }
 $_SESSION['Token'] = md5($_SERVER['REMOTE_ADDR'] . $ID . time());

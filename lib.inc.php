@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @todo Unique Random ID Generator function to be included
+ */
 include_once 'MySQLiDB.inc.php';
 
 /**
@@ -34,8 +37,8 @@ function jQueryInclude() {
  *
  * @param string $JavaScript src including path
  */
-function IncludeJS($JavaScript) {
-  echo '<script type="text/javascript" src="' . $JavaScript . '"></script>';
+function IncludeJS($PathToJS) {
+  echo '<script type="text/javascript" src="' . $PathToJS . '"></script>';
 }
 
 /**
@@ -45,8 +48,8 @@ function IncludeJS($JavaScript) {
  *
  * @param string $CSS href including path
  */
-function IncludeCSS($CSS = "css/Style.css") {
-  echo '<link type="text/css" href="' . $CSS . '" rel="Stylesheet" />';
+function IncludeCSS($PathToCSS = "css/Style.css") {
+  echo '<link type="text/css" href="' . $PathToCSS . '" rel="Stylesheet" />';
 }
 
 /**
@@ -64,11 +67,6 @@ function initHTML5page($PageTitle = "") {
   $_SESSION['Client_SID'] = $sess_id;
   $_SESSION['LifeTime'] = time();
   Html5Header($PageTitle);
-  $t = GetVal($_SERVER, 'HTTP_REFERER');
-  $reg = new MySQLiDB();
-  $reg->do_ins_query("INSERT INTO " . MySQL_Pre . "Logs(IP,URL,UserAgent,Referrer,SessionID) values"
-          . "('" . $_SERVER['REMOTE_ADDR'] . "','" . $_SERVER['PHP_SELF'] . "','"
-          . $_SERVER['HTTP_USER_AGENT'] . "','<" . $t . ">','" . session_id() . "');");
   if (GetVal($_REQUEST, 'show_src')) {
     if (GetVal($_REQUEST, 'show_src') == "me")
       show_source(substr($_SERVER['PHP_SELF'], 1, strlen($_SERVER['PHP_SELF'])));
@@ -82,7 +80,7 @@ function initHTML5page($PageTitle = "") {
  *
  * @param array $Array eg. $_SESSION
  * @param string $Index eg. "index"
- * @param bool $ForSQL If set to true then htmlspecialchars else SQLSafe will be applied
+ * @param bool $ForSQL If set to true then SQLSafe else htmlspecialchars will be applied
  * @param bool $HTMLSafe Raw OutPut without htmlspecialchars
  * @return null|$Array[$Index]
  */
@@ -181,7 +179,7 @@ function InpSanitize($PostData) {
   }
   unset($Value);
   $PostData['Fields'] = $Fields;
-  //echo "Total Fields:".count($PostData);
+//echo "Total Fields:".count($PostData);
   return $PostData;
 }
 
@@ -197,41 +195,58 @@ function ShowMsg() {
 }
 
 /**
- * Displays visit Count and also logs the Visits in MySQL_Pre.Visits table
+ * Displays Page Informations and Records Visit Count in MySQL_Pre.Visits table
  *
  */
 function pageinfo() {
   $strfile = strtok($_SERVER['PHP_SELF'], "/");
-  //echo $_SERVER['PHP_SELF'].' | '.$strfile;
+//echo $_SERVER['PHP_SELF'].' | '.$strfile;
   $str = strtok("/");
-  //echo ' | '.$str;
+//echo ' | '.$str;
   while ($str) {
     $strfile = $str;
-    //echo ' | '.$strfile;
+//echo ' | '.$strfile;
     $str = strtok("/");
   }
   $reg = new MySQLiDB();
-  $visitor_num = $reg->do_max_query("select VisitCount from " . MySQL_Pre . "Visits where PageURL='" . $_SERVER['PHP_SELF'] . "'");
-  //$LastVisit = $reg->do_max_query("select timestamp(LastVisit) from " . MySQL_Pre . "Visits where PageURL like '" . $_SERVER['PHP_SELF'] . "'");
+  $visitor_num = $reg->do_max_query("select VisitCount from `" . MySQL_Pre . "Visits` "
+          . " Where PageURL='" . $_SERVER['PHP_SELF'] . "'");
+//$LastVisit = $reg->do_max_query("select timestamp(LastVisit) from " . MySQL_Pre . "Visits where PageURL like '" . $_SERVER['PHP_SELF'] . "'");
   if ($visitor_num > 0)
-    $reg->do_ins_query("update " . MySQL_Pre . "Visits set `VisitCount`=`VisitCount`+1, VisitorIP='" . $_SERVER['REMOTE_ADDR'] . "' where PageURL='" . $_SERVER['PHP_SELF'] . "'");
+    $reg->do_ins_query("update " . MySQL_Pre . "Visits "
+            . " Set `VisitCount`=`VisitCount`+1, VisitorIP='" . $_SERVER['REMOTE_ADDR'] . "'"
+            . " Where PageURL='" . $_SERVER['PHP_SELF'] . "'");
   else
-    $reg->do_ins_query("Insert into " . MySQL_Pre . "Visits(PageURL,VisitorIP) values('" . $_SERVER['PHP_SELF'] . "','" . $_SERVER['REMOTE_ADDR'] . "')");
+    $reg->do_ins_query("Insert into " . MySQL_Pre . "Visits(PageURL,VisitorIP)"
+            . " Values('" . $_SERVER['PHP_SELF'] . "','" . $_SERVER['REMOTE_ADDR'] . "');");
   $_SESSION['LifeTime'] = time();
   echo "<strong > Last Updated On:</strong> &nbsp;&nbsp;" . date("l d F Y g:i:s A ", filemtime($strfile))
   . " IST &nbsp;&nbsp;&nbsp;<b>Your IP: </b>" . $_SERVER['REMOTE_ADDR']
   . "&nbsp;&nbsp;&nbsp;<b>Visits:</b>&nbsp;&nbsp;" . $visitor_num
-  . " <b>Loaded In:</b> " . (microtime(TRUE) - GetVal($_SESSION, 'ET')) . " Sec";
+  . " <b>Loaded In:</b> " . round(microtime(TRUE) - GetVal($_SESSION, 'ET'), 3) . " Sec";
   $reg->do_close();
 }
 
 /**
- * Static footer information
+ * Shows Static Footer Information and Records Execution Duration with Visitor Logs
  */
 function footerinfo() {
   echo 'Designed and Developed By <strong>National Informatics Centre</strong>, Paschim Medinipur District Centre<br/>'
   . 'L. A. Building (2nd floor), Collectorate Compound, Midnapore<br/>'
-  . 'West Bengal - 721101 , India Phone : 91-3222-263506, Email: wbmdp(a)nic.in<br/>';
+  . 'West Bengal - 721101 , India Phone : +91-3222-263506, Email: wbmdp(a)nic.in<br/>';
+  $_SESSION['ED'] = round(microtime(TRUE) - GetVal($_SESSION, 'ET'), 3);
+  $reg = new MySQLiDB();
+  $reg->do_ins_query("INSERT INTO " . MySQL_Pre . "VisitorLogs(`SessionID`, `IP`, `Referrer`, `UserAgent`, `URL`, `Action`, `Method`, `URI`, `ED`)"
+          . " Values('" . GetVal($_SESSION, 'ID', TRUE) . "', '" . $_SERVER['REMOTE_ADDR'] . "', '"
+          . GetVal($_SERVER, 'HTTP_REFERER', TRUE) . "', '"
+          . $reg->SqlSafe($_SERVER['HTTP_USER_AGENT']) . "', '"
+          . $reg->SqlSafe($_SERVER['PHP_SELF']) . "', '"
+          . $reg->SqlSafe($_SERVER['SCRIPT_NAME']) . "', '"
+          . $reg->SqlSafe($_SERVER['REQUEST_METHOD']) . "', '"
+          . $reg->SqlSafe($_SERVER['REQUEST_URI']) . "',"
+          . GetVal($_SESSION, 'ED') . ");");
+  $reg->do_close();
+  $_SESSION['ED'] = 0;
 }
 
 /**
@@ -261,11 +276,27 @@ function GetTableDefs($TableName) {
               . "`IP` varchar(15) DEFAULT NULL,"
               . "`Referrer` longtext,"
               . "`UserAgent` longtext,"
-              . "`UserID` varchar(20) DEFAULT NULL,"
+              . "`UserID` varchar(20) NOT NULL,"
               . "`URL` longtext,"
               . "`Action` longtext,"
               . "`Method` varchar(10) DEFAULT NULL,"
               . "`URI` longtext,"
+              . "`AccessTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,"
+              . "  PRIMARY KEY (`LogID`)"
+              . ") ENGINE=InnoDB  DEFAULT CHARSET=utf8;";
+      break;
+    case "VisitorLogs":
+      $SqlDB = "CREATE TABLE IF NOT EXISTS `" . MySQL_Pre . "VisitorLogs` ("
+              . "`LogID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,"
+              . "`SessionID` varchar(32) DEFAULT NULL,"
+              . "`IP` varchar(15) DEFAULT NULL,"
+              . "`Referrer` longtext,"
+              . "`UserAgent` longtext,"
+              . "`URL` longtext,"
+              . "`Action` longtext,"
+              . "`Method` varchar(10) DEFAULT NULL,"
+              . "`URI` longtext,"
+              . "`ED` DECIMAL(4,4) NOT NULL," //DECIMAL(M,D) as M.D ; M>=D;
               . "`AccessTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,"
               . "  PRIMARY KEY (`LogID`)"
               . ") ENGINE=InnoDB  DEFAULT CHARSET=utf8;";
@@ -288,7 +319,7 @@ function GetTableDefs($TableName) {
               . ") ENGINE=InnoDB  DEFAULT CHARSET=utf8;";
       break;
     case "Users":
-      $SqlDB = "CREATE TABLE `" . MySQL_Pre . "Users` ("
+      $SqlDB = "CREATE TABLE IF NOT EXISTS `" . MySQL_Pre . "Users` ("
               . "`UserID` varchar(255) DEFAULT NULL,"
               . "`UserName` varchar(255) DEFAULT NULL,"
               . "`UserPass` varchar(255) DEFAULT NULL,"
@@ -304,7 +335,6 @@ function GetTableDefs($TableName) {
       break;
     case "UsersData":
       // Super Admin Password "test@123"
-      //
       $SqlDB = "INSERT INTO `" . MySQL_Pre . "Users`"
               . "(`UserID`, `UserName`, `UserPass`, `UserMapID`, `CtrlMapID`,`Registered`, `Activated`) "
               . "VALUES ('Admin','Super Administrator','ceb6c970658f31504a901b89dcd3e461',0,30,1,1);";
@@ -323,6 +353,7 @@ function CreateDB($ForWhat = "WebSite") {
     case "WebSite":
       $ObjDB = new MySQLiDB();
       $ObjDB->do_ins_query(GetTableDefs("Visits"));
+      $ObjDB->do_ins_query(GetTableDefs("VisitorLogs"));
       $ObjDB->do_ins_query(GetTableDefs("Logs"));
       $ObjDB->do_ins_query(GetTableDefs("Uploads"));
       $ObjDB->do_ins_query(GetTableDefs("Users"));
@@ -363,17 +394,11 @@ function CheckAuth() {
  */
 function initSess() {
   $sess_id = md5(microtime());
-
-  $_SESSION['Debug'] = GetVal($_SESSION, 'Debug') . "InInitPage(" . GetVal($_SESSION, 'SESSION_TOKEN') . " = " . GetVal($_COOKIE, 'SESSION_TOKEN') . ")";
+  $_SESSION['ET'] = microtime(TRUE);
+  $_SESSION['Debug'] = GetVal($_SESSION, 'Debug') . "InInitPage(" . GetVal($_SESSION, 'SESSION_TOKEN') . " = " . GetVal($_COOKIE, 'SESSION_TOKEN', TRUE) . ")";
   setcookie("SESSION_TOKEN", $sess_id, (time() + (LifeTime * 60)));
   $_SESSION['SESSION_TOKEN'] = $sess_id;
   $_SESSION['LifeTime'] = time();
-  $t = (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : "");
-  $reg = new MySQLiDB();
-  $reg->do_ins_query("INSERT INTO " . MySQL_Pre . "Logs(IP, URL, UserAgent, Referrer) values"
-          . "('" . $_SERVER['REMOTE_ADDR'] . "', '" . htmlspecialchars($_SERVER['PHP_SELF']) . "', '" . $_SERVER['HTTP_USER_AGENT']
-          . "', '<" . $t . ">');
-      ");
   if (GetVal($_REQUEST, 'show_src')) {
     if ($_REQUEST['show_src'] == "me")
       show_source(substr($_SERVER['PHP_SELF'], 1, strlen($_SERVER['PHP_SELF'])));
@@ -381,7 +406,8 @@ function initSess() {
 }
 
 /**
- * Verify Session Authentication
+ * Verifies Session Authentication and Logs Audit Trails
+ * @todo Audit Trails to be logged with submitted data
  */
 function AuthSession() {
   if (!isset($_SESSION))
@@ -391,16 +417,19 @@ function AuthSession() {
   $SessRet = CheckAuth();
   $_SESSION['CheckAuth'] = $SessRet;
   $reg = new MySQLiDB();
-  //$reg->do_max_query("Select 1");
   if (GetVal($_REQUEST, 'NoAuth'))
     initSess();
   else {
-    if ($SessRet != "Valid") {
-      $reg->do_ins_query("INSERT INTO " . MySQL_Pre . "logs (`SessionID`, `IP`, `Referrer`, `UserAgent`, `UserID`, `URL`, `Action`, `Method`, `URI`) values"
-              . "('" . GetVal($_SESSION, 'ID') . "', '" . $_SERVER['REMOTE_ADDR'] . "', '" . $reg->SqlSafe($_SERVER['HTTP_REFERER']) . "', '" . $reg->SqlSafe($_SERVER['HTTP_USER_AGENT'])
-              . "', '" . GetVal($_SESSION, 'UserName') . "', '" . $reg->SqlSafe($_SERVER['PHP_SELF']) . "', '" . $SessRet . ": ("
-              . $_SERVER['SCRIPT_NAME'] . ")', '" . $reg->SqlSafe($_SERVER['REQUEST_METHOD']) . "', '" . $reg->SqlSafe($_SERVER['REQUEST_URI']) . "');
-      ");
+    if ($SessRet !== "Valid") {
+      $reg->do_ins_query("INSERT INTO `" . MySQL_Pre . "Logs` (`SessionID`, `IP`, `Referrer`, `UserAgent`, `UserID`, `URL`, `Action`, `Method`, `URI`)"
+              . " Values('" . GetVal($_SESSION, 'ID', TRUE) . "', '" . $_SERVER['REMOTE_ADDR'] . "', '"
+              . GetVal($_SERVER, 'HTTP_REFERER', TRUE) . "', '"
+              . $reg->SqlSafe($_SERVER['HTTP_USER_AGENT']) . "', '"
+              . GetVal($_SESSION, 'UserMapID', TRUE) . "', '"
+              . $reg->SqlSafe($_SERVER['PHP_SELF']) . "', 'Process ("
+              . $reg->SqlSafe($_SERVER['SCRIPT_NAME']) . ")', '"
+              . $reg->SqlSafe($_SERVER['REQUEST_METHOD']) . "', '"
+              . $reg->SqlSafe($_SERVER['REQUEST_URI']) . "');");
       session_unset();
       session_destroy();
       session_start();
@@ -409,21 +438,20 @@ function AuthSession() {
       header("Location: " . BaseDIR . "login.php");
       exit;
     } else {
-      $_SESSION['Debug'] = GetVal($_SESSION, 'Debug') . "SESSION_TOKEN-IsValid";
+      $_SESSION['Debug'] = GetVal($_SESSION, 'Debug') . "SESSION_TOKEN-Valid";
       $sess_id = md5(microtime());
       setcookie("SESSION_TOKEN", $sess_id, (time() + (LifeTime * 60)));
       $_SESSION['SESSION_TOKEN'] = $sess_id;
       $_SESSION['LifeTime'] = time();
-      $t = (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : "");
-      $reg->do_ins_query("INSERT INTO " . MySQL_Pre . "Visitors(ip, vpage, uagent, referrer) values"
-              . "('" . $_SERVER['REMOTE_ADDR'] . "', '" . htmlspecialchars($_SERVER['PHP_SELF']) . "', '" . $_SERVER['HTTP_USER_AGENT']
-              . "', '<" . $t . ">');
-      ");
-      $LogQuery = "INSERT INTO " . MySQL_Pre . "logs (`SessionID`, `IP`, `Referrer`, `UserAgent`, `UserID`, `URL`, `Action`, `Method`, `URI`) values"
-              . "('" . GetVal($_SESSION, 'ID') . "', '" . $_SERVER['REMOTE_ADDR'] . "', '" . $reg->SqlSafe($t) . "', '" . $_SERVER['HTTP_USER_AGENT']
-              . "', '" . GetVal($_SESSION, 'UserName') . "', '" . $reg->SqlSafe($_SERVER['PHP_SELF']) . "', 'Process (" . $_SERVER['SCRIPT_NAME'] . ")', '"
-              . $reg->SqlSafe($_SERVER['REQUEST_METHOD']) . "', '" . $reg->SqlSafe($_SERVER['REQUEST_URI']) . "');
-      ";
+      $LogQuery = "INSERT INTO `" . MySQL_Pre . "Logs` (`SessionID`, `IP`, `Referrer`, `UserAgent`, `UserID`, `URL`, `Action`, `Method`, `URI`) "
+              . " Values('" . GetVal($_SESSION, 'ID') . "', '" . $_SERVER['REMOTE_ADDR'] . "', '"
+              . GetVal($_SERVER, 'HTTP_REFERER', TRUE) . "', '"
+              . GetVal($_SERVER, 'HTTP_USER_AGENT', TRUE) . "', '"
+              . GetVal($_SESSION, 'UserMapID') . "', '"
+              . $reg->SqlSafe($_SERVER['PHP_SELF']) . "', '" . $SessRet . " ("
+              . $reg->SqlSafe($_SERVER['SCRIPT_NAME']) . ")', '"
+              . $reg->SqlSafe($_SERVER['REQUEST_METHOD']) . "', '"
+              . $reg->SqlSafe($_SERVER['REQUEST_URI']) . "');";
       $reg->do_ins_query($LogQuery);
     }
   }
@@ -453,7 +481,7 @@ function ShowMenuBar() {
 
 function ShowMenuitem($Caption, $URL) {
   $Class = ($_SERVER['SCRIPT_NAME'] === BaseDIR . $URL) ? "SelMenuitems" : "Menuitems";
-  echo '<li class="' . $Class . '">'
+  echo '<li class = "' . $Class . '">'
   . '<a href = "' . GetAbsoluteURLFolder() . $URL . '">' . $Caption . '</a>'
   . '</li>';
 }
@@ -468,10 +496,10 @@ function StaticCaptcha($ShowImage = FALSE) {
   require_once 'captcha/securimage.php';
   if ($ShowImage) {
     $captchaId = Securimage::getCaptchaId(true);
-    echo '<input type="hidden" id="captchaId" name="captchaId" value="' . $captchaId . '" />'
-    . '<img id="siimage" src="ShowCaptcha.php?captchaId=' . $captchaId . '" alt="captcha image" /><br/>'
-    . '<label for="captcha_code">Solve the above: </label><br/>'
-    . '<input type="text" name="captcha_code" value="" />';
+    echo '<input type = "hidden" id = "captchaId" name = "captchaId" value = "' . $captchaId . '" />'
+    . '<img id = "siimage" src = "ShowCaptcha.php?captchaId=' . $captchaId . '" alt = "captcha image" /><br/>'
+    . '<label for = "captcha_code">Solve the above: </label><br/>'
+    . '<input type = "text" name = "captcha_code" value = "" />';
   } else {
     $captcha_code = GetVal($_POST, 'captcha_code');
     if ($captcha_code !== NULL) {
