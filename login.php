@@ -145,9 +145,12 @@ IncludeJS("js/md5.js");
         }
         ?>
         <input type="hidden" name="LoginToken" value="<?php echo GetVal($_SESSION, 'Token'); ?>" />
-        <input style="width:80px;" type="submit" value="Login" onClick="document.getElementById('UserPass').value = MD5(MD5(document.getElementById('UserPass').value) + '<?php echo md5(GetVal($_SESSION, 'Token')); ?>');"/>
+        <input style="width:80px;" type="submit" value="Login"
+               onClick="document.getElementById('UserPass').value = MD5(MD5(document.getElementById('UserPass').value)
+                             + '<?php echo md5(GetVal($_SESSION, 'Token')); ?>');"/>
+        <a href="Register.php">Register</a>
       </form>
-      <p><b>Register: </b><a href="Register.php">Click here</a> to register yourself</p>
+
       <?php
       //echo GetVal($_SESSION,'Debug');
     }

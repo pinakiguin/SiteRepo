@@ -81,7 +81,7 @@ function initHTML5page($PageTitle = "") {
  * @param array $Array eg. $_SESSION
  * @param string $Index eg. "index"
  * @param bool $ForSQL If set to true then SQLSafe else htmlspecialchars will be applied
- * @param bool $HTMLSafe Raw OutPut without htmlspecialchars
+ * @param bool $HTMLSafe If FALSE then OutPut without htmlspecialchars
  * @return null|$Array[$Index]
  */
 function GetVal($Array, $Index, $ForSQL = FALSE, $HTMLSafe = TRUE) {

@@ -21,19 +21,8 @@ IncludeCSS();
   ?>
   <div class="content">
     <?php
-    if (GetVal($_POST, 'CmdSubmit') !== NULL) {
-      if (StaticCaptcha()) {
-        $_SESSION['Msg'] = "Valid";
-      } else {
-        $_SESSION['Msg'] = "In-Valid";
-      }
-    }
     ShowMsg();
     ?>
-    <form method="post" action="index.php">
-      <?php StaticCaptcha(TRUE); ?>
-      <input name="CmdSubmit" type="submit" value="Login" />
-    </form>
   </div>
   <div class="pageinfo">
     <?php pageinfo(); ?>
