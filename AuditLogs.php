@@ -1,7 +1,7 @@
 <?php
 include_once 'lib.inc.php';
-
-initHTML5page("User Activity");
+AuthSession();
+Html5Header("User Activity");
 IncludeCSS();
 ?>
 </head>
