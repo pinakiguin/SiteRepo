@@ -323,10 +323,10 @@ function GetTableDefs($TableName) {
       break;
     case "Users":
       $SqlDB = "CREATE TABLE IF NOT EXISTS `" . MySQL_Pre . "Users` ("
+              . "`UserMapID` int(10) NOT NULL AUTO_INCREMENT,"
               . "`UserID` varchar(255) DEFAULT NULL,"
               . "`UserName` varchar(255) DEFAULT NULL,"
               . "`UserPass` varchar(255) DEFAULT NULL,"
-              . "`UserMapID` int(10) NOT NULL,"
               . "`CtrlMapID` int(10) NOT NULL,"
               . "`Remarks` varchar(255) DEFAULT NULL,"
               . "`LoginCount` int(10) DEFAULT '0',"
@@ -482,7 +482,6 @@ function CreateDB($ForWhat = "WebSite") {
       $ObjDB->do_ins_query(GetTableDefs("SRER_Form8"));
       $ObjDB->do_ins_query(GetTableDefs("SRER_Form8A"));
       $ObjDB->do_ins_query(GetTableDefs("SRER_PartMap"));
-      //@todo SRER App Related Master Data to be inserted
       $ObjDB->do_close();
       break;
   }

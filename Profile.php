@@ -5,25 +5,6 @@ Html5Header("Profile");
 IncludeCSS();
 IncludeJS("js/md5.js");
 ?>
-<script type="text/javascript">
-  function ChkPwd(Token)
-  {
-    if (document.getElementById('CNewPassWD').value.length > 6
-            && /\d/.test(document.getElementById('CNewPassWD').value)
-            && /[A-Z]/.test(document.getElementById('CNewPassWD').value)
-            && /[-*!@#$%^&+=]/.test(document.getElementById('CNewPassWD').value)) {
-      document.getElementById('OldPassWD').value = MD5(MD5(document.getElementById('OldPassWD').value) + Token);
-      document.getElementById('NewPassWD').value = MD5(MD5(document.getElementById('NewPassWD').value) + Token);
-      document.getElementById('CNewPassWD').value = MD5(document.getElementById('CNewPassWD').value);
-      document.getElementById('frmChgPWD').submit();
-    } else {
-      alert('Your password is very weak!\n\n'
-              + 'Password Should be atleast 6 characters long '
-              + 'and must contain lowercase and uppercase letters, '
-              + 'numbers, and non alpha-numeric characters atleast one each.');
-    }
-  }
-</script>
 </head>
 <body>
   <div class="TopPanel">

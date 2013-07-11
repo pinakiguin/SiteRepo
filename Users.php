@@ -34,8 +34,8 @@ IncludeJS("js/md5.js");
     echo $Msg[$action];
     if (($action == 2) || ($action == 0) || ($action == 3)) {
       ?>
-      <form name="frmChgPWD" id="frmChgPWD" method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
-        <label for="OldPassWD">UserID:</label><br />
+      <form name="frmCreateUser" id="frmCreateUser" method="post" action="<?php echo GetVal($_SERVER, 'PHP_SELF'); ?>">
+        <label for="OldPassWD">User ID:</label><br />
         <input type="password" name="OldPassWD" id="OldPassWD" />
         <br />
         <input type="hidden" name="FormToken" value="<?php echo GetVal($_SESSION, 'FormToken') ?>" />
