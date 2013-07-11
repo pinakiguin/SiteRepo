@@ -337,7 +337,7 @@ function GetTableDefs($TableName) {
       // Super Admin Password "test@123"
       $SqlDB = "INSERT INTO `" . MySQL_Pre . "Users`"
               . "(`UserID`, `UserName`, `UserPass`, `UserMapID`, `CtrlMapID`,`Registered`, `Activated`) "
-              . "VALUES ('Admin','Super Administrator','ceb6c970658f31504a901b89dcd3e461',0,30,1,1);";
+              . "VALUES ('Admin','Super Administrator','ceb6c970658f31504a901b89dcd3e461',1,0,1,1);";
       break;
   }
   return $SqlDB;
@@ -370,7 +370,7 @@ function CreateDB($ForWhat = "WebSite") {
  */
 function CheckAuth() {
   $_SESSION['Debug'] = GetVal($_SESSION, 'Debug') . "CheckAuth";
-  if (GetVal($_SESSION, 'UserName') && GetVal($_SESSION, 'UserMapID')) {
+  if ((GetVal($_SESSION, 'UserMapID') === NULL)) {
     return "Browsing";
   }
   if (GetVal($_REQUEST, 'LogOut')) {
@@ -426,7 +426,7 @@ function AuthSession() {
               . GetVal($_SERVER, 'HTTP_REFERER', TRUE) . "', '"
               . $reg->SqlSafe($_SERVER['HTTP_USER_AGENT']) . "', '"
               . GetVal($_SESSION, 'UserMapID', TRUE) . "', '"
-              . $reg->SqlSafe($_SERVER['PHP_SELF']) . "', 'Process ("
+              . $reg->SqlSafe($_SERVER['PHP_SELF']) . "', '" . $SessRet . " ("
               . $reg->SqlSafe($_SERVER['SCRIPT_NAME']) . ")', '"
               . $reg->SqlSafe($_SERVER['REQUEST_METHOD']) . "', '"
               . $reg->SqlSafe($_SERVER['REQUEST_URI']) . "');");

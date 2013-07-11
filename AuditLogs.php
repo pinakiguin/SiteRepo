@@ -20,32 +20,35 @@ IncludeCSS();
     <h2>Activity Logs</h2>
     <?php
     $Data = new MySQLiDB();
-    if (GetVal($_SESSION, 'UserLevel') == '1') {
+    $Query = "SELECT count(*) FROM " . MySQL_Pre . "Users U"
+            . " Where CtrlMapID=" . GetVal($_SESSION, 'UserMapID', TRUE);
+    if ($Data->do_max_query($Query) > 0) {
       ?>
       <form name="frm_activity" method="post" action="<?php $_SERVER['PHP_SELF'] ?>">
-        <label for="Officer">Officer:</label>
+        <label for="User">Select User:</label>
         <select name="User" onChange="javascript:document.frm_activity.submit();">
           <?php
           if (GetVal($_POST, 'User') == "")
             $Choice = "-- Choose --";
           else
             $Choice = GetVal($_POST, 'User');
-          $Query = "SELECT `UserMapID`, concat(`UserName`,' [',`UserID`,']') as User FROM " . MySQL_Pre . "Users U"
-                  . " Where Activated AND CtrlMapID=" . GetVal($_SESSION, 'UserMapID', TRUE);
+          $Query = "SELECT `UserMapID`, concat(`UserName`,' [',`UserID`,']') as `User`"
+                  . " FROM `" . MySQL_Pre . "Users`"
+                  . " Where `CtrlMapID`=" . GetVal($_SESSION, 'UserMapID', TRUE);
           $Data->show_sel("UserMapID", "User", $Query, $Choice);
           ?>
         </select>
       </form>
       <?php
-      $Query = "SELECT l.LogID,l.`IP` as `IP Address`,l.`AccessTime` , l.`Action`, l.`SessionID`, l.`Method`"
-              . " FROM " . MySQL_Pre . "Logs l Where l.`UserMapID`=" . GetVal($_POST, 'User', TRUE)
-              . " ORDER BY l.`LogID` desc limit 50;";
+      $UserID = GetVal($_POST, 'User', TRUE);
     }
-    else
-      $Query = "SELECT LogID,`IP` as `IP Address`,AccessTime , Action, SessionID, Method "
-              . " FROM " . MySQL_Pre . "Logs "
-              . " Where UserID=" . GetVal($_SESSION, 'UserMapID', TRUE) . " ORDER BY LogID desc limit 50;";
-    $Data->Debug = 1;
+    else {
+      $UserID = GetVal($_SESSION, 'UserMapID', TRUE);
+    }
+    $Query = "SELECT `LogID`,`IP` as `IP Address`,`AccessTime`,`Action`,`SessionID`,`Method`"
+            . " FROM `" . MySQL_Pre . "Logs` "
+            . " Where UserID='" . $UserID . "'"
+            . " ORDER BY `LogID` desc limit 50;";
     $Data->ShowTable($Query);
     //echo "<br />" . $Query;
     ?>
