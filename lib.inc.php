@@ -25,9 +25,9 @@ function Html5Header($PageTitle = "Paschim Medinipur") {
  * Generates call to jQuery Scripts in Head Section
  */
 function jQueryInclude() {
-  echo '<link type="text/css" href="css/ui-lightness/jquery-ui-1.10.2.custom.min.css" rel="Stylesheet" />'
-  . '<script type="text/javascript" src="js/jquery-1.10.1.min.js"></script>'
-  . '<script type="text/javascript" src="js/jquery-ui-1.10.2.custom.min.js"></script>';
+  echo '<link type="text/css" href="' . GetAbsoluteURLFolder() . '/css/ui-lightness/jquery-ui-1.10.2.custom.min.css" rel="Stylesheet" />'
+  . '<script type="text/javascript" src="' . GetAbsoluteURLFolder() . 'js/jquery-1.10.1.min.js"></script>'
+  . '<script type="text/javascript" src="' . GetAbsoluteURLFolder() . 'js/jquery-ui-1.10.2.custom.min.js"></script>';
 }
 
 /**
@@ -38,7 +38,7 @@ function jQueryInclude() {
  * @param string $JavaScript src including path
  */
 function IncludeJS($PathToJS) {
-  echo '<script type="text/javascript" src="' . $PathToJS . '"></script>';
+  echo '<script type="text/javascript" src="' . GetAbsoluteURLFolder() . $PathToJS . '"></script>';
 }
 
 /**
@@ -49,7 +49,7 @@ function IncludeJS($PathToJS) {
  * @param string $CSS href including path
  */
 function IncludeCSS($PathToCSS = "css/Style.css") {
-  echo '<link type="text/css" href="' . $PathToCSS . '" rel="Stylesheet" />';
+  echo '<link type="text/css" href="' . GetAbsoluteURLFolder() . $PathToCSS . '" rel="Stylesheet" />';
 }
 
 /**
@@ -83,6 +83,9 @@ function initHTML5page($PageTitle = "") {
  * @param bool $ForSQL If set to true then SQLSafe else htmlspecialchars will be applied
  * @param bool $HTMLSafe If FALSE then OutPut without htmlspecialchars
  * @return null|$Array[$Index]
+ * @example GetVal($Array, $Index) = htmlspecialchars
+ * @example GetVal($Array, $Index, TRUE) = SqlSafe
+ * @example GetVal($Array, $Index, FALSE, FALSE) = raw output
  */
 function GetVal($Array, $Index, $ForSQL = FALSE, $HTMLSafe = TRUE) {
   if (!isset($Array[$Index])) {
@@ -334,10 +337,119 @@ function GetTableDefs($TableName) {
               . ") ENGINE=InnoDB DEFAULT CHARSET=utf8;";
       break;
     case "UsersData":
-      // Super Admin Password "test@123"
+// Super Admin Password "test@123"
       $SqlDB = "INSERT INTO `" . MySQL_Pre . "Users`"
               . "(`UserID`, `UserName`, `UserPass`, `UserMapID`, `CtrlMapID`,`Registered`, `Activated`) "
               . "VALUES ('Admin','Super Administrator','ceb6c970658f31504a901b89dcd3e461',1,0,1,1);";
+      break;
+    case "SRER_FieldNames":
+      $SqlDB = "CREATE TABLE IF NOT EXISTS `" . MySQL_Pre . "SRER_FieldNames` ("
+              . "`FieldName` varchar(20) NOT NULL,"
+              . "`Description` varchar(255) DEFAULT NULL,"
+              . " PRIMARY KEY (`FieldName`)"
+              . ") ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+      break;
+    case "SRER_FieldNameData":
+      $SqlDB = "INSERT INTO `SRER_FieldNames` (`FieldName`, `Description`) VALUES"
+              . "('ACNo', 'AC Name'),"
+              . "('Action', 'Action (Page)'),"
+              . "('AppName', 'Name of Applicant'),"
+              . "('CountF6', 'Form 6 Data Count'),"
+              . "('CountF6A', 'Form 6A Data Count'),"
+              . "('CountF7', 'Form 7 Data Count'),"
+              . "('CountF8', 'Form 8 Data Count'),"
+              . "('CountF8A', 'Form 8A Data Count'),"
+              . "('DelPersonName', 'Name of the Person to be Deleted'),"
+              . "('IP', 'IP Address'),"
+              . "('LastAccessTime', 'Last Accessed On'),"
+              . "('LastLoginTime', 'Last Login Time'),"
+              . "('LoginCount', 'Login Count'),"
+              . "('ObjectorName', 'Name of Objector'),"
+              . "('ObjectReason', 'Reason of Objection'),"
+              . "('PartNo', 'Part Number of Objected Person'),"
+              . "('ReceiptDate', 'Date of Receipt'),"
+              . "('Relationship', 'Relationship'),"
+              . "('RelationshipName', 'Name of Father/ Mother/ Husband/ Others'),"
+              . "('SerialNoInPart', 'Serial No. in Concerned Part'),"
+              . "('SlNo', 'Serial No.'),"
+              . "('Status', 'Status'),"
+              . "('UserName', 'Block');";
+    case "`SRER_Form6`":
+      $SqlDB = "CREATE TABLE IF NOT EXISTS `" . MySQL_Pre . "SRER_Form6` ("
+              . "`RowID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,"
+              . "`SlNo` int(10) DEFAULT NULL,"
+              . "`PartID` int(10) DEFAULT NULL,"
+              . "`ReceiptDate` varchar(10) DEFAULT NULL,"
+              . "`AppName` varchar(255) DEFAULT NULL,"
+              . "`RelationshipName` varchar(255) DEFAULT NULL,"
+              . "`Relationship` varchar(255) DEFAULT NULL,"
+              . "`Status` varchar(255) DEFAULT NULL,"
+              . " PRIMARY KEY (`RowID`)"
+              . ") ENGINE = InnoDB DEFAULT CHARSET = utf8;";
+      break;
+    case "SRER_Form6A":
+      $SqlDB = "CREATE TABLE IF NOT EXISTS `" . MySQL_Pre . "SRER_Form6A` ("
+              . "`RowID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,"
+              . "`SlNo` int(10) DEFAULT NULL,"
+              . "`PartID` int(10) DEFAULT NULL,"
+              . "`ReceiptDate` varchar(10) DEFAULT NULL,"
+              . "`AppName` varchar(255) DEFAULT NULL,"
+              . "`RelationshipName` varchar(255) DEFAULT NULL,"
+              . "`Relationship` varchar(255) DEFAULT NULL,"
+              . "`Status` varchar(255) DEFAULT NULL,"
+              . " PRIMARY KEY (`RowID`)"
+              . ") ENGINE = InnoDB DEFAULT CHARSET = utf8;";
+      break;
+    case "SRER_Form7":
+      $SqlDB = "CREATE TABLE IF NOT EXISTS `" . MySQL_Pre . "SRER_Form7` ("
+              . "`RowID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,"
+              . "`PartID` int(10) DEFAULT NULL,"
+              . "`ReceiptDate` varchar(10) DEFAULT NULL,"
+              . "`ObjectorName` varchar(255) DEFAULT NULL,"
+              . "`PartNo` varchar(255) DEFAULT NULL,"
+              . "`SerialNoInPart` int(10) DEFAULT NULL,"
+              . "`DelPersonName` varchar(255) DEFAULT NULL,"
+              . "`ObjectReason` varchar(255) DEFAULT NULL,"
+              . "`Status` varchar(255) DEFAULT NULL,"
+              . "`SlNo` int(10) DEFAULT NULL,"
+              . " PRIMARY KEY (`RowID`)"
+              . ") ENGINE=InnoDB  DEFAULT CHARSET=utf8;";
+      break;
+    case "SRER_Form8":
+      $SqlDB = "CREATE TABLE IF NOT EXISTS `" . MySQL_Pre . "SRER_Form8` ("
+              . "`RowID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,"
+              . "`SlNo` int(10) DEFAULT NULL,"
+              . "`PartID` int(10) DEFAULT NULL,"
+              . "`ReceiptDate` varchar(10) DEFAULT NULL,"
+              . "`AppName` varchar(255) DEFAULT NULL,"
+              . "`RelationshipName` varchar(255) DEFAULT NULL,"
+              . "`Relationship` varchar(255) DEFAULT NULL,"
+              . "`Status` varchar(255) DEFAULT NULL,"
+              . " PRIMARY KEY (`RowID`)"
+              . ") ENGINE = InnoDB DEFAULT CHARSET = utf8;";
+      break;
+    case "SRER_Form8A":
+      $SqlDB = "CREATE TABLE IF NOT EXISTS `" . MySQL_Pre . "SRER_Form8A` ("
+              . "`RowID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,"
+              . "`SlNo` int(10) DEFAULT NULL,"
+              . "`PartID` int(10) DEFAULT NULL,"
+              . "`ReceiptDate` varchar(10) DEFAULT NULL,"
+              . "`AppName` varchar(255) DEFAULT NULL,"
+              . "`RelationshipName` varchar(255) DEFAULT NULL,"
+              . "`Relationship` varchar(255) DEFAULT NULL,"
+              . "`Status` varchar(255) DEFAULT NULL,"
+              . " PRIMARY KEY (`RowID`)"
+              . ") ENGINE = InnoDB DEFAULT CHARSET = utf8;";
+      break;
+    case "SRER_PartMap":
+      $SqlDB = "CREATE TABLE IF NOT EXISTS `" . MySQL_Pre . "SRER_PartMap` ("
+              . "`PartID` int(10) NOT NULL AUTO_INCREMENT,"
+              . "`PartMapID` int(10) DEFAULT NULL,"
+              . "`PartNo` varchar(255) DEFAULT NULL,"
+              . "`PartName` varchar(255) DEFAULT NULL,"
+              . "`ACNo` varchar(255) DEFAULT NULL,"
+              . " PRIMARY KEY (`PartID`)"
+              . ") ENGINE=InnoDB  DEFAULT CHARSET=utf8;";
       break;
   }
   return $SqlDB;
@@ -358,6 +470,19 @@ function CreateDB($ForWhat = "WebSite") {
       $ObjDB->do_ins_query(GetTableDefs("Uploads"));
       $ObjDB->do_ins_query(GetTableDefs("Users"));
       $ObjDB->do_ins_query(GetTableDefs("UsersData"));
+      $ObjDB->do_close();
+      break;
+    case "SRER":
+      $ObjDB = new MySQLiDB();
+      $ObjDB->do_ins_query(GetTableDefs("SRER_FieldNames"));
+      $ObjDB->do_ins_query(GetTableDefs("SRER_FieldNameData"));
+      $ObjDB->do_ins_query(GetTableDefs("SRER_Form6"));
+      $ObjDB->do_ins_query(GetTableDefs("SRER_Form6A"));
+      $ObjDB->do_ins_query(GetTableDefs("SRER_Form7"));
+      $ObjDB->do_ins_query(GetTableDefs("SRER_Form8"));
+      $ObjDB->do_ins_query(GetTableDefs("SRER_Form8A"));
+      $ObjDB->do_ins_query(GetTableDefs("SRER_PartMap"));
+      //@todo SRER App Related Master Data to be inserted
       $ObjDB->do_close();
       break;
   }
@@ -429,7 +554,8 @@ function AuthSession() {
               . $reg->SqlSafe($_SERVER['PHP_SELF']) . "', '" . $SessRet . " ("
               . $reg->SqlSafe($_SERVER['SCRIPT_NAME']) . ")', '"
               . $reg->SqlSafe($_SERVER['REQUEST_METHOD']) . "', '"
-              . $reg->SqlSafe($_SERVER['REQUEST_URI']) . "');");
+              . $reg->SqlSafe($_SERVER['REQUEST_URI']) . "');
+");
       session_unset();
       session_destroy();
       session_start();
@@ -451,7 +577,8 @@ function AuthSession() {
               . $reg->SqlSafe($_SERVER['PHP_SELF']) . "', '" . $SessRet . " ("
               . $reg->SqlSafe($_SERVER['SCRIPT_NAME']) . ")', '"
               . $reg->SqlSafe($_SERVER['REQUEST_METHOD']) . "', '"
-              . $reg->SqlSafe($_SERVER['REQUEST_URI']) . "');";
+              . $reg->SqlSafe($_SERVER['REQUEST_URI']) . "');
+";
       $reg->do_ins_query($LogQuery);
     }
   }
@@ -471,6 +598,9 @@ function ShowMenuBar() {
   if (GetVal($_SESSION, 'CheckAuth') !== "Valid") {
     ShowMenuitem("Log In!", "login.php");
   } else {
+    ShowMenuitem("Data Entry", "srer/DataEntry.php");
+    ShowMenuitem("Admin Page", "srer/Admin.php");
+    ShowMenuitem("Reports", "srer/Reports.php");
     ShowMenuitem(GetVal($_SESSION, 'UserName') . "'s Profile", "Profile.php");
     ShowMenuitem("Manage Users", "Users.php");
     ShowMenuitem("User Activity", "AuditLogs.php");

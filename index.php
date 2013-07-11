@@ -1,8 +1,10 @@
 <?php
 include_once 'lib.inc.php';
 
-if (NeedsDB)
+if (NeedsDB) {
   CreateDB("WebSite");
+  CreateDB("SRER");
+}
 
 initHTML5page("Home");
 IncludeCSS();

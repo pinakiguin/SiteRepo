@@ -3,6 +3,7 @@ include_once 'lib.inc.php';
 
 initHTML5page("Home");
 IncludeCSS();
+IncludeJS("js/md5.js");
 ?>
 </head>
 <body>
@@ -12,17 +13,22 @@ IncludeCSS();
     <h1><?php echo AppTitle; ?></h1>
   </div>
   <div class="Header"></div>
-  <div class="MenuBar"></div>
+  <?php
+  ShowMenuBar();
+  ?>
   <div class="content">
     <h2>User Registration</h2>
     <?php
     $Data = new MySQLiDB();
     if (GetVal($_POST, 'UserID') !== NULL) {
       $email = $Data->SqlSafe(GetVal($_POST, 'UserID'));
+      //@todo Send Email after registration Specifing UserID for verification and password.
+      //@todo Password not to be asked in the form if asked should be sent encrypted Activation Should not be here
       $Pass = $Data->SqlSafe(GetVal($_POST, 'UserPass'));
       $PartMapID = $Data->SqlSafe(GetVal($_POST, 'PartMapID'));
       if (StaticCaptcha()) {
-        $Qry = "Update `" . MySQL_Pre . "Users` SET `UserID`='{$email}',`UserPass`='{$Pass}',`Registered`=1 "
+
+        $Qry = "Update `" . MySQL_Pre . "Users` SET `UserID`='{$email}',`UserPass`=MD5('{$Pass}'),`Registered`=1,`Activated`=1"
                 . " Where Registered=0 AND Activated=0 AND UserMapID='{$PartMapID}'";
         $Submitted = $Data->do_ins_query($Qry);
         $_SESSION['Msg'] = $Qry;
@@ -52,6 +58,10 @@ IncludeCSS();
         <div class="FieldGroup">
           <h3>E-Mail Address:</h3>
           <input size="35" maxlength="35"	type="text" name="UserID" value="<?php echo GetVal($_POST, 'UserID', FALSE); ?>" />
+        </div>
+        <div class="FieldGroup">
+          <h3>Password:</h3>
+          <input size="35" maxlength="35"	type="password" name="UserPass" value="<?php echo GetVal($_POST, 'UserPass', FALSE); ?>" />
         </div>
         <div style="clear:both;"></div>
         <div class="FieldGroup">

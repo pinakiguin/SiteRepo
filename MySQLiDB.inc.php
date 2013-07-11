@@ -12,7 +12,7 @@ require_once 'config.inc.php';
  * Class DB helper class for MySQL database handling functions
  * using mysqli php extension
  *
- * @todo Make the class MySQLi Extension based from MySQL Extension
+ * @todo Make use of MySQLi Extension instead of MySQL Extension
  */
 class MySQLiDB {
 
