@@ -624,17 +624,27 @@ function ShowMenuitem($Caption, $URL) {
  */
 function StaticCaptcha($ShowImage = FALSE) {
   require_once 'captcha/securimage.php';
+  $options = array(
+      'database_driver' => Securimage::SI_DRIVER_MYSQL,
+      'database_host' => HOST_Name,
+      'database_user' => MySQL_User,
+      'database_pass' => MySQL_Pass,
+      'database_name' => MySQL_DB,
+      'database_table' => MySQL_Pre . "CaptchaCodes",
+      'captcha_type' => Securimage::SI_CAPTCHA_MATHEMATIC,
+      'no_session' => true);
   if ($ShowImage) {
-    $captchaId = Securimage::getCaptchaId(true);
-    echo '<input type = "hidden" id = "captchaId" name = "captchaId" value = "' . $captchaId . '" />'
-    . '<img id = "siimage" src = "ShowCaptcha.php?captchaId=' . $captchaId . '" alt = "captcha image" /><br/>'
-    . '<label for = "captcha_code">Solve the above: </label><br/>'
-    . '<input type = "text" name = "captcha_code" value = "" />';
+    $captchaId = Securimage::getCaptchaId(true, $options);
+    echo '<input type="hidden" id="captchaId" name="captchaId" value="' . $captchaId . '" />'
+    . '<img id="siimage" src="ShowCaptcha.php?captchaId=' . $captchaId . '" alt="captcha image" /><br/>'
+    . '<label for="captcha_code">Solve the above: </label><br/>'
+    . '<input type="text" name="captcha_code" value="" />';
   } else {
     $captcha_code = GetVal($_POST, 'captcha_code');
     if ($captcha_code !== NULL) {
       $VerifyID = GetVal($_POST, 'captchaId');
-      return Securimage::checkByCaptchaId($VerifyID, $captcha_code);
+      $ValidCaptcha = Securimage::checkByCaptchaId($VerifyID, $captcha_code, $options);
+      return $ValidCaptcha;
     }
   }
 }
