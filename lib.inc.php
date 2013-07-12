@@ -63,7 +63,7 @@ function initHTML5page($PageTitle = "") {
   session_start();
   $sess_id = md5(microtime());
   $_SESSION['ET'] = microtime(TRUE);
-  setcookie("Client_SID", $sess_id, (time() + (LifeTime * 60)));
+  setcookie("Client_SID", $sess_id, (time() + (LifeTime * 60)), BaseDIR);
   $_SESSION['Client_SID'] = $sess_id;
   $_SESSION['LifeTime'] = time();
   Html5Header($PageTitle);
@@ -520,7 +520,7 @@ function initSess() {
   $sess_id = md5(microtime());
   $_SESSION['ET'] = microtime(TRUE);
   $_SESSION['Debug'] = GetVal($_SESSION, 'Debug') . "InInitPage(" . GetVal($_SESSION, 'SESSION_TOKEN') . " = " . GetVal($_COOKIE, 'SESSION_TOKEN', TRUE) . ")";
-  setcookie("SESSION_TOKEN", $sess_id, (time() + (LifeTime * 60)));
+  setcookie("SESSION_TOKEN", $sess_id, (time() + (LifeTime * 60)), BaseDIR);
   $_SESSION['SESSION_TOKEN'] = $sess_id;
   $_SESSION['LifeTime'] = time();
   if (GetVal($_REQUEST, 'show_src')) {
@@ -553,8 +553,7 @@ function AuthSession() {
               . $reg->SqlSafe($_SERVER['PHP_SELF']) . "', '" . $SessRet . " ("
               . $reg->SqlSafe($_SERVER['SCRIPT_NAME']) . ")', '"
               . $reg->SqlSafe($_SERVER['REQUEST_METHOD']) . "', '"
-              . $reg->SqlSafe($_SERVER['REQUEST_URI']) . "');
-");
+              . $reg->SqlSafe($_SERVER['REQUEST_URI']) . "');");
       session_unset();
       session_destroy();
       session_start();
@@ -565,7 +564,7 @@ function AuthSession() {
     } else {
       $_SESSION['Debug'] = GetVal($_SESSION, 'Debug') . "SESSION_TOKEN-Valid";
       $sess_id = md5(microtime());
-      setcookie("SESSION_TOKEN", $sess_id, (time() + (LifeTime * 60)));
+      setcookie("SESSION_TOKEN", $sess_id, (time() + (LifeTime * 60)), BaseDIR);
       $_SESSION['SESSION_TOKEN'] = $sess_id;
       $_SESSION['LifeTime'] = time();
       $LogQuery = "INSERT INTO `" . MySQL_Pre . "Logs` (`SessionID`, `IP`, `Referrer`, `UserAgent`, `UserID`, `URL`, `Action`, `Method`, `URI`) "
@@ -576,8 +575,7 @@ function AuthSession() {
               . $reg->SqlSafe($_SERVER['PHP_SELF']) . "', '" . $SessRet . " ("
               . $reg->SqlSafe($_SERVER['SCRIPT_NAME']) . ")', '"
               . $reg->SqlSafe($_SERVER['REQUEST_METHOD']) . "', '"
-              . $reg->SqlSafe($_SERVER['REQUEST_URI']) . "');
-";
+              . $reg->SqlSafe($_SERVER['REQUEST_URI']) . "');";
       $reg->do_ins_query($LogQuery);
     }
   }
