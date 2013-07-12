@@ -25,9 +25,9 @@ function Html5Header($PageTitle = "Paschim Medinipur") {
  * Generates call to jQuery Scripts in Head Section
  */
 function jQueryInclude() {
-  echo '<link type="text/css" href="' . GetAbsoluteURLFolder() . '/css/ui-lightness/jquery-ui-1.10.2.custom.min.css" rel="Stylesheet" />'
-  . '<script type="text/javascript" src="' . GetAbsoluteURLFolder() . 'js/jquery-1.10.1.min.js"></script>'
-  . '<script type="text/javascript" src="' . GetAbsoluteURLFolder() . 'js/jquery-ui-1.10.2.custom.min.js"></script>';
+  echo '<link type="text/css" href="' . GetAbsoluteURLFolder() . '/css/dark-hive/jquery-ui-1.10.3.custom.min.css" rel="Stylesheet" />'
+  . '<script type="text/javascript" src="' . GetAbsoluteURLFolder() . 'js/jquery-1.10.2.min.js"></script>'
+  . '<script type="text/javascript" src="' . GetAbsoluteURLFolder() . 'js/jquery-ui-1.10.3.custom.min.js"></script>';
 }
 
 /**
