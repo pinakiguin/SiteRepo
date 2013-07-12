@@ -21,14 +21,16 @@ IncludeJS("js/md5.js");
     <?php
     $Data = new MySQLiDB();
     if (GetVal($_POST, 'UserID') !== NULL) {
-      $email = $Data->SqlSafe(GetVal($_POST, 'UserID'));
+      $email = GetVal($_POST, 'UserID', TRUE);
+      $MobileNo = GetVal($_POST, 'MobileNo', TRUE);
       //@todo Send Email after registration Specifing UserID for verification and password.
       //@todo Password not to be asked in the form if asked should be sent encrypted Activation Should not be here
-      $Pass = $Data->SqlSafe(GetVal($_POST, 'UserPass'));
-      $PartMapID = $Data->SqlSafe(GetVal($_POST, 'PartMapID'));
+      $Pass = GetVal($_POST, 'UserPass', TRUE);
+      $PartMapID = GetVal($_POST, 'PartMapID', TRUE);
       if (StaticCaptcha()) {
 
-        $Qry = "Update `" . MySQL_Pre . "Users` SET `UserID`='{$email}',`UserPass`=MD5('{$Pass}'),`Registered`=1"
+        $Qry = "Update `" . MySQL_Pre . "Users` "
+                . " SET `UserID`='{$email}',`UserPass`=MD5('{$Pass}'),`MobileNo`='{$MobileNo}',`Registered`=1"
                 . " Where Registered=0 AND Activated=0 AND UserMapID='{$PartMapID}'";
         $Submitted = $Data->do_ins_query($Qry);
         $_SESSION['Msg'] = $Qry;
@@ -57,11 +59,11 @@ IncludeJS("js/md5.js");
         <div style="clear:both;"></div>
         <div class="FieldGroup">
           <h3>E-Mail Address:</h3>
-          <input size="35" maxlength="35"	type="text" name="UserID" value="<?php echo GetVal($_POST, 'UserID', FALSE); ?>" />
+          <input size="35" maxlength="35"	type="text" name="UserID" value="<?php echo GetVal($_POST, 'UserID'); ?>" />
         </div>
         <div class="FieldGroup">
-          <h3>Password:</h3>
-          <input size="35" maxlength="35"	type="password" name="UserPass" value="<?php echo GetVal($_POST, 'UserPass', FALSE); ?>" />
+          <h3>Mobile No:</h3>
+          <input size="35" maxlength="35"	type="text" name="MobileNo" value="<?php echo GetVal($_POST, 'MobileNo'); ?>" />
         </div>
         <div style="clear:both;"></div>
         <div class="FieldGroup">

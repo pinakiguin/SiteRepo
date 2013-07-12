@@ -95,6 +95,7 @@ function GetVal($Array, $Index, $ForSQL = FALSE, $HTMLSafe = TRUE) {
       $Data = new MySQLiDB();
       $Value = $Data->SqlSafe($Array[$Index]);
       $Data->do_close();
+      unset($Data);
       return $Value;
     } else {
       if ($HTMLSafe) {
@@ -325,6 +326,7 @@ function GetTableDefs($TableName) {
       $SqlDB = "CREATE TABLE IF NOT EXISTS `" . MySQL_Pre . "Users` ("
               . "`UserMapID` int(10) NOT NULL AUTO_INCREMENT,"
               . "`UserID` varchar(255) DEFAULT NULL,"
+              . "`MobileNo` varchar(10) DEFAULT NULL,"
               . "`UserName` varchar(255) DEFAULT NULL,"
               . "`UserPass` varchar(255) DEFAULT NULL,"
               . "`CtrlMapID` int(10) NOT NULL,"
@@ -350,7 +352,7 @@ function GetTableDefs($TableName) {
               . ") ENGINE=InnoDB DEFAULT CHARSET=utf8;";
       break;
     case "SRER_FieldNameData":
-      $SqlDB = "INSERT INTO `SRER_FieldNames` (`FieldName`, `Description`) VALUES"
+      $SqlDB = "INSERT INTO `" . MySQL_Pre . "SRER_FieldNames` (`FieldName`, `Description`) VALUES"
               . "('ACNo', 'AC Name'),"
               . "('Action', 'Action (Page)'),"
               . "('AppName', 'Name of Applicant'),"
@@ -632,7 +634,6 @@ function StaticCaptcha($ShowImage = FALSE) {
     $captcha_code = GetVal($_POST, 'captcha_code');
     if ($captcha_code !== NULL) {
       $VerifyID = GetVal($_POST, 'captchaId');
-      $captcha_code = GetVal($_POST, 'captcha_code');
       return Securimage::checkByCaptchaId($VerifyID, $captcha_code);
     }
   }

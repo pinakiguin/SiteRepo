@@ -61,7 +61,7 @@ function ShowSRER($QueryString) {
     echo '<th style="text-align:center;">' . GetColHead($Data->GetFieldName($i)) . '</th>';
     $i++;
   }
-  $i = 0;
+  $j = 0;
   while ($line = $Data->get_row()) {
     echo "\t<tr>\n";
     foreach ($line as $col_value)
@@ -69,11 +69,11 @@ function ShowSRER($QueryString) {
     //$strdt=date("F j, Y, g:i:s a",$ntime);
     //echo "\t\t<td>$strdt</td>\n";
     echo "\t</tr>\n";
-    $i++;
+    $j++;
   }
   echo "</table>\n";
   unset($Data);
-  return ($i);
+  return ($j);
 }
 
 function EditForm($QueryString) {
