@@ -1,5 +1,5 @@
 <?php
-require_once('srer.lib.inc.php');
+require_once('srer.lib.php');
 
 AuthSession();
 Html5Header("Data Entry");
