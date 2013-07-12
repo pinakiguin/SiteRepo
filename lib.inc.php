@@ -605,7 +605,7 @@ function ShowMenuBar() {
     ShowMenuitem("User Activity", "AuditLogs.php");
     ShowMenuitem("Log Out!", "login.php?LogOut=1");
   }
-  ShowMenuitem(GetVal($_SESSION, 'CheckAuth'), "#");
+  //ShowMenuitem(GetVal($_SESSION, 'CheckAuth'), "#");
   echo '</ul></div>';
 }
 
