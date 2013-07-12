@@ -28,7 +28,7 @@ IncludeJS("js/md5.js");
       $PartMapID = $Data->SqlSafe(GetVal($_POST, 'PartMapID'));
       if (StaticCaptcha()) {
 
-        $Qry = "Update `" . MySQL_Pre . "Users` SET `UserID`='{$email}',`UserPass`=MD5('{$Pass}'),`Registered`=1,`Activated`=1"
+        $Qry = "Update `" . MySQL_Pre . "Users` SET `UserID`='{$email}',`UserPass`=MD5('{$Pass}'),`Registered`=1"
                 . " Where Registered=0 AND Activated=0 AND UserMapID='{$PartMapID}'";
         $Submitted = $Data->do_ins_query($Qry);
         $_SESSION['Msg'] = $Qry;

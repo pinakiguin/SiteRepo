@@ -126,7 +126,7 @@ IncludeJS("js/md5.js");
       case "NoAccess":
         echo "<h2 align=\"center\">Sorry! Access Denied!</h2>";
         $_SESSION['TryCount'] = GetVal($_SESSION, 'TryCount') + 1;
-        echo "Try Count:" . GetVal($_SESSION, 'TryCount');
+        //echo "Try Count:" . GetVal($_SESSION, 'TryCount');
         break;
       default:
         echo "<h2>Login - " . AppTitle . "</h2>";
@@ -147,7 +147,7 @@ IncludeJS("js/md5.js");
         <input type="hidden" name="LoginToken" value="<?php echo GetVal($_SESSION, 'Token'); ?>" />
         <input style="width:80px;" type="submit" value="Login"
                onClick="document.getElementById('UserPass').value = MD5(MD5(document.getElementById('UserPass').value)
-                             + '<?php echo md5(GetVal($_SESSION, 'Token')); ?>');"/>
+                           + '<?php echo md5(GetVal($_SESSION, 'Token')); ?>');"/>
         <a href="Register.php">Register</a>
       </form>
 
