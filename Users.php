@@ -44,7 +44,7 @@ IncludeJS("js/md5.js");
                   . " AND `UserMapID`=" . GetVal($_POST, 'UserMapID');
           break;
         case "Un-Register":
-          $Query = "Update `" . MySQL_Pre . "Users` Set `Registered`=0"
+          $Query = "Update `" . MySQL_Pre . "Users` Set `Registered`=0,`Activated`=0"
                   . " Where `Registered`=1 AND `CtrlMapID`=" . GetVal($_SESSION, 'UserMapID', TRUE)
                   . " AND `UserMapID`=" . GetVal($_POST, 'UserMapID');
           break;

@@ -24,8 +24,7 @@ IncludeJS("js/md5.js");
       $email = GetVal($_POST, 'UserID', TRUE);
       $MobileNo = GetVal($_POST, 'MobileNo', TRUE);
       //@todo Send Email after registration Specifing UserID for verification and password.
-      //@todo Password not to be asked in the form if asked should be sent encrypted Activation Should not be here
-      $Pass = GetVal($_POST, 'UserPass', TRUE);
+      $Pass = generatePassword(8, 3, 3, 2);
       $PartMapID = GetVal($_POST, 'PartMapID', TRUE);
       if (StaticCaptcha()) {
 
@@ -35,7 +34,8 @@ IncludeJS("js/md5.js");
         $Submitted = $Data->do_ins_query($Qry);
         $_SESSION['Msg'] = $Qry;
         if ($Submitted > 0) {
-          $_SESSION['Msg'] = "<h3>Regristration successful.</h3><b>Please Note: </b>Password will be sent to: {$email}";
+          $_SESSION['Msg'] = "<h3>Regristration successful.</h3>"
+                  . "<b>Please Note: </b>Password is sent to: {$MobileNo}";
           ShowMsg();
         } else {
           echo "<h3>Unable to send request.</h3>";
@@ -59,11 +59,13 @@ IncludeJS("js/md5.js");
         <div style="clear:both;"></div>
         <div class="FieldGroup">
           <h3>E-Mail Address:</h3>
-          <input size="35" maxlength="35"	type="text" name="UserID" value="<?php echo GetVal($_POST, 'UserID'); ?>" />
+          <input placeholder="Valid e-Mail Address" size="35" maxlength="35"	type="email" name="UserID"
+                 value="<?php echo GetVal($_POST, 'UserID'); ?>" required />
         </div>
         <div class="FieldGroup">
           <h3>Mobile No:</h3>
-          <input size="35" maxlength="35"	type="text" name="MobileNo" value="<?php echo GetVal($_POST, 'MobileNo'); ?>" />
+          <input placeholder="Mobile Number" size="15" maxlength="10"	min="7000000000" type="number" name="MobileNo"
+                 value="<?php echo GetVal($_POST, 'MobileNo'); ?>" required />
         </div>
         <div style="clear:both;"></div>
         <div class="FieldGroup">
