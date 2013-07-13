@@ -453,6 +453,7 @@ function GetTableDefs($TableName) {
               . "('SlNo', 'Serial No.'),"
               . "('Status', 'Status'),"
               . "('UserName', 'Block');";
+      break;
     case "`SRER_Form6`":
       $SqlDB = "CREATE TABLE IF NOT EXISTS `" . MySQL_Pre . "SRER_Form6` ("
               . "`RowID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,"
@@ -553,6 +554,7 @@ function CreateDB($ForWhat = "WebSite") {
       break;
     case "SRER":
       $ObjDB = new MySQLiDB();
+      $ObjDB->Debug = 1;
       $ObjDB->do_ins_query(GetTableDefs("SRER_FieldNames"));
       $ObjDB->do_ins_query(GetTableDefs("SRER_FieldNameData"));
       $ObjDB->do_ins_query(GetTableDefs("SRER_Form6"));
