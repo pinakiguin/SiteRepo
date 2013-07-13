@@ -554,7 +554,6 @@ function CreateDB($ForWhat = "WebSite") {
       break;
     case "SRER":
       $ObjDB = new MySQLiDB();
-      $ObjDB->Debug = 1;
       $ObjDB->do_ins_query(GetTableDefs("SRER_FieldNames"));
       $ObjDB->do_ins_query(GetTableDefs("SRER_FieldNameData"));
       $ObjDB->do_ins_query(GetTableDefs("SRER_Form6"));
