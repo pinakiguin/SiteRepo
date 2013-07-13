@@ -672,6 +672,7 @@ function ShowMenuBar() {
   echo '<div class="MenuBar"><ul>';
   ShowMenuitem("Home", "index.php");
   if (GetVal($_SESSION, 'CheckAuth') !== "Valid") {
+    ShowMenuitem("Registration", "Register.php");
     ShowMenuitem("Log In!", "login.php");
   } else {
     ShowMenuitem("Data Entry", "srer/DataEntry.php");
