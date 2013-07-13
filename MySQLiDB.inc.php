@@ -241,9 +241,10 @@ class MySQLiDB {
    * @param string $ColName Name of the database field
    * @return string
    */
-  function GetCaption($ColName) {
-    $Fields = new DB();
-    $ColHead = $Fields->do_max_query("Select Caption from " . MySQL_Pre . "Fields where FieldName='{$ColName}'");
+  function GetCaption($ColName, $FieldsTable = "SRER_FieldNames") {
+    $Fields = new MySQLiDB();
+    $ColHead = $Fields->do_max_query("Select `Description` from `" . MySQL_Pre . "{$FieldsTable}`"
+            . " Where `FieldName`='{$ColName}'");
     $Fields->do_close();
     unset($Fields);
     return (!$ColHead ? $ColName : $ColHead);
