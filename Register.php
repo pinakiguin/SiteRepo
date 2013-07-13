@@ -1,6 +1,6 @@
 <?php
 include_once 'lib.inc.php';
-
+include_once 'php-mailer/GMail.lib.php';
 initHTML5page("Home");
 IncludeCSS();
 IncludeJS("js/md5.js");
@@ -24,18 +24,28 @@ IncludeJS("js/md5.js");
       $email = GetVal($_POST, 'UserID', TRUE);
       $MobileNo = GetVal($_POST, 'MobileNo', TRUE);
       //@todo Send Email after registration Specifing UserID for verification and password.
-      $Pass = generatePassword(8, 3, 3, 2);
+      $Pass = generatePassword(10, 2, 2, 2);
       $PartMapID = GetVal($_POST, 'PartMapID', TRUE);
       if (StaticCaptcha()) {
-
         $Qry = "Update `" . MySQL_Pre . "Users` "
                 . " SET `UserID`='{$email}',`UserPass`=MD5('{$Pass}'),`MobileNo`='{$MobileNo}',`Registered`=1"
                 . " Where Registered=0 AND Activated=0 AND UserMapID='{$PartMapID}'";
         $Submitted = $Data->do_ins_query($Qry);
-        $_SESSION['Msg'] = $Qry;
         if ($Submitted > 0) {
-          $_SESSION['Msg'] = "<h3>Regristration successful.</h3>"
-                  . "<b>Please Note: </b>Password is sent to: {$MobileNo}";
+
+          $UserName = $Data->do_max_query("Select `UserName` FROM `" . MySQL_Pre . "Users`"
+                  . " Where UserMapID='{$PartMapID}'");
+          $Subject = "User Account Details - SRER 2014";
+          $Body = "<b>UserID: </b><span> {$email}</span><br/>"
+                  . "<b>Password: </b><span> {$Pass}</span>";
+          $MailSent = json_decode(GMailSMTP($email, $UserName, $Subject, $Body));
+          //$_SESSION['Msg'] = "<h3>Regristration successful.</h3>"
+          //        . "<b>Please Note: </b>Password is sent to: {$MobileNo}";
+          ShowMsg();
+          if ($MailSent->Sent === TRUE) {
+            $_SESSION['Msg'] = "<h3>Regristration successful.</h3>"
+                    . "<b>Please Note: </b>Password is sent to: {$email}";
+          }
           ShowMsg();
         } else {
           echo "<h3>Unable to send request.</h3>";

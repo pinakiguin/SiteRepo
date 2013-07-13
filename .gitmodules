@@ -16,3 +16,6 @@
 [submodule "SRER-2014"]
 	path = SRER-2014
 	url = https://github.com/abusalam/SRER-2014.git
+[submodule "php-mailer"]
+	path = php-mailer
+	url = https://github.com/abusalam/GMail-SMTP.git
