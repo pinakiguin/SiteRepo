@@ -102,7 +102,7 @@ class MySQLiDB {
     if (!$this->conn) {
       die('Could not Connect: ' . mysql_error() . "<br><br>");
     }
-    mysql_select_db(MySQL_DB) or die('Cannot select database (database.php): ' . mysql_error() . "<br><br>");
+    mysql_select_db(MySQL_DB) or die('Cannot select database: ' . mysql_error() . "<br><br>");
     $this->NoResult = 1;
   }
 
@@ -148,7 +148,7 @@ class MySQLiDB {
       $message = 'Error(database): ' . mysql_error();
       //$message .= 'Whole query: '. $querystr."<br>";
       if ($this->Debug)
-        echo $message;
+        $_SESSION['Msg'] = $message;
       $this->RowCount = 0;
       return 0;
     }
@@ -170,7 +170,7 @@ class MySQLiDB {
     $this->RecSet = mysql_query($querystr, $this->conn);
     if (mysql_errno($this->conn)) {
       if ($this->Debug)
-        echo mysql_error($this->conn);
+        $_SESSION['Msg'] = mysql_error($this->conn);
       $this->NoResult = 1;
       $this->RowCount = 0;
       return 0;

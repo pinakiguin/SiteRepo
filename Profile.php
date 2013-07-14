@@ -44,13 +44,16 @@ WebLib::IncludeJS("js/md5.js");
   ?>
   <div class="content">
     <?php
-    $Msg[0] = "<h2>Change Password</h2>";
-    $Msg[1] = "<h2>Your password changed Successfully!</h2>";
-    $Msg[2] = "<h2>Sorry! Invalid Old Password!</h2>";
-    $Msg[3] = "<h2>New Passwords do not match.</h2>";
-    $Msg[4] = "<h2>Un-Authorised " . GetVal($_POST, 'FormToken') . "|" . GetVal($_SESSION, 'FormToken') . "</h2>";
-    $Msg[5] = "<h2>Your password is not safe.</h2>";
-    echo $Msg[$action];
+    echo "<h2>Change Password</h2>";
+    $Msg[0] = NULL;
+    $Msg[1] = "<b>Your password changed Successfully!</b>";
+    $Msg[2] = "<b>Sorry! Invalid Old Password!</b>";
+    $Msg[3] = "<b>New Passwords do not match.</b>";
+    $Msg[4] = "<b>Un-Authorised " . WebLib::GetVal($_POST, 'FormToken') . "|" . WebLib::GetVal($_SESSION, 'FormToken') . "</b>";
+    $Msg[5] = "<b>Your password is not safe.</b>";
+
+    $_SESSION['Msg'] = $Msg[$action];
+    WebLib::ShowMsg();
     if ($action !== 4) {
       ?>
       <form name="frmChgPWD" id="frmChgPWD" method="post" action="<?php echo WebLib::GetVal($_SERVER, 'PHP_SELF'); ?>">

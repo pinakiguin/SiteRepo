@@ -41,12 +41,12 @@ WebLib::IncludeJS("js/md5.js");
           $MailSent = json_decode(GMailSMTP($email, $UserName, $Subject, $Body));
           //$_SESSION['Msg'] = "<h3>Regristration successful.</h3>"
           //        . "<b>Please Note: </b>Password is sent to: {$MobileNo}";
-          ShowMsg();
+          WebLib::ShowMsg();
           if ($MailSent->Sent === TRUE) {
             $_SESSION['Msg'] = "<h3>Regristration successful.</h3>"
                     . "<b>Please Note: </b>Password is sent to: {$email}";
           }
-          ShowMsg();
+          WebLib::ShowMsg();
         } else {
           echo "<h3>Unable to send request.</h3>";
         }
