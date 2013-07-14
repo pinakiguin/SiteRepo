@@ -139,7 +139,7 @@ class WebLib {
    * @param string $PageTitle Title of the page
    */
   public static function InitHTML5page($PageTitle = "") {
-    WebLib::initSess();
+    WebLib::InitSess();
     WebLib::Html5Header($PageTitle);
     if (WebLib::GetVal($_REQUEST, 'show_src')) {
       if (WebLib::GetVal($_REQUEST, 'show_src') == "me")
@@ -594,6 +594,8 @@ class WebLib {
    *
    */
   public static function InitSess() {
+    if (!isset($_SESSION))
+      session_start();
     $sess_id = md5(microtime());
     $_SESSION['ET'] = microtime(TRUE);
     $_SESSION['Debug'] = WebLib::GetVal($_SESSION, 'Debug')
