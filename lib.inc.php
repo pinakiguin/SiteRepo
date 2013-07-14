@@ -619,7 +619,7 @@ class WebLib {
       session_start();
     $_SESSION['ET'] = microtime(TRUE);
     $_SESSION['Debug'] = WebLib::GetVal($_SESSION, 'Debug') . "InSession_AUTH";
-    $SessRet = CheckAuth();
+    $SessRet = WebLib::CheckAuth();
     $_SESSION['CheckAuth'] = $SessRet;
     $reg = new MySQLiDB();
     if (WebLib::GetVal($_REQUEST, 'NoAuth'))
