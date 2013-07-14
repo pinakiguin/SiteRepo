@@ -1,37 +1,19 @@
 <?php
 require_once('srer.lib.php');
 
-AuthSession();
-Html5Header("Admin Page");
-IncludeCSS();
-jQueryInclude();
-//if (GetVal($_SESSION,'UserName') != "Admin")
+WebLib::AuthSession();
+WebLib::Html5Header("Admin Page");
+WebLib::IncludeCSS();
+
+//if (WebLib::GetVal($_SESSION,'UserName') != "Admin")
 //  exit;
 
 SetCurrForm();
-if (intval(GetVal($_POST, 'PartID')) > 0)
-  $_SESSION['PartID'] = intval(GetVal($_POST, 'PartID'));
-if (GetVal($_POST, 'ACNo') != "")
-  $_SESSION['ACNo'] = GetVal($_POST, 'ACNo');
+if (intval(WebLib::GetVal($_POST, 'PartID')) > 0)
+  $_SESSION['PartID'] = intval(WebLib::GetVal($_POST, 'PartID'));
+if (WebLib::GetVal($_POST, 'ACNo') != "")
+  $_SESSION['ACNo'] = WebLib::GetVal($_POST, 'ACNo');
 ?>
-<script>
-  $(function() {
-    $(".datepick").datepicker({
-      dateFormat: 'yy-mm-dd',
-      showOtherMonths: true,
-      selectOtherMonths: true,
-      showButtonPanel: true,
-      showAnim: "slideDown"
-    });
-    $("#Dept").autocomplete({
-      source: "query.php",
-      minLength: 3,
-      select: function(event, ui) {
-        $('#Dept').val(ui.item.value);
-      }
-    });
-  });
-</script>
 </head>
 <body>
   <div class="TopPanel">
@@ -42,12 +24,12 @@ if (GetVal($_POST, 'ACNo') != "")
   <div class="Header">
   </div>
   <?php
-  ShowMenuBar()
+  WebLib::ShowMenuBar()
   ?>
   <div class="content">
     <h2><?php echo AppTitle; ?></h2>
     <hr />
-    <form name="frmSRER" method="post" action="<?php GetVal($_SERVER, 'PHP_SELF') ?>">
+    <form name="frmSRER" method="post" action="<?php WebLib::GetVal($_SERVER, 'PHP_SELF') ?>">
       <input type="submit" name="FormName" value="User Activity" />
       <input type="submit" name="FormName" value="AC wise Data Entry Status" />
       <input type="submit" name="FormName" value="Block wise Data Entry Status" />
@@ -57,10 +39,10 @@ if (GetVal($_POST, 'ACNo') != "")
       <input type="submit" name="FormName" value="Block AC wise Rejected" /><hr /><br />
     </form>
     <?php
-    if (GetVal($_POST, 'FormName') != "")
-      $_SESSION['AdminView'] = GetVal($_POST, 'FormName');
-    echo "<h3>" . GetVal($_SESSION, 'AdminView') . "</h3>";
-    Switch (GetVal($_SESSION, 'AdminView')) {
+    if (WebLib::GetVal($_POST, 'FormName') != "")
+      $_SESSION['AdminView'] = WebLib::GetVal($_POST, 'FormName');
+    echo "<h3>" . WebLib::GetVal($_SESSION, 'AdminView') . "</h3>";
+    Switch (WebLib::GetVal($_SESSION, 'AdminView')) {
       case 'User Activity':
         $Query = "Select `UserName`,`LoginCount`,CONVERT_TZ(`LastLoginTime`,'+00:00','+05:30') as LastLoginTime,"
                 . "CONVERT_TZ(L.`AccessTime`,'+00:00','+05:30') as LastAccessTime,Li.`IP`,Li.`Action`"
@@ -202,7 +184,7 @@ if (GetVal($_POST, 'ACNo') != "")
     }
     ?>
   </div>
-  <div class="pageinfo"><?php pageinfo(); ?></div>
-  <div class="footer"><?php footerinfo(); ?></div>
+  <div class="pageinfo"><?php WebLib::PageInfo(); ?></div>
+  <div class="footer"><?php WebLib::FooterInfo(); ?></div>
 </body>
 </html>

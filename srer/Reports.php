@@ -1,41 +1,22 @@
 <?php
 require_once('srer.lib.php');
 
-AuthSession();
+WebLib::AuthSession();
+WebLib::Html5Header("Data Entry");
+WebLib::IncludeCSS();
 
-Html5Header("Data Entry");
-IncludeCSS();
-jQueryInclude();
 $Data = new MySQLiDB();
 SetCurrForm();
 
-if (GetVal($_SESSION, 'ACNo') == "")
+if (WebLib::GetVal($_SESSION, 'ACNo') == "")
   $_SESSION['ACNo'] = "-- Choose --";
-if ((Getval($_SESSION, 'PartID') == "") || (Getval($_SESSION, 'ACNo') != Getval($_POST, 'ACNo')))
+if ((WebLib::GetVal($_SESSION, 'PartID') == "") || (WebLib::GetVal($_SESSION, 'ACNo') != WebLib::GetVal($_POST, 'ACNo')))
   $_SESSION['PartID'] = "-- Choose --";
-if (intval(Getval($_SESSION, 'PartID')) > 0)
-  $_SESSION['PartID'] = intval(GetVal($_POST, 'PartID'));
-if (Getval($_POST, 'ACNo') != "")
-  $_SESSION['ACNo'] = GetVal($_POST, 'ACNo');
+if (intval(WebLib::GetVal($_SESSION, 'PartID')) > 0)
+  $_SESSION['PartID'] = intval(WebLib::GetVal($_POST, 'PartID'));
+if (WebLib::GetVal($_POST, 'ACNo') != "")
+  $_SESSION['ACNo'] = WebLib::GetVal($_POST, 'ACNo');
 ?>
-<script>
-  $(function() {
-    $(".datepick").datepicker({
-      dateFormat: 'yy-mm-dd',
-      showOtherMonths: true,
-      selectOtherMonths: true,
-      showButtonPanel: true,
-      showAnim: "slideDown"
-    });
-    $("#Dept").autocomplete({
-      source: "query.php",
-      minLength: 3,
-      select: function(event, ui) {
-        $('#Dept').val(ui.item.value);
-      }
-    });
-  });
-</script>
 </head>
 <body>
   <div class="TopPanel">
@@ -46,24 +27,24 @@ if (Getval($_POST, 'ACNo') != "")
   <div class="Header">
   </div>
   <?php
-  ShowMenuBar()
+  WebLib::ShowMenuBar()
   ?>
   <div class="content">
     <h2><?php echo AppTitle; ?></h2>
     <hr/>
-    <form name="frmSRER" method="post" action="<?php echo GetVal($_SERVER, 'PHP_SELF'); ?>">
+    <form name="frmSRER" method="post" action="<?php echo WebLib::GetVal($_SERVER, 'PHP_SELF'); ?>">
       <label for="textfield">AC No.:</label>
       <select name="ACNo" onChange="document.frmSRER.submit();">
         <?php
         $Query = "select ACNo,ACNo from SRER_PartMap group by ACNo";
-        $Data->show_sel('ACNo', 'ACNo', $Query, GetVal($_SESSION, 'ACNo', TRUE));
+        $Data->show_sel('ACNo', 'ACNo', $Query, WebLib::GetVal($_SESSION, 'ACNo', TRUE));
         ?>
       </select>
       <label for="textfield">Part No.:</label>
       <select name="PartID">
         <?php
-        $Query = "Select PartID,CONCAT(PartNo,'-',PartName) as PartName from SRER_PartMap where ACNo='" . GetVal($_SESSION, 'ACNo', TRUE) . "' group by PartNo";
-        $Data->show_sel('PartID', 'PartName', $Query, GetVal($_SESSION, 'PartID'));
+        $Query = "Select PartID,CONCAT(PartNo,'-',PartName) as PartName from SRER_PartMap where ACNo='" . WebLib::GetVal($_SESSION, 'ACNo', TRUE) . "' group by PartNo";
+        $Data->show_sel('PartID', 'PartName', $Query, WebLib::GetVal($_SESSION, 'PartID'));
         ?>
       </select>
       <?php //echo $Query;  ?>
@@ -71,24 +52,24 @@ if (Getval($_POST, 'ACNo') != "")
       <hr /><br />
     </form>
     <?php
-    if (intval(GetVal($_SESSION, 'PartID')) > 0) {
+    if (intval(WebLib::GetVal($_SESSION, 'PartID')) > 0) {
       echo "<h3>Form 6</h3>";
-      $Query = "Select `SlNo`, `ReceiptDate`, `AppName`, `RelationshipName`, `Relationship`, `Status` from SRER_Form6 Where PartID=" . GetVal($_SESSION, 'PartID', TRUE);
+      $Query = "Select `SlNo`, `ReceiptDate`, `AppName`, `RelationshipName`, `Relationship`, `Status` from SRER_Form6 Where PartID=" . WebLib::GetVal($_SESSION, 'PartID', TRUE);
       ShowSRER($Query);
       echo "<h3>Form 6A</h3>";
-      $Query = "Select `SlNo`, `ReceiptDate`, `AppName`, `RelationshipName`, `Relationship`, `Status` from SRER_Form6A Where PartID=" . GetVal($_SESSION, 'PartID', TRUE);
+      $Query = "Select `SlNo`, `ReceiptDate`, `AppName`, `RelationshipName`, `Relationship`, `Status` from SRER_Form6A Where PartID=" . WebLib::GetVal($_SESSION, 'PartID', TRUE);
       ShowSRER($Query);
       echo "<h3>Form 7</h3>";
-      $Query = "Select `SlNo`, `ReceiptDate`, `ObjectorName`, `PartNo`, `SerialNoInPart`, `DelPersonName`, `ObjectReason`, `Status` from SRER_Form7 Where PartID=" . GetVal($_SESSION, 'PartID', TRUE);
+      $Query = "Select `SlNo`, `ReceiptDate`, `ObjectorName`, `PartNo`, `SerialNoInPart`, `DelPersonName`, `ObjectReason`, `Status` from SRER_Form7 Where PartID=" . WebLib::GetVal($_SESSION, 'PartID', TRUE);
       ShowSRER($Query);
       echo "<h3>Form 8</h3>";
-      $Query = "Select `SlNo`, `ReceiptDate`, `AppName`, `RelationshipName`, `Relationship`, `Status` from SRER_Form8 Where PartID=" . GetVal($_SESSION, 'PartID', TRUE);
+      $Query = "Select `SlNo`, `ReceiptDate`, `AppName`, `RelationshipName`, `Relationship`, `Status` from SRER_Form8 Where PartID=" . WebLib::GetVal($_SESSION, 'PartID', TRUE);
       ShowSRER($Query);
       echo "<h3>Form 8A</h3>";
-      $Query = "Select `SlNo`, `ReceiptDate`, `AppName`, `RelationshipName`, `Relationship`, `Status` from SRER_Form8A Where PartID=" . GetVal($_SESSION, 'PartID', TRUE);
+      $Query = "Select `SlNo`, `ReceiptDate`, `AppName`, `RelationshipName`, `Relationship`, `Status` from SRER_Form8A Where PartID=" . WebLib::GetVal($_SESSION, 'PartID', TRUE);
       ShowSRER($Query);
     }
-    if (GetVal($_SERVER, 'PHP_SELF') == '/srer2013/reports.php') {
+    if (WebLib::GetVal($_SERVER, 'PHP_SELF') == '/srer2013/reports.php') {
       /* if((time()-strtotime("02:30:00"))>0)
         {
         echo "<h3>Summary Reports will be available at 8:00AM.</h3>";
@@ -98,7 +79,7 @@ if (Getval($_POST, 'ACNo') != "")
       $Query = "SELECT ACNo as `AC Name`,PartNo,PartName,SUM(CountF6) as CountF6,SUM(CountF6A) as CountF6A,SUM(CountF7) as CountF7,"
               . "SUM(CountF8) as CountF8,SUM(CountF8A) as CountF8A,(IFNULL(SUM(CountF6),0)+IFNULL(SUM(CountF6A),0)+IFNULL(SUM(CountF7),0)+"
               . "IFNULL(SUM(CountF8),0)+IFNULL(SUM(CountF8A),0)) as Total "
-              . "FROM SRER_Users U INNER JOIN SRER_PartMap P ON U.PartMapID=P.PartMapID AND U.PartMapID=" . GetVal($_SESSION, 'PartMapID', TRUE) . " LEFT JOIN "
+              . "FROM SRER_Users U INNER JOIN SRER_PartMap P ON U.PartMapID=P.PartMapID AND U.PartMapID=" . WebLib::GetVal($_SESSION, 'PartMapID', TRUE) . " LEFT JOIN "
               . "(SELECT PartID,Count(*) as CountF6 FROM `SRER_Form6` GROUP BY PartID) F6 "
               . "ON (F6.PartID=P.PartID) LEFT JOIN "
               . "(SELECT PartID,Count(*) as CountF6A FROM `SRER_Form6A` GROUP BY PartID) F6A "
@@ -116,11 +97,10 @@ if (Getval($_POST, 'ACNo') != "")
       ShowSRER($Query);
       //}
     }
-//echo $Query;
     ?>
     <br />
   </div>
-  <div class="pageinfo"><?php pageinfo(); ?></div>
-  <div class="footer"><?php footerinfo(); ?></div>
+  <div class="pageinfo"><?php WebLib::PageInfo(); ?></div>
+  <div class="footer"><?php WebLib::FooterInfo(); ?></div>
 </body>
 </html>

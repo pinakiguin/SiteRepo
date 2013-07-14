@@ -1,9 +1,9 @@
 <?php
 require_once('lib.inc.php');
-AuthSession();
-Html5Header("Profile");
-IncludeCSS();
-IncludeJS("js/md5.js");
+WebLib::AuthSession();
+WebLib::Html5Header("Profile");
+WebLib::IncludeCSS();
+WebLib::IncludeJS("js/md5.js");
 ?>
 </head>
 <body>
@@ -15,20 +15,20 @@ IncludeJS("js/md5.js");
   <div class="Header">
   </div>
   <?php
-  ShowMenuBar();
+  WebLib::ShowMenuBar();
   $action = 0;
   $Data = new MySQLiDB();
-  if (GetVal($_POST, 'FormToken') !== NULL) {
-    if (GetVal($_POST, 'FormToken') !== GetVal($_SESSION, 'FormToken')) {
+  if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
+    if (WebLib::GetVal($_POST, 'FormToken') !== WebLib::GetVal($_SESSION, 'FormToken')) {
       $action = 4;
     } else {
-      if (GetVal($_POST, 'NewPassWD') !== md5(GetVal($_POST, 'CNewPassWD') . md5(GetVal($_SESSION, 'FormToken')))) {
+      if (WebLib::GetVal($_POST, 'NewPassWD') !== md5(WebLib::GetVal($_POST, 'CNewPassWD') . md5(WebLib::GetVal($_SESSION, 'FormToken')))) {
         $action = 3;
-      } elseif (preg_match("#.*^(?=.{8,20})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$#", GetVal($_POST, 'NewPassWD'))) {
-        $Qry = "Update `" . MySQL_Pre . "Users` set UserPass='" . GetVal($_POST, 'CNewPassWD', TRUE)
-                . "' where UserMapID=" . GetVal($_SESSION, 'UserMapID') . " AND "
-                . "md5(concat(`UserPass`,md5('" . GetVal($_POST, 'FormToken') . "')))='"
-                . GetVal($_POST, 'OldPassWD') . "'";
+      } elseif (preg_match("#.*^(?=.{8,20})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$#", WebLib::GetVal($_POST, 'NewPassWD'))) {
+        $Qry = "Update `" . MySQL_Pre . "Users` set UserPass='" . WebLib::GetVal($_POST, 'CNewPassWD', TRUE)
+                . "' where UserMapID=" . WebLib::GetVal($_SESSION, 'UserMapID') . " AND "
+                . "md5(concat(`UserPass`,md5('" . WebLib::GetVal($_POST, 'FormToken') . "')))='"
+                . WebLib::GetVal($_POST, 'OldPassWD') . "'";
         $rows = $Data->do_ins_query($Qry);
         if ($rows > 0) {
           $action = 1;
@@ -53,7 +53,7 @@ IncludeJS("js/md5.js");
     echo $Msg[$action];
     if ($action !== 4) {
       ?>
-      <form name="frmChgPWD" id="frmChgPWD" method="post" action="<?php echo GetVal($_SERVER, 'PHP_SELF'); ?>">
+      <form name="frmChgPWD" id="frmChgPWD" method="post" action="<?php echo WebLib::GetVal($_SERVER, 'PHP_SELF'); ?>">
         <label for="OldPassWD">Old Password:</label><br />
         <input type="password" name="OldPassWD" id="OldPassWD" />
         <br />
@@ -62,19 +62,19 @@ IncludeJS("js/md5.js");
         <br />
         <label for="CNewPassWD">Confirm New Password:</label> <br />
         <input type="password" name="CNewPassWD" id="CNewPassWD" />
-        <input type="hidden" name="FormToken" value="<?php echo GetVal($_SESSION, 'FormToken'); ?>" />
+        <input type="hidden" name="FormToken" value="<?php echo WebLib::GetVal($_SESSION, 'FormToken'); ?>" />
         <br />
-        <input type="button" value="Change Password" onClick="ChkPwd('<?php echo md5(GetVal($_SESSION, 'FormToken')); ?>');" />
+        <input type="button" value="Change Password" onClick="ChkPwd('<?php echo md5(WebLib::GetVal($_SESSION, 'FormToken')); ?>');" />
       </form>
       <?php
     }
     ?>
   </div>
   <div class="pageinfo">
-    <?php pageinfo(); ?>
+    <?php WebLib::PageInfo(); ?>
   </div>
   <div class="footer">
-    <?php footerinfo(); ?>
+    <?php WebLib::FooterInfo(); ?>
   </div>
 </body>
 </html>
