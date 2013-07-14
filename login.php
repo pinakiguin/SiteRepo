@@ -12,44 +12,44 @@ require_once('lib.inc.php');
 session_start();
 $_SESSION['ET'] = microtime(TRUE);
 $Data = new MySQLiDB();
-$ID = GetVal($_SESSION, 'ID');
+$ID = WebLib::GetVal($_SESSION, 'ID');
 $_SESSION['ID'] = session_id();
-if (GetVal($_SESSION, 'LifeTime') === NULL)
+if (WebLib::GetVal($_SESSION, 'LifeTime') === NULL)
   $_SESSION['LifeTime'] = time();
-$action = CheckAuth();
+$action = WebLib::CheckAuth();
 if ($action == "LogOut") {
   $Data->do_ins_query("INSERT INTO `" . MySQL_Pre . "Logs` (`SessionID`,`IP`,`Referrer`,`UserAgent`,`UserID`,`URL`,`Action`,`Method`,`URI`, `ED`)"
-          . " Values('" . GetVal($_SESSION, 'ID') . "','" . $_SERVER['REMOTE_ADDR'] . "','"
+          . " Values('" . WebLib::GetVal($_SESSION, 'ID') . "','" . $_SERVER['REMOTE_ADDR'] . "','"
           . $Data->SqlSafe($_SERVER["HTTP_REFERER"]) . "','"
           . $_SERVER['HTTP_USER_AGENT']
-          . "','" . GetVal($_SESSION, 'UserMapID') . "','"
+          . "','" . WebLib::GetVal($_SESSION, 'UserMapID') . "','"
           . $Data->SqlSafe($_SERVER['PHP_SELF']) . "','"
           . $action . ": (" . $_SERVER['SCRIPT_NAME'] . ")','"
           . $Data->SqlSafe($_SERVER['REQUEST_METHOD']) . "','"
           . $Data->SqlSafe($_SERVER['REQUEST_URI']) . "',"
-          . GetVal($_SESSION, 'ED', TRUE) . ");");
+          . WebLib::GetVal($_SESSION, 'ED', TRUE) . ");");
   session_unset();
   session_destroy();
   session_start();
   $_SESSION = array();
   $_SESSION['ET'] = microtime(TRUE);
-  $_SESSION['Debug'] = GetVal($_SESSION, 'Debug') . $action . "TOKEN-!Valid";
+  $_SESSION['Debug'] = WebLib::GetVal($_SESSION, 'Debug') . $action . "TOKEN-!Valid";
   header("Location: index.php");
   exit;
 } elseif ($action != "Valid") {
-  initSess();
+  WebLib::InitSess();
 }
 
-if (GetVal($_SESSION, 'TryCount') >= $FailedTry) {
-  $ValidCaptcha = StaticCaptcha();
+if (WebLib::GetVal($_SESSION, 'TryCount') >= $FailedTry) {
+  $ValidCaptcha = WebLib::StaticCaptcha();
 } else {
   $ValidCaptcha = TRUE;
 }
 
-if ((GetVal($_POST, 'UserID') !== NULL) && (GetVal($_POST, 'UserPass') !== NULL) && $ValidCaptcha) {
+if ((WebLib::GetVal($_POST, 'UserID') !== NULL) && (WebLib::GetVal($_POST, 'UserPass') !== NULL) && $ValidCaptcha) {
   $QueryLogin = "Select UserMapID,UserName from `" . MySQL_Pre . "Users` "
-          . " Where `UserID`='" . GetVal($_POST, 'UserID', TRUE) . "' "
-          . " AND MD5(concat(`UserPass`,MD5('" . GetVal($_SESSION, 'Token', TRUE) . "')))='" . GetVal($_POST, 'UserPass', TRUE) . "'"
+          . " Where `UserID`='" . WebLib::GetVal($_POST, 'UserID', TRUE) . "' "
+          . " AND MD5(concat(`UserPass`,MD5('" . WebLib::GetVal($_SESSION, 'Token', TRUE) . "')))='" . WebLib::GetVal($_POST, 'UserPass', TRUE) . "'"
           . " AND Activated";
   $rows = $Data->do_sel_query($QueryLogin);
   if ($rows > 0) {
@@ -66,14 +66,14 @@ if ((GetVal($_POST, 'UserID') !== NULL) && (GetVal($_POST, 'UserPass') !== NULL)
     $action = "JustLoggedIn";
     $Data->do_ins_query(
             "Update " . MySQL_Pre . "Users Set LoginCount=LoginCount+1"
-            . " Where `UserID`='" . GetVal($_POST, 'UserID', TRUE) . "'"
-            . " AND MD5(concat(`UserPass`,MD5('" . GetVal($_POST, 'LoginToken', TRUE) . "')))='" . GetVal($_POST, 'UserPass', TRUE) . "'");
+            . " Where `UserID`='" . WebLib::GetVal($_POST, 'UserID', TRUE) . "'"
+            . " AND MD5(concat(`UserPass`,MD5('" . WebLib::GetVal($_POST, 'LoginToken', TRUE) . "')))='" . WebLib::GetVal($_POST, 'UserPass', TRUE) . "'");
     $Data->do_ins_query(
             "INSERT INTO " . MySQL_Pre . "Logs (`SessionID`,`IP`,`Referrer`,`UserAgent`,`UserID`,`URL`,`Action`,`Method`,`URI`) "
-            . "Values ('" . GetVal($_SESSION, 'ID', TRUE) . "','"
+            . "Values ('" . WebLib::GetVal($_SESSION, 'ID', TRUE) . "','"
             . $Data->SqlSafe($_SERVER['REMOTE_ADDR']) . "','"
             . $Data->SqlSafe($_SERVER['HTTP_REFERER']) . "','"
-            . $Data->SqlSafe($_SERVER['HTTP_USER_AGENT']) . "','" . GetVal($_SESSION, 'UserMapID', TRUE) . "','"
+            . $Data->SqlSafe($_SERVER['HTTP_USER_AGENT']) . "','" . WebLib::GetVal($_SESSION, 'UserMapID', TRUE) . "','"
             . $Data->SqlSafe($_SERVER['PHP_SELF']) . "','Login: Success','"
             . $Data->SqlSafe($_SERVER['REQUEST_METHOD']) . "','"
             . $Data->SqlSafe($_SERVER['REQUEST_URI'] . $_SERVER['QUERY_STRING']) . "');");
@@ -81,21 +81,20 @@ if ((GetVal($_POST, 'UserID') !== NULL) && (GetVal($_POST, 'UserPass') !== NULL)
     $action = "NoAccess";
     $Data->do_ins_query(
             "INSERT INTO " . MySQL_Pre . "Logs (`SessionID`,`IP`,`Referrer`,`UserAgent`,`UserID`,`URL`,`Action`,`Method`,`URI`,`ED`) "
-            . "Values ('" . GetVal($_SESSION, 'ID', TRUE) . "','"
+            . "Values ('" . WebLib::GetVal($_SESSION, 'ID', TRUE) . "','"
             . $Data->SqlSafe($_SERVER['REMOTE_ADDR']) . "','"
             . $Data->SqlSafe($_SERVER['HTTP_REFERER']) . "','"
-            . $Data->SqlSafe($_SERVER['HTTP_USER_AGENT']) . "','" . GetVal($_POST, 'UserID', TRUE) . "','"
-            . $Data->SqlSafe($_SERVER['PHP_SELF']) . "','Login: Failed[" . GetVal($_POST, 'UserID', TRUE) . "]','"
+            . $Data->SqlSafe($_SERVER['HTTP_USER_AGENT']) . "','" . WebLib::GetVal($_POST, 'UserID', TRUE) . "','"
+            . $Data->SqlSafe($_SERVER['PHP_SELF']) . "','Login: Failed[" . WebLib::GetVal($_POST, 'UserID', TRUE) . "]','"
             . $Data->SqlSafe($_SERVER['REQUEST_METHOD']) . "','"
             . $Data->SqlSafe($_SERVER['REQUEST_URI'] . $_SERVER['QUERY_STRING']) . "',"
-            . GetVal($_SESSION, 'ED', TRUE) . ");");
+            . WebLib::GetVal($_SESSION, 'ED', TRUE) . ");");
   }
 }
 $_SESSION['Token'] = md5($_SERVER['REMOTE_ADDR'] . $ID . time());
-Html5Header("Login");
-IncludeCSS();
-jQueryInclude();
-IncludeJS("js/md5.js");
+WebLib::Html5Header("Login");
+WebLib::IncludeCSS();
+WebLib::IncludeJS("js/md5.js");
 ?>
 </head>
 <body>
@@ -107,7 +106,7 @@ IncludeJS("js/md5.js");
   <div class="Header">
   </div>
   <?php
-  ShowMenuBar();
+  WebLib::ShowMenuBar();
   ?>
   <div class="content">
     <?php
@@ -117,16 +116,16 @@ IncludeJS("js/md5.js");
         "<h2 align=\"center\">Thank You! You Have Successfully Logged Out!</h2>";
         break;
       case "JustLoggedIn":
-        echo "<h2 align=\"center\">Welcome " . GetVal($_SESSION, 'UserName') .
+        echo "<h2 align=\"center\">Welcome " . WebLib::GetVal($_SESSION, 'UserName') .
         " You Have Successfully Logged In!</h2>";
         break;
       case "Valid":
-        echo "<h2 align=\"center\">You are already Logged In as " . GetVal($_SESSION, 'UserName') . "!</h2>";
+        echo "<h2 align=\"center\">You are already Logged In as " . WebLib::GetVal($_SESSION, 'UserName') . "!</h2>";
         break;
       case "NoAccess":
         echo "<h2 align=\"center\">Sorry! Access Denied!</h2>";
-        $_SESSION['TryCount'] = GetVal($_SESSION, 'TryCount') + 1;
-        //echo "Try Count:" . GetVal($_SESSION, 'TryCount');
+        $_SESSION['TryCount'] = WebLib::GetVal($_SESSION, 'TryCount') + 1;
+        //echo "Try Count:" . WebLib::GetVal($_SESSION, 'TryCount');
         break;
       default:
         echo "<h2>Login - " . AppTitle . "</h2>";
@@ -140,27 +139,27 @@ IncludeJS("js/md5.js");
         <label for="UserPass">Password:</label><br />
         <input type="password" id="UserPass" name="UserPass" value="test@123" autocomplete="off"/><br />
         <?php
-        if (GetVal($_SESSION, 'TryCount') >= $FailedTry) {
-          StaticCaptcha(TRUE);
+        if (WebLib::GetVal($_SESSION, 'TryCount') >= $FailedTry) {
+          WebLib::StaticCaptcha(TRUE);
         }
         ?>
-        <input type="hidden" name="LoginToken" value="<?php echo GetVal($_SESSION, 'Token'); ?>" />
+        <input type="hidden" name="LoginToken" value="<?php echo WebLib::GetVal($_SESSION, 'Token'); ?>" />
         <input style="width:80px;" type="submit" value="Login"
                onClick="document.getElementById('UserPass').value = MD5(MD5(document.getElementById('UserPass').value)
-                           + '<?php echo md5(GetVal($_SESSION, 'Token')); ?>');"/>
+                             + '<?php echo md5(WebLib::GetVal($_SESSION, 'Token')); ?>');"/>
         <a href="Register.php">Register</a>
       </form>
 
       <?php
-      //echo GetVal($_SESSION,'Debug');
+      //echo WebLib::GetVal($_SESSION,'Debug');
     }
     ?>
   </div>
   <div class="pageinfo">
-    <?php pageinfo(); ?>
+    <?php WebLib::PageInfo(); ?>
   </div>
   <div class="footer">
-    <?php footerinfo(); ?>
+    <?php WebLib::FooterInfo(); ?>
   </div>
   <?php
 //print_r($_SESSION);

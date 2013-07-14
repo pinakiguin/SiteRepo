@@ -2,12 +2,12 @@
 include_once 'lib.inc.php';
 
 if (NeedsDB) {
-  CreateDB("WebSite");
-  CreateDB("SRER");
+  WebLib::CreateDB("WebSite");
+  WebLib::CreateDB("SRER");
 }
 
-initHTML5page("Home");
-IncludeCSS();
+WebLib::InitHTML5page("Home");
+WebLib::IncludeCSS();
 ?>
 </head>
 <body>
@@ -19,18 +19,18 @@ IncludeCSS();
   <div class="Header">
   </div>
   <?php
-  ShowMenuBar();
+  WebLib::ShowMenuBar();
   ?>
   <div class="content">
     <?php
-    ShowMsg();
+    WebLib::ShowMsg();
     ?>
   </div>
   <div class="pageinfo">
-    <?php pageinfo(); ?>
+    <?php WebLib::PageInfo(); ?>
   </div>
   <div class="footer">
-    <?php footerinfo(); ?>
+    <?php WebLib::FooterInfo(); ?>
   </div>
 </body>
 </html>

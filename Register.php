@@ -1,9 +1,9 @@
 <?php
 include_once 'lib.inc.php';
 include_once 'php-mailer/GMail.lib.php';
-initHTML5page("Home");
-IncludeCSS();
-IncludeJS("js/md5.js");
+WebLib::initHTML5page("Home");
+WebLib::IncludeCSS();
+WebLib::IncludeJS("js/md5.js");
 ?>
 </head>
 <body>
@@ -14,19 +14,19 @@ IncludeJS("js/md5.js");
   </div>
   <div class="Header"></div>
   <?php
-  ShowMenuBar();
+  WebLib::ShowMenuBar();
   ?>
   <div class="content">
     <h2>User Registration</h2>
     <?php
     $Data = new MySQLiDB();
-    if (GetVal($_POST, 'UserID') !== NULL) {
-      $email = GetVal($_POST, 'UserID', TRUE);
-      $MobileNo = GetVal($_POST, 'MobileNo', TRUE);
+    if (WebLib::GetVal($_POST, 'UserID') !== NULL) {
+      $email = WebLib::GetVal($_POST, 'UserID', TRUE);
+      $MobileNo = WebLib::GetVal($_POST, 'MobileNo', TRUE);
       //@todo Send Email after registration Specifing UserID for verification and password.
       $Pass = generatePassword(10, 2, 2, 2);
-      $PartMapID = GetVal($_POST, 'PartMapID', TRUE);
-      if (StaticCaptcha()) {
+      $PartMapID = WebLib::GetVal($_POST, 'PartMapID', TRUE);
+      if (WebLib::StaticCaptcha()) {
         $Qry = "Update `" . MySQL_Pre . "Users` "
                 . " SET `UserID`='{$email}',`UserPass`=MD5('{$Pass}'),`MobileNo`='{$MobileNo}',`Registered`=1"
                 . " Where Registered=0 AND Activated=0 AND UserMapID='{$PartMapID}'";
@@ -55,14 +55,14 @@ IncludeJS("js/md5.js");
       }
     } else {
       ?>
-      <form name="feed_frm" method="post" action="<?php echo GetVal($_SERVER, 'PHP_SELF', FALSE); ?>" >
+      <form name="feed_frm" method="post" action="<?php echo WebLib::GetVal($_SERVER, 'PHP_SELF', FALSE); ?>" >
         <div class="FieldGroup">
           <h3>User:</h3>
           <select name="PartMapID">
             <?php
             $Data->show_sel("UserMapID", "UserName", "Select `UserMapID`,`UserName` "
                     . " FROM `" . MySQL_Pre . "Users` "
-                    . " Where NOT `Registered` AND NOT `Activated`;", GetVal($_POST, 'PartMapID', TRUE));
+                    . " Where NOT `Registered` AND NOT `Activated`;", WebLib::GetVal($_POST, 'PartMapID', TRUE));
             ?>
           </select>
         </div>
@@ -70,19 +70,19 @@ IncludeJS("js/md5.js");
         <div class="FieldGroup">
           <h3>E-Mail Address:</h3>
           <input placeholder="Valid e-Mail Address" size="35" maxlength="35"	type="email" name="UserID"
-                 value="<?php echo GetVal($_POST, 'UserID'); ?>" required />
+                 value="<?php echo WebLib::GetVal($_POST, 'UserID'); ?>" required />
         </div>
         <div class="FieldGroup">
           <h3>Mobile No:</h3>
           <input placeholder="Mobile Number" size="15" maxlength="10"	min="7000000000" type="number" name="MobileNo"
-                 value="<?php echo GetVal($_POST, 'MobileNo'); ?>" required />
+                 value="<?php echo WebLib::GetVal($_POST, 'MobileNo'); ?>" required />
         </div>
         <div style="clear:both;"></div>
         <div class="FieldGroup">
-          <input type="hidden" name="LoginToken" value="<?php echo GetVal($_SESSION, 'Token'); ?>" />
+          <input type="hidden" name="LoginToken" value="<?php echo WebLib::GetVal($_SESSION, 'Token'); ?>" />
         </div>
         <div class="FieldGroup">
-          <?php StaticCaptcha(TRUE); ?>
+          <?php WebLib::StaticCaptcha(TRUE); ?>
           <input style="width:80px;" type="submit" value="Register"/>
         </div>
       </form>
@@ -92,10 +92,10 @@ IncludeJS("js/md5.js");
     <div style="clear:both;"></div>
   </div>
   <div class="pageinfo">
-    <?php pageinfo(); ?>
+    <?php WebLib::PageInfo(); ?>
   </div>
   <div class="footer">
-    <?php footerinfo(); ?>
+    <?php WebLib::FooterInfo(); ?>
   </div>
 </body>
 </html>
