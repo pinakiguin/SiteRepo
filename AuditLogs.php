@@ -40,6 +40,11 @@ WebLib::IncludeCSS();
         </select>
       </form>
       <?php
+      $Query = 'Select `W`.`UserID`,`Action`,`AccessTime` FROM '
+              . '(Select `UserID`,Max(`LogID`) as `LogID` FROM `' . MySQL_Pre . 'Logs`'
+              . ' Group By `UserID`) as `L` JOIN `' . MySQL_Pre . 'Logs` as `W` '
+              . ' ON (`W`.`LogID`=`L`.`LogID` AND `Action` NOT LIKE \'LogOut:%\')';
+      echo "<b>Currently Active Users: </b>" . $Data->do_sel_query($Query);
     }
     if (WebLib::GetVal($_POST, 'User')) {
       $UserID = WebLib::GetVal($_POST, 'User', TRUE);
