@@ -24,7 +24,7 @@ WebLib::IncludeJS("js/md5.js");
       $email = WebLib::GetVal($_POST, 'UserID', TRUE);
       $MobileNo = WebLib::GetVal($_POST, 'MobileNo', TRUE);
       //@todo Send Email after registration Specifing UserID for verification and password.
-      $Pass = generatePassword(10, 2, 2, 2);
+      $Pass = WebLib::GeneratePassword(10, 2, 2, 2);
       $PartMapID = WebLib::GetVal($_POST, 'PartMapID', TRUE);
       if (WebLib::StaticCaptcha()) {
         $Qry = "Update `" . MySQL_Pre . "Users` "
