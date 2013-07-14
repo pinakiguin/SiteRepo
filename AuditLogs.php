@@ -32,7 +32,7 @@ WebLib::IncludeCSS();
             $Choice = "-- Choose --";
           else
             $Choice = WebLib::GetVal($_POST, 'User');
-          $Query = "SELECT `UserMapID`, concat(`UserName`,' [',`UserID`,']') as `User`"
+          $Query = "SELECT `UserMapID`, concat(`UserName`,' [',IFNULL(`UserID`,''),']') as `User`"
                   . " FROM `" . MySQL_Pre . "Users`"
                   . " Where `CtrlMapID`=" . WebLib::GetVal($_SESSION, 'UserMapID', TRUE);
           $Data->show_sel("UserMapID", "User", $Query, $Choice);
@@ -40,9 +40,10 @@ WebLib::IncludeCSS();
         </select>
       </form>
       <?php
-      $UserID = WebLib::GetVal($_POST, 'User', TRUE);
     }
-    else {
+    if (WebLib::GetVal($_POST, 'User')) {
+      $UserID = WebLib::GetVal($_POST, 'User', TRUE);
+    } else {
       $UserID = WebLib::GetVal($_SESSION, 'UserMapID', TRUE);
     }
     $Query = "SELECT `LogID`,`IP` as `IP Address`,`AccessTime`,`Action`,`SessionID`,`Method`"

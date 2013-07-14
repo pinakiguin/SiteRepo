@@ -18,7 +18,7 @@ if (WebLib::GetVal($_SESSION, 'LifeTime') === NULL)
   $_SESSION['LifeTime'] = time();
 $action = WebLib::CheckAuth();
 if ($action == "LogOut") {
-  $Data->do_ins_query("INSERT INTO `" . MySQL_Pre . "Logs` (`SessionID`,`IP`,`Referrer`,`UserAgent`,`UserID`,`URL`,`Action`,`Method`,`URI`, `ED`)"
+  $Query = "INSERT INTO `" . MySQL_Pre . "Logs` (`SessionID`,`IP`,`Referrer`,`UserAgent`,`UserID`,`URL`,`Action`,`Method`,`URI`)"
           . " Values('" . WebLib::GetVal($_SESSION, 'ID') . "','" . $_SERVER['REMOTE_ADDR'] . "','"
           . $Data->SqlSafe($_SERVER["HTTP_REFERER"]) . "','"
           . $_SERVER['HTTP_USER_AGENT']
@@ -26,8 +26,10 @@ if ($action == "LogOut") {
           . $Data->SqlSafe($_SERVER['PHP_SELF']) . "','"
           . $action . ": (" . $_SERVER['SCRIPT_NAME'] . ")','"
           . $Data->SqlSafe($_SERVER['REQUEST_METHOD']) . "','"
-          . $Data->SqlSafe($_SERVER['REQUEST_URI']) . "',"
-          . WebLib::GetVal($_SESSION, 'ED', TRUE) . ");");
+          . $Data->SqlSafe($_SERVER['REQUEST_URI']) . "');";
+  $Data->do_ins_query($Query);
+  $Data->do_close();
+  unset($Data);
   session_unset();
   session_destroy();
   session_start();
