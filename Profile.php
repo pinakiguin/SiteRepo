@@ -4,7 +4,11 @@ WebLib::AuthSession();
 WebLib::Html5Header("Profile");
 WebLib::IncludeCSS();
 WebLib::IncludeJS("js/md5.js");
+WebLib::JQueryInclude();
+WebLib::IncludeCSS("Jcrop/css/jquery.Jcrop.min.css");
+WebLib::IncludeJS("Jcrop/js/jquery.Jcrop.min.js");
 ?>
+
 </head>
 <body>
   <div class="TopPanel">
@@ -68,6 +72,63 @@ WebLib::IncludeJS("js/md5.js");
         <input type="hidden" name="FormToken" value="<?php echo WebLib::GetVal($_SESSION, 'FormToken'); ?>" />
         <br />
         <input type="button" value="Change Password" onClick="ChkPwd('<?php echo md5(WebLib::GetVal($_SESSION, 'FormToken')); ?>');" />
+      </form>
+      <hr />
+      <h2>Upload Photo</h2>
+      <form action="<?php echo WebLib::GetVal($_SERVER, 'PHP_SELF'); ?>" method="post" onsubmit="return checkCoords();">
+        <div class="UploadPhoto">
+          <img class="ViewPhoto">
+          <label id="lblAdmitPhoto" for="AdmitPhoto">Select a Photograph:</label>
+          <input type="file" id="AdmitPhoto" name="AdmitPhoto" accept="image/*" required="">
+        </div>
+        <script type="text/javascript">
+          function updateCoords(c) {
+            $('#x').val(c.x);
+            $('#y').val(c.y);
+            $('#w').val(c.w);
+            $('#h').val(c.h);
+            $('#AdmitPhoto').hide();
+            $('#lblAdmitPhoto').hide();
+          }
+          ;
+          $('input[type=file]').change(function(e) {
+            if (typeof FileReader == "undefined")
+              return true;
+
+            var elem = $(this);
+            var files = e.target.files;
+
+            for (var i = 0, file; file = files[i]; i++) {
+              if (file.type.match('image.*')) {
+                var reader = new FileReader();
+                reader.onload = (function(theFile) {
+                  return function(e) {
+                    var image = e.target.result;
+                    previewDiv = $('.ViewPhoto', elem.parent());
+                    previewDiv.attr({"src": image,
+                      "complete": function() {
+                        $('.ViewPhoto').Jcrop({
+                          bgColor: 'black',
+                          bgOpacity: .4,
+                          setSelect: [0, 0, 180, 240],
+                          aspectRatio: 3 / 4,
+                          allowSelect: false,
+                          onSelect: updateCoords,
+                        });
+                      }
+                    });
+                  };
+                })(file);
+                reader.readAsDataURL(file);
+              }
+            }
+          });
+        </script>
+        <input type="hidden" id="x" name="x" />
+        <input type="hidden" id="y" name="y" />
+        <input type="hidden" id="w" name="w" />
+        <input type="hidden" id="h" name="h" />
+        <input type="submit" value="Crop &amp; Save Photo" class="btn btn-large btn-inverse" />
       </form>
       <?php
     }
