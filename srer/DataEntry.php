@@ -1,10 +1,16 @@
 <?php
+/**
+ * @todo Cache based Selection of AC and Part
+ * @todo Form Selection using jQuery UI Tabs
+ */
 require_once('srer.lib.php');
 
 WebLib::AuthSession();
 WebLib::Html5Header("Data Entry");
 WebLib::IncludeCSS();
 WebLib::JQueryInclude();
+WebLib::IncludeCSS('css/chosen.min.css');
+WebLib::IncludeJS('js/chosen.jquery.min.js');
 $Data = new MySQLiDB();
 SetCurrForm();
 if (WebLib::GetVal($_SESSION, 'ACNo') == "")
@@ -36,6 +42,35 @@ if (intval(WebLib::GetVal($_REQUEST, 'ID')) > 0)
     });
   });
 </script>
+<style type="test/css">
+  .TxtInput{
+    border: 1px solid darkgray;
+    width: 95%;
+    margin: 0px;
+  }
+  .TxtInput:hover{
+    border: 1px solid #fbd850;
+  }
+  .TxtInput:focus{
+    border: 1px solid #1c94c4;
+  }
+  input{
+    padding: 4px;
+  }
+  input[readonly="readonly"]{
+    border: none;
+    background-color: transparent;
+  }
+  input[type="text"] {
+    width: 100%;
+    box-sizing: border-box;
+    -webkit-box-sizing:border-box;
+    -moz-box-sizing: border-box;
+  }
+  th,td{
+    text-align: center;
+  }
+</style>
 </head>
 <body>
   <div class="TopPanel">
@@ -48,30 +83,35 @@ if (intval(WebLib::GetVal($_REQUEST, 'ID')) > 0)
   <?php
   WebLib::ShowMenuBar()
   ?>
-  <div class="content" style="margin-left:5px;margin-right:5px;">
+  <div class="content">
     <h2><?php echo AppTitle; ?></h2>
     <hr/>
     <form name="frmSRER" method="post" action="<?php echo WebLib::GetVal($_SERVER, 'PHP_SELF'); ?>">
-      <label for="textfield">AC No.:</label>
-      <select name="ACNo" onChange="document.frmSRER.submit();">
-        <?php
-        $Query = 'Select ACNo,ACNo from `' . MySQL_Pre . 'SRER_PartMap`'
-                . ' Where PartMapID=' . WebLib::GetVal($_SESSION, 'UserMapID', TRUE) . ' Group By ACNo';
-        $Data->show_sel('ACNo', 'ACNo', $Query, WebLib::GetVal($_SESSION, 'ACNo', TRUE));
-        ?>
-      </select>
-      <label for="textfield">Part No.:</label>
-      <select name="PartID">
-        <?php
-        $Choice = (WebLib::GetVal($_SESSION, 'PartID') === "") ? '--Choose--' : WebLib::GetVal($_SESSION, 'PartID');
-        $Query = 'Select PartID,CONCAT(PartNo,\' - \',PartName) as PartName from `' . MySQL_Pre . 'SRER_PartMap` '
-                . ' Where ACNo=\'' . WebLib::GetVal($_SESSION, 'ACNo') . '\' and PartMapID=' . WebLib::GetVal($_SESSION, 'UserMapID') . ' group by PartNo';
-        $RowCount = $Data->show_sel('PartID', 'PartName', $Query, $Choice);
-        ?>
-      </select>
-      <input type="submit" name="CmdSubmit" value="Refresh" />
+      <div class="FieldGroup">
+        <label for="textfield">AC No.:</label><br/>
+        <select name="ACNo" id="ACNo" onChange="document.frmSRER.submit();">
+          <?php
+          $Query = 'Select AC_NO,CONCAT(AC_NO,\' - \',AC_NAME) as AC_NAME from `' . MySQL_Pre . 'SRER_ACs`'
+                  . ' Where PartMapID=' . WebLib::GetVal($_SESSION, 'UserMapID', TRUE);
+          $Data->show_sel('AC_NO', 'AC_NAME', $Query, WebLib::GetVal($_SESSION, 'ACNo', TRUE));
+          ?>
+        </select>
+        <?php //echo $Query; ?>
+      </div>
+      <div class="FieldGroup">
+        <label for="textfield">Part No.:</label><br/>
+        <select name="PartID" id="PartID" onChange="document.frmSRER.submit();">
+          <?php
+          $Choice = (WebLib::GetVal($_SESSION, 'PartID') === "") ? '--Choose--' : WebLib::GetVal($_SESSION, 'PartID');
+          $Query = 'Select PartID,CONCAT(PartNo,\' - \',PartName) as PartName from `' . MySQL_Pre . 'SRER_PartMap` '
+                  . ' Where ACNo=\'' . WebLib::GetVal($_SESSION, 'ACNo') . '\' and PartMapID=' . WebLib::GetVal($_SESSION, 'UserMapID') . ' group by PartNo';
+          $RowCount = $Data->show_sel('PartID', 'PartName', $Query, $Choice);
+          ?>
+        </select>
+      </div>
+      <div style="clear:both;"></div>
       <?php //echo $Query; ?>
-      <br /><hr />
+      <hr />
       <?php
       if ((intval(WebLib::GetVal($_SESSION, 'PartID')) > 0) && (WebLib::GetVal($_SESSION, 'TableName') != "")) {
         $RowCount = $Data->do_max_query("Select count(*) from " . WebLib::GetVal($_SESSION, 'TableName') . " Where PartID=" . WebLib::GetVal($_SESSION, 'PartID'));
@@ -118,7 +158,7 @@ if (intval(WebLib::GetVal($_REQUEST, 'ID')) > 0)
               . ' Where PartID=' . WebLib::GetVal($_SESSION, 'PartID');
       $Query = $Query . $CondBlank;
 
-      echo $Query;
+      //echo $Query;
 
       EditForm($Query);
       if (WebLib::GetVal($_POST, 'ShowBlankCount') == "1") {
@@ -145,7 +185,10 @@ if (intval(WebLib::GetVal($_REQUEST, 'ID')) > 0)
       }
     }
     ?>
-    <br />
+    <script type="text/javascript">
+  $('#ACNo').chosen({width: "300px"});
+  $('#PartID').chosen({width: "400px"});
+    </script>
   </div>
   <div class="pageinfo"><?php WebLib::PageInfo(); ?></div>
   <div class="footer"><?php WebLib::FooterInfo(); ?></div>
