@@ -2,8 +2,11 @@
 
 /**
  * @todo Unique Random ID Generator function to be included
+ * @todo HelpLine has to be added
+ * @todo Menus made to be Database driven
  */
-include_once 'MySQLiDB.inc.php';
+require_once 'MySQLiDB.inc.php';
+require_once 'sql.defs.php';
 
 class WebLib {
 
@@ -44,10 +47,10 @@ class WebLib {
 
     // all inputs clean, proceed to build password
     // change these strings if you want to include or exclude possible password characters
-    $chars = "abcdefghijklmnopqrstuvwxyz";
+    $chars = 'abcdefghijklmnopqrstuvwxyz';
     $caps = strtoupper($chars);
-    $nums = "0123456789";
-    $syms = "!@#$%^&*()-+?";
+    $nums = '0123456789';
+    $syms = '!@#$%^&*()-+?';
     $out = '';
     // build the base password of all lower-case letters
     for ($i = 0; $i < $l; $i++) {
@@ -90,12 +93,12 @@ class WebLib {
    * Title: {$PageTitle} - {$AppTitle}; AppTitle is Defined in DatabaseCofig.inc.php
    * @param string $PageTitle Title of the page
    */
-  public static function Html5Header($PageTitle = "Paschim Medinipur") {
+  public static function Html5Header($PageTitle = 'Paschim Medinipur') {
     $AppTitle = AppTitle;
     echo '<!DOCTYPE html>';
     echo '<html xmlns="http://www.w3.org/1999/xhtml">';
     echo '<head>';
-    echo "<title>{$PageTitle} - {$AppTitle}</title>";
+    echo '<title>' . $PageTitle . ' - ' . $AppTitle . '</title>';
     echo '<meta name="robots" content="noarchive,noodp">';
     echo '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
   }
@@ -121,28 +124,28 @@ class WebLib {
   }
 
   /**
-   * IncludeCSS([$CSS = "css/Style.css"])
+   * IncludeCSS([$CSS = 'css/Style.css'])
    *
    * Generates link to css specified by $CSS
    *
    * @param string $CSS href including path
    */
-  public static function IncludeCSS($PathToCSS = "css/Style.css") {
+  public static function IncludeCSS($PathToCSS = 'css/Style.css') {
     echo '<link type="text/css" href="' . WebLib::GetAbsoluteURLFolder() . $PathToCSS . '" rel="Stylesheet" />';
   }
 
   /**
-   * initHTML5page([$PageTitle = ""])
+   * initHTML5page([$PageTitle = ''])
    *
    * Starts a Session and Html5Header function
    *
    * @param string $PageTitle Title of the page
    */
-  public static function InitHTML5page($PageTitle = "") {
+  public static function InitHTML5page($PageTitle = '') {
     WebLib::InitSess();
     WebLib::Html5Header($PageTitle);
     if (WebLib::GetVal($_REQUEST, 'show_src')) {
-      if (WebLib::GetVal($_REQUEST, 'show_src') == "me")
+      if (WebLib::GetVal($_REQUEST, 'show_src') == 'me')
         show_source(substr($_SERVER['PHP_SELF'], 1, strlen($_SERVER['PHP_SELF'])));
     }
   }
@@ -153,7 +156,7 @@ class WebLib {
    * Returns value of an array element without cousing warning/error
    *
    * @param array $Array eg. $_SESSION
-   * @param string $Index eg. "index"
+   * @param string $Index eg. 'index'
    * @param bool $ForSQL If set to true then SQLSafe else htmlspecialchars will be applied
    * @param bool $HTMLSafe If FALSE then OutPut without htmlspecialchars
    * @return null|$Array[$Index]
@@ -163,7 +166,7 @@ class WebLib {
    */
   public static function GetVal($Array, $Index, $ForSQL = FALSE, $HTMLSafe = TRUE) {
     if (!isset($Array[$Index])) {
-      return ($ForSQL) ? "" : NULL;
+      return ($ForSQL) ? '' : NULL;
     } else {
       if ($ForSQL) {
         $Data = new MySQLiDB();
@@ -188,10 +191,10 @@ class WebLib {
    * @return string
    */
   public static function ToDate($AppDate) {
-    if ($AppDate != "")
-      return date("d-m-Y", strtotime($AppDate));
+    if ($AppDate != '')
+      return date('d-m-Y', strtotime($AppDate));
     else
-      return date("d-m-Y", time());
+      return date('d-m-Y', time());
   }
 
   /**
@@ -201,10 +204,10 @@ class WebLib {
    * @return string
    */
   public static function ToDBDate($AppDate) {
-    if ($AppDate == "")
-      return date("Y-m-d", time());
+    if ($AppDate == '')
+      return date('Y-m-d', time());
     else
-      return date("Y-m-d", strtotime($AppDate));
+      return date('Y-m-d', strtotime($AppDate));
   }
 
   /**
@@ -214,13 +217,13 @@ class WebLib {
    * @return string Random String
    */
   public static function RandStr($length) {
-    $chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $size = strlen($chars);
-    $str = "";
+    $str = '';
     for ($i = 0; $i < $length; $i++) {
       $Chr = $chars[rand(0, $size - 1)];
       $str .=$Chr;
-      $chars = str_replace($Chr, "", $chars);
+      $chars = str_replace($Chr, '', $chars);
       $size = strlen($chars);
     }
     return $str;
@@ -246,18 +249,18 @@ class WebLib {
    * @return array
    */
   public static function InpSanitize($PostData) {
-    $Fields = "";
+    $Fields = '';
     $Data = new MySQLiDB();
     foreach ($PostData as $FieldName => &$Value) {
       $Value = $Data->SqlSafe($Value);
-      $Fields = $Fields . "<br />" . $FieldName;
-      if ($Value == "") {
+      $Fields = $Fields . '<br />' . $FieldName;
+      if ($Value == '') {
         $_SESSION['Msg'] = '<b>Message:</b> Field ' . GetColHead($FieldName) . ' left unfilled.';
       }
     }
     unset($Value);
     $PostData['Fields'] = $Fields;
-//echo "Total Fields:".count($PostData);
+//echo 'Total Fields:'.count($PostData);
     return $PostData;
   }
 
@@ -266,42 +269,41 @@ class WebLib {
    */
 
   public static function ShowMsg() {
-    if (WebLib::GetVal($_SESSION, "Msg") != "") {
+    if (WebLib::GetVal($_SESSION, 'Msg') != '') {
       echo '<span class="Message">' . WebLib::GetVal($_SESSION, 'Msg', FALSE, FALSE) . '</span><br/>';
-      $_SESSION['Msg'] = "";
+      $_SESSION['Msg'] = '';
     }
   }
 
   /**
    * Displays Page Informations and Records Visit Count in MySQL_Pre.Visits table
-   *
+   * @todo Active User Count to be incorporated with LifeTime Limit
    */
   public static function PageInfo() {
-    $strfile = strtok($_SERVER['PHP_SELF'], "/");
+    $strfile = strtok($_SERVER['PHP_SELF'], '/');
 //echo $_SERVER['PHP_SELF'].' | '.$strfile;
-    $str = strtok("/");
+    $str = strtok('/');
 //echo ' | '.$str;
     while ($str) {
       $strfile = $str;
 //echo ' | '.$strfile;
-      $str = strtok("/");
+      $str = strtok('/');
     }
     $reg = new MySQLiDB();
-    $visitor_num = $reg->do_max_query("select VisitCount from `" . MySQL_Pre . "Visits` "
-            . " Where PageURL='" . $_SERVER['PHP_SELF'] . "'");
-//$LastVisit = $reg->do_max_query("select timestamp(LastVisit) from " . MySQL_Pre . "Visits where PageURL like '" . $_SERVER['PHP_SELF'] . "'");
+    $visitor_num = $reg->do_max_query('select VisitCount from `' . MySQL_Pre . 'Visits` '
+            . ' Where PageURL=\'' . $_SERVER['PHP_SELF'] . '\'');
     if ($visitor_num > 0)
-      $reg->do_ins_query("update " . MySQL_Pre . "Visits "
-              . " Set `VisitCount`=`VisitCount`+1, VisitorIP='" . $_SERVER['REMOTE_ADDR'] . "'"
-              . " Where PageURL='" . $_SERVER['PHP_SELF'] . "'");
+      $reg->do_ins_query('Update `' . MySQL_Pre . 'Visits` '
+              . ' Set `VisitCount`=`VisitCount`+1, VisitorIP=\'' . $_SERVER['REMOTE_ADDR'] . '\''
+              . ' Where PageURL=\'' . $_SERVER['PHP_SELF'] . '\'');
     else
-      $reg->do_ins_query("Insert into " . MySQL_Pre . "Visits(PageURL,VisitorIP)"
-              . " Values('" . $_SERVER['PHP_SELF'] . "','" . $_SERVER['REMOTE_ADDR'] . "');");
+      $reg->do_ins_query('Insert into `' . MySQL_Pre . 'Visits` (`PageURL`,`VisitorIP`)'
+              . ' Values(\'' . $_SERVER['PHP_SELF'] . '\',\'' . $_SERVER['REMOTE_ADDR'] . '\');');
     $_SESSION['LifeTime'] = time();
-    echo "<strong > Last Updated On:</strong> &nbsp;&nbsp;" . date("l d F Y g:i:s A ", filemtime($strfile))
-    . " IST &nbsp;&nbsp;&nbsp;<b>Your IP: </b>" . $_SERVER['REMOTE_ADDR']
-    . "&nbsp;&nbsp;&nbsp;<b>Visits:</b>&nbsp;&nbsp;" . $visitor_num
-    . " <b>Loaded In:</b> " . round(microtime(TRUE) - WebLib::GetVal($_SESSION, 'ET'), 3) . " Sec";
+    echo '<strong > Last Updated On:</strong> &nbsp;&nbsp;' . date('l d F Y g:i:s A ', filemtime($strfile))
+    . ' IST &nbsp;&nbsp;&nbsp;<b>Your IP: </b>' . $_SERVER['REMOTE_ADDR']
+    . '&nbsp;&nbsp;&nbsp;<b>Visits:</b>&nbsp;&nbsp;' . $visitor_num
+    . ' <b>Loaded In:</b> ' . round(microtime(TRUE) - WebLib::GetVal($_SESSION, 'ET'), 3) . ' Sec';
     $reg->do_close();
   }
 
@@ -314,15 +316,15 @@ class WebLib {
     . 'West Bengal - 721101 , India Phone : +91-3222-263506, Email: wbmdp(a)nic.in<br/>';
     $_SESSION['ED'] = round(microtime(TRUE) - WebLib::GetVal($_SESSION, 'ET'), 3);
     $reg = new MySQLiDB();
-    $reg->do_ins_query("INSERT INTO " . MySQL_Pre . "VisitorLogs(`SessionID`, `IP`, `Referrer`, `UserAgent`, `URL`, `Action`, `Method`, `URI`, `ED`)"
-            . " Values('" . WebLib::GetVal($_SESSION, 'ID', TRUE) . "', '" . $_SERVER['REMOTE_ADDR'] . "', '"
-            . WebLib::GetVal($_SERVER, 'HTTP_REFERER', TRUE) . "', '"
-            . $reg->SqlSafe($_SERVER['HTTP_USER_AGENT']) . "', '"
-            . $reg->SqlSafe($_SERVER['PHP_SELF']) . "', '"
-            . $reg->SqlSafe($_SERVER['SCRIPT_NAME']) . "', '"
-            . $reg->SqlSafe($_SERVER['REQUEST_METHOD']) . "', '"
-            . $reg->SqlSafe($_SERVER['REQUEST_URI']) . "',"
-            . WebLib::GetVal($_SESSION, 'ED') . ");");
+    $reg->do_ins_query('INSERT INTO ' . MySQL_Pre . 'VisitorLogs(`SessionID`, `IP`, `Referrer`, `UserAgent`, `URL`, `Action`, `Method`, `URI`, `ED`)'
+            . ' Values(\'' . WebLib::GetVal($_SESSION, 'ID', TRUE) . '\', \'' . $_SERVER['REMOTE_ADDR'] . '\', \''
+            . WebLib::GetVal($_SERVER, 'HTTP_REFERER', TRUE) . '\', \''
+            . $reg->SqlSafe($_SERVER['HTTP_USER_AGENT']) . '\', \''
+            . $reg->SqlSafe($_SERVER['PHP_SELF']) . '\', \''
+            . $reg->SqlSafe($_SERVER['SCRIPT_NAME']) . '\', \''
+            . $reg->SqlSafe($_SERVER['REQUEST_METHOD']) . '\', \''
+            . $reg->SqlSafe($_SERVER['REQUEST_URI']) . '\','
+            . WebLib::GetVal($_SESSION, 'ED') . ');');
     $reg->do_close();
     $_SESSION['ED'] = 0;
   }
@@ -334,202 +336,7 @@ class WebLib {
    * @return string SQL Query for the requested object
    */
   private static function GetTableDefs($TableName) {
-    $SqlDB = "";
-    switch ($TableName) {
-      case "Visits":
-        $SqlDB = "CREATE TABLE IF NOT EXISTS `" . MySQL_Pre . "Visits` ("
-                . "`PageID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,"
-                . "`PageURL` text NOT NULL,"
-                . "`VisitCount` bigint(20) NOT NULL DEFAULT '1',"
-                . "`LastVisit` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,"
-                . "`PageTitle` text,"
-                . "`VisitorIP` text NOT NULL,"
-                . " PRIMARY KEY (`PageID`)"
-                . ") ENGINE = InnoDB DEFAULT CHARSET = utf8;";
-        break;
-      case "Logs":
-        $SqlDB = "CREATE TABLE IF NOT EXISTS `" . MySQL_Pre . "Logs` ("
-                . "`LogID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,"
-                . "`SessionID` varchar(32) DEFAULT NULL,"
-                . "`IP` varchar(15) DEFAULT NULL,"
-                . "`Referrer` longtext,"
-                . "`UserAgent` longtext,"
-                . "`UserID` varchar(20) NOT NULL,"
-                . "`URL` longtext,"
-                . "`Action` longtext,"
-                . "`Method` varchar(10) DEFAULT NULL,"
-                . "`URI` longtext,"
-                . "`AccessTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,"
-                . "  PRIMARY KEY (`LogID`)"
-                . ") ENGINE=InnoDB  DEFAULT CHARSET=utf8;";
-        break;
-      case "VisitorLogs":
-        $SqlDB = "CREATE TABLE IF NOT EXISTS `" . MySQL_Pre . "VisitorLogs` ("
-                . "`LogID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,"
-                . "`SessionID` varchar(32) DEFAULT NULL,"
-                . "`IP` varchar(15) DEFAULT NULL,"
-                . "`Referrer` longtext,"
-                . "`UserAgent` longtext,"
-                . "`URL` longtext,"
-                . "`Action` longtext,"
-                . "`Method` varchar(10) DEFAULT NULL,"
-                . "`URI` longtext,"
-                . "`ED` DECIMAL(4,4) NOT NULL," //DECIMAL(M,D) as M.D ; M>=D;
-                . "`AccessTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,"
-                . "  PRIMARY KEY (`LogID`)"
-                . ") ENGINE=InnoDB  DEFAULT CHARSET=utf8;";
-        break;
-      case "Uploads":
-        $SqlDB = "CREATE TABLE IF NOT EXISTS `" . MySQL_Pre . "Uploads` ("
-                . "`UploadID` int(11) NOT NULL AUTO_INCREMENT,"
-                . "`Dept` text NOT NULL,"
-                . "`Subject` varchar(250) NOT NULL,"
-                . "`Topic` int(11) NOT NULL,"
-                . "`Dated` date NOT NULL,"
-                . "`Expiry` date DEFAULT NULL,"
-                . "`Attachment` text NOT NULL,"
-                . "`size` int(11) NOT NULL,"
-                . "`mime` text NOT NULL,"
-                . "`file` longblob,"
-                . "`UploadedOn` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,"
-                . "`Deleted` tinyint(1) NOT NULL,"
-                . " PRIMARY KEY (`UploadID`)"
-                . ") ENGINE=InnoDB  DEFAULT CHARSET=utf8;";
-        break;
-      case "Users":
-        $SqlDB = "CREATE TABLE IF NOT EXISTS `" . MySQL_Pre . "Users` ("
-                . "`UserMapID` int(10) NOT NULL AUTO_INCREMENT,"
-                . "`UserID` varchar(255) DEFAULT NULL,"
-                . "`MobileNo` varchar(10) DEFAULT NULL,"
-                . "`UserName` varchar(255) DEFAULT NULL,"
-                . "`UserPass` varchar(255) DEFAULT NULL,"
-                . "`CtrlMapID` int(10) NOT NULL,"
-                . "`Remarks` varchar(255) DEFAULT NULL,"
-                . "`LoginCount` int(10) DEFAULT '0',"
-                . "`LastLoginTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,"
-                . "`Registered` tinyint(1) NOT NULL,"
-                . "`Activated` tinyint(1) NOT NULL,"
-                . " PRIMARY KEY (`UserMapID`)"
-                . ") ENGINE=InnoDB DEFAULT CHARSET=utf8;";
-        break;
-      case "UsersData":
-// Super Admin Password "test@123"
-        $SqlDB = "INSERT INTO `" . MySQL_Pre . "Users`"
-                . "(`UserID`, `UserName`, `UserPass`, `UserMapID`, `CtrlMapID`,`Registered`, `Activated`) "
-                . "VALUES ('Admin','Super Administrator','ceb6c970658f31504a901b89dcd3e461',1,0,1,1);";
-        break;
-      case "SRER_FieldNames":
-        $SqlDB = "CREATE TABLE IF NOT EXISTS `" . MySQL_Pre . "SRER_FieldNames` ("
-                . "`FieldName` varchar(20) NOT NULL,"
-                . "`Description` varchar(255) DEFAULT NULL,"
-                . " PRIMARY KEY (`FieldName`)"
-                . ") ENGINE=InnoDB DEFAULT CHARSET=utf8;";
-        break;
-      case "SRER_FieldNameData":
-        $SqlDB = "INSERT INTO `" . MySQL_Pre . "SRER_FieldNames` (`FieldName`, `Description`) VALUES"
-                . "('ACNo', 'AC Name'),"
-                . "('Action', 'Action (Page)'),"
-                . "('AppName', 'Name of Applicant'),"
-                . "('CountF6', 'Form 6 Data Count'),"
-                . "('CountF6A', 'Form 6A Data Count'),"
-                . "('CountF7', 'Form 7 Data Count'),"
-                . "('CountF8', 'Form 8 Data Count'),"
-                . "('CountF8A', 'Form 8A Data Count'),"
-                . "('DelPersonName', 'Name of the Person to be Deleted'),"
-                . "('IP', 'IP Address'),"
-                . "('LastAccessTime', 'Last Accessed On'),"
-                . "('LastLoginTime', 'Last Login Time'),"
-                . "('LoginCount', 'Login Count'),"
-                . "('ObjectorName', 'Name of Objector'),"
-                . "('ObjectReason', 'Reason of Objection'),"
-                . "('PartNo', 'Part Number of Objected Person'),"
-                . "('ReceiptDate', 'Date of Receipt'),"
-                . "('Relationship', 'Relationship'),"
-                . "('RelationshipName', 'Name of Father/ Mother/ Husband/ Others'),"
-                . "('SerialNoInPart', 'Serial No. in Concerned Part'),"
-                . "('SlNo', 'Serial No.'),"
-                . "('Status', 'Status'),"
-                . "('UserName', 'Block');";
-        break;
-      case "`SRER_Form6`":
-        $SqlDB = "CREATE TABLE IF NOT EXISTS `" . MySQL_Pre . "SRER_Form6` ("
-                . "`RowID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,"
-                . "`SlNo` int(10) DEFAULT NULL,"
-                . "`PartID` int(10) DEFAULT NULL,"
-                . "`ReceiptDate` varchar(10) DEFAULT NULL,"
-                . "`AppName` varchar(255) DEFAULT NULL,"
-                . "`RelationshipName` varchar(255) DEFAULT NULL,"
-                . "`Relationship` varchar(255) DEFAULT NULL,"
-                . "`Status` varchar(255) DEFAULT NULL,"
-                . " PRIMARY KEY (`RowID`)"
-                . ") ENGINE = InnoDB DEFAULT CHARSET = utf8;";
-        break;
-      case "SRER_Form6A":
-        $SqlDB = "CREATE TABLE IF NOT EXISTS `" . MySQL_Pre . "SRER_Form6A` ("
-                . "`RowID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,"
-                . "`SlNo` int(10) DEFAULT NULL,"
-                . "`PartID` int(10) DEFAULT NULL,"
-                . "`ReceiptDate` varchar(10) DEFAULT NULL,"
-                . "`AppName` varchar(255) DEFAULT NULL,"
-                . "`RelationshipName` varchar(255) DEFAULT NULL,"
-                . "`Relationship` varchar(255) DEFAULT NULL,"
-                . "`Status` varchar(255) DEFAULT NULL,"
-                . " PRIMARY KEY (`RowID`)"
-                . ") ENGINE = InnoDB DEFAULT CHARSET = utf8;";
-        break;
-      case "SRER_Form7":
-        $SqlDB = "CREATE TABLE IF NOT EXISTS `" . MySQL_Pre . "SRER_Form7` ("
-                . "`RowID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,"
-                . "`PartID` int(10) DEFAULT NULL,"
-                . "`ReceiptDate` varchar(10) DEFAULT NULL,"
-                . "`ObjectorName` varchar(255) DEFAULT NULL,"
-                . "`PartNo` varchar(255) DEFAULT NULL,"
-                . "`SerialNoInPart` int(10) DEFAULT NULL,"
-                . "`DelPersonName` varchar(255) DEFAULT NULL,"
-                . "`ObjectReason` varchar(255) DEFAULT NULL,"
-                . "`Status` varchar(255) DEFAULT NULL,"
-                . "`SlNo` int(10) DEFAULT NULL,"
-                . " PRIMARY KEY (`RowID`)"
-                . ") ENGINE=InnoDB  DEFAULT CHARSET=utf8;";
-        break;
-      case "SRER_Form8":
-        $SqlDB = "CREATE TABLE IF NOT EXISTS `" . MySQL_Pre . "SRER_Form8` ("
-                . "`RowID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,"
-                . "`SlNo` int(10) DEFAULT NULL,"
-                . "`PartID` int(10) DEFAULT NULL,"
-                . "`ReceiptDate` varchar(10) DEFAULT NULL,"
-                . "`AppName` varchar(255) DEFAULT NULL,"
-                . "`RelationshipName` varchar(255) DEFAULT NULL,"
-                . "`Relationship` varchar(255) DEFAULT NULL,"
-                . "`Status` varchar(255) DEFAULT NULL,"
-                . " PRIMARY KEY (`RowID`)"
-                . ") ENGINE = InnoDB DEFAULT CHARSET = utf8;";
-        break;
-      case "SRER_Form8A":
-        $SqlDB = "CREATE TABLE IF NOT EXISTS `" . MySQL_Pre . "SRER_Form8A` ("
-                . "`RowID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,"
-                . "`SlNo` int(10) DEFAULT NULL,"
-                . "`PartID` int(10) DEFAULT NULL,"
-                . "`ReceiptDate` varchar(10) DEFAULT NULL,"
-                . "`AppName` varchar(255) DEFAULT NULL,"
-                . "`RelationshipName` varchar(255) DEFAULT NULL,"
-                . "`Relationship` varchar(255) DEFAULT NULL,"
-                . "`Status` varchar(255) DEFAULT NULL,"
-                . " PRIMARY KEY (`RowID`)"
-                . ") ENGINE = InnoDB DEFAULT CHARSET = utf8;";
-        break;
-      case "SRER_PartMap":
-        $SqlDB = "CREATE TABLE IF NOT EXISTS `" . MySQL_Pre . "SRER_PartMap` ("
-                . "`PartID` int(10) NOT NULL AUTO_INCREMENT,"
-                . "`PartMapID` int(10) DEFAULT NULL,"
-                . "`PartNo` varchar(255) DEFAULT NULL,"
-                . "`PartName` varchar(255) DEFAULT NULL,"
-                . "`ACNo` varchar(255) DEFAULT NULL,"
-                . " PRIMARY KEY (`PartID`)"
-                . ") ENGINE=InnoDB  DEFAULT CHARSET=utf8;";
-        break;
-    }
-    return $SqlDB;
+    return SQLDefs($TableName);
   }
 
   /**
@@ -537,28 +344,29 @@ class WebLib {
    *
    * @param string $ForWhat
    */
-  public static function CreateDB($ForWhat = "WebSite") {
+  public static function CreateDB($ForWhat = 'WebSite') {
     switch ($ForWhat) {
-      case "WebSite":
+      case 'WebSite':
         $ObjDB = new MySQLiDB();
-        $ObjDB->do_ins_query(self::GetTableDefs("Visits"));
-        $ObjDB->do_ins_query(self::GetTableDefs("VisitorLogs"));
-        $ObjDB->do_ins_query(self::GetTableDefs("Logs"));
-        $ObjDB->do_ins_query(self::GetTableDefs("Uploads"));
-        $ObjDB->do_ins_query(self::GetTableDefs("Users"));
-        $ObjDB->do_ins_query(self::GetTableDefs("UsersData"));
+        $ObjDB->do_ins_query(self::GetTableDefs('Visits'));
+        $ObjDB->do_ins_query(self::GetTableDefs('VisitorLogs'));
+        $ObjDB->do_ins_query(self::GetTableDefs('Logs'));
+        $ObjDB->do_ins_query(self::GetTableDefs('Uploads'));
+        $ObjDB->do_ins_query(self::GetTableDefs('Users'));
+        $ObjDB->do_ins_query(self::GetTableDefs('UsersData'));
         $ObjDB->do_close();
         break;
-      case "SRER":
+      case 'SRER':
         $ObjDB = new MySQLiDB();
-        $ObjDB->do_ins_query(self::GetTableDefs("SRER_FieldNames"));
-        $ObjDB->do_ins_query(self::GetTableDefs("SRER_FieldNameData"));
-        $ObjDB->do_ins_query(self::GetTableDefs("SRER_Form6"));
-        $ObjDB->do_ins_query(self::GetTableDefs("SRER_Form6A"));
-        $ObjDB->do_ins_query(self::GetTableDefs("SRER_Form7"));
-        $ObjDB->do_ins_query(self::GetTableDefs("SRER_Form8"));
-        $ObjDB->do_ins_query(self::GetTableDefs("SRER_Form8A"));
-        $ObjDB->do_ins_query(self::GetTableDefs("SRER_PartMap"));
+        $ObjDB->do_ins_query(self::GetTableDefs('SRER_FieldNames'));
+        $ObjDB->do_ins_query(self::GetTableDefs('SRER_FieldNameData'));
+        $ObjDB->do_ins_query(self::GetTableDefs('SRER_Form6'));
+        $ObjDB->do_ins_query(self::GetTableDefs('SRER_Form6A'));
+        $ObjDB->do_ins_query(self::GetTableDefs('SRER_Form7'));
+        $ObjDB->do_ins_query(self::GetTableDefs('SRER_Form8'));
+        $ObjDB->do_ins_query(self::GetTableDefs('SRER_Form8A'));
+        $ObjDB->do_ins_query(self::GetTableDefs('SRER_PartMap'));
+        $ObjDB->do_ins_query(self::GetTableDefs('SRER_PartMapData'));
         $ObjDB->do_close();
         break;
     }
@@ -570,22 +378,22 @@ class WebLib {
    * @return string <b>(Browsing|LogOut|TimeOut|INVALID SESSION|Valid)</b>
    */
   public static function CheckAuth() {
-    $_SESSION['Debug'] = WebLib::GetVal($_SESSION, 'Debug') . "CheckAuth";
+    $_SESSION['Debug'] = WebLib::GetVal($_SESSION, 'Debug') . 'CheckAuth';
     if ((WebLib::GetVal($_SESSION, 'UserMapID') === NULL)) {
-      return "Browsing";
+      return 'Browsing';
     }
     if (WebLib::GetVal($_REQUEST, 'LogOut')) {
-      return "LogOut";
+      return 'LogOut';
     } else if (WebLib::GetVal($_SESSION, 'LifeTime') < (time() - (LifeTime * 60))) {
-      return "TimeOut(" . WebLib::GetVal($_SESSION, 'LifeTime') . "-" . (time() - (LifeTime * 60)) . ")";
+      return 'TimeOut(' . WebLib::GetVal($_SESSION, 'LifeTime') . '-' . (time() - (LifeTime * 60)) . ')';
     } else if (WebLib::GetVal($_SESSION, 'SESSION_TOKEN') != WebLib::GetVal($_COOKIE, 'SESSION_TOKEN')) {
-      $_SESSION['Debug'] = "(" . WebLib::GetVal($_SESSION, 'SESSION_TOKEN') . " = " . WebLib::GetVal($_COOKIE, 'SESSION_TOKEN') . ")";
-      return "INVALID SESSION (" . WebLib::GetVal($_SESSION, 'SESSION_TOKEN') . " = " . WebLib::GetVal($_COOKIE, 'SESSION_TOKEN') . ")";
+      $_SESSION['Debug'] = '(' . WebLib::GetVal($_SESSION, 'SESSION_TOKEN') . ' = ' . WebLib::GetVal($_COOKIE, 'SESSION_TOKEN') . ')';
+      return 'INVALID SESSION (' . WebLib::GetVal($_SESSION, 'SESSION_TOKEN') . ' = ' . WebLib::GetVal($_COOKIE, 'SESSION_TOKEN') . ')';
     } elseif (WebLib::GetVal($_SESSION, 'ID') !== session_id()) {
-      $_SESSION['Debug'] = "(" . WebLib::GetVal($_SESSION, 'ID') . " = " . session_id() . ")";
-      return "INVALID SESSION (" . WebLib::GetVal($_SESSION, 'ID') . " = " . session_id() . ")";
+      $_SESSION['Debug'] = '(' . WebLib::GetVal($_SESSION, 'ID') . ' = ' . session_id() . ')';
+      return 'INVALID SESSION (' . WebLib::GetVal($_SESSION, 'ID') . ' = ' . session_id() . ')';
     } elseif (WebLib::GetVal($_SESSION, 'UserMapID') !== NULL) {
-      return "Valid";
+      return 'Valid';
     }
   }
 
@@ -599,13 +407,13 @@ class WebLib {
     $sess_id = md5(microtime());
     $_SESSION['ET'] = microtime(TRUE);
     $_SESSION['Debug'] = WebLib::GetVal($_SESSION, 'Debug')
-            . "InInitPage(" . WebLib::GetVal($_SESSION, 'SESSION_TOKEN')
-            . " = " . WebLib::GetVal($_COOKIE, 'SESSION_TOKEN', TRUE) . ")";
-    setcookie("SESSION_TOKEN", $sess_id, (time() + (LifeTime * 60)), BaseDIR);
+            . 'InInitPage(' . WebLib::GetVal($_SESSION, 'SESSION_TOKEN')
+            . ' = ' . WebLib::GetVal($_COOKIE, 'SESSION_TOKEN', TRUE) . ')';
+    setcookie('SESSION_TOKEN', $sess_id, (time() + (LifeTime * 60)), BaseDIR);
     $_SESSION['SESSION_TOKEN'] = $sess_id;
     $_SESSION['LifeTime'] = time();
     if (WebLib::GetVal($_REQUEST, 'show_src')) {
-      if ($_REQUEST['show_src'] == "me")
+      if ($_REQUEST['show_src'] == 'me')
         show_source(substr($_SERVER['PHP_SELF'], 1, strlen($_SERVER['PHP_SELF'])));
     }
   }
@@ -618,51 +426,51 @@ class WebLib {
     if (!isset($_SESSION))
       session_start();
     $_SESSION['ET'] = microtime(TRUE);
-    $_SESSION['Debug'] = WebLib::GetVal($_SESSION, 'Debug') . "InSession_AUTH";
+    $_SESSION['Debug'] = WebLib::GetVal($_SESSION, 'Debug') . 'InSession_AUTH';
     $SessRet = WebLib::CheckAuth();
     $_SESSION['CheckAuth'] = $SessRet;
     $reg = new MySQLiDB();
     if (WebLib::GetVal($_REQUEST, 'NoAuth'))
       initSess();
     else {
-      if ($SessRet !== "Valid") {
-        $reg->do_ins_query("INSERT INTO `" . MySQL_Pre . "Logs` (`SessionID`, `IP`, `Referrer`, `UserAgent`, `UserID`, `URL`, `Action`, `Method`, `URI`)"
-                . " Values('" . WebLib::GetVal($_SESSION, 'ID', TRUE) . "', '" . $_SERVER['REMOTE_ADDR'] . "', '"
-                . WebLib::GetVal($_SERVER, 'HTTP_REFERER', TRUE) . "', '"
-                . $reg->SqlSafe($_SERVER['HTTP_USER_AGENT']) . "', '"
-                . WebLib::GetVal($_SESSION, 'UserMapID', TRUE) . "', '"
-                . $reg->SqlSafe($_SERVER['PHP_SELF']) . "', '" . $SessRet . " ("
-                . $reg->SqlSafe($_SERVER['SCRIPT_NAME']) . ")', '"
-                . $reg->SqlSafe($_SERVER['REQUEST_METHOD']) . "', '"
-                . $reg->SqlSafe($_SERVER['REQUEST_URI']) . "');");
+      if ($SessRet !== 'Valid') {
+        $reg->do_ins_query('INSERT INTO `' . MySQL_Pre . 'Logs` (`SessionID`, `IP`, `Referrer`, `UserAgent`, `UserID`, `URL`, `Action`, `Method`, `URI`)'
+                . ' Values(\'' . WebLib::GetVal($_SESSION, 'ID', TRUE) . '\', \'' . $_SERVER['REMOTE_ADDR'] . '\', \''
+                . WebLib::GetVal($_SERVER, 'HTTP_REFERER', TRUE) . '\', \''
+                . $reg->SqlSafe($_SERVER['HTTP_USER_AGENT']) . '\', \''
+                . WebLib::GetVal($_SESSION, 'UserMapID', TRUE) . '\', \''
+                . $reg->SqlSafe($_SERVER['PHP_SELF']) . '\', \'' . $SessRet . ' ('
+                . $reg->SqlSafe($_SERVER['SCRIPT_NAME']) . ')\', \''
+                . $reg->SqlSafe($_SERVER['REQUEST_METHOD']) . '\', \''
+                . $reg->SqlSafe($_SERVER['REQUEST_URI']) . '\');');
         session_unset();
         session_destroy();
         session_start();
         $_SESSION = array();
-        $_SESSION['Debug'] = WebLib::GetVal($_SESSION, 'Debug') . $SessRet . "SESSION_TOKEN-!Valid";
-        header("Location: " . BaseDIR . "login.php");
+        $_SESSION['Debug'] = WebLib::GetVal($_SESSION, 'Debug') . $SessRet . 'SESSION_TOKEN-!Valid';
+        header('Location: ' . BaseDIR . 'login.php');
         exit;
       } else {
-        $_SESSION['Debug'] = WebLib::GetVal($_SESSION, 'Debug') . "SESSION_TOKEN-Valid";
+        $_SESSION['Debug'] = WebLib::GetVal($_SESSION, 'Debug') . 'SESSION_TOKEN-Valid';
         $sess_id = md5(microtime());
-        setcookie("SESSION_TOKEN", $sess_id, (time() + (LifeTime * 60)), BaseDIR);
+        setcookie('SESSION_TOKEN', $sess_id, (time() + (LifeTime * 60)), BaseDIR);
         $_SESSION['SESSION_TOKEN'] = $sess_id;
         $_SESSION['LifeTime'] = time();
-        $LogQuery = "INSERT INTO `" . MySQL_Pre . "Logs` (`SessionID`, `IP`, `Referrer`, `UserAgent`, `UserID`, `URL`, `Action`, `Method`, `URI`) "
-                . " Values('" . WebLib::GetVal($_SESSION, 'ID') . "', '" . $_SERVER['REMOTE_ADDR'] . "', '"
-                . WebLib::GetVal($_SERVER, 'HTTP_REFERER', TRUE) . "', '"
-                . WebLib::GetVal($_SERVER, 'HTTP_USER_AGENT', TRUE) . "', '"
-                . WebLib::GetVal($_SESSION, 'UserMapID') . "', '"
-                . $reg->SqlSafe($_SERVER['PHP_SELF']) . "', '" . $SessRet . " ("
-                . $reg->SqlSafe($_SERVER['SCRIPT_NAME']) . ")', '"
-                . $reg->SqlSafe($_SERVER['REQUEST_METHOD']) . "', '"
-                . $reg->SqlSafe($_SERVER['REQUEST_URI']) . "');";
+        $LogQuery = 'INSERT INTO `' . MySQL_Pre . 'Logs` (`SessionID`, `IP`, `Referrer`, `UserAgent`, `UserID`, `URL`, `Action`, `Method`, `URI`) '
+                . ' Values(\'' . WebLib::GetVal($_SESSION, 'ID') . '\', \'' . $_SERVER['REMOTE_ADDR'] . '\', \''
+                . WebLib::GetVal($_SERVER, 'HTTP_REFERER', TRUE) . '\', \''
+                . WebLib::GetVal($_SERVER, 'HTTP_USER_AGENT', TRUE) . '\', \''
+                . WebLib::GetVal($_SESSION, 'UserMapID') . '\', \''
+                . $reg->SqlSafe($_SERVER['PHP_SELF']) . '\', \'' . $SessRet . ' ('
+                . $reg->SqlSafe($_SERVER['SCRIPT_NAME']) . ')\', \''
+                . $reg->SqlSafe($_SERVER['REQUEST_METHOD']) . '\', \''
+                . $reg->SqlSafe($_SERVER['REQUEST_URI']) . '\');';
         $reg->do_ins_query($LogQuery);
       }
     }
     if (WebLib::GetVal($_REQUEST, 'show_src') !== NULL) {
       echo $LogQuery;
-      if ($_REQUEST['show_src'] == "me")
+      if ($_REQUEST['show_src'] == 'me')
         show_source(substr($_SERVER['PHP_SELF'], 1, strlen($_SERVER['PHP_SELF'])));
     }
   }
@@ -672,25 +480,25 @@ class WebLib {
    */
   public static function ShowMenuBar() {
     echo '<div class="MenuBar"><ul>';
-    WebLib::ShowMenuitem("Home", "index.php");
-    if (WebLib::GetVal($_SESSION, 'CheckAuth') !== "Valid") {
-      WebLib::ShowMenuitem("Registration", "Register.php");
-      WebLib::ShowMenuitem("Log In!", "login.php");
+    WebLib::ShowMenuitem('Home', 'index.php');
+    if (WebLib::GetVal($_SESSION, 'CheckAuth') !== 'Valid') {
+      WebLib::ShowMenuitem('Registration', 'Register.php');
+      WebLib::ShowMenuitem('Log In!', 'login.php');
     } else {
-      WebLib::ShowMenuitem("Data Entry", "srer/DataEntry.php");
-      WebLib::ShowMenuitem("Admin Page", "srer/Admin.php");
-      WebLib::ShowMenuitem("Reports", "srer/Reports.php");
-      WebLib::ShowMenuitem(WebLib::GetVal($_SESSION, 'UserName') . "'s Profile", "Profile.php");
-      WebLib::ShowMenuitem("Manage Users", "Users.php");
-      WebLib::ShowMenuitem("User Activity", "AuditLogs.php");
-      WebLib::ShowMenuitem("Log Out!", "login.php?LogOut=1");
+      WebLib::ShowMenuitem('Data Entry', 'srer/DataEntry.php');
+      WebLib::ShowMenuitem('Admin Page', 'srer/Admin.php');
+      WebLib::ShowMenuitem('Reports', 'srer/Reports.php');
+      WebLib::ShowMenuitem(WebLib::GetVal($_SESSION, 'UserName') . '\'s Profile', 'Profile.php');
+      WebLib::ShowMenuitem('Manage Users', 'Users.php');
+      WebLib::ShowMenuitem('User Activity', 'AuditLogs.php');
+      WebLib::ShowMenuitem('Log Out!', 'login.php?LogOut=1');
     }
-    //WebLib::ShowMenuitem(WebLib::GetVal($_SESSION, 'CheckAuth'), "#");
+    //WebLib::ShowMenuitem(WebLib::GetVal($_SESSION, 'CheckAuth'), '#');
     echo '</ul></div>';
   }
 
   public static function ShowMenuitem($Caption, $URL) {
-    $Class = ($_SERVER['SCRIPT_NAME'] === BaseDIR . $URL) ? "SelMenuitems" : "Menuitems";
+    $Class = ($_SERVER['SCRIPT_NAME'] === BaseDIR . $URL) ? 'SelMenuitems' : 'Menuitems';
     echo '<li class = "' . $Class . '">'
     . '<a href = "' . WebLib::GetAbsoluteURLFolder() . $URL . '">' . $Caption . '</a>'
     . '</li>';
@@ -710,7 +518,7 @@ class WebLib {
         'database_user' => MySQL_User,
         'database_pass' => MySQL_Pass,
         'database_name' => MySQL_DB,
-        'database_table' => MySQL_Pre . "CaptchaCodes",
+        'database_table' => MySQL_Pre . 'CaptchaCodes',
         'captcha_type' => Securimage::SI_CAPTCHA_MATHEMATIC,
         'no_session' => true);
     if ($ShowImage) {
