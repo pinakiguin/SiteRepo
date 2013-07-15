@@ -16,7 +16,7 @@ if (intval(WebLib::GetVal($_POST, 'PartID')) > 0)
 if (WebLib::GetVal($_POST, 'ACNo') != "")
   $_SESSION['ACNo'] = WebLib::GetVal($_POST, 'ACNo');
 if (intval(WebLib::GetVal($_REQUEST, 'ID')) > 0)
-  $_SESSION['PartMapID'] = intval($_REQUEST['ID']);
+  $_SESSION['UserMapID'] = intval($_REQUEST['ID']);
 ?>
 <script>
   $(function() {
@@ -55,15 +55,18 @@ if (intval(WebLib::GetVal($_REQUEST, 'ID')) > 0)
       <label for="textfield">AC No.:</label>
       <select name="ACNo" onChange="document.frmSRER.submit();">
         <?php
-        $Query = "select ACNo,ACNo from SRER_PartMap Where PartMapID=" . WebLib::GetVal($_SESSION, 'PartMapID', TRUE) . " group by ACNo";
+        $Query = 'Select ACNo,ACNo from `' . MySQL_Pre . 'SRER_PartMap`'
+                . ' Where PartMapID=' . WebLib::GetVal($_SESSION, 'UserMapID', TRUE) . ' Group By ACNo';
         $Data->show_sel('ACNo', 'ACNo', $Query, WebLib::GetVal($_SESSION, 'ACNo', TRUE));
         ?>
       </select>
       <label for="textfield">Part No.:</label>
       <select name="PartID">
         <?php
-        $Query = "Select PartID,CONCAT(PartNo,'-',PartName) as PartName from SRER_PartMap where ACNo='" . WebLib::GetVal($_SESSION, 'ACNo') . "' and PartMapID=" . WebLib::GetVal($_SESSION, 'PartMapID') . " group by PartNo";
-        $RowCount = $Data->show_sel('PartID', 'PartName', $Query, WebLib::GetVal($_SESSION, 'PartID'));
+        $Choice = (WebLib::GetVal($_SESSION, 'PartID') === "") ? '--Choose--' : WebLib::GetVal($_SESSION, 'PartID');
+        $Query = 'Select PartID,CONCAT(PartNo,\' - \',PartName) as PartName from `' . MySQL_Pre . 'SRER_PartMap` '
+                . ' Where ACNo=\'' . WebLib::GetVal($_SESSION, 'ACNo') . '\' and PartMapID=' . WebLib::GetVal($_SESSION, 'UserMapID') . ' group by PartNo';
+        $RowCount = $Data->show_sel('PartID', 'PartName', $Query, $Choice);
         ?>
       </select>
       <input type="submit" name="CmdSubmit" value="Refresh" />
@@ -85,14 +88,18 @@ if (intval(WebLib::GetVal($_REQUEST, 'ID')) > 0)
         <input type="submit" name="FormName" value="Form 7" />
         <input type="submit" name="FormName" value="Form 8" />
         <input type="submit" name="FormName" value="Form 8A" />
-        <input type="checkbox" name="ShowBlank" value="1" <?php if (WebLib::GetVal($_POST, 'ShowBlank')) echo "Checked" ?>/>
+        <input type="checkbox" name="ShowBlank" value="1" <?php
+        if (WebLib::GetVal($_POST, 'ShowBlank'))
+          echo
+          "Checked"
+          ?>/>
         <label for="ShowBlank">Show Blank Records</label>
         <input type="checkbox" name="ShowBlankCount" value="1"/>
         <label for="ShowBlank">Show Blank Records Count</label>
         <hr /><br />
         <?php
         $PartName = GetPartName();
-        echo "<h3>Selected Part[{$PartName}] " . WebLib::GetVal($_SESSION, 'FormName') . "</h3>";
+        echo '<h3>Selected Part[' . $PartName . '] ' . WebLib::GetVal($_SESSION, 'FormName') . '</h3>';
       }
       ?>
     </form>
@@ -100,14 +107,15 @@ if (intval(WebLib::GetVal($_REQUEST, 'ID')) > 0)
     $CondBlank = "";
     if (WebLib::GetVal($_SESSION, 'TableName') !== NULL) {
       if (WebLib::GetVal($_POST, 'ShowBlank') == "1") {
-        $FieldNames = explode(',', WebLib::GetVal($_SESSION, 'Fields'));
+        $FieldNames = explode(', ', WebLib::GetVal($_SESSION, 'Fields'));
         $CondBlank = " AND (";
         for ($i = 1; $i < count($FieldNames); $i++) {
           $CondBlank = $CondBlank . $FieldNames[$i] . "='' OR " . $FieldNames[$i] . " IS NULL) AND (";
         }
         $CondBlank = $CondBlank . "1 )";
       }
-      $Query = "Select " . WebLib::GetVal($_SESSION, 'Fields') . " from " . WebLib::GetVal($_SESSION, 'TableName') . " Where PartID=" . WebLib::GetVal($_SESSION, 'PartID');
+      $Query = 'Select ' . WebLib::GetVal($_SESSION, 'Fields') . ' from ' . WebLib::GetVal($_SESSION, 'TableName')
+              . ' Where PartID=' . WebLib::GetVal($_SESSION, 'PartID');
       $Query = $Query . $CondBlank;
 
       echo $Query;
@@ -118,7 +126,7 @@ if (intval(WebLib::GetVal($_REQUEST, 'ID')) > 0)
         $Query = "SELECT ACNo as `AC Name`,PartNo,PartName,SUM(CountF6) as CountF6,SUM(CountF6A) as CountF6A,SUM(CountF7) as CountF7,"
                 . "SUM(CountF8) as CountF8,SUM(CountF8A) as CountF8A,(IFNULL(SUM(CountF6),0)+IFNULL(SUM(CountF6A),0)+IFNULL(SUM(CountF7),0)+"
                 . "IFNULL(SUM(CountF8),0)+IFNULL(SUM(CountF8A),0)) as Total "
-                . "FROM SRER_Users U INNER JOIN SRER_PartMap P ON U.PartMapID=P.PartMapID AND U.PartMapID=" . WebLib::GetVal($_SESSION, 'PartMapID') . " LEFT JOIN "
+                . "FROM SRER_Users U INNER JOIN SRER_PartMap P ON U.PartMapID=P.PartMapID AND U.PartMapID=" . WebLib::GetVal($_SESSION, 'UserMapID') . " LEFT JOIN "
                 . "(SELECT PartID,Count(*) as CountF6 FROM `SRER_Form6` where ((`ReceiptDate`='' OR `ReceiptDate` IS NULL) AND (`AppName`='' OR `AppName` IS NULL) AND (`RelationshipName`='' OR `RelationshipName` IS NULL) AND (`Relationship`='' OR `Relationship` IS NULL) AND (`Status`='' OR `Status` IS NULL)) GROUP BY PartID) F6 "
                 . "ON (F6.PartID=P.PartID) LEFT JOIN "
                 . "(SELECT PartID,Count(*) as CountF6A FROM `SRER_Form6A` where ((`ReceiptDate`='' OR `ReceiptDate` IS NULL) AND (`AppName`='' OR `AppName` IS NULL) AND (`RelationshipName`='' OR `RelationshipName` IS NULL) AND (`Relationship`='' OR `Relationship` IS NULL) AND (`Status`='' OR `Status` IS NULL)) GROUP BY PartID) F6A "
@@ -127,7 +135,7 @@ if (intval(WebLib::GetVal($_REQUEST, 'ID')) > 0)
                 . "ON (F7.PartID=P.PartID) LEFT JOIN "
                 . "(SELECT PartID,Count(*) as CountF8 FROM `SRER_Form8` where ((`ReceiptDate`='' OR `ReceiptDate` IS NULL) AND (`AppName`='' OR `AppName` IS NULL) AND (`RelationshipName`='' OR `RelationshipName` IS NULL) AND (`Relationship`='' OR `Relationship` IS NULL) AND (`Status`='' OR `Status` IS NULL)) GROUP BY PartID) F8 "
                 . "ON (F8.PartID=P.PartID) LEFT JOIN "
-                . "(SELECT PartID,Count(*) as CountF8A FROM `SRER_Form8A` where ((`ReceiptDate`='' OR `ReceiptDate` IS NULL) AND (`AppName`='' OR `AppName` IS NULL) AND (`RelationshipName`='' OR `RelationshipName` IS NULL) AND (`Relationship`='' OR `Relationship` IS NULL) AND (`Status`='' OR `Status` IS NULL)) GROUP BY PartID) F8A "
+                . "(SELECT PartID,Count(*) as CountF8A FROM `SRER_Form8A` where ((`ReceiptDate`='' OR `ReceiptDate` IS NULL) AND (`AppName`='' OR `AppName` IS NULL) AND (`RelationshipName`='' OR `RelationshipName` IS NULL) AND (`Relationship`='' OR `Relationship` IS NULL) AND (`Status`='       ' OR `Status` IS NULL)) GROUP BY PartID) F8A "
                 . "ON (F8A.PartID=P.PartID) GROUP BY ACNo,PartNo,PartName";
         ShowSRER($Query);
         //echo $Query;
