@@ -9,7 +9,7 @@
 	url = https://github.com/abusalam/SMS-Gateway.git
 [submodule "Jcrop"]
 	path = Jcrop
-	url = https://github.com/tapmodo/Jcrop.git
+	url = https://github.com/abusalam/Jcrop.git
 [submodule "captcha"]
 	path = captcha
 	url = https://github.com/abusalam/Captcha.git
