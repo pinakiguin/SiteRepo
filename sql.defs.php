@@ -185,6 +185,20 @@ function SQLDefs($ObjectName) {
               . ' PRIMARY KEY (`RowID`)'
               . ') ENGINE = InnoDB DEFAULT CHARSET = utf8;';
       break;
+    case 'SRER_ACs':
+      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . 'SRER_ACs` ('
+              . '`ACNo` int(3) DEFAULT NULL,'
+              . '`ACName` varchar(25) DEFAULT NULL,'
+              . '`DistCode` int(2) DEFAULT NULL,'
+              . '`PartMapID` int(3) DEFAULT NULL'
+              . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
+      break;
+    case 'SRER_Districts':
+      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . 'SRER_Districts` ('
+              . '`DistCode` int(2) DEFAULT NULL,'
+              . '`District` varchar(17) DEFAULT NULL'
+              . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
+      break;
     case 'SRER_PartMap':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . 'SRER_PartMap` ('
               . '`PartID` int(10) NOT NULL AUTO_INCREMENT,'
@@ -203,4 +217,5 @@ function SQLDefs($ObjectName) {
   }
   return $SqlDB;
 }
+
 ?>

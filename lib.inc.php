@@ -365,6 +365,8 @@ class WebLib {
         $ObjDB->do_ins_query(self::GetTableDefs('SRER_Form7'));
         $ObjDB->do_ins_query(self::GetTableDefs('SRER_Form8'));
         $ObjDB->do_ins_query(self::GetTableDefs('SRER_Form8A'));
+        $ObjDB->do_ins_query(self::GetTableDefs('SRER_Districts'));
+        $ObjDB->do_ins_query(self::GetTableDefs('SRER_ACs'));
         $ObjDB->do_ins_query(self::GetTableDefs('SRER_PartMap'));
         $ObjDB->do_ins_query(self::GetTableDefs('SRER_PartMapData'));
         $ObjDB->do_close();
