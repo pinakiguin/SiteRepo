@@ -127,6 +127,8 @@ function SQLDefs($ObjectName) {
               . '`AppName` varchar(255) DEFAULT NULL,'
               . '`RelationshipName` varchar(255) DEFAULT NULL,'
               . '`Relationship` varchar(255) DEFAULT NULL,'
+              . '`DOB` DATE NULL DEFAULT NULL,'
+              . '`Sex` INT(1) NULL DEFAULT NULL,'
               . '`Status` varchar(255) DEFAULT NULL,'
               . ' PRIMARY KEY (`RowID`)'
               . ') ENGINE = InnoDB DEFAULT CHARSET = utf8;';
@@ -140,6 +142,8 @@ function SQLDefs($ObjectName) {
               . '`AppName` varchar(255) DEFAULT NULL,'
               . '`RelationshipName` varchar(255) DEFAULT NULL,'
               . '`Relationship` varchar(255) DEFAULT NULL,'
+              . '`DOB` DATE NULL DEFAULT NULL,'
+              . '`Sex` INT(1) NULL DEFAULT NULL,'
               . '`Status` varchar(255) DEFAULT NULL,'
               . ' PRIMARY KEY (`RowID`)'
               . ') ENGINE = InnoDB DEFAULT CHARSET = utf8;';
@@ -147,6 +151,7 @@ function SQLDefs($ObjectName) {
     case 'SRER_Form7':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . 'SRER_Form7` ('
               . '`RowID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,'
+              . '`SlNo` int(10) DEFAULT NULL,'
               . '`PartID` int(10) DEFAULT NULL,'
               . '`ReceiptDate` varchar(10) DEFAULT NULL,'
               . '`ObjectorName` varchar(255) DEFAULT NULL,'
@@ -154,8 +159,9 @@ function SQLDefs($ObjectName) {
               . '`SerialNoInPart` int(10) DEFAULT NULL,'
               . '`DelPersonName` varchar(255) DEFAULT NULL,'
               . '`ObjectReason` varchar(255) DEFAULT NULL,'
+              . '`DOB` DATE NULL DEFAULT NULL,'
+              . '`Sex` INT(1) NULL DEFAULT NULL,'
               . '`Status` varchar(255) DEFAULT NULL,'
-              . '`SlNo` int(10) DEFAULT NULL,'
               . ' PRIMARY KEY (`RowID`)'
               . ') ENGINE=InnoDB  DEFAULT CHARSET=utf8;';
       break;
@@ -168,6 +174,8 @@ function SQLDefs($ObjectName) {
               . '`AppName` varchar(255) DEFAULT NULL,'
               . '`RelationshipName` varchar(255) DEFAULT NULL,'
               . '`Relationship` varchar(255) DEFAULT NULL,'
+              . '`DOB` DATE NULL DEFAULT NULL,'
+              . '`Sex` INT(1) NULL DEFAULT NULL,'
               . '`Status` varchar(255) DEFAULT NULL,'
               . ' PRIMARY KEY (`RowID`)'
               . ') ENGINE = InnoDB DEFAULT CHARSET = utf8;';
@@ -181,21 +189,23 @@ function SQLDefs($ObjectName) {
               . '`AppName` varchar(255) DEFAULT NULL,'
               . '`RelationshipName` varchar(255) DEFAULT NULL,'
               . '`Relationship` varchar(255) DEFAULT NULL,'
+              . '`DOB` DATE NULL DEFAULT NULL,'
+              . '`Sex` INT(1) NULL DEFAULT NULL,'
               . '`Status` varchar(255) DEFAULT NULL,'
               . ' PRIMARY KEY (`RowID`)'
               . ') ENGINE = InnoDB DEFAULT CHARSET = utf8;';
       break;
     case 'SRER_ACs':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . 'SRER_ACs` ('
-              . '`ACNo` int(3) DEFAULT NULL,'
+              . '`ACNo` varchar(3) DEFAULT NULL,'
               . '`ACName` varchar(25) DEFAULT NULL,'
-              . '`DistCode` int(2) DEFAULT NULL,'
+              . '`DistCode` varchar(2) DEFAULT NULL,'
               . '`PartMapID` int(3) DEFAULT NULL'
               . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
       break;
     case 'SRER_Districts':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . 'SRER_Districts` ('
-              . '`DistCode` int(2) DEFAULT NULL,'
+              . '`DistCode` varchar(2) DEFAULT NULL,'
               . '`District` varchar(17) DEFAULT NULL'
               . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
       break;

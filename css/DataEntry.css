@@ -1,0 +1,75 @@
+/*
+    Document   : DataEntry
+    Created on : 16 Jul, 2013, 4:20:11 PM
+    Author     : abu
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root {
+  display: block;
+}
+.TxtInput{
+  border: 1px solid darkgray;
+  width: 95%;
+  margin: 0px;
+}
+.TxtInput:hover{
+  border: 1px solid #fbd850;
+}
+.TxtInput:focus{
+  border: 1px solid #1c94c4;
+}
+input{
+  padding: 4px;
+}
+input[readonly="readonly"]{
+  border: none;
+  background-color: transparent;
+  color: whitesmoke;
+}
+input[type="text"] {
+  width: 100%;
+  box-sizing: border-box;
+  -webkit-box-sizing:border-box;
+  -moz-box-sizing: border-box;
+}
+th{
+  text-align: center;
+}
+.active-result{
+  text-align: left;
+  color: black;
+}
+.SRERForm{
+  width: 100%;
+}
+.new {
+  color: whitesmoke;
+  background-color: gray;
+}
+.saved {
+  color: whitesmoke;
+  background-color: transparent;
+}
+
+.SLNo{
+  width: 60px;
+}
+.ReceiptDate, .DOB{
+  width: 110px;
+}
+
+.AppName,.RelationshipName{
+
+}
+
+.Sex{
+  width: 80px;
+}
+.Relationship{
+  width: 80px;
+}
+.Status{
+  width: 80px;
+}

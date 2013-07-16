@@ -260,11 +260,10 @@ class MySQLiDB {
    * @example Output: <option value="$row[$val]"> $row[$txt] < /option>;
    * htmlspecialchars() applied to all the values
    */
-  public function show_sel($val, $txt, $query, $sel_val = "-- Choose --") {
+  public function show_sel($val, $txt, $query, $sel_val = "") {
     $this->do_sel_query($query);
     $opt = $this->RowCount;
-    if ($sel_val == "-- Choose --")
-      echo "<option value=''>-- Choose --</option>";
+    echo "<option value=''></option>";
     for ($i = 0; $i < $opt; $i++) {
       $row = $this->get_row();
       if ($row[$val] == $sel_val)

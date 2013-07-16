@@ -2,8 +2,8 @@
 
 require_once('../lib.inc.php');
 
-function SetCurrForm() {
-  Switch (WebLib::GetVal($_POST, 'FormName')) {
+function SetCurrForm($FormName = 'Form 6') {
+  Switch ($FormName) {
     case 'Form 6':
       $_SESSION['TableName'] = '`' . MySQL_Pre . 'SRER_Form6`';
       $_SESSION['Fields'] = '`SlNo`, `ReceiptDate`, `AppName`, `RelationshipName`, `Relationship`, `Status`';
@@ -76,13 +76,48 @@ function ShowSRER($QueryString) {
   return ($j);
 }
 
-function EditForm($QueryString) {
+function EditForm($FormName) {
+  //$Data = new MySQLiDBHelper(HOST_Name, MySQL_User, MySQL_Pass, MySQL_DB);
+  $FormHTML = '';
+  switch ($FormName) {
+    case 'SRER_Form6':
+      $FormHTML .='<table id="TabForm6">';
+      $FormHTML .='<thead><tr>';
+
+      $FormHTML .='<th></th>';
+
+      $FormHTML .='</tr></thead>';
+      $FormHTML .='<tbody><tr>';
+
+      $FormHTML .='<td></td>';
+
+      $FormHTML .='</tr></tbody>';
+      $FormHTML .='<tfoot><tr>';
+
+      $FormHTML .='<td></td>';
+
+      $FormHTML .='</tr></tfoot >';
+      $FormHTML .='</table>';
+      break;
+    case 'SRER_Form6A':
+      break;
+    case 'SRER_Form7':
+      break;
+    case 'SRER_Form8':
+      break;
+    case 'SRER_Form8A':
+      break;
+  }
+  return $FormHTML;
+}
+
+function EditFormA($QueryString) {
   $RowBreak = 8;
   $Data = new MySQLiDB();
   $TotalRows = $Data->do_sel_query($QueryString);
   // Printing results in HTML
   echo '<form name="frmData" method="post" action="' . htmlspecialchars($_SERVER['PHP_SELF'])
-  . '"><table rules="all" frame="box" width="100%" cellpadding="5" cellspacing="1">';
+  . '"><table rules="all" frame="box" width="100%" cellpadding="2" cellspacing="1">';
   //Update Table Data
   $col = 1;
   $TotalCols = $Data->ColCount;
@@ -99,7 +134,7 @@ function EditForm($QueryString) {
       $AddNewDB->do_ins_query($Query);
       $i++;
       $MaxSlNo++;
-      echo $Query . '<br />';
+      //echo $Query . '<br />';
     }
     $AddNewDB->do_close();
     unset($AddNewDB);
@@ -128,7 +163,7 @@ function EditForm($QueryString) {
         }
         $col++;
       }
-      echo $Query . '<br />';
+      //echo $Query . '<br />';
       $DBUpdt->do_close();
       unset($DBUpdt);
     }
@@ -159,15 +194,12 @@ function EditForm($QueryString) {
         echo '</tr><tr>';
       echo '<td>';
       if ($i == 0) {
-        $allow = 'readonly';
-        echo '<input type="checkbox" name="RowSelected[]" value="' . htmlspecialchars($col_value) . '"/>&nbsp;&nbsp;'
-        . '<!--a href="?Delete=' . htmlspecialchars($col_value) . '"><img border="0" height="16" width="16" '
-        . 'title="Delete" alt="Delete" src="./Images/b_drop.png"/></a-->&nbsp;&nbsp;';
+        echo '<input type="checkbox" name="RowSelected[]" value="' . htmlspecialchars($col_value) . '"/>'
+        . '<span style="text-align:right;">' . htmlspecialchars($col_value) . '</span>';
+      } else {
+        echo '<input type="text"';
+        echo ' name="' . $Data->GetFieldName($i) . '[]" value="' . htmlspecialchars($col_value) . '" /> </td>';
       }
-      else
-        $allow = '';
-      echo '<input ' . $allow . ' type="text"';
-      echo ' name="' . $Data->GetFieldName($i) . '[]" value="' . htmlspecialchars($col_value) . '" /> </td>';
       $i++;
     }
   }
