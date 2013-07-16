@@ -109,85 +109,73 @@ if (intval(WebLib::GetVal($_REQUEST, 'ID')) > 0)
           ?>
         </select>
       </div>
-      <div style="clear:both;"></div>
-      <?php //echo $Query; ?>
-      <hr />
-      <?php
-      if ((intval(WebLib::GetVal($_SESSION, 'PartID')) > 0) && (WebLib::GetVal($_SESSION, 'TableName') != "")) {
-        $RowCount = $Data->do_max_query("Select count(*) from " . WebLib::GetVal($_SESSION, 'TableName') . " Where PartID=" . WebLib::GetVal($_SESSION, 'PartID'));
-        $RowCount = $RowCount - 9;
-        if ($RowCount < 1)
-          $RowCount = 1;
-      }
-      if (intval(WebLib::GetVal($_SESSION, 'PartID')) > 0) {
-        ?>
-        <label for="SlFrom">From Serial No.:</label>
-        <input type="text" name="SlFrom" size="3" value="<?php echo (WebLib::GetVal($_POST, 'ShowBlank') == "1") ? '0' : $RowCount; ?>"/>
-        <input type="submit" name="FormName" value="Form 6" />
-        <input type="submit" name="FormName" value="Form 6A" />
-        <input type="submit" name="FormName" value="Form 7" />
-        <input type="submit" name="FormName" value="Form 8" />
-        <input type="submit" name="FormName" value="Form 8A" />
-        <input type="checkbox" name="ShowBlank" value="1" <?php
-        if (WebLib::GetVal($_POST, 'ShowBlank'))
-          echo
-          "Checked"
-          ?>/>
-        <label for="ShowBlank">Show Blank Records</label>
-        <input type="checkbox" name="ShowBlankCount" value="1"/>
-        <label for="ShowBlank">Show Blank Records Count</label>
-        <hr /><br />
+    </form>
+    <div style="clear:both;"></div>
+    <hr />
+    <?php
+    if ((intval(WebLib::GetVal($_SESSION, 'PartID')) > 0) && (WebLib::GetVal($_SESSION, 'TableName') != "")) {
+      $RowCount = $Data->do_max_query("Select count(*) from " . WebLib::GetVal($_SESSION, 'TableName') . " Where PartID=" . WebLib::GetVal($_SESSION, 'PartID'));
+      $RowCount = $RowCount - 9;
+      if ($RowCount < 1)
+        $RowCount = 1;
+    }
+
+    if (intval(WebLib::GetVal($_SESSION, 'PartID')) > 0) {
+      $PartName = GetPartName();
+      echo '<h3>Selected Part[' . $PartName . '] '
+      . WebLib::GetVal($_SESSION, 'FormName') . '</h3>';
+      ?>
+      <div id="SRER_Forms">
+        <ul>
+          <li><a href="#SRER_Form6">Form 6</a></li>
+          <li><a href="#SRER_Form6A">Form 6A</a></li>
+          <li><a href="#SRER_Form7">Form 7</a></li>
+          <li><a href="#SRER_Form8">Form 8</a></li>
+          <li><a href="#SRER_Form8A">Form 8A</a></li>
+        </ul>
+        <div id="SRER_Form6">
+
+        </div>
+        <div id="SRER_Form6A">
+
+        </div>
+        <div id="SRER_Form7">
+
+        </div>
+        <div id="SRER_Form8">
+
+        </div>
+        <div id="SRER_Form8A">
+
+        </div>
         <?php
-        $PartName = GetPartName();
-        echo '<h3>Selected Part[' . $PartName . '] ' . WebLib::GetVal($_SESSION, 'FormName') . '</h3>';
+      }
+      $CondBlank = "";
+      if (WebLib::GetVal($_SESSION, 'TableName') !== NULL) {
+        if (WebLib::GetVal($_POST, 'ShowBlank') == "1") {
+          $FieldNames = explode(', ', WebLib::GetVal($_SESSION, 'Fields'));
+          $CondBlank = " AND (";
+          for ($i = 1; $i < count($FieldNames); $i++) {
+            $CondBlank = $CondBlank . $FieldNames[$i] . "='' OR " . $FieldNames[$i] . " IS NULL) AND (";
+          }
+          $CondBlank = $CondBlank . "1 )";
+        }
+        $Query = 'Select ' . WebLib::GetVal($_SESSION, 'Fields') . ' from ' . WebLib::GetVal($_SESSION, 'TableName')
+                . ' Where PartID=' . WebLib::GetVal($_SESSION, 'PartID');
+        $Query = $Query . $CondBlank;
+
+        //echo $Query;
+
+        EditForm($Query);
       }
       ?>
-    </form>
-    <?php
-    $CondBlank = "";
-    if (WebLib::GetVal($_SESSION, 'TableName') !== NULL) {
-      if (WebLib::GetVal($_POST, 'ShowBlank') == "1") {
-        $FieldNames = explode(', ', WebLib::GetVal($_SESSION, 'Fields'));
-        $CondBlank = " AND (";
-        for ($i = 1; $i < count($FieldNames); $i++) {
-          $CondBlank = $CondBlank . $FieldNames[$i] . "='' OR " . $FieldNames[$i] . " IS NULL) AND (";
-        }
-        $CondBlank = $CondBlank . "1 )";
-      }
-      $Query = 'Select ' . WebLib::GetVal($_SESSION, 'Fields') . ' from ' . WebLib::GetVal($_SESSION, 'TableName')
-              . ' Where PartID=' . WebLib::GetVal($_SESSION, 'PartID');
-      $Query = $Query . $CondBlank;
-
-      //echo $Query;
-
-      EditForm($Query);
-      if (WebLib::GetVal($_POST, 'ShowBlankCount') == "1") {
-
-        $Query = "SELECT ACNo as `AC Name`,PartNo,PartName,SUM(CountF6) as CountF6,SUM(CountF6A) as CountF6A,SUM(CountF7) as CountF7,"
-                . "SUM(CountF8) as CountF8,SUM(CountF8A) as CountF8A,(IFNULL(SUM(CountF6),0)+IFNULL(SUM(CountF6A),0)+IFNULL(SUM(CountF7),0)+"
-                . "IFNULL(SUM(CountF8),0)+IFNULL(SUM(CountF8A),0)) as Total "
-                . "FROM SRER_Users U INNER JOIN SRER_PartMap P ON U.PartMapID=P.PartMapID AND U.PartMapID=" . WebLib::GetVal($_SESSION, 'UserMapID') . " LEFT JOIN "
-                . "(SELECT PartID,Count(*) as CountF6 FROM `SRER_Form6` where ((`ReceiptDate`='' OR `ReceiptDate` IS NULL) AND (`AppName`='' OR `AppName` IS NULL) AND (`RelationshipName`='' OR `RelationshipName` IS NULL) AND (`Relationship`='' OR `Relationship` IS NULL) AND (`Status`='' OR `Status` IS NULL)) GROUP BY PartID) F6 "
-                . "ON (F6.PartID=P.PartID) LEFT JOIN "
-                . "(SELECT PartID,Count(*) as CountF6A FROM `SRER_Form6A` where ((`ReceiptDate`='' OR `ReceiptDate` IS NULL) AND (`AppName`='' OR `AppName` IS NULL) AND (`RelationshipName`='' OR `RelationshipName` IS NULL) AND (`Relationship`='' OR `Relationship` IS NULL) AND (`Status`='' OR `Status` IS NULL)) GROUP BY PartID) F6A "
-                . "ON (F6A.PartID=P.PartID) LEFT JOIN "
-                . "(SELECT PartID,Count(*) as CountF7 FROM `SRER_Form7` Where ((`ReceiptDate`='' OR `ReceiptDate` IS NULL) AND (`ObjectorName`='' OR `ObjectorName` IS NULL) AND (`PartNo`='' OR `PartNo` IS NULL) AND (`SerialNoInPart`='' OR `SerialNoInPart` IS NULL) AND (`DelPersonName`='' OR `DelPersonName` IS NULL) AND (`ObjectReason`='' OR `ObjectReason` IS NULL) AND (`Status` ='' OR `Status` IS NULL)) GROUP BY PartID) F7 "
-                . "ON (F7.PartID=P.PartID) LEFT JOIN "
-                . "(SELECT PartID,Count(*) as CountF8 FROM `SRER_Form8` where ((`ReceiptDate`='' OR `ReceiptDate` IS NULL) AND (`AppName`='' OR `AppName` IS NULL) AND (`RelationshipName`='' OR `RelationshipName` IS NULL) AND (`Relationship`='' OR `Relationship` IS NULL) AND (`Status`='' OR `Status` IS NULL)) GROUP BY PartID) F8 "
-                . "ON (F8.PartID=P.PartID) LEFT JOIN "
-                . "(SELECT PartID,Count(*) as CountF8A FROM `SRER_Form8A` where ((`ReceiptDate`='' OR `ReceiptDate` IS NULL) AND (`AppName`='' OR `AppName` IS NULL) AND (`RelationshipName`='' OR `RelationshipName` IS NULL) AND (`Relationship`='' OR `Relationship` IS NULL) AND (`Status`='       ' OR `Status` IS NULL)) GROUP BY PartID) F8A "
-                . "ON (F8A.PartID=P.PartID) GROUP BY ACNo,PartNo,PartName";
-        ShowSRER($Query);
-        //echo $Query;
-        $Query = "Select SUM(CountF6) as TotalF6,SUM(CountF6A) as TotalF6A,SUM(CountF7) as TotalF7,SUM(CountF8) as TotalF8,SUM(CountF8A) as TotalF8A"
-                . ",SUM(Total) as Total FROM ({$Query}) as T";
-        ShowSRER($Query);
-      }
-    }
-    ?>
+    </div>
     <script type="text/javascript">
   $('#ACNo').chosen({width: "300px"});
   $('#PartID').chosen({width: "400px"});
+  $(function() {
+    $("#SRER_Forms").tabs();
+  });
     </script>
   </div>
   <div class="pageinfo"><?php WebLib::PageInfo(); ?></div>
