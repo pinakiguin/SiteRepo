@@ -38,7 +38,6 @@ if (intval(WebLib::GetVal($_REQUEST, 'ID')) > 0)
   WebLib::ShowMenuBar()
   ?>
   <div class="content" style="padding-top: 10px;">
-    <span id="Error"></span>
     <span class="Message" id="Msg" style="float: right;">
       <b>Message: </b> All messages will be shown here.
     </span>
@@ -70,7 +69,6 @@ if (intval(WebLib::GetVal($_REQUEST, 'ID')) > 0)
     <input type="text" id="ActiveSRERForm" style="width:100px;" value="SRERForm6" />
 
     <div id="SRER_Forms" style="text-align:center;width:100%;display:table;">
-
       <ul>
         <li><a href="#SRERForm6" >Form 6 </a></li>
         <li><a href="#SRERForm6A">Form 6A</a></li>
@@ -99,25 +97,22 @@ if (intval(WebLib::GetVal($_REQUEST, 'ID')) > 0)
             $i = 0;
             while ($i < 10) {
               $i++;
-              if ($i < 5) {
-                $Class = 'saved';
-              } else {
-                $Class = 'new';
-              }
               ?>
-              <tr class="<?php echo $Class; ?>">
+              <tr class="saved">
                 <td style="text-align: left;">
-                  <input id="RowID1" type="checkbox" />
+                  <input id="SRERForm6RowID<?php echo $i - 1; ?>" type="checkbox" />
                 </td>
                 <td>
-                  <input type="text" id="SRERForm6SlNo<?php echo $i; ?>" class="SlNo" />
+                  <input type="text" id="SRERForm6SlNo<?php echo $i - 1; ?>" class="SlNo"
+                         style="width: 30px; text-align: right;" readonly="readonly" />
                 </td>
-                <td><input type="text" class="ReceiptDate" id="SRERForm6ReceiptDate<?php echo $i; ?>" placeholder="dd/mm/yyyy"
-                           readonly="readonly" /></td>
+                <td><input type="text" class="ReceiptDate" id="SRERForm6ReceiptDate<?php echo $i - 1; ?>"
+                           placeholder="dd/mm/yyyy" /></td>
                 <td><input type="text" id="SRERForm6AppName<?php echo $i - 1; ?>" /></td>
                 <td><input type="text" id="SRERForm6DOB<?php echo $i - 1; ?>" class="DOB" placeholder="dd/mm/yyyy" /></td>
                 <td>
                   <select id="SRERForm6Sex<?php echo $i - 1; ?>">
+                    <option value=""></option>
                     <option value="M">Male</option>
                     <option value="F">Female</option>
                     <option value="U">Other</option>
@@ -126,10 +121,11 @@ if (intval(WebLib::GetVal($_REQUEST, 'ID')) > 0)
                 <td><input type="text" id="SRERForm6RelationshipName<?php echo $i - 1; ?>" /></td>
                 <td>
                   <select id="SRERForm6Relationship<?php echo $i - 1; ?>">
+                    <option value=""></option>
                     <option value="F">Father</option>
                     <option value="M">Mother</option>
                     <option value="H">Husband</option>
-                    <option value="U" selected="selected">Other</option>
+                    <option value="U">Other</option>
                   </select>
                 </td>
                 <td>
@@ -146,7 +142,7 @@ if (intval(WebLib::GetVal($_REQUEST, 'ID')) > 0)
             <tr>
               <td colspan="6" style="text-align: left;">
                 <span>Show 10 Rows Starting From: </span>
-                <input type="text" id="FromRow" style="width: 50px;" />
+                <input type="text" id="FromRow" style="width: 50px;" value="1"/>
                 <input type="button" id="CmdEdit"  value="Edit"/>
               </td>
               <td colspan="3" style="text-align: right;">
@@ -167,6 +163,7 @@ if (intval(WebLib::GetVal($_REQUEST, 'ID')) > 0)
       <div id="SRERForm8A">
       </div>
     </div>
+    <pre id="Error"></pre>
   </div>
   <div class="pageinfo"><?php WebLib::PageInfo(); ?></div>
   <div class="footer"><?php WebLib::FooterInfo(); ?></div>

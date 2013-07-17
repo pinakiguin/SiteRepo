@@ -42,10 +42,20 @@ if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
 
     case 'GetSRERData':
       SetCurrForm(WebLib::GetVal($_POST, 'TableName'));
-      $Query = 'Select ' . WebLib::GetVal($_SESSION, 'Fields')
-              . ' FROM ' . WebLib::GetVal($_SESSION, 'TableName')
+      $Query = 'Select ' . WebLib::GetVal($_SESSION, 'Fields', FALSE, FALSE)
+              . ' FROM ' . WebLib::GetVal($_SESSION, 'TableName', FALSE, FALSE)
               . ' Where `PartID`=? LIMIT ?,?';
       doQuery($DataResp, $Query, WebLib::GetVal($_POST, 'Params', FALSE, FALSE));
+      break;
+
+    // @todo [Currently Working to Get Last SlNo]
+    case 'PutSRERData':
+      /* SetCurrForm(WebLib::GetVal($_POST, 'TableName'));
+        $Query = 'Insert into ' . WebLib::GetVal($_SESSION, 'TableName', FALSE, FALSE)
+        . WebLib::GetVal($_SESSION, 'InsFields', FALSE, FALSE)
+        . ' Where `PartID`=? ';
+        doQuery($DataResp, $Query, WebLib::GetVal($_POST, 'Params', FALSE, FALSE)); */
+      $DataResp['Data'] = $_POST;
       break;
 
     case 'GetACParts':
@@ -63,7 +73,7 @@ if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
   }
   $DataResp['RT'] = '<b>Response Time:</b> '
           . round(microtime(TRUE) - WebLib::GetVal($_SESSION, 'RT'), 6) . ' Sec';
-  $AjaxResp = json_encode($DataResp);
+  $AjaxResp = json_encode($DataResp, JSON_PRETTY_PRINT);
   unset($DataResp);
 
   header('Content-Type: application/json');
@@ -133,7 +143,9 @@ function SetCurrForm($FormName = 'SRERForm6') {
   Switch ($FormName) {
     case 'SRERForm6':
       $_SESSION['TableName'] = '`' . MySQL_Pre . 'SRER_Form6`';
-      $_SESSION['Fields'] = '`SlNo`, `ReceiptDate`, `AppName`, `Sex`, `DOB`, `RelationshipName`, `Relationship`, `Status`';
+      $_SESSION['Fields'] = '`RowID`,`SlNo`,`ReceiptDate`,`AppName`,`Sex`,`DOB`,`RelationshipName`,`Relationship`,`Status`';
+      $_SESSION['InsFields'] = '(`SlNo`,`ReceiptDate`,`AppName`,`Sex`,`DOB`,`RelationshipName`,`Relationship`,`Status`) '
+              . 'Values (?,?,?,?,?,?,?,?) ';
       break;
     case 'SRERForm6A':
       $_SESSION['TableName'] = '`' . MySQL_Pre . 'SRER_Form6A`';

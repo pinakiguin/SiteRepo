@@ -71,15 +71,25 @@ input[type="text"] {
   -webkit-box-sizing:border-box;
   -moz-box-sizing: border-box;
 }
-th{
-  text-align: center;
+table {
+  border-collapse: collapse;
+}
+th, td {
+  padding: 0;
+}
+tr,th{
+  border: 2px solid gray;
 }
 .active-result{
   text-align: left;
   color: black;
 }
+#SRERForm6{
+  padding: 2px;
+}
 .SRERForm{
   width: 100%;
+  padding: 0px;
 }
 #SRER_Forms {
   font-size: 12px;
@@ -108,7 +118,7 @@ th{
   width: 80px;
 }
 .Relationship{
-  width: 80px;
+  width: 100px;
 }
 .Status{
   width: 80px;
