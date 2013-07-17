@@ -128,7 +128,7 @@ function SQLDefs($ObjectName) {
               . '`RelationshipName` varchar(50) DEFAULT NULL,'
               . '`Relationship` varchar(1) DEFAULT NULL,'
               . '`DOB` DATE NULL DEFAULT NULL,'
-              . '`Sex` INT(1) NULL DEFAULT NULL,'
+              . '`Sex` varchar(1) NULL DEFAULT NULL,'
               . '`Status` varchar(1) DEFAULT NULL,'
               . ' PRIMARY KEY (`RowID`)'
               . ') ENGINE = InnoDB DEFAULT CHARSET = utf8;';
@@ -143,7 +143,7 @@ function SQLDefs($ObjectName) {
               . '`RelationshipName` varchar(50) DEFAULT NULL,'
               . '`Relationship` varchar(1) DEFAULT NULL,'
               . '`DOB` DATE NULL DEFAULT NULL,'
-              . '`Sex` INT(1) NULL DEFAULT NULL,'
+              . '`Sex` varchar(1) NULL DEFAULT NULL,'
               . '`Status` varchar(1) DEFAULT NULL,'
               . ' PRIMARY KEY (`RowID`)'
               . ') ENGINE = InnoDB DEFAULT CHARSET = utf8;';
@@ -160,7 +160,7 @@ function SQLDefs($ObjectName) {
               . '`DelPersonName` varchar(50) DEFAULT NULL,'
               . '`ObjectReason` varchar(1) DEFAULT NULL,'
               . '`DOB` DATE NULL DEFAULT NULL,'
-              . '`Sex` INT(1) NULL DEFAULT NULL,'
+              . '`Sex` varchar(1) NULL DEFAULT NULL,'
               . '`Status` varchar(1) DEFAULT NULL,'
               . ' PRIMARY KEY (`RowID`)'
               . ') ENGINE=InnoDB  DEFAULT CHARSET=utf8;';
@@ -175,7 +175,7 @@ function SQLDefs($ObjectName) {
               . '`RelationshipName` varchar(50) DEFAULT NULL,'
               . '`Relationship` varchar(1) DEFAULT NULL,'
               . '`DOB` DATE NULL DEFAULT NULL,'
-              . '`Sex` INT(1) NULL DEFAULT NULL,'
+              . '`Sex` varchar(1) NULL DEFAULT NULL,'
               . '`Status` varchar(1) DEFAULT NULL,'
               . ' PRIMARY KEY (`RowID`)'
               . ') ENGINE = InnoDB DEFAULT CHARSET = utf8;';
@@ -190,7 +190,7 @@ function SQLDefs($ObjectName) {
               . '`RelationshipName` varchar(50) DEFAULT NULL,'
               . '`Relationship` varchar(1) DEFAULT NULL,'
               . '`DOB` DATE NULL DEFAULT NULL,'
-              . '`Sex` INT(1) NULL DEFAULT NULL,'
+              . '`Sex` varchar(1) NULL DEFAULT NULL,'
               . '`Status` varchar(1) DEFAULT NULL,'
               . ' PRIMARY KEY (`RowID`)'
               . ') ENGINE = InnoDB DEFAULT CHARSET = utf8;';
