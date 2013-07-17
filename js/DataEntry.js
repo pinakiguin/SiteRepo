@@ -11,6 +11,7 @@ $(function() {
     showButtonPanel: true,
     showAnim: "slideDown"
   });
+
   $(".DOB").datepicker({
     dateFormat: 'dd/mm/yy',
     maxDate: new Date(1996, 1 - 1, 1),
@@ -19,6 +20,7 @@ $(function() {
     showButtonPanel: true,
     showAnim: "slideDown"
   });
+
   $("#Dept").autocomplete({
     source: "query.php",
     minLength: 3,
@@ -26,13 +28,83 @@ $(function() {
       $('#Dept').val(ui.item.value);
     }
   });
-  $('#ACNo').chosen({width: "300px",
-    no_results_text: "Oops, nothing found!"
+
+  $('#SRER_Forms').tabs({
+    activate: function(event, ui) {
+      $('#ActiveSRERForm').val(ui.newPanel.attr('id'));
+    }
   });
+
+  /**
+   *  OnChange put PartID into hidden field #ActivePartID
+   */
   $('#PartID').chosen({width: "400px",
     no_results_text: "Oops, nothing found!"
+  }).change(function() {
+    $('#ActivePartID').val(this.value);
   });
-  $('#SRER_Forms').tabs();
+
+  /**
+   * Get the list of ACs and register change event to update Parts
+   */
+  $('#ACNo').chosen({width: "300px",
+    no_results_text: "Oops, nothing found!"
+  }).change(function() {
+    var Options = '<option value=""></option>';
+    var Parts = $('#PartID').data('Parts');
+    var ACNo = $('#ACNo').val();
+    $.each(Parts.Data,
+            function(index, value) {
+              if (value.ACNo === ACNo) {
+                Options += '<option value="' + value.PartID + '">' + value.PartNo + ' - ' + value.PartName + '</option>';
+              }
+            });
+    $('#PartID').html(Options)
+            .trigger("liszt:updated");
+  });
+
+
+  /**
+   * GetACParts API Call for Caching of AC and Parts
+   * Options for ACs are rendered and
+   * for Parts Stored in $('#PartID').data('Parts', DataResp.Parts);
+   */
+  $.ajax({
+    type: 'POST',
+    url: '../MySQLiDB.ajax.php',
+    dataType: 'html',
+    xhrFields: {
+      withCredentials: true
+    },
+    data: {
+      'AjaxToken': $('#AjaxToken').val(),
+      'CallAPI': 'GetACParts'
+    }
+  }).done(function(data) {
+    var DataResp = $.parseJSON(data);
+    delete data;
+    $('#AjaxToken').val(DataResp.AjaxToken);
+    $('#Msg').html(DataResp.Msg);
+    $('#ED').html(DataResp.RT);
+    var Options = '<option value=""></option>';
+    $.each(DataResp.ACs.Data,
+            function(index, value) {
+              Options += '<option value="' + value.ACNo + '">' + value.ACNo + ' - ' + value.ACName + '</option>';
+            });
+    $('#ACNo').html(Options)
+            .trigger("liszt:updated");
+    $('#PartID').data('Parts', DataResp.Parts);
+    delete DataResp;
+  }).fail(function(msg) {
+    $('#Msg').html(msg);
+  });
+
+  /**
+   * On Edit Fetch the rows acordingly
+   *
+   *
+   */
+
   $('#CmdEdit').click(function() {
     $.ajax({
       type: 'POST',
@@ -41,30 +113,32 @@ $(function() {
       xhrFields: {
         withCredentials: true
       },
-      data: {'AjaxToken': $('#AjaxToken').val(),
-        'CallAPI': 'GetData',
-        'Fields': '`PartNo`,`PartName`',
-        'TableName': 'SRER_PartMap',
-        'Criteria': 'Where `PartMapID`=? LIMIT ?,?',
-        'Params': new Array('1', 30, 10)
+      data: {
+        'AjaxToken': $('#AjaxToken').val(),
+        'CallAPI': 'GetSRERData',
+        'TableName': $('#ActiveSRERForm').val(),
+        'Params': new Array(56055, 1, 10)//$('#ActivePartID').val(), $('#FromRow').val(), 10)
       }
-    })
-            .done(function(data) {
+    }).done(function(data) {
+      $('#Error').html(data);
       var DataResp = $.parseJSON(data);
+      delete data;
       $('#AjaxToken').val(DataResp.AjaxToken);
       $('#Msg').html(DataResp.Msg);
       $.each(DataResp.Data,
               function(index, value) {
-                $('#Row' + index).val(value.PartNo);
-                $('#RowData' + index).val(value.PartName);
-                $('#ED').html(DataResp.RT);
+                $.each(value, function(key, data) {
+                  $('#' + $('#ActiveSRERForm').val() + key + index).val(data);
+                });
               });
-    })
-            .fail(function(msg) {
+      $('#ED').html(DataResp.RT);
+      delete DataResp;
+    }).fail(function(msg) {
       $('#Msg').html(msg);
     });
   });
+
   $('#CmdNew').click(function() {
-    $('#Msg').html($('#SRER_Forms').tabs('option', 'active'));
+    // @todo Remove the first Row and Add one at end
   });
 });

@@ -23,6 +23,7 @@ require_once('class.MySQLiDBHelper.php');
 require_once 'php-mailer/GMail.lib.php';
 if (!isset($_SESSION))
   session_start();
+//@todo Enable AjaxToken currently disabled
 $CSRF = TRUE; //(WebLib::GetVal($_POST, 'AjaxToken') === WebLib::GetVal($_SESSION, 'Token'));
 if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
   $_SESSION['LifeTime'] = time();
@@ -34,14 +35,30 @@ if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
   $DataResp['Mail'] = array();
   $DataResp['Msg'] = '';
   switch (WebLib::GetVal($_POST, 'CallAPI')) {
+
     case 'ChgPwd':
       ChangePassword($DataResp, WebLib::GetVal($_POST, 'OldPass'));
       break;
-    case 'GetData':
-      $Query = 'Select ' . WebLib::GetVal($_POST, 'Fields')
-              . ' FROM `' . MySQL_Pre . WebLib::GetVal($_POST, 'TableName') . '`'
-              . ' ' . WebLib::GetVal($_POST, 'Criteria');
+
+    case 'GetSRERData':
+      SetCurrForm(WebLib::GetVal($_POST, 'TableName'));
+      $Query = 'Select ' . WebLib::GetVal($_SESSION, 'Fields')
+              . ' FROM ' . WebLib::GetVal($_SESSION, 'TableName')
+              . ' Where `PartID`=? LIMIT ?,?';
       doQuery($DataResp, $Query, WebLib::GetVal($_POST, 'Params', FALSE, FALSE));
+      break;
+
+    case 'GetACParts':
+      $Query = 'Select `ACNo`,`ACName`'
+              . ' FROM `' . MySQL_Pre . 'SRER_ACs`'
+              . ' Where `PartMapID`=?';
+      $DataResp['ACs'] = array();
+      doQuery($DataResp['ACs'], $Query, array(WebLib::GetVal($_SESSION, 'UserMapID')));
+      $Query = 'Select `PartID`,`PartNo`,`PartName`,`ACNo`'
+              . ' FROM `' . MySQL_Pre . 'SRER_PartMap`'
+              . ' Where `PartMapID`=?';
+      $DataResp['Parts'] = array();
+      doQuery($DataResp['Parts'], $Query, array(WebLib::GetVal($_SESSION, 'UserMapID')));
       break;
   }
   $DataResp['RT'] = '<b>Response Time:</b> '
@@ -96,13 +113,47 @@ function ChangePassword(&$DataResp, $OldPass) {
  * @param array   $Params
  * @example GetData(&$DataResp, "Select a,b,c from Table Where c=? Order By b LIMIT ?,?", array('1',30,10))
  */
-function doQuery(&$DataResp, $Query, $Params) {
+function doQuery(&$DataResp, $Query, $Params = NULL) {
   $Data = new MySQLiDBHelper(HOST_Name, MySQL_User, MySQL_Pass, MySQL_DB);
   $Result = $Data->rawQuery($Query, $Params);
   $DataResp['Data'] = $Result;
   $DataResp['Msg'] = 'Total Rows: ' . count($Result);
   unset($Result);
   unset($Data);
+}
+
+/**
+ * Return the Queries related to SRER Forms
+ *
+ * ***Important*** $FormName variable should not be directly used in Query for security reasons
+ *
+ * @param type $FormName
+ */
+function SetCurrForm($FormName = 'SRERForm6') {
+  Switch ($FormName) {
+    case 'SRERForm6':
+      $_SESSION['TableName'] = '`' . MySQL_Pre . 'SRER_Form6`';
+      $_SESSION['Fields'] = '`SlNo`, `ReceiptDate`, `AppName`, `Sex`, `DOB`, `RelationshipName`, `Relationship`, `Status`';
+      break;
+    case 'SRERForm6A':
+      $_SESSION['TableName'] = '`' . MySQL_Pre . 'SRER_Form6A`';
+      $_SESSION['Fields'] = '`SlNo`, `ReceiptDate`, `AppName`, `RelationshipName`, `Relationship`, `Status`';
+      break;
+    case 'SRERForm7':
+      $_SESSION['TableName'] = '`' . MySQL_Pre . 'SRER_Form7`';
+      $_SESSION['Fields'] = '`SlNo`, `ReceiptDate`, `ObjectorName`, `PartNo`, `SerialNoInPart`, `DelPersonName`, `ObjectReason`, `Status` ';
+      break;
+    case 'SRERForm8':
+      $_SESSION['TableName'] = '`' . MySQL_Pre . 'SRER_Form8`';
+      $_SESSION['Fields'] = '`SlNo`, `ReceiptDate`, `AppName`, `RelationshipName`, `Relationship`, `Status`';
+      break;
+    case 'SRERForm8A':
+      $_SESSION['TableName'] = '`' . MySQL_Pre . 'SRER_Form8A`';
+      $_SESSION['Fields'] = '`SlNo`, `ReceiptDate`, `AppName`, `RelationshipName`, `Relationship`, `Status`';
+      break;
+  }
+  if (WebLib::GetVal($_POST, 'FormName') != '')
+    $_SESSION['FormName'] = WebLib::GetVal($_POST, 'FormName');
 }
 
 ?>
