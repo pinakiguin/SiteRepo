@@ -37,9 +37,14 @@ if (intval(WebLib::GetVal($_REQUEST, 'ID')) > 0)
   <?php
   WebLib::ShowMenuBar()
   ?>
-  <div class="content">
-    <h2><?php echo AppTitle; ?></h2>
-    <hr/>
+  <div class="content" style="padding-top: 10px;">
+    <span id="Error"></span>
+    <span class="Message" id="Msg" style="float: right;">
+      <b>Message: </b> All messages will be shown here.  All messages will be shown here.
+      All messages will be shown here. All messages will be shown here. All messages will be shown here.
+      All messages will be shown here. All messages will be shown here. All messages will be shown here.
+      All messages will be shown here. All messages will be shown here. All messages will be shown here.
+    </span>
     <form name="frmSRER" method="post" action="<?php echo WebLib::GetVal($_SERVER, 'PHP_SELF'); ?>">
       <div class="FieldGroup">
         <label for="textfield">AC No.:</label><br/>
@@ -75,9 +80,6 @@ if (intval(WebLib::GetVal($_REQUEST, 'ID')) > 0)
     }
 
     if (intval(WebLib::GetVal($_SESSION, 'PartID')) > 0) {
-      $PartName = GetPartName();
-      echo '<h3>Selected Part[' . $PartName . '] '
-      . WebLib::GetVal($_SESSION, 'FormName') . '</h3>';
       ?>
       <div id="SRER_Forms" style="text-align:center;width:100%;display:table;">
         <ul>
@@ -87,6 +89,8 @@ if (intval(WebLib::GetVal($_REQUEST, 'ID')) > 0)
           <li><a href="#SRER_Form8" >Form 8 </a></li>
           <li><a href="#SRER_Form8A">Form 8A</a></li>
         </ul>
+        <input type="hidden" id="AjaxToken"
+               value="<?php echo WebLib::GetVal($_SESSION, 'Token'); ?>" />
         <div id="SRER_Form6">
           <table class="SRERForm">
             <thead>
@@ -114,9 +118,10 @@ if (intval(WebLib::GetVal($_REQUEST, 'ID')) > 0)
                 ?>
                 <tr class="<?php echo $Class; ?>">
                   <td style="text-align: left;"><input id="RowID1" type="checkbox" /><label for="RowID1"><?php echo $i; ?></label></td>
-                  <td><input type="text" class="ReceiptDate" placeholder="dd/mm/yyyy" /></td>
-                  <td><input type="text" /></td>
-                  <td><input type="text" class="DOB" placeholder="dd/mm/yyyy" readonly="readonly" /></td>
+                  <td><input type="text" class="ReceiptDate" placeholder="dd/mm/yyyy"
+                             readonly="readonly" /></td>
+                  <td><input type="text" id="Row<?php echo $i - 1; ?>" /></td>
+                  <td><input type="text" class="DOB" placeholder="dd/mm/yyyy" /></td>
                   <td>
                     <select id="Sex" class="">
                       <option value="M">Male</option>
@@ -124,7 +129,7 @@ if (intval(WebLib::GetVal($_REQUEST, 'ID')) > 0)
                       <option value="U">Other</option>
                     </select>
                   </td>
-                  <td><input type="text" /></td>
+                  <td><input type="text" id="RowData<?php echo $i - 1; ?>" /></td>
                   <td>
                     <select id="Rel">
                       <option value="F">Father</option>
@@ -145,7 +150,16 @@ if (intval(WebLib::GetVal($_REQUEST, 'ID')) > 0)
             </tbody>
             <tfoot>
               <tr>
-                <td colspan="8" style="text-align: right;"><input type="button" value="New"/><input type="button" value="Save"/><input type="button" value="Delete"/></td>
+                <td colspan="5">
+                  <span>Show 10 Rows Starting From: </span>
+                  <input type="text" id="FromRow" style="width: 50px;" />
+                  <input type="button" id="CmdEdit"  value="Edit"/>
+                </td>
+                <td colspan="3" style="text-align: right;">
+                  <input type="button" id="CmdNew"  value="New"/>
+                  <input type="button" id="CmdSave" value="Save"/>
+                  <input type="button" id="CmdDel"  value="Delete"/>
+                </td>
               </tr>
             </tfoot>
           </table>

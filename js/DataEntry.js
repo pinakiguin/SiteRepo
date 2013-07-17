@@ -32,7 +32,39 @@ $(function() {
   $('#PartID').chosen({width: "400px",
     no_results_text: "Oops, nothing found!"
   });
-  $(function() {
-    $("#SRER_Forms").tabs();
+  $('#SRER_Forms').tabs();
+  $('#CmdEdit').click(function() {
+    $.ajax({
+      type: 'POST',
+      url: '../MySQLiDB.ajax.php',
+      dataType: 'html',
+      xhrFields: {
+        withCredentials: true
+      },
+      data: {'AjaxToken': $('#AjaxToken').val(),
+        'CallAPI': 'GetData',
+        'Fields': '`PartNo`,`PartName`',
+        'TableName': 'SRER_PartMap',
+        'Criteria': 'Where `PartMapID`=? LIMIT ?,?',
+        'Params': new Array('1', 30, 10)
+      }
+    })
+            .done(function(data) {
+      var DataResp = $.parseJSON(data);
+      $('#AjaxToken').val(DataResp.AjaxToken);
+      $('#Msg').html(DataResp.Msg);
+      $.each(DataResp.Data,
+              function(index, value) {
+                $('#Row' + index).val(value.PartNo);
+                $('#RowData' + index).val(value.PartName);
+                $('#ED').html(DataResp.RT);
+              });
+    })
+            .fail(function(msg) {
+      $('#Msg').html(msg);
+    });
+  });
+  $('#CmdNew').click(function() {
+    $('#Msg').html($('#SRER_Forms').tabs('option', 'active'));
   });
 });

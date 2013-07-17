@@ -2,16 +2,21 @@
 
 /**
  * API For Ajax Calls from a valid authenticated session.
- * @example ($_POST['CallAPI']='GetData';$_POST['AjaxToken']='$$$$';
- * $_POST['TableName']='SRER_PartMap';$_POST['numRows']=10;)
- *
- * @return json
  *
  * The JSON Object will Contain Four Top Level Nodes
- * 1. $DataResp['AjaxToken']
+ * 1. $DataResp['AjaxToken'] => Token for preventing atacks like CSRF and Sesion Hijack
  * 2. $DataResp['Data']
  * 3. $DataResp['Mail']
  * 4. $DataResp['Msg']
+ * 5. $DataResp['RT'] => Response Time of the Script
+ *
+ * * @example ($_POST=array(
+ *              'CallAPI'=>'GetData',
+ *              'AjaxToken'=>'$$$$')
+ *
+ * @return json
+ *
+
  */
 require_once('lib.inc.php');
 require_once('class.MySQLiDBHelper.php');
@@ -21,7 +26,7 @@ if (!isset($_SESSION))
 $CSRF = TRUE; //(WebLib::GetVal($_POST, 'AjaxToken') === WebLib::GetVal($_SESSION, 'Token'));
 if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
   $_SESSION['LifeTime'] = time();
-  $_SESSION['ET'] = microtime(TRUE);
+  $_SESSION['RT'] = microtime(TRUE);
   $_SESSION['CheckAuth'] = 'Valid';
   $_SESSION['Token'] = md5($_SERVER['REMOTE_ADDR'] . session_id() . $_SESSION['ET']);
   $DataResp['AjaxToken'] = $_SESSION['Token'];
@@ -33,9 +38,14 @@ if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
       ChangePassword($DataResp, WebLib::GetVal($_POST, 'OldPass'));
       break;
     case 'GetData':
-      GetData($DataResp, WebLib::GetVal($_POST, 'TableName'), WebLib::GetVal($_POST, 'numRows'));
+      $Query = 'Select ' . WebLib::GetVal($_POST, 'Fields')
+              . ' FROM `' . MySQL_Pre . WebLib::GetVal($_POST, 'TableName') . '`'
+              . ' ' . WebLib::GetVal($_POST, 'Criteria');
+      doQuery($DataResp, $Query, WebLib::GetVal($_POST, 'Params', FALSE, FALSE));
       break;
   }
+  $DataResp['RT'] = '<b>Response Time:</b> '
+          . round(microtime(TRUE) - WebLib::GetVal($_SESSION, 'RT'), 6) . ' Sec';
   $AjaxResp = json_encode($DataResp);
   unset($DataResp);
 
@@ -45,7 +55,14 @@ if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
   exit();
 }
 header("HTTP/1.1 404 Not Found");
+exit();
 
+/**
+ * Changes the password of current user
+ * @todo Verify the Salting method
+ * @param type $DataResp
+ * @param string $OldPass Salted MD5 String as MD5(PassWord.MD5(Salt))
+ */
 function ChangePassword(&$DataResp, $OldPass) {
   $Pass = WebLib::GeneratePassword(10, 2, 2, 2);
   $UserMapID = $_SESSION['UserMapID'];
@@ -71,14 +88,21 @@ function ChangePassword(&$DataResp, $OldPass) {
   unset($Data);
 }
 
-function GetData(&$DataResp, $TableName, $numRows = 10) {
+/**
+ * Perfroms Select Query to the database
+ *
+ * @param ref     $DataResp
+ * @param string  $Query
+ * @param array   $Params
+ * @example GetData(&$DataResp, "Select a,b,c from Table Where c=? Order By b LIMIT ?,?", array('1',30,10))
+ */
+function doQuery(&$DataResp, $Query, $Params) {
   $Data = new MySQLiDBHelper(HOST_Name, MySQL_User, MySQL_Pass, MySQL_DB);
-  $Data->where('PartMapID', $_SESSION['UserMapID']);
-  $Result = $Data->query('Select `PartNo`,`PartName` FROM `'
-          . MySQL_Pre . $TableName . '`', $numRows);
+  $Result = $Data->rawQuery($Query, $Params);
   $DataResp['Data'] = $Result;
   $DataResp['Msg'] = 'Total Rows: ' . count($Result);
   unset($Result);
   unset($Data);
 }
+
 ?>
