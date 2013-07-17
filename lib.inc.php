@@ -303,7 +303,7 @@ class WebLib {
     echo '<strong > Last Updated On:</strong> &nbsp;&nbsp;' . date('l d F Y g:i:s A ', filemtime($strfile))
     . ' IST &nbsp;&nbsp;&nbsp;<b>Your IP: </b>' . $_SERVER['REMOTE_ADDR']
     . '&nbsp;&nbsp;&nbsp;<b>Visits:</b>&nbsp;&nbsp;' . $visitor_num
-    . ' <b>Loaded In:</b> ' . round(microtime(TRUE) - WebLib::GetVal($_SESSION, 'ET'), 3) . ' Sec';
+    . '&nbsp;&nbsp;&nbsp;<span id="ED"><b>Loaded In:</b> ' . round(microtime(TRUE) - WebLib::GetVal($_SESSION, 'ET'), 3) . ' Sec</span>';
     $reg->do_close();
   }
 
