@@ -14,7 +14,7 @@ class WebLib {
    * Generates a strong password
    *
    * @link http://www.dougv.com/demo/php_password_generator/index.php
-   * @param int $l Password Length
+   * @param int $l Password Length (Max: 50 chars)
    * @param int $c No. of CAPITAL letters
    * @param int $n No. of Integers
    * @param int $s No. of $~mb()|$
@@ -28,7 +28,7 @@ class WebLib {
     if (!is_int($l) || !is_int($c) || !is_int($n) || !is_int($s)) {
       trigger_error('Argument(s) not an integer', E_USER_WARNING);
       return false;
-    } elseif ($l < 0 || $l > 20 || $c < 0 || $n < 0 || $s < 0) {
+    } elseif ($l < 0 || $l > 50 || $c < 0 || $n < 0 || $s < 0) {
       trigger_error('Argument(s) out of range', E_USER_WARNING);
       return false;
     } elseif ($c > $l) {
