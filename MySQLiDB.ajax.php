@@ -51,16 +51,12 @@ if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
     // @todo [Currently Working to Insert Data]
     case 'PutSRERData':
       SetCurrForm(WebLib::GetVal($_POST, 'TableName'));
-      $Query = 'Insert into ' . WebLib::GetVal($_SESSION, 'TableName', FALSE, FALSE)
-              . WebLib::GetVal($_SESSION, 'InsFields', FALSE, FALSE);
-
-      $DataResp['Msg'] = '<b>Total Records:</b>' . count($_POST);
-
-      $PostData = WebLib::GetVal($_POST, 'Params', FALSE, FALSE);
-      $DataResp['Data']['Row'] = $PostData[0];
-      $DataResp['Data'] = $_POST;
-
-      doQuery($DataResp, $Query, $PostData[0]);
+      $Params = WebLib::GetVal($_POST, 'Params', FALSE, FALSE);
+      $DataResp['Data']['POST'] = $_POST;
+      for ($i = 0; $i < count($Params); $i++) {
+        SaveData($DataResp, $_SESSION['TableName'], $Params[$i]);
+      }
+      //doQuery($DataResp, $Query, $PostData[0]);
       break;
 
     case 'GetACParts':
@@ -144,6 +140,30 @@ function doQuery(&$DataResp, $Query, $Params = NULL) {
 }
 
 /**
+ * Performs Insert Query
+ *
+ * @param ref $DataResp
+ * @param string $tableName
+ * @param Object $insertData
+ */
+function SaveData(&$DataResp, $tableName, $insertData) {
+  $Data = new MySQLiDBHelper(HOST_Name, MySQL_User, MySQL_Pass, MySQL_DB);
+  $DataResp['Data']['Row'] = $insertData;
+  if ($insertData['RowID'] === "") {
+    $Saved = $Data->insert($tableName, $insertData);
+  } else {
+    $Data->where('RowID', $insertData['RowID']);
+    $Saved = $Data->update($tableName, $insertData);
+  }
+  if ($Saved) {
+    $DataResp['Msg'] = 'Saved Successfully!';
+  } else {
+    $DataResp['Msg'] = 'Unable to Saved!';
+  }
+  unset($Data);
+}
+
+/**
  * Return the Queries related to SRER Forms
  *
  * ***Important*** $FormName variable should not be directly used in Query for security reasons
@@ -153,10 +173,10 @@ function doQuery(&$DataResp, $Query, $Params = NULL) {
 function SetCurrForm($FormName = 'SRERForm6I') {
   Switch ($FormName) {
     case 'SRERForm6I':
-      $_SESSION['TableName'] = '`' . MySQL_Pre . 'SRER_Form6`';
+      $_SESSION['TableName'] = '' . MySQL_Pre . 'SRER_Form6';
       $_SESSION['Fields'] = '`RowID`,`SlNo`,`ReceiptDate`,`AppName`,`DOB`,`Sex`,`RelationshipName`,`Relationship`,`Status`';
-      $_SESSION['InsFields'] = '(`RowID`,`SlNo`,`ReceiptDate`,`AppName`,`DOB`,`Sex`,`RelationshipName`,`Relationship`,`Status`,`PartID`) '
-              . 'Values (?,?,?,?,?,?,?,?,?,?);';
+      $_SESSION['InsFields'] = '`' . MySQL_Pre . 'SRER_Form6`'
+              . '(`RowID`,`SlNo`,`ReceiptDate`,`AppName`,`DOB`,`Sex`,`RelationshipName`,`Relationship`,`Status`,`PartID`)';
       break;
     case 'SRERForm6A':
       $_SESSION['TableName'] = '`' . MySQL_Pre . 'SRER_Form6A`';

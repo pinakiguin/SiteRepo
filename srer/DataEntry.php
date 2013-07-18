@@ -13,7 +13,7 @@ WebLib::IncludeCSS('css/DataEntry.css');
 WebLib::IncludeJS('js/DataEntry.js');
 WebLib::IncludeCSS('css/chosen.min.css');
 WebLib::IncludeJS('js/chosen.jquery.min.js');
-$Data = new MySQLiDB();
+
 if (WebLib::GetVal($_SESSION, 'ACNo') == "")
   $_SESSION['ACNo'] = "";
 if (WebLib::GetVal($_SESSION, 'PartID') == "")
@@ -39,7 +39,7 @@ if (intval(WebLib::GetVal($_REQUEST, 'ID')) > 0)
   ?>
   <div class="content" style="padding-top: 10px;">
     <span class="Message" id="Msg" style="float: right;">
-      <b>Message: </b> All messages will be shown here.
+      <b>Loading please wait...</b>
     </span>
     <form name="frmSRER" method="post" action="<?php echo WebLib::GetVal($_SERVER, 'PHP_SELF'); ?>">
       <div class="FieldGroup">
@@ -56,15 +56,7 @@ if (intval(WebLib::GetVal($_REQUEST, 'ID')) > 0)
     </form>
     <div style="clear:both;"></div>
     <hr />
-    <?php
-    if ((intval(WebLib::GetVal($_SESSION, 'PartID')) > 0) && (WebLib::GetVal($_SESSION, 'TableName') != "")) {
-      $RowCount = $Data->do_max_query("Select count(*) from " . WebLib::GetVal($_SESSION, 'TableName') . " Where PartID=" . WebLib::GetVal($_SESSION, 'PartID'));
-      $RowCount = $RowCount - 9;
-      if ($RowCount < 1)
-        $RowCount = 1;
-    }
-    ?>
-    <!-- // @todo Change type="hidden" remove styles -->
+    <?php // @todo Change type="hidden" remove styles ?>
     <input type="text" id="ActivePartID" style="width:50px;" />
     <input type="text" id="ActiveSRERForm" style="width:100px;" value="SRERForm6I" />
 

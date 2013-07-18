@@ -88,6 +88,10 @@ tr,th{
 #SRERForm6I,#SRERForm6A,#SRERForm7I,#SRERForm8I,#SRERForm8A{
   padding: 2px;
 }
+input[id$="FromRow"]{
+  width: 50px;
+  text-align: right;
+}
 .SRERForm{
   width: 100%;
   padding: 0px;

@@ -54,7 +54,9 @@ $(function() {
     $.each(Parts.Data,
             function(index, value) {
               if (value.ACNo === ACNo) {
-                Options += '<option value="' + value.PartID + '">' + value.PartNo + ' - ' + value.PartName + '</option>';
+                Options += '<option value="' + value.PartID + '">'
+                        + value.PartNo + ' - ' + value.PartName
+                        + '</option>';
               }
             });
     $('#PartID').html(Options)
@@ -79,7 +81,8 @@ $(function() {
       'AjaxToken': $('#AjaxToken').val(),
       'CallAPI': 'GetACParts'
     }
-  }).done(function(data) {
+  })
+          .done(function(data) {
     var DataResp = $.parseJSON(data);
     delete data;
     $('#AjaxToken').val(DataResp.AjaxToken);
@@ -94,7 +97,8 @@ $(function() {
             .trigger("liszt:updated");
     $('#PartID').data('Parts', DataResp.Parts);
     delete DataResp;
-  }).fail(function(msg) {
+  })
+          .fail(function(msg) {
     $('#Msg').html(msg);
   });
 
@@ -104,7 +108,8 @@ $(function() {
    *
    */
 
-  $('#' + $('#ActiveSRERForm').val() + 'CmdEdit').click(function() {
+  $('#' + $('#ActiveSRERForm').val() + 'CmdEdit')
+          .click(function() {
     $('[id^="' + $('#ActiveSRERForm').val() + '"][id$="_D"]').each(function() {
       $(this).val('');
     });
@@ -126,7 +131,8 @@ $(function() {
         'TableName': $('#ActiveSRERForm').val(),
         'Params': new Array($('#ActivePartID').val(), FromRow, 10)
       }
-    }).done(function(data) {
+    })
+            .done(function(data) {
       $('#Error').html(data);
       var DataResp = $.parseJSON(data);
       delete data;
@@ -140,7 +146,8 @@ $(function() {
               });
       $('#ED').html(DataResp.RT);
       delete DataResp;
-    }).fail(function(msg) {
+    })
+            .fail(function(msg) {
       $('#Msg').html(msg);
     });
   });
@@ -151,19 +158,30 @@ $(function() {
    * @todo Save only those rows that are selected by checkbox
    */
 
-  $('#' + $('#ActiveSRERForm').val() + 'CmdSave').click(function() {
+  $('#' + $('#ActiveSRERForm').val() + 'CmdSave')
+          .click(function() {
     $('#Error').html('');
     $('#Msg').html('Saving Please Wait...');
     var i = 0, j, Params = new Array('');
-    for (i = 0; i < 10; i++) {
-      j = 0;
-      Params[i] = new Array('');
-      $('[id^="' + $('#ActiveSRERForm').val() + '"][id$="' + i + '_D"]').each(function() {
-        Params[i][j++] = $(this).val();
-        //Params[j++] = $(this).val();
+    //for (i = 0; i < 10; i++) {
+    j = 0;
+    //if (){
+    $('input[type="checkbox"]').filter(':checked')
+            .each(function() {
+      Params[i] = new Object();
+      $('#Msg').append(document.createTextNode($(this).val() + ', '));
+      $('[id$="' + $(this).attr('id').slice(-3) + '"][id^="' + $('#ActiveSRERForm').val() + '"]')
+              .each(function() {
+        Params[i][$(this).attr('id').slice($('#ActiveSRERForm').val().length, -3)] = $(this).val();
       });
-      Params[i][j] = $('#ActivePartID').val();
-    }
+      //$(this).val();
+      //alert(Params[i][$(this).attr('id').slice($('#ActiveSRERForm').val().length, -3)]);
+      Params[i++]["PartID"] = $('#ActivePartID').val();
+    });
+
+
+    //}
+    //}
     // @todo May just the array be prepared instead of the whole request
     $.ajax({
       type: 'POST',
@@ -203,7 +221,8 @@ $(function() {
    *
    * @todo CmdNew Click [Currently Working to Get Last SlNo]
    */
-  $('#' + $('#ActiveSRERForm').val() + 'CmdNew').click(function() {
+  $('#' + $('#ActiveSRERForm').val() + 'CmdNew')
+          .click(function() {
     $('#Msg').html('Creating Please Wait...');
     $.ajax({
       type: 'POST',
@@ -244,7 +263,8 @@ $(function() {
    * @todo CmdDel Click
    * @todo Make API Call directly to delete.
    */
-  $('#' + $('#ActiveSRERForm').val() + 'CmdDel').click(function() {
+  $('#' + $('#ActiveSRERForm').val() + 'CmdDel')
+          .click(function() {
     $('#Msg').html('RecordID: ');
     $('input[type="checkbox"]').filter(':checked').each(function() {
 
@@ -264,8 +284,7 @@ $(function() {
    * @param {obj} inputText
    * @returns {Boolean}
    */
-  function validatedate(inputText)
-  {
+  function validatedate(inputText) {
     var dateformat = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/;
     // Match the date format through regular expression
     if (inputText.value.match(dateformat))
