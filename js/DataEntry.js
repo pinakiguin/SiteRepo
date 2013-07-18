@@ -104,8 +104,8 @@ $(function() {
    *
    */
 
-  $('#CmdEdit').click(function() {
-    var FromRow = $('#FromRow').val() - 1;
+  $('#' + $('#ActiveSRERForm').val() + 'CmdEdit').click(function() {
+    var FromRow = $('#' + $('#ActiveSRERForm').val() + 'FromRow').val() - 1;
     if (FromRow <= 0) {
       FromRow = 0;
     }
@@ -146,7 +146,7 @@ $(function() {
    * @todo CmdSave Click [Currently Working to Get Last SlNo]
    */
 
-  $('#CmdSave').click(function() {
+  $('#' + $('#ActiveSRERForm').val() + 'CmdSave').click(function() {
 
     // for (i = 0; i < 10; i++) {
     var Params = new Array('');
@@ -195,7 +195,7 @@ $(function() {
    *
    * @todo CmdNew Click [Currently Working to Get Last SlNo]
    */
-  $('#CmdNew').click(function() {
+  $('#' + $('#ActiveSRERForm').val() + 'CmdNew').click(function() {
     $.ajax({
       type: 'POST',
       url: '../MySQLiDB.ajax.php',
@@ -234,8 +234,8 @@ $(function() {
   /**
    * @todo CmdDel Click
    */
-  $('#CmdDel').click(function() {
-    // @todo Implement CmdNew Click
+  $('#' + $('#ActiveSRERForm').val() + 'CmdDel').click(function() {
+    // @todo Implement CmdDel Click
 
     $('[id^="' + $('#ActiveSRERForm').val() + '"]').each(function() {
       $(this).val('');

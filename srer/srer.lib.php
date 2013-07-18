@@ -1,5 +1,4 @@
 <?php
-
 require_once('../lib.inc.php');
 
 function SetCurrForm($FormName = 'Form 6') {
@@ -76,39 +75,105 @@ function ShowSRER($QueryString) {
   return ($j);
 }
 
-function EditForm($FormName) {
+function SRERForm($FormName) {
   //$Data = new MySQLiDBHelper(HOST_Name, MySQL_User, MySQL_Pass, MySQL_DB);
-  $FormHTML = '';
   switch ($FormName) {
-    case 'SRER_Form6':
-      $FormHTML .='<table id="TabForm6">';
-      $FormHTML .='<thead><tr>';
-
-      $FormHTML .='<th></th>';
-
-      $FormHTML .='</tr></thead>';
-      $FormHTML .='<tbody><tr>';
-
-      $FormHTML .='<td></td>';
-
-      $FormHTML .='</tr></tbody>';
-      $FormHTML .='<tfoot><tr>';
-
-      $FormHTML .='<td></td>';
-
-      $FormHTML .='</tr></tfoot >';
-      $FormHTML .='</table>';
-      break;
-    case 'SRER_Form6A':
+    case 'SRERForm6':
+    case 'SRERForm6A':
+    case 'SRERForm8':
+    case 'SRERForm8A':
+      ?>
+      <table class="SRERForm">
+        <thead>
+          <tr>
+            <th colspan="2" class="SlNo">Sl No.</th>
+            <th class="ReceiptDate">Date of Receipt</th>
+            <th class="AppName">Name of Applicant</th>
+            <th class="DOB">Date of Birth</th>
+            <th class="Sex">Sex</th>
+            <th class="RelationshipName">Name of Father/ Mother/ Husband/ Others</th>
+            <th class="Relationship">Relationship</th>
+            <th class="Status">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php
+          $i = 0;
+          //@todo SlNo may be replaced by RowID
+          while ($i < 10) {
+            ?>
+            <tr id="RowStat<?php echo $i; ?>" class="saved">
+              <td style="text-align: left;">
+                <input id="<?php echo $FormName . 'RowID' . $i; ?>" type="checkbox" />
+              </td>
+              <td>
+                <input type="text" id="<?php echo $FormName . 'SlNo' . $i; ?>" style="width: 30px; text-align: right;"
+                       class="SlNo"  readonly="readonly" />
+              </td>
+              <td>
+                <input type="text" id="<?php echo $FormName . 'ReceiptDate' . $i; ?>"
+                       class="ReceiptDate" placeholder="dd/mm/yyyy" />
+              </td>
+              <td>
+                <input type="text" id="<?php echo $FormName . 'AppName' . $i; ?>" />
+              </td>
+              <td>
+                <input type="text" id="<?php echo $FormName . 'DOB' . $i; ?>"
+                       class="DOB" placeholder="dd/mm/yyyy" />
+              </td>
+              <td>
+                <select id="<?php echo $FormName . 'Sex' . $i; ?>">
+                  <option value=""></option>
+                  <option value="M">Male</option>
+                  <option value="F">Female</option>
+                  <option value="U">Other</option>
+                </select>
+              </td>
+              <td>
+                <input type="text" id="<?php echo $FormName . 'RelationshipName' . $i; ?>" />
+              </td>
+              <td>
+                <select id="<?php echo $FormName . 'Relationship' . $i; ?>">
+                  <option value=""></option>
+                  <option value="F">Father</option>
+                  <option value="M">Mother</option>
+                  <option value="H">Husband</option>
+                  <option value="U">Other</option>
+                </select>
+              </td>
+              <td>
+                <select id="<?php echo $FormName . 'Status' . $i; ?>">
+                  <option value="A">Accepted</option>
+                  <option value="R">Rejected</option>
+                  <option value="P" selected="selected">Pending</option>
+                </select>
+              </td>
+            </tr>
+            <?php
+            $i++;
+          }
+          ?>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="6" style="text-align: left;">
+              <span>Show 10 Rows Starting From: </span>
+              <input type="text" id="<?php echo $FormName . 'FromRow'; ?>" style="width: 50px;" value="1"/>
+              <input type="button" id="<?php echo $FormName . 'CmdEdit'; ?>"  value="Edit"/>
+            </td>
+            <td colspan="3" style="text-align: right;">
+              <input type="button" id="<?php echo $FormName . 'CmdNew'; ?>"  value="New"/>
+              <input type="button" id="<?php echo $FormName . 'CmdSave'; ?>" value="Save"/>
+              <input type="button" id="<?php echo $FormName . 'CmdDel'; ?>"  value="Delete"/>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+      <?php
       break;
     case 'SRER_Form7':
       break;
-    case 'SRER_Form8':
-      break;
-    case 'SRER_Form8A':
-      break;
   }
-  return $FormHTML;
 }
 
 function EditFormA($QueryString) {
@@ -210,5 +275,4 @@ function EditFormA($QueryString) {
   . '<input type="submit" name="AddNew" value="New Rows" /><input style="width:80px;" type="submit" name="Delete" value="Delete" />';
   echo '&nbsp;&nbsp;&nbsp;<input style="width:80px;" type="submit" value="Save" /></td></tr></table></form>';
 }
-
 ?>
