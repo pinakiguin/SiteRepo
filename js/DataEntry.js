@@ -5,7 +5,7 @@
 
 $(function() {
   $(".ReceiptDate").datepicker({
-    dateFormat: 'dd/mm/yy',
+    dateFormat: 'yy-mm-dd',
     showOtherMonths: true,
     selectOtherMonths: true,
     showButtonPanel: true,
@@ -13,7 +13,7 @@ $(function() {
   });
 
   $(".DOB").datepicker({
-    dateFormat: 'dd/mm/yy',
+    dateFormat: 'yy-mm-dd',
     maxDate: new Date(1996, 1 - 1, 1),
     showOtherMonths: true,
     selectOtherMonths: true,
@@ -105,6 +105,10 @@ $(function() {
    */
 
   $('#' + $('#ActiveSRERForm').val() + 'CmdEdit').click(function() {
+    $('[id^="' + $('#ActiveSRERForm').val() + '"][id$="_D"]').each(function() {
+      $(this).val('');
+    });
+    $('#Msg').html('Editing Please Wait...');
     var FromRow = $('#' + $('#ActiveSRERForm').val() + 'FromRow').val() - 1;
     if (FromRow <= 0) {
       FromRow = 0;
@@ -131,7 +135,7 @@ $(function() {
       $.each(DataResp.Data,
               function(index, value) {
                 $.each(value, function(key, data) {
-                  $('#' + $('#ActiveSRERForm').val() + key + index).val(data);
+                  $('#' + $('#ActiveSRERForm').val() + key + index + '_D').val(data);
                 });
               });
       $('#ED').html(DataResp.RT);
@@ -144,18 +148,22 @@ $(function() {
   /**
    * Insert the rows acordingly
    * @todo CmdSave Click [Currently Working to Get Last SlNo]
+   * @todo Save only those rows that are selected by checkbox
    */
 
   $('#' + $('#ActiveSRERForm').val() + 'CmdSave').click(function() {
-
-    // for (i = 0; i < 10; i++) {
-    var Params = new Array('');
-    var i = 0, j = 0;
-    $('[id^="' + $('#ActiveSRERForm').val() + '"][id$="' + i + '"]').each(function() {
-      Params[j++] = $(this).attr('id');
-      //Params[j++] = $(this).val();
-    });
-    Params[j] = $('#ActivePartID').val();
+    $('#Error').html('');
+    $('#Msg').html('Saving Please Wait...');
+    var i = 0, j, Params = new Array('');
+    for (i = 0; i < 10; i++) {
+      j = 0;
+      Params[i] = new Array('');
+      $('[id^="' + $('#ActiveSRERForm').val() + '"][id$="' + i + '_D"]').each(function() {
+        Params[i][j++] = $(this).val();
+        //Params[j++] = $(this).val();
+      });
+      Params[i][j] = $('#ActivePartID').val();
+    }
     // @todo May just the array be prepared instead of the whole request
     $.ajax({
       type: 'POST',
@@ -187,7 +195,7 @@ $(function() {
     }).fail(function(msg) {
       $('#Msg').html(msg);
     });
-    //}
+
   });
 
   /**
@@ -196,6 +204,7 @@ $(function() {
    * @todo CmdNew Click [Currently Working to Get Last SlNo]
    */
   $('#' + $('#ActiveSRERForm').val() + 'CmdNew').click(function() {
+    $('#Msg').html('Creating Please Wait...');
     $.ajax({
       type: 'POST',
       url: '../MySQLiDB.ajax.php',
@@ -226,20 +235,25 @@ $(function() {
     }).fail(function(msg) {
       $('#Msg').html(msg);
     });
-    $('[id^="' + $('#ActiveSRERForm').val() + '"]').each(function() {
+    $('[id^="' + $('#ActiveSRERForm').val() + '"][id$="_D"]').each(function() {
       $(this).val('');
     });
   });
 
   /**
    * @todo CmdDel Click
+   * @todo Make API Call directly to delete.
    */
   $('#' + $('#ActiveSRERForm').val() + 'CmdDel').click(function() {
-    // @todo Implement CmdDel Click
+    $('#Msg').html('RecordID: ');
+    $('input[type="checkbox"]').filter(':checked').each(function() {
 
-    $('[id^="' + $('#ActiveSRERForm').val() + '"]').each(function() {
-      $(this).val('');
+      $('#Msg').append(document.createTextNode($(this).val() + ', '));
+      $('[id!="' + $('#ActiveSRERForm').val() + 'RowID' + $(this).attr('id').slice(-3) + '"]'
+              + '[id$="' + $(this).attr('id').slice(-3) + '"]'
+              + '[id^="' + $('#ActiveSRERForm').val() + '"]').val('');
     });
+    $('#Msg').append(document.createTextNode(' deleted.'));
   });
 
   /**

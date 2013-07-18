@@ -48,14 +48,19 @@ if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
       doQuery($DataResp, $Query, WebLib::GetVal($_POST, 'Params', FALSE, FALSE));
       break;
 
-    // @todo [Currently Working to Get Last SlNo]
+    // @todo [Currently Working to Insert Data]
     case 'PutSRERData':
-      /* SetCurrForm(WebLib::GetVal($_POST, 'TableName'));
-        $Query = 'Insert into ' . WebLib::GetVal($_SESSION, 'TableName', FALSE, FALSE)
-        . WebLib::GetVal($_SESSION, 'InsFields', FALSE, FALSE)
-        . ' Where `PartID`=? ';
-        doQuery($DataResp, $Query, WebLib::GetVal($_POST, 'Params', FALSE, FALSE)); */
+      SetCurrForm(WebLib::GetVal($_POST, 'TableName'));
+      $Query = 'Insert into ' . WebLib::GetVal($_SESSION, 'TableName', FALSE, FALSE)
+              . WebLib::GetVal($_SESSION, 'InsFields', FALSE, FALSE);
+
+      $DataResp['Msg'] = '<b>Total Records:</b>' . count($_POST);
+
+      $PostData = WebLib::GetVal($_POST, 'Params', FALSE, FALSE);
+      $DataResp['Data']['Row'] = $PostData[0];
       $DataResp['Data'] = $_POST;
+
+      doQuery($DataResp, $Query, $PostData[0]);
       break;
 
     case 'GetACParts':
@@ -73,7 +78,13 @@ if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
   }
   $DataResp['RT'] = '<b>Response Time:</b> '
           . round(microtime(TRUE) - WebLib::GetVal($_SESSION, 'RT'), 6) . ' Sec';
-  $AjaxResp = json_encode($DataResp, JSON_PRETTY_PRINT);
+  //PHP 5.4+ is required for JSON_PRETTY_PRINT
+  //@todo Remove PRETTY_PRINT for Production
+  if (strnatcmp(phpversion(), '5.4') >= 0) {
+    $AjaxResp = json_encode($DataResp, JSON_PRETTY_PRINT);
+  } else {
+    $AjaxResp = WebLib::prettyPrint(json_encode($DataResp));
+  }
   unset($DataResp);
 
   header('Content-Type: application/json');
@@ -139,23 +150,23 @@ function doQuery(&$DataResp, $Query, $Params = NULL) {
  *
  * @param type $FormName
  */
-function SetCurrForm($FormName = 'SRERForm6') {
+function SetCurrForm($FormName = 'SRERForm6I') {
   Switch ($FormName) {
-    case 'SRERForm6':
+    case 'SRERForm6I':
       $_SESSION['TableName'] = '`' . MySQL_Pre . 'SRER_Form6`';
-      $_SESSION['Fields'] = '`RowID`,`SlNo`,`ReceiptDate`,`AppName`,`Sex`,`DOB`,`RelationshipName`,`Relationship`,`Status`';
-      $_SESSION['InsFields'] = '(`SlNo`,`ReceiptDate`,`AppName`,`Sex`,`DOB`,`RelationshipName`,`Relationship`,`Status`) '
-              . 'Values (?,?,?,?,?,?,?,?) ';
+      $_SESSION['Fields'] = '`RowID`,`SlNo`,`ReceiptDate`,`AppName`,`DOB`,`Sex`,`RelationshipName`,`Relationship`,`Status`';
+      $_SESSION['InsFields'] = '(`RowID`,`SlNo`,`ReceiptDate`,`AppName`,`DOB`,`Sex`,`RelationshipName`,`Relationship`,`Status`,`PartID`) '
+              . 'Values (?,?,?,?,?,?,?,?,?,?);';
       break;
     case 'SRERForm6A':
       $_SESSION['TableName'] = '`' . MySQL_Pre . 'SRER_Form6A`';
       $_SESSION['Fields'] = '`SlNo`, `ReceiptDate`, `AppName`, `RelationshipName`, `Relationship`, `Status`';
       break;
-    case 'SRERForm7':
+    case 'SRERForm7I':
       $_SESSION['TableName'] = '`' . MySQL_Pre . 'SRER_Form7`';
       $_SESSION['Fields'] = '`SlNo`, `ReceiptDate`, `ObjectorName`, `PartNo`, `SerialNoInPart`, `DelPersonName`, `ObjectReason`, `Status` ';
       break;
-    case 'SRERForm8':
+    case 'SRERForm8I':
       $_SESSION['TableName'] = '`' . MySQL_Pre . 'SRER_Form8`';
       $_SESSION['Fields'] = '`SlNo`, `ReceiptDate`, `AppName`, `RelationshipName`, `Relationship`, `Status`';
       break;

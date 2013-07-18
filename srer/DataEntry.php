@@ -66,21 +66,21 @@ if (intval(WebLib::GetVal($_REQUEST, 'ID')) > 0)
     ?>
     <!-- // @todo Change type="hidden" remove styles -->
     <input type="text" id="ActivePartID" style="width:50px;" />
-    <input type="text" id="ActiveSRERForm" style="width:100px;" value="SRERForm6" />
+    <input type="text" id="ActiveSRERForm" style="width:100px;" value="SRERForm6I" />
 
     <div id="SRER_Forms" style="text-align:center;width:100%;display:table;">
       <ul>
-        <li><a href="#SRERForm6" >Form 6 </a></li>
+        <li><a href="#SRERForm6I" >Form 6 </a></li>
         <li><a href="#SRERForm6A">Form 6A</a></li>
-        <li><a href="#SRERForm7" >Form 7 </a></li>
-        <li><a href="#SRERForm8" >Form 8 </a></li>
+        <li><a href="#SRERForm7I" >Form 7 </a></li>
+        <li><a href="#SRERForm8I" >Form 8 </a></li>
         <li><a href="#SRERForm8A">Form 8A</a></li>
       </ul>
       <input type="hidden" id="AjaxToken"
              value="<?php echo WebLib::GetVal($_SESSION, 'Token'); ?>" />
-      <div id="SRERForm6">
+      <div id="SRERForm6I">
         <?php
-        SRERForm('SRERForm6');
+        SRERForm('SRERForm6I');
         ?>
       </div>
       <div id="SRERForm6A">
@@ -88,11 +88,14 @@ if (intval(WebLib::GetVal($_REQUEST, 'ID')) > 0)
         SRERForm('SRERForm6A');
         ?>
       </div>
-      <div id="SRERForm7">
-      </div>
-      <div id="SRERForm8">
+      <div id="SRERForm7I">
         <?php
-        SRERForm('SRERForm8');
+        SRERForm('SRERForm7I');
+        ?>
+      </div>
+      <div id="SRERForm8I">
+        <?php
+        SRERForm('SRERForm8I');
         ?>
       </div>
       <div id="SRERForm8A">

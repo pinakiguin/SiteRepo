@@ -78,9 +78,9 @@ function ShowSRER($QueryString) {
 function SRERForm($FormName) {
   //$Data = new MySQLiDBHelper(HOST_Name, MySQL_User, MySQL_Pass, MySQL_DB);
   switch ($FormName) {
-    case 'SRERForm6':
+    case 'SRERForm6I':
     case 'SRERForm6A':
-    case 'SRERForm8':
+    case 'SRERForm8I':
     case 'SRERForm8A':
       ?>
       <table class="SRERForm">
@@ -102,27 +102,27 @@ function SRERForm($FormName) {
           //@todo SlNo may be replaced by RowID
           while ($i < 10) {
             ?>
-            <tr id="RowStat<?php echo $i; ?>" class="saved">
-              <td style="text-align: left;">
-                <input id="<?php echo $FormName . 'RowID' . $i; ?>" type="checkbox" />
+            <tr id="RowStat<?php echo $i . '_D'; ?>" class="saved">
+              <td class="SlNoChk">
+                <input id="<?php echo $FormName . 'RowID' . $i . '_D'; ?>" type="checkbox" />
+              </td>
+              <td class="SlNoTxt">
+                <input type="text" id="<?php echo $FormName . 'SlNo' . $i . '_D'; ?>" class="SlNoTxt"
+                       class="SlNo" />
               </td>
               <td>
-                <input type="text" id="<?php echo $FormName . 'SlNo' . $i; ?>" style="width: 30px; text-align: right;"
-                       class="SlNo"  readonly="readonly" />
-              </td>
-              <td>
-                <input type="text" id="<?php echo $FormName . 'ReceiptDate' . $i; ?>"
+                <input type="text" id="<?php echo $FormName . 'ReceiptDate' . $i . '_D'; ?>"
                        class="ReceiptDate" placeholder="dd/mm/yyyy" />
               </td>
               <td>
-                <input type="text" id="<?php echo $FormName . 'AppName' . $i; ?>" />
+                <input type="text" id="<?php echo $FormName . 'AppName' . $i . '_D'; ?>" />
               </td>
               <td>
-                <input type="text" id="<?php echo $FormName . 'DOB' . $i; ?>"
+                <input type="text" id="<?php echo $FormName . 'DOB' . $i . '_D'; ?>"
                        class="DOB" placeholder="dd/mm/yyyy" />
               </td>
               <td>
-                <select id="<?php echo $FormName . 'Sex' . $i; ?>">
+                <select id="<?php echo $FormName . 'Sex' . $i . '_D'; ?>">
                   <option value=""></option>
                   <option value="M">Male</option>
                   <option value="F">Female</option>
@@ -130,10 +130,10 @@ function SRERForm($FormName) {
                 </select>
               </td>
               <td>
-                <input type="text" id="<?php echo $FormName . 'RelationshipName' . $i; ?>" />
+                <input type="text" id="<?php echo $FormName . 'RelationshipName' . $i . '_D'; ?>" />
               </td>
               <td>
-                <select id="<?php echo $FormName . 'Relationship' . $i; ?>">
+                <select id="<?php echo $FormName . 'Relationship' . $i . '_D'; ?>">
                   <option value=""></option>
                   <option value="F">Father</option>
                   <option value="M">Mother</option>
@@ -142,7 +142,7 @@ function SRERForm($FormName) {
                 </select>
               </td>
               <td>
-                <select id="<?php echo $FormName . 'Status' . $i; ?>">
+                <select id="<?php echo $FormName . 'Status' . $i . '_D'; ?>">
                   <option value="A">Accepted</option>
                   <option value="R">Rejected</option>
                   <option value="P" selected="selected">Pending</option>
@@ -171,7 +171,7 @@ function SRERForm($FormName) {
       </table>
       <?php
       break;
-    case 'SRER_Form7':
+    case 'SRER_Form7I':
       break;
   }
 }

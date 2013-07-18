@@ -14,10 +14,10 @@ root {
   width: 95%;
   margin: 0px;
 }
-.TxtInput:hover{
+Input:hover{
   border: 1px solid #fbd850;
 }
-.TxtInput:focus{
+Input:focus{
   border: 1px solid #1c94c4;
 }
 input{
@@ -70,6 +70,7 @@ input[type="text"] {
   box-sizing: border-box;
   -webkit-box-sizing:border-box;
   -moz-box-sizing: border-box;
+  margin: 2px;
 }
 table {
   border-collapse: collapse;
@@ -84,7 +85,7 @@ tr,th{
   text-align: left;
   color: black;
 }
-#SRERForm6,#SRERForm6A,#SRERForm7,#SRERForm8,#SRERForm8A{
+#SRERForm6I,#SRERForm6A,#SRERForm7I,#SRERForm8I,#SRERForm8A{
   padding: 2px;
 }
 .SRERForm{
@@ -92,7 +93,7 @@ tr,th{
   padding: 0px;
 }
 #SRER_Forms {
-  font-size: 12px;
+  font-size: 14px;
 }
 .new {
   color: whitesmoke;
@@ -104,9 +105,21 @@ tr,th{
 }
 
 .SlNo{
-  width: 20px;
+  width: 50px;
 }
+
+.SlNoChk{
+  width: 10px;
+  text-align: left;
+}
+
+.SlNoTxt{
+  width: 40px;
+  text-align: right;
+}
+
 .ReceiptDate, .DOB{
+  text-align: center;
   width: 100px;
 }
 

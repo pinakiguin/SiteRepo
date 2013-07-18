@@ -93,7 +93,7 @@ body {
   padding-bottom: 6px;
   padding-left: 0px;
   list-style-position: inside;
-  list-style-image: url(../img/blackright.gif);
+  /*list-style-image: url(../img/blackright.gif);*/
   list-style-type: disc;
   margin-left: 25px;
 }
@@ -669,10 +669,6 @@ h3 {
   list-style-position: inside;
   list-style-image: none;
   list-style-type: decimal;
-}
-
-.content table {
-  border: 1px solid #666666;
 }
 
 h4 {
