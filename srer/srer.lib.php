@@ -92,14 +92,14 @@ function SRERForm($FormName) {
               </td>
               <td>
                 <input type="text" id="<?php echo $FormName . 'ReceiptDate' . $i . '_D'; ?>"
-                       class="ReceiptDate" placeholder="dd/mm/yyyy" />
+                       class="ReceiptDate" placeholder="yyyy-mm-dd" />
               </td>
               <td>
                 <input type="text" id="<?php echo $FormName . 'AppName' . $i . '_D'; ?>" />
               </td>
               <td>
                 <input type="text" id="<?php echo $FormName . 'DOB' . $i . '_D'; ?>"
-                       class="DOB" placeholder="dd/mm/yyyy" />
+                       class="DOB" placeholder="yyyy-mm-dd" />
               </td>
               <td>
                 <select id="<?php echo $FormName . 'Sex' . $i . '_D'; ?>">
