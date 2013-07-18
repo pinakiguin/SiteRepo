@@ -60,7 +60,7 @@ if (intval(WebLib::GetVal($_REQUEST, 'ID')) > 0)
     <input type="text" id="ActivePartID" style="width:50px;" />
     <input type="text" id="ActiveSRERForm" style="width:100px;" value="SRERForm6I" />
 
-    <div id="SRER_Forms" style="text-align:center;width:100%;display:table;">
+    <div id="SRER_Forms" style="text-align:center;width:100%;display:none;">
       <ul>
         <li><a href="#SRERForm6I" >Form 6 </a></li>
         <li><a href="#SRERForm6A">Form 6A</a></li>

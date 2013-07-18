@@ -276,6 +276,7 @@ $(function() {
     $('#Msg').append(document.createTextNode(' deleted.'));
   });
 
+  $('#SRER_Forms').css('display', 'table');
   /**
    * Validates date in dd/mm/yyyy and dd-mm-yyyy format
    *
