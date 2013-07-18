@@ -14,7 +14,7 @@ $(function() {
 
   $(".DOB").datepicker({
     dateFormat: 'yy-mm-dd',
-    maxDate: new Date(1996, 1 - 1, 1),
+    maxDate: new Date("1996-01-01"),
     showOtherMonths: true,
     selectOtherMonths: true,
     showButtonPanel: true,
