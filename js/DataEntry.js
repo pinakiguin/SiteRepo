@@ -133,7 +133,7 @@ $(function() {
       }
     })
             .done(function(data) {
-      $('#Error').html(data);
+      //$('#Error').html(data);
       var DataResp = $.parseJSON(data);
       delete data;
       $('#AjaxToken').val(DataResp.AjaxToken);
@@ -160,7 +160,7 @@ $(function() {
 
   $('#' + $('#ActiveSRERForm').val() + 'CmdSave')
           .click(function() {
-    $('#Error').html('');
+    //$('#Error').html('');
     $('#Msg').html('Saving Please Wait...');
     var i = 0, j, Params = new Array('');
     //for (i = 0; i < 10; i++) {
@@ -197,7 +197,7 @@ $(function() {
         'Params': Params
       }
     }).done(function(data) {
-      $('#Error').append(document.createTextNode(data));
+      //$('#Error').append(document.createTextNode(data));
       var DataResp = $.parseJSON(data);
       delete data;
       $('#AjaxToken').val(DataResp.AjaxToken);
@@ -238,7 +238,7 @@ $(function() {
         'Params': new Array($('#ActivePartID').val())
       }
     }).done(function(data) {
-      $('#Error').append(document.createTextNode(data));
+      //$('#Error').append(document.createTextNode(data));
       var DataResp = $.parseJSON(data);
       delete data;
       $('#AjaxToken').val(DataResp.AjaxToken);

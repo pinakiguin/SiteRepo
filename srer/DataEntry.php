@@ -57,8 +57,8 @@ if (intval(WebLib::GetVal($_REQUEST, 'ID')) > 0)
     <div style="clear:both;"></div>
     <hr />
     <?php // @todo Change type="hidden" remove styles ?>
-    <input type="text" id="ActivePartID" style="width:50px;" />
-    <input type="text" id="ActiveSRERForm" style="width:100px;" value="SRERForm6I" />
+    <input type="hidden" id="ActivePartID" />
+    <input type="hidden" id="ActiveSRERForm" value="SRERForm6I" />
 
     <div id="SRER_Forms" style="text-align:center;width:100%;display:none;">
       <ul>
