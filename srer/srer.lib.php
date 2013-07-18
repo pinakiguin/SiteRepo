@@ -83,7 +83,8 @@ function SRERForm($FormName) {
             ?>
             <tr id="RowStat<?php echo $i . '_D'; ?>" class="saved">
               <td class="SlNoChk">
-                <input id="<?php echo $FormName . 'RowID' . $i . '_D'; ?>" type="checkbox" />
+                <input id="<?php echo $FormName . 'RowID' . $i . '_D'; ?>"
+                       type="checkbox" value="" />
               </td>
               <td class="SlNoTxt">
                 <input type="text" id="<?php echo $FormName . 'SlNo' . $i . '_D'; ?>" class="SlNoTxt"
