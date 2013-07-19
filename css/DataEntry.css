@@ -111,6 +111,9 @@ input[id$="FromRow"]{
 .SlNo{
   width: 50px;
 }
+.SerialNoInPart,.PartNo{
+  width:120px;
+}
 
 .SlNoChk{
   width: 10px;

@@ -50,6 +50,7 @@ function ShowSRER($QueryString) {
 
 /**
  * Shows the Table for SRER FormPanels
+ * @todo FieldNames sent as ID to be encrypted using Secret
  *
  * @param string $FormName Possible values: (SRERForm6I|SRERForm6A|SRERForm7I|SRERForm8I|SRERForm8A)
  */
@@ -58,20 +59,19 @@ function SRERForm($FormName) {
   switch ($FormName) {
     case 'SRERForm6I':
     case 'SRERForm6A':
-    case 'SRERForm8I':
-    case 'SRERForm8A':
+      //@todo Available fields Field in the form to be fetched and encrypted and sent to browser
       ?>
       <table class="SRERForm">
         <thead>
           <tr>
-            <th colspan="2" class="SlNo">Sl No.</th>
-            <th class="ReceiptDate">Date of Receipt</th>
-            <th class="AppName">Name of Applicant</th>
-            <th class="DOB">Date of Birth</th>
-            <th class="Sex">Sex</th>
-            <th class="RelationshipName">Name of Father/ Mother/ Husband/ Others</th>
-            <th class="Relationship">Relationship</th>
-            <th class="Status">Status</th>
+            <th colspan="2" class="SlNo"><?php echo GetColHead('SlNo'); ?></th>
+            <th class="ReceiptDate"><?php echo GetColHead('ReceiptDate'); ?></th>
+            <th class="AppName"><?php echo GetColHead('AppName'); ?></th>
+            <th class="DOB"><?php echo GetColHead('DOB'); ?></th>
+            <th class="Sex"><?php echo GetColHead('Sex'); ?></th>
+            <th class="RelationshipName"><?php echo GetColHead('RelationshipName'); ?></th>
+            <th class="Relationship"><?php echo GetColHead('Relationship'); ?></th>
+            <th class="Status"><?php echo GetColHead('Status'); ?></th>
           </tr>
         </thead>
         <tbody>
@@ -151,7 +151,198 @@ function SRERForm($FormName) {
       </table>
       <?php
       break;
-    case 'SRER_Form7I':
+    case 'SRERForm8I':
+    case 'SRERForm8A':
+      //@todo Available fields Field in the form to be fetched and encrypted and sent to browser
+      ?>
+      <table class="SRERForm">
+        <thead>
+          <tr>
+            <th colspan="2" class="SlNo"><?php echo GetColHead('SlNo'); ?></th>
+            <th class="ReceiptDate"><?php echo GetColHead('ReceiptDate'); ?></th>
+            <th class="ObjectorName"><?php echo GetColHead('ObjectorName'); ?></th>
+            <th class = "PartNo"><?php echo GetColHead('PartNo'); ?></th>
+            <th class = "SerialNoInPart"><?php echo GetColHead('SerialNoInPart'); ?></th>
+            <th class = "ObjectReason"><?php echo GetColHead('ObjectReason'); ?></th>
+            <th class="DOB"><?php echo GetColHead('DOB'); ?></th>
+            <th class="Sex"><?php echo GetColHead('Sex'); ?></th>
+            <th class="Status"><?php echo GetColHead('Status'); ?></th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php
+          $i = 0;
+          //@todo SlNo may be replaced by RowID
+          //@todo Form has to be Generated based on $_SESSION['Fields'] Set by SetCurrForm
+          while ($i < 10) {
+            ?>
+            <tr id="RowStat<?php echo $i . '_D'; ?>" class="saved">
+              <td class="SlNoChk">
+                <input id="<?php echo $FormName . 'RowID' . $i . '_D'; ?>"
+                       type="checkbox" value="" />
+              </td>
+              <td class="SlNoTxt">
+                <input type="text" id="<?php echo $FormName . 'SlNo' . $i . '_D'; ?>" class="SlNoTxt"
+                       class="SlNo" />
+              </td>
+              <td>
+                <input type="text" id="<?php echo $FormName . 'ReceiptDate' . $i . '_D'; ?>"
+                       class="ReceiptDate" placeholder="yyyy-mm-dd" />
+              </td>
+              <td>
+                <input type="text" id="<?php echo $FormName . 'ObjectorName' . $i . '_D'; ?>" />
+              </td>
+              <td>
+                <input type="text" id="<?php echo $FormName . 'PartNo' . $i . '_D'; ?>" />
+              </td>
+              <td>
+                <input type="text" id="<?php echo $FormName . 'SerialNoInPart' . $i . '_D'; ?>" />
+              </td>
+              <td>
+                <input type="text" id="<?php echo $FormName . 'ObjectReason' . $i . '_D'; ?>" />
+              </td>
+              <td>
+                <input type="text" id="<?php echo $FormName . 'DOB' . $i . '_D'; ?>"
+                       class="DOB" placeholder="yyyy-mm-dd" />
+              </td>
+              <td>
+                <select id="<?php echo $FormName . 'Sex' . $i . '_D'; ?>">
+                  <option value=""></option>
+                  <option value="M">Male</option>
+                  <option value="F">Female</option>
+                  <option value="U">Other</option>
+                </select>
+              </td>
+              <td>
+                <select id="<?php echo $FormName . 'Status' . $i . '_D'; ?>">
+                  <option value="A">Accepted</option>
+                  <option value="R">Rejected</option>
+                  <option value="P" selected="selected">Pending</option>
+                </select>
+              </td>
+            </tr>
+            <?php
+            $i++;
+          }
+          ?>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="6" style="text-align: left;">
+              <span>Show 10 Rows Starting From: </span>
+              <input type="text" id="<?php echo $FormName . 'FromRow'; ?>" value="1"/>
+              <input type="button" id="<?php echo $FormName . 'CmdEdit'; ?>"  value="Edit"/>
+            </td>
+            <td colspan="4" style="text-align: right;">
+              <input type="button" id="<?php echo $FormName . 'CmdNew'; ?>"  value="New"/>
+              <input type="button" id="<?php echo $FormName . 'CmdSave'; ?>" value="Save"/>
+              <input type="button" id="<?php echo $FormName . 'CmdDel'; ?>"  value="Delete"/>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+      <?php
+      break;
+    case 'SRERForm7I':
+      ?>
+      <table class="SRERForm">
+        <thead>
+          <tr>
+            <th colspan = "2" class = "SlNo"><?php echo GetColHead('SlNo'); ?></th>
+            <th class = "ReceiptDate"><?php echo GetColHead('ReceiptDate'); ?></th>
+            <th class = "ObjectorName"><?php echo GetColHead('ObjectorName'); ?></th>
+            <th class = "PartNo"><?php echo GetColHead('PartNo'); ?></th>
+            <th class = "SerialNoInPart"><?php echo GetColHead('SerialNoInPart'); ?></th>
+            <th class = "DelPersonName"><?php echo GetColHead('DelPersonName'); ?></th>
+            <th class = "ObjectReason"><?php echo GetColHead('ObjectReason'); ?></th>
+            <th class = "DOB"><?php echo GetColHead('DOB'); ?></th>
+            <th class = "Sex"><?php echo GetColHead('Sex'); ?></th>
+            <th class = "Status"><?php echo GetColHead('Status'); ?></th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php
+          $i = 0;
+          //@todo SlNo may be replaced by RowID
+          //@todo Form has to be Generated based on $_SESSION['Fields'] Set by SetCurrForm
+          while ($i < 10) {
+            ?>
+            <tr id="RowStat<?php echo $i . '_D'; ?>" class="saved">
+              <td class="SlNoChk">
+                <input id="<?php echo $FormName . 'RowID' . $i . '_D'; ?>"
+                       type="checkbox" value="" />
+              </td>
+              <td class="SlNoTxt">
+                <input type="text" id="<?php echo $FormName . 'SlNo' . $i . '_D'; ?>" class="SlNoTxt"
+                       class="SlNo" />
+              </td>
+              <td>
+                <input type="text" id="<?php echo $FormName . 'ReceiptDate' . $i . '_D'; ?>"
+                       class="ReceiptDate" placeholder="yyyy-mm-dd" />
+              </td>
+              <td>
+                <input type="text" id="<?php echo $FormName . 'ObjectorName' . $i . '_D'; ?>" />
+              </td>
+              <td>
+                <input type="text" id="<?php echo $FormName . 'PartNo' . $i . '_D'; ?>" />
+              </td>
+              <td>
+                <input type="text" id="<?php echo $FormName . 'SerialNoInPart' . $i . '_D'; ?>" />
+              </td>
+              <td>
+                <input type="text" id="<?php echo $FormName . 'DelPersonName' . $i . '_D'; ?>" />
+              </td>
+              <td>
+                <select id="<?php echo $FormName . 'ObjectReason' . $i . '_D'; ?>">
+                  <option value=""></option>
+                  <option value="S">Shifted</option>
+                  <option value="E">Dead</option>
+                  <option value="D">Duplicate</option>
+                  <option value="Q">Disqualification</option>
+                  <option value="M">Missing</option>
+                </select>
+              </td>
+              <td>
+                <input type="text" id="<?php echo $FormName . 'DOB' . $i . '_D'; ?>"
+                       class="DOB" placeholder="yyyy-mm-dd" />
+              </td>
+              <td>
+                <select id="<?php echo $FormName . 'Sex' . $i . '_D'; ?>">
+                  <option value=""></option>
+                  <option value="M">Male</option>
+                  <option value="F">Female</option>
+                  <option value="U">Other</option>
+                </select>
+              </td>
+              <td>
+                <select id="<?php echo $FormName . 'Status' . $i . '_D'; ?>">
+                  <option value="A">Accepted</option>
+                  <option value="R">Rejected</option>
+                  <option value="P" selected="selected">Pending</option>
+                </select>
+              </td>
+            </tr>
+            <?php
+            $i++;
+          }
+          ?>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="6" style="text-align: left;">
+              <span>Show 10 Rows Starting From: </span>
+              <input type="text" id="<?php echo $FormName . 'FromRow'; ?>" value="1"/>
+              <input type="button" id="<?php echo $FormName . 'CmdEdit'; ?>"  value="Edit"/>
+            </td>
+            <td colspan="5" style="text-align: right;">
+              <input type="button" id="<?php echo $FormName . 'CmdNew'; ?>"  value="New"/>
+              <input type="button" id="<?php echo $FormName . 'CmdSave'; ?>" value="Save"/>
+              <input type="button" id="<?php echo $FormName . 'CmdDel'; ?>"  value="Delete"/>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+      <?php
       break;
   }
 }
