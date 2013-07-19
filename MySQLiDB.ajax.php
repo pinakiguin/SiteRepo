@@ -24,7 +24,7 @@ require_once 'php-mailer/GMail.lib.php';
 if (!isset($_SESSION))
   session_start();
 //@todo Enable AjaxToken currently disabled
-$CSRF = TRUE; //(WebLib::GetVal($_POST, 'AjaxToken') === WebLib::GetVal($_SESSION, 'Token'));
+$CSRF = (WebLib::GetVal($_POST, 'AjaxToken') === WebLib::GetVal($_SESSION, 'Token'));
 if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
   $_SESSION['LifeTime'] = time();
   $_SESSION['RT'] = microtime(TRUE);
@@ -182,26 +182,34 @@ function SaveData(&$DataResp, $tableName, $insertData) {
 function SetCurrForm($FormName = 'SRERForm6I') {
   Switch ($FormName) {
     case 'SRERForm6I':
-      $_SESSION['TableName'] = '' . MySQL_Pre . 'SRER_Form6';
+      $_SESSION['TableName'] = '`' . MySQL_Pre . 'SRER_Form6`';
       $_SESSION['Fields'] = '`RowID`,`SlNo`,`ReceiptDate`,`AppName`,`DOB`,`Sex`,`RelationshipName`,`Relationship`,`Status`';
       $_SESSION['InsFields'] = '`' . MySQL_Pre . 'SRER_Form6`'
               . '(`RowID`,`SlNo`,`ReceiptDate`,`AppName`,`DOB`,`Sex`,`RelationshipName`,`Relationship`,`Status`,`PartID`)';
       break;
     case 'SRERForm6A':
       $_SESSION['TableName'] = '`' . MySQL_Pre . 'SRER_Form6A`';
-      $_SESSION['Fields'] = '`SlNo`, `ReceiptDate`, `AppName`, `RelationshipName`, `Relationship`, `Status`';
+      $_SESSION['Fields'] = '`RowID`,`SlNo`,`ReceiptDate`,`AppName`,`DOB`,`Sex`,`RelationshipName`,`Relationship`,`Status`';
+      $_SESSION['InsFields'] = '`' . MySQL_Pre . 'SRER_Form6A`'
+              . '(`RowID`,`SlNo`,`ReceiptDate`,`AppName`,`DOB`,`Sex`,`RelationshipName`,`Relationship`,`Status`,`PartID`)';
       break;
     case 'SRERForm7I':
       $_SESSION['TableName'] = '`' . MySQL_Pre . 'SRER_Form7`';
-      $_SESSION['Fields'] = '`SlNo`, `ReceiptDate`, `ObjectorName`, `PartNo`, `SerialNoInPart`, `DelPersonName`, `ObjectReason`, `Status` ';
+      $_SESSION['Fields'] = '`RowID`,`SlNo`, `ReceiptDate`, `ObjectorName`, `PartNo`, `SerialNoInPart`, `DelPersonName`, `ObjectReason`,`DOB`,`Sex`, `Status` ';
+      $_SESSION['InsFields'] = '`' . MySQL_Pre . 'SRER_Form7`'
+              . '(`RowID`,`SlNo`, `ReceiptDate`, `ObjectorName`, `PartNo`, `SerialNoInPart`, `DelPersonName`, `ObjectReason`,`DOB`,`Sex`, `Status`,`PartID`)';
       break;
     case 'SRERForm8I':
       $_SESSION['TableName'] = '`' . MySQL_Pre . 'SRER_Form8`';
-      $_SESSION['Fields'] = '`SlNo`, `ReceiptDate`, `AppName`, `RelationshipName`, `Relationship`, `Status`';
+      $_SESSION['Fields'] = '`RowID`,`SlNo`, `ReceiptDate`, `ObjectorName`, `PartNo`, `SerialNoInPart`, `ObjectReason`,`DOB`,`Sex`, `Status`';
+      $_SESSION['InsFields'] = '`' . MySQL_Pre . 'SRER_Form8`'
+              . '(`RowID`,`SlNo`, `ReceiptDate`, `ObjectorName`, `PartNo`, `SerialNoInPart`, `ObjectReason`,`DOB`,`Sex`, `Status`,`PartID`)';
       break;
     case 'SRERForm8A':
       $_SESSION['TableName'] = '`' . MySQL_Pre . 'SRER_Form8A`';
-      $_SESSION['Fields'] = '`SlNo`, `ReceiptDate`, `AppName`, `RelationshipName`, `Relationship`, `Status`';
+      $_SESSION['Fields'] = '`RowID`,`SlNo`, `ReceiptDate`, `ObjectorName`, `PartNo`, `SerialNoInPart`, `ObjectReason`,`DOB`,`Sex`, `Status`';
+      $_SESSION['InsFields'] = '`' . MySQL_Pre . 'SRER_Form8A`'
+              . '(`RowID`,`SlNo`, `ReceiptDate`, `ObjectorName`, `PartNo`, `SerialNoInPart`, `ObjectReason`,`DOB`,`Sex`, `Status`,`PartID`)';
       break;
   }
   if (WebLib::GetVal($_POST, 'FormName') != '')
