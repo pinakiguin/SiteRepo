@@ -10,7 +10,10 @@ $(function() {
     showOtherMonths: true,
     selectOtherMonths: true,
     showButtonPanel: true,
-    showAnim: "slideDown"
+    showAnim: "slideDown",
+    onClose: function() {
+      DataChanged(this)
+    }
   });
 
   $(".DOB").datepicker({
@@ -19,7 +22,10 @@ $(function() {
     showOtherMonths: true,
     selectOtherMonths: true,
     showButtonPanel: true,
-    showAnim: "slideDown"
+    showAnim: "slideDown",
+    onClose: function() {
+      DataChanged(this)
+    }
   });
 
   /**
