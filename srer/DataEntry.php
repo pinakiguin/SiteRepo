@@ -13,6 +13,8 @@ WebLib::IncludeCSS('css/DataEntry.css');
 WebLib::IncludeJS('js/DataEntry.js');
 WebLib::IncludeCSS('css/chosen.min.css');
 WebLib::IncludeJS('js/chosen.jquery.min.js');
+WebLib::IncludeJS('js/jquery.validate.min.js');
+WebLib::IncludeJS('js/additional-methods.min.js');
 
 if (WebLib::GetVal($_SESSION, 'ACNo') == "")
   $_SESSION['ACNo'] = "";
