@@ -114,48 +114,48 @@ $(function() {
    * @todo CmdEdit Click
    *
    */
-
-  $('#' + $('#ActiveSRERForm').val() + 'CmdEdit')
-          .click(function() {
-    ClearAll();
-    $('#Msg').html('Editing Please Wait...');
-    var FromRow = $('#' + $('#ActiveSRERForm').val() + 'FromRow').val() - 1;
-    if (FromRow <= 0) {
-      FromRow = 0;
-    }
-    $.ajax({
-      type: 'POST',
-      url: '../MySQLiDB.ajax.php',
-      dataType: 'html',
-      xhrFields: {
-        withCredentials: true
-      },
-      data: {
-        'AjaxToken': $('#AjaxToken').val(),
-        'CallAPI': 'GetSRERData',
-        'TableName': $('#ActiveSRERForm').val(),
-        'Params': new Array($('#ActivePartID').val(), FromRow, 10)
+  $('[id$="CmdEdit"]').each(function() {
+    $(this).bind('click', function() {
+      ClearAll();
+      $('#Msg').html('Editing Please Wait...');
+      var FromRow = $('#' + $('#ActiveSRERForm').val() + 'FromRow').val() - 1;
+      if (FromRow <= 0) {
+        FromRow = 0;
       }
-    })
-            .done(function(data) {
-      //$('#Error').html(data);
-      var DataResp = $.parseJSON(data);
-      delete data;
-      $('#AjaxToken').val(DataResp.AjaxToken);
-      $('#Msg').html(DataResp.Msg);
-      $.each(DataResp.Data,
-              function(index, value) {
-                $.each(value, function(key, data) {
-                  var Field = $('#' + $('#ActiveSRERForm').val() + key + index + '_D');
-                  Field.val(data);
-                  SaveFieldData(Field);
+      $.ajax({
+        type: 'POST',
+        url: '../MySQLiDB.ajax.php',
+        dataType: 'html',
+        xhrFields: {
+          withCredentials: true
+        },
+        data: {
+          'AjaxToken': $('#AjaxToken').val(),
+          'CallAPI': 'GetSRERData',
+          'TableName': $('#ActiveSRERForm').val(),
+          'Params': new Array($('#ActivePartID').val(), FromRow, 10)
+        }
+      })
+              .done(function(data) {
+        //$('#Error').html(data);
+        var DataResp = $.parseJSON(data);
+        delete data;
+        $('#AjaxToken').val(DataResp.AjaxToken);
+        $('#Msg').html(DataResp.Msg);
+        $.each(DataResp.Data,
+                function(index, value) {
+                  $.each(value, function(key, data) {
+                    var Field = $('#' + $('#ActiveSRERForm').val() + key + index + '_D');
+                    Field.val(data);
+                    SaveFieldData(Field);
+                  });
                 });
-              });
-      $('#ED').html(DataResp.RT);
-      delete DataResp;
-    })
-            .fail(function(msg) {
-      $('#Msg').html(msg);
+        $('#ED').html(DataResp.RT);
+        delete DataResp;
+      })
+              .fail(function(msg) {
+        $('#Msg').html(msg);
+      });
     });
   });
 
@@ -166,52 +166,53 @@ $(function() {
    * @todo Clear Checkboxes on Save
    */
 
-  $('#' + $('#ActiveSRERForm').val() + 'CmdSave')
-          .click(function() {
-    $('#Error').html('');
-    $('#Msg').html('Preparing to Save Please Wait...');
-    var i = 0, j, Params = new Array('');
-    j = 0;
-    $('input[type="checkbox"]').filter(':checked')
-            .each(function() {
-      Params[i] = new Object();
-      $('#Msg').append(document.createTextNode($(this).val() + ', '));
-      $('[id$="' + $(this).attr('id').slice(-3) + '"][id^="' + $('#ActiveSRERForm').val() + '"]')
+  $('[id$="CmdSave"]').each(function() {
+    $(this).bind('click', function() {
+      $('#Error').html('CmdSave: ');
+      $('#Msg').html('Preparing to Save Please Wait...');
+      var i = 0, j, Params = new Array('');
+      j = 0;
+      $('input[type="checkbox"]').filter(':checked')
               .each(function() {
-        Params[i][$(this).attr('id').slice($('#ActiveSRERForm').val().length, -3)] = $(this).val();
+        Params[i] = new Object();
+        $('#Msg').append(document.createTextNode($(this).val() + ', '));
+        $('[id$="' + $(this).attr('id').slice(-3) + '"][id^="' + $('#ActiveSRERForm').val() + '"]')
+                .each(function() {
+          Params[i][$(this).attr('id').slice($('#ActiveSRERForm').val().length, -3)] = $(this).val();
+        });
+        Params[i++]["PartID"] = $('#ActivePartID').val();
       });
-      Params[i++]["PartID"] = $('#ActivePartID').val();
-    });
-    $.ajax({
-      type: 'POST',
-      url: '../MySQLiDB.ajax.php',
-      dataType: 'html',
-      xhrFields: {
-        withCredentials: true
-      },
-      data: {
-        'AjaxToken': $('#AjaxToken').val(),
-        'CallAPI': 'PutSRERData',
-        'TableName': $('#ActiveSRERForm').val(),
-        'Params': Params
-      }
-    })
-            .done(function(data) {
-      $('#Error').append(document.createTextNode(data));
-      try {
-        var DataResp = $.parseJSON(data);
-        delete data;
-        $('#AjaxToken').val(DataResp.AjaxToken);
-        $('#Msg').html(DataResp.Msg);
-        $('#ED').html(DataResp.RT);
-        delete DataResp;
-      }
-      catch (e) {
-        $('#Msg').html('Server Error:' + e);
-      }
-    })
-            .fail(function(msg) {
-      $('#Msg').html(msg);
+      $.ajax({
+        type: 'POST',
+        url: '../MySQLiDB.ajax.php',
+        dataType: 'html',
+        xhrFields: {
+          withCredentials: true
+        },
+        data: {
+          'AjaxToken': $('#AjaxToken').val(),
+          'CallAPI': 'PutSRERData',
+          'TableName': $('#ActiveSRERForm').val(),
+          'Params': Params
+        }
+      })
+              .done(function(data) {
+        $('#Error').append(document.createTextNode(data));
+        try {
+          var DataResp = $.parseJSON(data);
+          delete data;
+          $('#AjaxToken').val(DataResp.AjaxToken);
+          $('#Msg').html(DataResp.Msg);
+          $('#ED').html(DataResp.RT);
+          delete DataResp;
+        }
+        catch (e) {
+          $('#Msg').html('Server Error:' + e);
+        }
+      })
+              .fail(function(msg) {
+        $('#Msg').html(msg);
+      });
     });
   });
 
@@ -220,40 +221,41 @@ $(function() {
    *
    * @todo CmdNew Click [Currently Working to Get Last SlNo]
    */
-  $('#' + $('#ActiveSRERForm').val() + 'CmdNew')
-          .click(function() {
-    $('#Msg').html('Creating Please Wait...');
-    $.ajax({
-      type: 'POST',
-      url: '../MySQLiDB.ajax.php',
-      dataType: 'html',
-      xhrFields: {
-        withCredentials: true
-      },
-      data: {
-        'AjaxToken': $('#AjaxToken').val(),
-        'CallAPI': 'GetLastSl',
-        'TableName': $('#ActiveSRERForm').val(),
-        'Params': new Array($('#ActivePartID').val())
-      }
-    }).done(function(data) {
-      //$('#Error').append(document.createTextNode(data));
-      var DataResp = $.parseJSON(data);
-      delete data;
-      $('#AjaxToken').val(DataResp.AjaxToken);
-      $('#Msg').html(DataResp.Msg);
-      /*$.each(DataResp.Data,
-       function(index, value) {
-       $.each(value, function(key, data) {
-       $('#' + $('#ActiveSRERForm').val() + key + index).val(data);
-       });
-       });*/
-      $('#ED').html(DataResp.RT);
-      delete DataResp;
-    }).fail(function(msg) {
-      $('#Msg').html(msg);
+  $('[id$="CmdNew"]').each(function() {
+    $(this).bind('click', function() {
+      $('#Msg').html('Creating Please Wait...');
+      $.ajax({
+        type: 'POST',
+        url: '../MySQLiDB.ajax.php',
+        dataType: 'html',
+        xhrFields: {
+          withCredentials: true
+        },
+        data: {
+          'AjaxToken': $('#AjaxToken').val(),
+          'CallAPI': 'GetLastSl',
+          'TableName': $('#ActiveSRERForm').val(),
+          'Params': new Array($('#ActivePartID').val())
+        }
+      }).done(function(data) {
+        //$('#Error').append(document.createTextNode(data));
+        var DataResp = $.parseJSON(data);
+        delete data;
+        $('#AjaxToken').val(DataResp.AjaxToken);
+        $('#Msg').html(DataResp.Msg);
+        /*$.each(DataResp.Data,
+         function(index, value) {
+         $.each(value, function(key, data) {
+         $('#' + $('#ActiveSRERForm').val() + key + index).val(data);
+         });
+         });*/
+        $('#ED').html(DataResp.RT);
+        delete DataResp;
+      }).fail(function(msg) {
+        $('#Msg').html(msg);
+      });
+      ClearAll();
     });
-    ClearAll();
   });
 
   /**
@@ -261,17 +263,18 @@ $(function() {
    * @todo Make API Call directly to delete.
    * @toto Implement SaveFieldData and DataChanged on Delete
    */
-  $('#' + $('#ActiveSRERForm').val() + 'CmdDel')
-          .click(function() {
-    $('#Msg').html('RecordID: ');
-    $('input[type="checkbox"]').filter(':checked').each(function() {
+  $('[id$="CmdDel"]').each(function() {
+    $(this).bind('click', function() {
+      $('#Msg').html('RecordID: ');
+      $('input[type="checkbox"]').filter(':checked').each(function() {
 
-      $('#Msg').append(document.createTextNode($(this).val() + ', '));
-      $('[id!="' + $('#ActiveSRERForm').val() + 'RowID' + $(this).attr('id').slice(-3) + '"]'
-              + '[id$="' + $(this).attr('id').slice(-3) + '"]'
-              + '[id^="' + $('#ActiveSRERForm').val() + '"]').val('');
+        $('#Msg').append(document.createTextNode($(this).val() + ', '));
+        $('[id!="' + $('#ActiveSRERForm').val() + 'RowID' + $(this).attr('id').slice(-3) + '"]'
+                + '[id$="' + $(this).attr('id').slice(-3) + '"]'
+                + '[id^="' + $('#ActiveSRERForm').val() + '"]').val('');
+      });
+      $('#Msg').append(document.createTextNode(' deleted.'));
     });
-    $('#Msg').append(document.createTextNode(' deleted.'));
   });
 
   /**
