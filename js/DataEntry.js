@@ -1,7 +1,7 @@
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
- * @todo Turn on the Checkboxes of changed records
+ * @todo Turned on the Checkboxes of changed records
  */
 
 $(function() {
@@ -43,7 +43,7 @@ $(function() {
 
   /**
    * Get the list of ACs and register change event to update Parts
-   * @todo ACNo Change
+   * @todo ACNo Change event registered
    *
    */
   $('#ACNo').chosen({width: "300px",
@@ -69,7 +69,7 @@ $(function() {
    * GetACParts API Call for Caching of AC and Parts
    * Options for ACs are rendered and
    * for Parts Stored in $('#PartID').data('Parts', DataResp.Parts);
-   * @todo Caching of AC and Parts
+   * @todo Caching of AC and Parts done
    */
   $.ajax({
     type: 'POST',
@@ -111,9 +111,7 @@ $(function() {
 
   $('#' + $('#ActiveSRERForm').val() + 'CmdEdit')
           .click(function() {
-    $('[id^="' + $('#ActiveSRERForm').val() + '"][id$="_D"]').each(function() {
-      $(this).val('');
-    });
+    ClearAll();
     $('#Msg').html('Editing Please Wait...');
     var FromRow = $('#' + $('#ActiveSRERForm').val() + 'FromRow').val() - 1;
     if (FromRow <= 0) {
@@ -142,7 +140,9 @@ $(function() {
       $.each(DataResp.Data,
               function(index, value) {
                 $.each(value, function(key, data) {
-                  $('#' + $('#ActiveSRERForm').val() + key + index + '_D').val(data);
+                  var Field = $('#' + $('#ActiveSRERForm').val() + key + index + '_D');
+                  Field.val(data);
+                  SaveFieldData(Field);
                 });
               });
       $('#ED').html(DataResp.RT);
@@ -157,6 +157,7 @@ $(function() {
    * Insert the rows acordingly
    * @todo CmdSave Click [Currently Working to Get Last SlNo]
    * @todo Save only those rows that are selected by checkbox
+   * @todo Clear Checkboxes on Save
    */
 
   $('#' + $('#ActiveSRERForm').val() + 'CmdSave')
@@ -246,14 +247,13 @@ $(function() {
     }).fail(function(msg) {
       $('#Msg').html(msg);
     });
-    $('[id^="' + $('#ActiveSRERForm').val() + '"][id$="_D"]').each(function() {
-      $(this).val('');
-    });
+    ClearAll();
   });
 
   /**
    * @todo CmdDel Click
    * @todo Make API Call directly to delete.
+   * @toto Implement SaveFieldData and DataChanged on Delete
    */
   $('#' + $('#ActiveSRERForm').val() + 'CmdDel')
           .click(function() {
@@ -268,8 +268,85 @@ $(function() {
     $('#Msg').append(document.createTextNode(' deleted.'));
   });
 
+  /**
+   * Stores the initial data and bind the blur event of all fields
+   */
+  $('[id$="_D"]').each(function() {
+    $(this).bind('blur', function() {
+      DataChanged(this);
+    });
+    SaveFieldData(this);
+  });
+
+  /**
+   * Shows the Tabs when loading completes.
+   *
+   * ****Important*****
+   * Don't do anything beyond this at document ready
+   */
   $('#SRER_Forms').css('display', 'table');
 });
+
+/**
+ * Clears all the fields
+ *
+ * @returns {undefined}
+ */
+function ClearAll() {
+  $('[id^="' + $('#ActiveSRERForm').val() + '"][id$="_D"]').each(function() {
+    $(this).val('');
+    SaveFieldData(this);
+    if ($(this).filter(':checked').length !== 0) {
+      $(this).click();//attr('checked', 'checked');
+    }
+  });
+}
+
+/**
+ * Save the element data as it was while loaded from Database
+ *
+ * @param {jQuery} Obj
+ * @returns {undefined}
+ */
+function SaveFieldData(Obj) {
+  $(Obj).data('DB', $(Obj).val());
+}
+
+/**
+ * Check the element data if it is still as it was while loaded from Database
+ *
+ * @todo Check the whole row if any data has been changed turn the corresponding checkbox acordingly
+ *
+ * @param {jQuery} Obj
+ * @returns {undefined}
+ */
+function DataChanged(Obj) {
+  var CheckBox = new Object();
+  $('#Msg').text($(Obj).attr('id') + ':blur');
+  if ($(Obj).data('DB') !== $(Obj).val()) {
+    CheckBox = $('#' + $('#ActiveSRERForm').val() + 'RowID' + $(Obj).attr('id').slice(-3));
+    if (CheckBox.filter(':checked').length === 0) {
+      CheckBox.click();//attr('checked', 'checked');
+    }
+    $('#Msg').text($(Obj).attr('id') + ':changed[' + CheckBox.attr('checked') + ']');
+  } else {
+    var hasChangedAnyElementOnRow = 0;
+    $('[id$="' + $(Obj).attr('id').slice(-3) + '"]').each(function() {
+      if ($(this).data('DB') !== $(this).val()) {
+        hasChangedAnyElementOnRow = 1;
+        $('#Msg').text($(this).data('DB') + '!==' + $(this).val() + '|' + $(this).attr('id'));
+      }
+    });
+    if (hasChangedAnyElementOnRow === 0) {
+      CheckBox = $('#' + $('#ActiveSRERForm').val() + 'RowID' + $(Obj).attr('id').slice(-3));
+      if (CheckBox.filter(':checked').length !== 0) {
+        CheckBox.click();//removeAttr('checked');
+      }
+      $('#Msg').text($(Obj).attr('id') + ':All-unchanged[' + CheckBox.attr('checked') + ']');
+    }
+  }
+}
+
 /**
  * Validates date in dd/mm/yyyy and dd-mm-yyyy format
  *
