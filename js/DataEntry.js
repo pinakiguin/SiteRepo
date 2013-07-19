@@ -1,6 +1,7 @@
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
+ * @todo Turn on the Checkboxes of changed records
  */
 
 $(function() {
@@ -160,12 +161,10 @@ $(function() {
 
   $('#' + $('#ActiveSRERForm').val() + 'CmdSave')
           .click(function() {
-    //$('#Error').html('');
-    $('#Msg').html('Saving Please Wait...');
+    $('#Error').html('');
+    $('#Msg').html('Preparing to Save Please Wait...');
     var i = 0, j, Params = new Array('');
-    //for (i = 0; i < 10; i++) {
     j = 0;
-    //if (){
     $('input[type="checkbox"]').filter(':checked')
             .each(function() {
       Params[i] = new Object();
@@ -174,15 +173,8 @@ $(function() {
               .each(function() {
         Params[i][$(this).attr('id').slice($('#ActiveSRERForm').val().length, -3)] = $(this).val();
       });
-      //$(this).val();
-      //alert(Params[i][$(this).attr('id').slice($('#ActiveSRERForm').val().length, -3)]);
       Params[i++]["PartID"] = $('#ActivePartID').val();
     });
-
-
-    //}
-    //}
-    // @todo May just the array be prepared instead of the whole request
     $.ajax({
       type: 'POST',
       url: '../MySQLiDB.ajax.php',
@@ -196,24 +188,24 @@ $(function() {
         'TableName': $('#ActiveSRERForm').val(),
         'Params': Params
       }
-    }).done(function(data) {
-      //$('#Error').append(document.createTextNode(data));
-      var DataResp = $.parseJSON(data);
-      delete data;
-      $('#AjaxToken').val(DataResp.AjaxToken);
-      $('#Msg').html(DataResp.Msg);
-      /*$.each(DataResp.Data,
-       function(index, value) {
-       $.each(value, function(key, data) {
-       $('#' + $('#ActiveSRERForm').val() + key + index).val(data);
-       });
-       });*/
-      $('#ED').html(DataResp.RT);
-      delete DataResp;
-    }).fail(function(msg) {
+    })
+            .done(function(data) {
+      $('#Error').append(document.createTextNode(data));
+      try {
+        var DataResp = $.parseJSON(data);
+        delete data;
+        $('#AjaxToken').val(DataResp.AjaxToken);
+        $('#Msg').html(DataResp.Msg);
+        $('#ED').html(DataResp.RT);
+        delete DataResp;
+      }
+      catch (e) {
+        $('#Msg').html('Server Error:' + e);
+      }
+    })
+            .fail(function(msg) {
       $('#Msg').html(msg);
     });
-
   });
 
   /**

@@ -53,6 +53,7 @@ if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
       SetCurrForm(WebLib::GetVal($_POST, 'TableName'));
       $Params = WebLib::GetVal($_POST, 'Params', FALSE, FALSE);
       $DataResp['Data']['POST'] = $_POST;
+      $DataResp['Msg'] = 'Rows Sent: ' . count($Params);
       for ($i = 0; $i < count($Params); $i++) {
         SaveData($DataResp, $_SESSION['TableName'], $Params[$i]);
       }
@@ -149,16 +150,24 @@ function doQuery(&$DataResp, $Query, $Params = NULL) {
 function SaveData(&$DataResp, $tableName, $insertData) {
   $Data = new MySQLiDBHelper(HOST_Name, MySQL_User, MySQL_Pass, MySQL_DB);
   $DataResp['Data']['Row'] = $insertData;
-  if ($insertData['RowID'] === "") {
-    $Saved = $Data->insert($tableName, $insertData);
+  $Saved = FALSE;
+  if (is_array($insertData)) {
+    if ($insertData['RowID'] === "") {
+      $Saved = $Data->insert($tableName, $insertData);
+      $Action = 'Added[' . $Data->getInsertId() . ']';
+    } else {
+      $Data->where('RowID', $insertData['RowID']);
+      $Saved = $Data->update($tableName, $insertData);
+      $Action = 'Updated[' . $insertData['RowID'] . ']';
+    }
+    $Action .= ': ' . $insertData['SlNo'];
+    if ($Saved) {
+      $DataResp['Msg'] .= '|' . $Action;
+    } else {
+      $DataResp['Msg'] .= '|not ' . $Action;
+    }
   } else {
-    $Data->where('RowID', $insertData['RowID']);
-    $Saved = $Data->update($tableName, $insertData);
-  }
-  if ($Saved) {
-    $DataResp['Msg'] = 'Saved Successfully!';
-  } else {
-    $DataResp['Msg'] = 'Unable to Saved!';
+    $DataResp['Msg'] .= ' But nothing to Save!';
   }
   unset($Data);
 }
