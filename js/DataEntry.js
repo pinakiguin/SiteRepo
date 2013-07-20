@@ -3,7 +3,12 @@
  * and open the template in the editor.
  * @ todo Turned on the Checkboxes of changed records
  * @ todo Don't make ajax call if no row selected
- * @todo Data validation to be done befor submit
+ * 
+ * @todo Data validation to be done before submit
+ * @todo If Non existent data sent for deletion then it is being added instead of doing nothing
+ * @todo If No Part Selected appropriate message to be displayed
+ * @todo If ajax callback receives no data appropriate message to be displayed
+ *
  */
 
 $(function() {
@@ -183,7 +188,7 @@ $(function() {
   $('[id$="CmdSave"]')
           .each(function() {
     $(this).bind('click', function() {
-      $('#Error').html('CmdSave: ');
+      //$('#Error').html('CmdSave: ');
       $('#Msg').html('Preparing to Save Please Wait...');
       var i = 0, j, Params = new Array('');
       j = 0;
@@ -213,7 +218,7 @@ $(function() {
           }
         })
                 .done(function(data) {
-          $('#Error').append(document.createTextNode(data));
+          //$('#Error').append(document.createTextNode(data));
           try {
             var DataResp = $.parseJSON(data);
             delete data;
@@ -260,7 +265,7 @@ $(function() {
         }
       })
               .done(function(data) {
-        $('#Error').append(document.createTextNode(data));
+        //$('#Error').append(document.createTextNode(data));
         var DataResp = $.parseJSON(data);
         delete data;
         $('#AjaxToken').val(DataResp.AjaxToken);
@@ -285,14 +290,19 @@ $(function() {
           .each(function() {
     $(this).bind('click', function() {
       $('#Msg').html('RecordID: ');
+      var i = 0;
       $('input[type="checkbox"]').filter(':checked')
               .each(function() {
         $('#Msg').append(document.createTextNode($(this).val() + ', '));
         $('[id!="' + $('#ActiveSRERForm').val() + 'RowID' + $(this).attr('id').slice(-3) + '"]'
                 + '[id$="' + $(this).attr('id').slice(-3) + '"]'
                 + '[id^="' + $('#ActiveSRERForm').val() + '"]').val('');
+        i++;
       });
-      $('#Msg').append(document.createTextNode(' deleted.'));
+      $('#Msg').append(document.createTextNode(' to be deleted.'));
+      if (i === 0) {
+        $('#Msg').html('Nothing to delete...');
+      }
     });
   });
 
@@ -351,19 +361,19 @@ function SaveFieldData(Obj) {
  */
 function DataChanged(Obj) {
   var CheckBox = new Object();
-  $('#Msg').text($(Obj).attr('id') + ':blur');
+  //$('#Msg').text($(Obj).attr('id') + ':blur');
   if ($(Obj).data('DB') !== $(Obj).val()) {
     CheckBox = $('#' + $('#ActiveSRERForm').val() + 'RowID' + $(Obj).attr('id').slice(-3));
     if (CheckBox.filter(':checked').length === 0) {
       CheckBox.click();//attr('checked', 'checked');
     }
-    $('#Msg').text($(Obj).attr('id') + ':changed[' + CheckBox.attr('checked') + ']');
+    //$('#Msg').text($(Obj).attr('id') + ':changed[' + CheckBox.attr('checked') + ']');
   } else {
     var hasChangedAnyElementOnRow = 0;
     $('[id$="' + $(Obj).attr('id').slice(-3) + '"]').each(function() {
       if ($(this).data('DB') !== $(this).val()) {
         hasChangedAnyElementOnRow = 1;
-        $('#Msg').text($(this).data('DB') + '!==' + $(this).val() + '|' + $(this).attr('id'));
+        //$('#Msg').text($(this).data('DB') + '!==' + $(this).val() + '|' + $(this).attr('id'));
       }
     });
     if (hasChangedAnyElementOnRow === 0) {
@@ -371,7 +381,7 @@ function DataChanged(Obj) {
       if (CheckBox.filter(':checked').length !== 0) {
         CheckBox.click();//removeAttr('checked');
       }
-      $('#Msg').text($(Obj).attr('id') + ':All-unchanged[' + CheckBox.attr('checked') + ']');
+      //$('#Msg').text($(Obj).attr('id') + ':All-unchanged[' + CheckBox.attr('checked') + ']');
     }
   }
 }
