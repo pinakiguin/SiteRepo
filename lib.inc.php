@@ -4,6 +4,7 @@
  * @todo Unique Random ID Generator function to be included
  * @todo HelpLine has to be added
  * @todo Menus made to be Database driven
+ * @todo *** VVI *** Make Modernizr to display message if browser is not capable.
  */
 require_once 'MySQLiDB.inc.php';
 require_once 'sql.defs.php';
@@ -101,13 +102,14 @@ class WebLib {
     echo '<title>' . $PageTitle . ' - ' . $AppTitle . '</title>';
     echo '<meta name="robots" content="noarchive,noodp">';
     echo '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
+    echo '<script src="' . WebLib::GetAbsoluteURLFolder() . 'js/modernizr-latest.js" type="text/javascript"></script>';
   }
 
   /**
    * Generates call to jQuery Scripts in Head Section
    */
   public static function JQueryInclude() {
-    echo '<link type="text/css" href="' . WebLib::GetAbsoluteURLFolder() . '/css/dark-hive/jquery-ui-1.10.3.custom.min.css" rel="Stylesheet" />'
+    echo '<link type="text/css" href="' . WebLib::GetAbsoluteURLFolder() . 'css/dark-hive/jquery-ui-1.10.3.custom.min.css" rel="Stylesheet" />'
     . '<script type="text/javascript" src="' . WebLib::GetAbsoluteURLFolder() . 'js/jquery-1.10.2.min.js"></script>'
     . '<script type="text/javascript" src="' . WebLib::GetAbsoluteURLFolder() . 'js/jquery-ui-1.10.3.custom.min.js"></script>';
   }
