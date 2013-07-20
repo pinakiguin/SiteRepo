@@ -45,11 +45,11 @@ if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
 
     case 'GetLastSl':
       SetCurrForm(WebLib::GetVal($_POST, 'TableName'));
-      $Query = 'Select count(*) as LastSL '
+      $Query = 'Select (count(*)+1) as LastSL '
               . ' FROM ' . WebLib::GetVal($_SESSION, 'TableName', FALSE, FALSE)
               . ' Where `PartID`=?';
       doQuery($DataResp, $Query, WebLib::GetVal($_POST, 'Params', FALSE, FALSE));
-      $DataResp['Msg'] = 'Total Data in this Form of this Part: ' . $DataResp['Data'][0]['LastSL'];
+      $DataResp['Msg'] = 'Total Data in this Form of this Part: ' . ($DataResp['Data'][0]['LastSL'] - 1);
       break;
 
     case 'GetSRERData':
@@ -201,33 +201,28 @@ function SetCurrForm($FormName = 'SRERForm6I') {
   Switch ($FormName) {
     case 'SRERForm6I':
       $_SESSION['TableName'] = '`' . MySQL_Pre . 'SRER_Form6`';
-      $_SESSION['Fields'] = '`RowID`,`SlNo`,`ReceiptDate`,`AppName`,`DOB`,`Sex`,`RelationshipName`,`Relationship`,`Status`';
-      $_SESSION['InsFields'] = '`' . MySQL_Pre . 'SRER_Form6`'
-              . '(`RowID`,`SlNo`,`ReceiptDate`,`AppName`,`DOB`,`Sex`,`RelationshipName`,`Relationship`,`Status`,`PartID`)';
+      $_SESSION['Fields'] = '`RowID`,`SlNo`,`ReceiptDate`,`Status`,'
+              . '`AppName`,`DOB`,`Sex`,`RelationshipName`,`Relationship`';
       break;
     case 'SRERForm6A':
       $_SESSION['TableName'] = '`' . MySQL_Pre . 'SRER_Form6A`';
-      $_SESSION['Fields'] = '`RowID`,`SlNo`,`ReceiptDate`,`AppName`,`DOB`,`Sex`,`RelationshipName`,`Relationship`,`Status`';
-      $_SESSION['InsFields'] = '`' . MySQL_Pre . 'SRER_Form6A`'
-              . '(`RowID`,`SlNo`,`ReceiptDate`,`AppName`,`DOB`,`Sex`,`RelationshipName`,`Relationship`,`Status`,`PartID`)';
+      $_SESSION['Fields'] = '`RowID`,`SlNo`,`ReceiptDate`,`Status`,'
+              . '`AppName`,`DOB`,`Sex`,`RelationshipName`,`Relationship`';
       break;
     case 'SRERForm7I':
       $_SESSION['TableName'] = '`' . MySQL_Pre . 'SRER_Form7`';
-      $_SESSION['Fields'] = '`RowID`,`SlNo`, `ReceiptDate`, `ObjectorName`, `PartNo`, `SerialNoInPart`, `DelPersonName`, `ObjectReason`,`DOB`,`Sex`, `Status` ';
-      $_SESSION['InsFields'] = '`' . MySQL_Pre . 'SRER_Form7`'
-              . '(`RowID`,`SlNo`, `ReceiptDate`, `ObjectorName`, `PartNo`, `SerialNoInPart`, `DelPersonName`, `ObjectReason`,`DOB`,`Sex`, `Status`,`PartID`)';
+      $_SESSION['Fields'] = '`RowID`,`SlNo`,`ReceiptDate`, `Status`,'
+              . '`ObjectorName`,`PartNo`,`SerialNoInPart`,`DelPersonName`,`ObjectReason`';
       break;
     case 'SRERForm8I':
       $_SESSION['TableName'] = '`' . MySQL_Pre . 'SRER_Form8`';
-      $_SESSION['Fields'] = '`RowID`,`SlNo`, `ReceiptDate`, `ObjectorName`, `PartNo`, `SerialNoInPart`, `ObjectReason`,`DOB`,`Sex`, `Status`';
-      $_SESSION['InsFields'] = '`' . MySQL_Pre . 'SRER_Form8`'
-              . '(`RowID`,`SlNo`, `ReceiptDate`, `ObjectorName`, `PartNo`, `SerialNoInPart`, `ObjectReason`,`DOB`,`Sex`, `Status`,`PartID`)';
+      $_SESSION['Fields'] = '`RowID`,`SlNo`,`ReceiptDate`, `Status`,'
+              . '`ElectorName`, `ElectorPartNo`, `ElectorSerialNoInPart`,`NatureObjection`';
       break;
     case 'SRERForm8A':
       $_SESSION['TableName'] = '`' . MySQL_Pre . 'SRER_Form8A`';
-      $_SESSION['Fields'] = '`RowID`,`SlNo`, `ReceiptDate`, `ObjectorName`, `PartNo`, `SerialNoInPart`, `ObjectReason`,`DOB`,`Sex`, `Status`';
-      $_SESSION['InsFields'] = '`' . MySQL_Pre . 'SRER_Form8A`'
-              . '(`RowID`,`SlNo`, `ReceiptDate`, `ObjectorName`, `PartNo`, `SerialNoInPart`, `ObjectReason`,`DOB`,`Sex`, `Status`,`PartID`)';
+      $_SESSION['Fields'] = '`RowID`,`SlNo`,`ReceiptDate`,`Status`,'
+              . '`AppName`,`TransName`,`TransPartNo`,`TransSerialNoInPart`,`TransEPIC`,`PreResi`';
       break;
   }
   if (WebLib::GetVal($_POST, 'FormName') != '')

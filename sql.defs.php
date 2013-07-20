@@ -117,6 +117,15 @@ function SQLDefs($ObjectName) {
               . '(\'SlNo\', \'Serial No.\'),'
               . '(\'Status\', \'Status\'),'
               . '(\'DOB\', \'Date of Birth\'),'
+              . '(\'TransName\', \'Name of Person to be Transposed\'),'
+              . '(\'TransPartNo\', \'PartNo of person to be Transposed\'),'
+              . '(\'TransSerialNoInPart\', \'Sl. No. of person to be Transposed\'),'
+              . '(\'TransEPIC\', \'EPIC No.\'),'
+              . '(\'PreResi\', \'Present residence of the person to be Transposed\'),'
+              . '(\'ElectorName\', \'Name of Elector\'),'
+              . '(\'ElectorPartNo\', \'Part No. of Elector\'),'
+              . '(\'ElectorSerialNoInPart\', \'Serial No. of Elector in Concerned Part\'),'
+              . '(\'NatureObjection\', \'Nature of Objection\'),'
               . '(\'UserName\', \'Block\');';
       break;
     case 'SRER_Form6':
@@ -160,8 +169,6 @@ function SQLDefs($ObjectName) {
               . '`SerialNoInPart` varchar(3) DEFAULT NULL,'
               . '`DelPersonName` varchar(50) DEFAULT NULL,'
               . '`ObjectReason` varchar(1) DEFAULT NULL,'
-              . '`DOB` DATE NULL DEFAULT NULL,'
-              . '`Sex` varchar(1) NULL DEFAULT NULL,'
               . '`Status` varchar(1) DEFAULT NULL,'
               . ' PRIMARY KEY (`RowID`)'
               . ') ENGINE=InnoDB  DEFAULT CHARSET=utf8;';
@@ -172,12 +179,10 @@ function SQLDefs($ObjectName) {
               . '`SlNo` int(10) DEFAULT NULL,'
               . '`PartID` int(10) DEFAULT NULL,'
               . '`ReceiptDate` DATE NULL DEFAULT NULL,'
-              . '`ObjectorName` varchar(50) DEFAULT NULL,'
-              . '`PartNo` varchar(3) DEFAULT NULL,'
-              . '`SerialNoInPart` varchar(3) DEFAULT NULL,'
-              . '`ObjectReason` varchar(1) DEFAULT NULL,'
-              . '`DOB` DATE NULL DEFAULT NULL,'
-              . '`Sex` varchar(1) NULL DEFAULT NULL,'
+              . '`ElectorName` varchar(50) DEFAULT NULL,'
+              . '`ElectorPartNo` varchar(3) DEFAULT NULL,'
+              . '`ElectorSerialNoInPart` varchar(3) DEFAULT NULL,'
+              . '`NatureObjection` varchar(1) DEFAULT NULL,'
               . '`Status` varchar(1) DEFAULT NULL,'
               . ' PRIMARY KEY (`RowID`)'
               . ') ENGINE = InnoDB DEFAULT CHARSET = utf8;';
@@ -188,12 +193,12 @@ function SQLDefs($ObjectName) {
               . '`SlNo` int(10) DEFAULT NULL,'
               . '`PartID` int(10) DEFAULT NULL,'
               . '`ReceiptDate` varchar(10) DEFAULT NULL,'
-              . '`ObjectorName` varchar(50) DEFAULT NULL,'
-              . '`PartNo` varchar(3) DEFAULT NULL,'
-              . '`SerialNoInPart` varchar(3) DEFAULT NULL,'
-              . '`ObjectReason` varchar(1) DEFAULT NULL,'
-              . '`DOB` DATE NULL DEFAULT NULL,'
-              . '`Sex` varchar(1) NULL DEFAULT NULL,'
+              . '`AppName` varchar(50) DEFAULT NULL,'
+              . '`TransName` varchar(50) DEFAULT NULL,'
+              . '`TransPartNo` varchar(3) DEFAULT NULL,'
+              . '`TransSerialNoInPart` varchar(3) DEFAULT NULL,'
+              . '`TransEPIC` varchar(16) DEFAULT NULL,'
+              . '`PreResi` varchar(30) DEFAULT NULL,'
               . '`Status` varchar(1) DEFAULT NULL,'
               . ' PRIMARY KEY (`RowID`)'
               . ') ENGINE = InnoDB DEFAULT CHARSET = utf8;';
@@ -222,11 +227,6 @@ function SQLDefs($ObjectName) {
               . '`ACNo` varchar(3) DEFAULT NULL,'
               . ' PRIMARY KEY (`PartID`)'
               . ') ENGINE=InnoDB  DEFAULT CHARSET=utf8;';
-      break;
-    case 'SRER_PartMapData':
-      $SqlDB = 'INSERT INTO `' . MySQL_Pre . 'SRER_PartMap` (`PartID`, `UserMapID`, `PartNo`, `PartName`, `ACNo`) VALUES'
-              . '(1, 1, \'001\', \'Sirni Primary School\', \'219\'),'
-              . '(2, 1, \'002\', \'Sahania Shishu Shikshakendra\', \'219\');';
       break;
   }
   return $SqlDB;
