@@ -134,7 +134,7 @@ input[id$="FromRow"]{
 }
 
 .AppName,.RelationshipName{
-
+  width:160px;
 }
 
 .Sex{

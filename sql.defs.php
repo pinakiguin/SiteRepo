@@ -182,7 +182,7 @@ function SQLDefs($ObjectName) {
               . '`ElectorName` varchar(50) DEFAULT NULL,'
               . '`ElectorPartNo` varchar(3) DEFAULT NULL,'
               . '`ElectorSerialNoInPart` varchar(3) DEFAULT NULL,'
-              . '`NatureObjection` varchar(1) DEFAULT NULL,'
+              . '`NatureObjection` varchar(30) DEFAULT NULL,'
               . '`Status` varchar(1) DEFAULT NULL,'
               . ' PRIMARY KEY (`RowID`)'
               . ') ENGINE = InnoDB DEFAULT CHARSET = utf8;';

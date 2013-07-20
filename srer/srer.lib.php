@@ -300,7 +300,7 @@ function SRERForm($FormName) {
               <input type="text" id="<?php echo $FormName . 'FromRow'; ?>" value="1"/>
               <input type="button" id="<?php echo $FormName . 'CmdEdit'; ?>"  value="Edit"/>
             </td>
-            <td colspan="3" style="text-align: right;">
+            <td colspan="4" style="text-align: right;">
               <input type="button" id="<?php echo $FormName . 'CmdNew'; ?>"  value="New"/>
               <input type="button" id="<?php echo $FormName . 'CmdSave'; ?>" value="Save"/>
               <input type="button" id="<?php echo $FormName . 'CmdDel'; ?>"  value="Delete"/>
