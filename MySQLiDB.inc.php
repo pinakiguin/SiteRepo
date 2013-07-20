@@ -62,6 +62,10 @@ class MySQLiDB {
    */
   private $NoResult;
 
+  function __construct() {
+    $this->NoResult = 1;
+  }
+
   function __get($var) {
     switch ($var) {
       case 'RowCount' :
@@ -336,10 +340,14 @@ class MySQLiDB {
    */
   public function do_close() {
     // Free resultset
-    if (!$this->NoResult)
+    if (!$this->NoResult) {
       mysql_free_result($this->RecSet);
+      $this->NoResult = 1;
+    }
+
     // Closing connection
-    mysql_close($this->conn);
+    if ($this->conn)
+      mysql_close($this->conn);
     //echo "<br />LastQuery: ".$LastQuery;
   }
 
