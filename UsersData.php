@@ -1,12 +1,12 @@
 <?php
 
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * @todo Fetch District AC and Parts Combo Data on seperate request via ajax
  */
 
 $Data = new MySQLiDB();
 $_SESSION['action'] = 0;
+$Query = '';
 if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
   if (WebLib::GetVal($_POST, 'FormToken') !== WebLib::GetVal($_SESSION, 'FormToken')) {
     $_SESSION['action'] = 1;
@@ -56,6 +56,51 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
                 . '<b>Please Register again to change EmailID and Password</b>';
         $Mail = json_decode(GMailSMTP($User[1], $User[0], $Subject, $Body));
         break;
+
+      /**
+       * @todo User will be assigned a District only if user is Activated
+       */
+      case 'Assign Whole District':
+        $Query = 'Update `' . MySQL_Pre . 'SRER_Districts` Set `UserMapID`=' . WebLib::GetVal($_POST, 'UserMapID')
+                . ' Where `DistCode`=\'' . WebLib::GetVal($_POST, 'DistCode', TRUE) . '\'';
+        $User = explode('|', $Data->do_max_query('Select CONCAT(`UserName`,\'|\',`UserID`) FROM `' . MySQL_Pre . 'Users`'
+                        . ' Where UserMapID=' . WebLib::GetVal($_POST, 'UserMapID')));
+        $Subject = 'User Account Changed - SRER 2014';
+        $Body = '<span>A New District in now assigned Your UserID: <b>' . $User[1] . '</b></span><br/>'
+                . '<b>Please Login to check it out.</b>';
+        $Mail = json_decode(GMailSMTP($User[1], $User[0], $Subject, $Body));
+        $_SESSION['Msg'] = 'Whole District Assigned Successfully!';
+        break;
+
+      /**
+       * @todo User will be assigned an AC only if user is Activated
+       */
+      case 'Assign Whole AC':
+        $Query = 'Update `' . MySQL_Pre . 'SRER_ACs` Set `UserMapID`=' . WebLib::GetVal($_POST, 'UserMapID')
+                . ' Where `ACNo`=\'' . WebLib::GetVal($_POST, 'ACNo', TRUE) . '\'';
+        $User = explode('|', $Data->do_max_query('Select CONCAT(`UserName`,\'|\',`UserID`) FROM `' . MySQL_Pre . 'Users`'
+                        . ' Where UserMapID=' . WebLib::GetVal($_POST, 'UserMapID')));
+        $Subject = 'User Account Changed - SRER 2014';
+        $Body = '<span>A New Assembly Constituency in now assigned Your UserID: <b>' . $User[1] . '</b></span><br/>'
+                . '<b>Please Login to check it out.</b>';
+        $Mail = json_decode(GMailSMTP($User[1], $User[0], $Subject, $Body));
+        $_SESSION['Msg'] = 'Whole AC Assigned Successfully!';
+        break;
+
+      /**
+       * @todo User will be assigned a Part only if user is Activated
+       */
+      case 'Assign Part':
+        $Query = 'Update `' . MySQL_Pre . 'SRER_PartMap` Set `UserMapID`=' . WebLib::GetVal($_POST, 'UserMapID')
+                . ' Where `PartID`=\'' . WebLib::GetVal($_POST, 'PartID', TRUE) . '\'';
+        $User = explode('|', $Data->do_max_query('Select CONCAT(`UserName`,\'|\',`UserID`) FROM `' . MySQL_Pre . 'Users`'
+                        . ' Where UserMapID=' . WebLib::GetVal($_POST, 'UserMapID')));
+        $Subject = 'User Account Changed - SRER 2014';
+        $Body = '<span>A New District in now assigned Your UserID: <b>' . $User[1] . '</b></span><br/>'
+                . '<b>Please Login to check it out.</b>';
+        $Mail = json_decode(GMailSMTP($User[1], $User[0], $Subject, $Body));
+        $_SESSION['Msg'] = 'Part Assigned Successfully!';
+        break;
     }
     if ($Query !== '') {
       $Inserted = $Data->do_ins_query($Query);
@@ -63,14 +108,16 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
         if (WebLib::GetVal($_POST, 'CmdSubmit') === 'Create') {
           $_SESSION['Msg'] = 'User Created Successfully!';
         } else {
-          if ($Mail->Sent === TRUE) {
-            $_SESSION['Msg'] = 'User ' . WebLib::GetVal($_POST, 'CmdSubmit') . 'd Successfully!';
+          if (1 || $Mail->Sent === TRUE) {
+            if (WebLib::GetVal($_SESSION, 'Msg') === '') {
+              $_SESSION['Msg'] = 'User ' . WebLib::GetVal($_POST, 'CmdSubmit') . 'd Successfully!';
+            }
           } else {
-            $_SESSION['Msg'] = 'User ' . WebLib::GetVal($_POST, 'CmdSubmit') . 'd Successfully! But Unable to Send eMail!';
+            $_SESSION['Msg'] = 'Action completed Successfully! But Unable to Send eMail!';
           }
         }
       } else {
-        $_SESSION['Msg'] = 'Unable to ' . WebLib::GetVal($_POST, 'CmdSubmit') . ' User!';
+        $_SESSION['Msg'] = $Query; //'Unable to ' . WebLib::GetVal($_POST, 'CmdSubmit') . '!';
       }
     }
   }

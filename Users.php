@@ -44,7 +44,7 @@ WebLib::JQueryInclude();
     WebLib::ShowMsg();
     if ($_SESSION['action'] == 0) {
       ?>
-      <div class="FieldGroup" id="CreateUser-dialog-form">
+      <div class="FieldGroup" id="CreateUser-dialog-form" style="display:none">
         <form name="frmCreateUser" id="frmCreateUser" method="post" action="<?php echo WebLib::GetVal($_SERVER, 'PHP_SELF'); ?>">
           <label for="UserName">User Name: </label>
           <input type="text" name="UserName" id="UserName" required="required" />
@@ -75,35 +75,35 @@ WebLib::JQueryInclude();
           <input type="submit" name="CmdSubmit" value="De-Activate" />
           <input type="submit" name="CmdSubmit" value="Un-Register" /><hr/>
           <label for="UserName">District:</label><br/>
-          <select name="UserMapID">
+          <select name="DistCode" onchange="document.frmEditUser.submit();">
             <?php
-            $Query = 'Select `DistCode`,CONCAT(`DistCode`,\' [\',IFNULL(`District`,\'\'),\']\') as `District` '
+            $Query = 'Select `DistCode`,CONCAT(`DistCode`,\' - \',`District`) as `District` '
                     . ' FROM `' . MySQL_Pre . 'SRER_Districts` '
                     . ' Where `UserMapID`=' . WebLib::GetVal($_SESSION, 'UserMapID', TRUE)
                     . ' Order By `District`';
-            $Data->show_sel('DistCode', 'District', $Query, WebLib::GetVal($_POST, 'UserMapID'));
+            $Data->show_sel('DistCode', 'District', $Query, WebLib::GetVal($_POST, 'DistCode'));
             ?>
           </select>
           <input type="submit" name="CmdSubmit" value="Assign Whole District" /><br />
           <label for="UserName">Assembly Constituency:</label><br/>
-          <select name="UserMapID">
+          <select name="ACNo" onchange="document.frmEditUser.submit();">
             <?php
-            $Query = 'Select `ACNo`,CONCAT(`ACNo`,\' [\',IFNULL(`ACName`,\'\'),\']\') as `ACName` '
+            $Query = 'Select `ACNo`,CONCAT(`DistCode`,\' - \',`ACNo`,\' - \',`ACName`) as `ACName` '
                     . ' FROM `' . MySQL_Pre . 'SRER_ACs` '
-                    . ' Where `UserMapID`=' . WebLib::GetVal($_SESSION, 'UserMapID', TRUE)
+                    . ' Where `DistCode`=\'' . WebLib::GetVal($_POST, 'DistCode') . '\' OR `UserMapID`=' . WebLib::GetVal($_SESSION, 'UserMapID', TRUE)
                     . ' Order By `ACNo`';
-            $Data->show_sel('ACNo', 'ACName', $Query, WebLib::GetVal($_POST, 'UserMapID'));
+            $Data->show_sel('ACNo', 'ACName', $Query, WebLib::GetVal($_POST, 'ACNo'));
             ?>
           </select>
           <input type="submit" name="CmdSubmit" value="Assign Whole AC" /><br />
           <label for="UserName">Part:</label><br/>
-          <select name="UserMapID">
+          <select name="PartID">
             <?php
-            $Query = 'Select `PartID`,CONCAT(`PartNo`,\' [\',IFNULL(`PartName`,\'\'),\']\') as `PartName` '
+            $Query = 'Select `PartID`,CONCAT(`PartNo`,\' - \',`PartName`) as `PartName` '
                     . ' FROM `' . MySQL_Pre . 'SRER_PartMap` '
-                    . ' Where `UserMapID`=' . WebLib::GetVal($_SESSION, 'UserMapID', TRUE)
+                    . ' Where `ACNo`=\'' . WebLib::GetVal($_POST, 'ACNo') . '\'' // AND `UserMapID`=' . WebLib::GetVal($_SESSION, 'UserMapID', TRUE)
                     . ' Order By `PartNo`';
-            $Data->show_sel('PartID', 'PartName', $Query, WebLib::GetVal($_POST, 'UserMapID'));
+            $Data->show_sel('PartID', 'PartName', $Query, WebLib::GetVal($_POST, 'PartID'));
             ?>
           </select>
           <input type="submit" name="CmdSubmit" value="Assign Part" />
