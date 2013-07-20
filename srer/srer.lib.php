@@ -87,8 +87,8 @@ function SRERForm($FormName) {
                        type="checkbox" value="" />
               </td>
               <td class="SlNoTxt">
-                <input type="text" id="<?php echo $FormName . 'SlNo' . $i . '_D'; ?>" class="SlNoTxt"
-                       class="SlNo" />
+                <input type="text" id="<?php echo $FormName . 'SlNo' . $i . '_D'; ?>"
+                       class="SlNoTxt" />
               </td>
               <td>
                 <input type="text" id="<?php echo $FormName . 'ReceiptDate' . $i . '_D'; ?>"
@@ -177,7 +177,8 @@ function SRERForm($FormName) {
                 <input id="<?php echo $FormName . 'RowID' . $i . '_D'; ?>" type="checkbox" value="" />
               </td>
               <td class="SlNoTxt">
-                <input type="text" id="<?php echo $FormName . 'SlNo' . $i . '_D'; ?>" />
+                <input type="text" id="<?php echo $FormName . 'SlNo' . $i . '_D'; ?>"
+                       class="SlNoTxt" />
               </td>
               <td>
                 <input type="text" id="<?php echo $FormName . 'ReceiptDate' . $i . '_D'; ?>"
@@ -255,8 +256,8 @@ function SRERForm($FormName) {
                        type="checkbox" value="" />
               </td>
               <td class="SlNoTxt">
-                <input type="text" id="<?php echo $FormName . 'SlNo' . $i . '_D'; ?>" class="SlNoTxt"
-                       class="SlNo" />
+                <input type="text" id="<?php echo $FormName . 'SlNo' . $i . '_D'; ?>"
+                       class="SlNoTxt" />
               </td>
               <td>
                 <input type="text" id="<?php echo $FormName . 'ReceiptDate' . $i . '_D'; ?>"
@@ -338,8 +339,8 @@ function SRERForm($FormName) {
                        type="checkbox" value="" />
               </td>
               <td class="SlNoTxt">
-                <input type="text" id="<?php echo $FormName . 'SlNo' . $i . '_D'; ?>" class="SlNoTxt"
-                       class="SlNo" />
+                <input type="text" id="<?php echo $FormName . 'SlNo' . $i . '_D'; ?>"
+                       class="SlNoTxt" />
               </td>
               <td>
                 <input type="text" id="<?php echo $FormName . 'ReceiptDate' . $i . '_D'; ?>"
