@@ -209,7 +209,7 @@ function SQLDefs($ObjectName) {
     case 'SRER_Districts':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . 'SRER_Districts` ('
               . '`DistCode` varchar(2) DEFAULT NULL,'
-              . '`District` varchar(17) DEFAULT NULL'
+              . '`District` varchar(17) DEFAULT NULL,'
               . '`UserMapID` int(5) DEFAULT 1'
               . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
       break;
@@ -224,7 +224,7 @@ function SQLDefs($ObjectName) {
               . ') ENGINE=InnoDB  DEFAULT CHARSET=utf8;';
       break;
     case 'SRER_PartMapData':
-      $SqlDB = 'INSERT INTO `' . MySQL_Pre . 'SRER_PartMap` (`PartID`, `PartMapID`, `PartNo`, `PartName`, `ACNo`) VALUES'
+      $SqlDB = 'INSERT INTO `' . MySQL_Pre . 'SRER_PartMap` (`PartID`, `UserMapID`, `PartNo`, `PartName`, `ACNo`) VALUES'
               . '(1, 1, \'001\', \'Sirni Primary School\', \'219\'),'
               . '(2, 1, \'002\', \'Sahania Shishu Shikshakendra\', \'219\');';
       break;

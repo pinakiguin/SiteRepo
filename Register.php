@@ -25,16 +25,16 @@ WebLib::IncludeJS("js/md5.js");
       $MobileNo = WebLib::GetVal($_POST, 'MobileNo', TRUE);
       //@ todo Send Email after registration Specifing UserID for verification and password.
       $Pass = WebLib::GeneratePassword(10, 2, 2, 2);
-      $PartMapID = WebLib::GetVal($_POST, 'PartMapID', TRUE);
+      $UserMapID = WebLib::GetVal($_POST, 'UserMapID', TRUE);
       if (WebLib::StaticCaptcha()) {
         $Qry = "Update `" . MySQL_Pre . "Users` "
                 . " SET `UserID`='{$email}',`UserPass`=MD5('{$Pass}'),`MobileNo`='{$MobileNo}',`Registered`=1"
-                . " Where Registered=0 AND Activated=0 AND UserMapID='{$PartMapID}'";
+                . " Where Registered=0 AND Activated=0 AND UserMapID='{$UserMapID}'";
         $Submitted = $Data->do_ins_query($Qry);
         if ($Submitted > 0) {
 
           $UserName = $Data->do_max_query("Select `UserName` FROM `" . MySQL_Pre . "Users`"
-                  . " Where UserMapID='{$PartMapID}'");
+                  . " Where UserMapID='{$UserMapID}'");
           $Subject = "User Account Details - SRER 2014";
           $Body = "<b>UserID: </b><span> {$email}</span><br/>"
                   . "<b>Password: </b><span> {$Pass}</span>";
@@ -58,11 +58,11 @@ WebLib::IncludeJS("js/md5.js");
       <form name="feed_frm" method="post" action="<?php echo WebLib::GetVal($_SERVER, 'PHP_SELF', FALSE); ?>" >
         <div class="FieldGroup">
           <h3>User:</h3>
-          <select name="PartMapID">
+          <select name="UserMapID">
             <?php
             $Data->show_sel("UserMapID", "UserName", "Select `UserMapID`,`UserName` "
                     . " FROM `" . MySQL_Pre . "Users` "
-                    . " Where NOT `Registered` AND NOT `Activated`;", WebLib::GetVal($_POST, 'PartMapID', TRUE));
+                    . " Where NOT `Registered` AND NOT `Activated`;", WebLib::GetVal($_POST, 'UserMapID', TRUE));
             ?>
           </select>
         </div>

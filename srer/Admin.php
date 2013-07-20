@@ -75,7 +75,7 @@ if (WebLib::GetVal($_POST, 'ACNo') != "")
         $Query = "SELECT UserName,SUM(CountF6) as CountF6,SUM(CountF6A) as CountF6A,SUM(CountF7) as CountF7,"
                 . "SUM(CountF8) as CountF8,SUM(CountF8A) as CountF8A,(IFNULL(SUM(CountF6),0)+IFNULL(SUM(CountF6A),0)+IFNULL(SUM(CountF7),0)+"
                 . "IFNULL(SUM(CountF8),0)+IFNULL(SUM(CountF8A),0)) as Total "
-                . "FROM SRER_Users U INNER JOIN SRER_PartMap P ON U.PartMapID=P.PartMapID LEFT JOIN "
+                . "FROM SRER_Users U INNER JOIN SRER_PartMap P ON U.UserMapID=P.UserMapID LEFT JOIN "
                 . "(SELECT PartID,Count(*) as CountF6 FROM `SRER_Form6` GROUP BY PartID) F6 "
                 . "ON (F6.PartID=P.PartID) LEFT JOIN "
                 . "(SELECT PartID,Count(*) as CountF6A FROM `SRER_Form6A` GROUP BY PartID) F6A "
@@ -97,7 +97,7 @@ if (WebLib::GetVal($_POST, 'ACNo') != "")
         $Query = "SELECT UserName,ACNo,SUM(CountF6) as CountF6,SUM(CountF6A) as CountF6A,SUM(CountF7) as CountF7,"
                 . "SUM(CountF8) as CountF8,SUM(CountF8A) as CountF8A,(IFNULL(SUM(CountF6),0)+IFNULL(SUM(CountF6A),0)+IFNULL(SUM(CountF7),0)+"
                 . "IFNULL(SUM(CountF8),0)+IFNULL(SUM(CountF8A),0)) as Total "
-                . "FROM SRER_Users U INNER JOIN SRER_PartMap P ON U.PartMapID=P.PartMapID LEFT JOIN "
+                . "FROM SRER_Users U INNER JOIN SRER_PartMap P ON U.UserMapID=P.UserMapID LEFT JOIN "
                 . "(SELECT PartID,Count(*) as CountF6 FROM `SRER_Form6` GROUP BY PartID) F6 "
                 . "ON (F6.PartID=P.PartID) LEFT JOIN "
                 . "(SELECT PartID,Count(*) as CountF6A FROM `SRER_Form6A` GROUP BY PartID) F6A "
@@ -116,10 +116,10 @@ if (WebLib::GetVal($_POST, 'ACNo') != "")
         //echo $Query;
         break;
       case 'Block AC wise Blank Records':
-        $Query = "SELECT U.PartMapID as UserID,UserName,ACNo,SUM(CountF6) as CountF6,SUM(CountF6A) as CountF6A,SUM(CountF7) as CountF7,"
+        $Query = "SELECT U.UserMapID as UserID,UserName,ACNo,SUM(CountF6) as CountF6,SUM(CountF6A) as CountF6A,SUM(CountF7) as CountF7,"
                 . "SUM(CountF8) as CountF8,SUM(CountF8A) as CountF8A,(IFNULL(SUM(CountF6),0)+IFNULL(SUM(CountF6A),0)+IFNULL(SUM(CountF7),0)+"
                 . "IFNULL(SUM(CountF8),0)+IFNULL(SUM(CountF8A),0)) as Total "
-                . "FROM SRER_Users U INNER JOIN SRER_PartMap P ON U.PartMapID=P.PartMapID LEFT JOIN "
+                . "FROM SRER_Users U INNER JOIN SRER_PartMap P ON U.UserMapID=P.UserMapID LEFT JOIN "
                 . "(SELECT PartID,Count(*) as CountF6 FROM `SRER_Form6`  where ((`ReceiptDate`='' OR `ReceiptDate` IS NULL) AND (`AppName`='' OR `AppName` IS NULL) AND (`RelationshipName`='' OR `RelationshipName` IS NULL) AND (`Relationship`='' OR `Relationship` IS NULL) AND (`Status`='' OR `Status` IS NULL)) GROUP BY PartID) F6 "
                 . "ON (F6.PartID=P.PartID) LEFT JOIN "
                 . "(SELECT PartID,Count(*) as CountF6A FROM `SRER_Form6A`  where ((`ReceiptDate`='' OR `ReceiptDate` IS NULL) AND (`AppName`='' OR `AppName` IS NULL) AND (`RelationshipName`='' OR `RelationshipName` IS NULL) AND (`Relationship`='' OR `Relationship` IS NULL) AND (`Status`='' OR `Status` IS NULL)) GROUP BY PartID) F6A "
@@ -129,7 +129,7 @@ if (WebLib::GetVal($_POST, 'ACNo') != "")
                 . "(SELECT PartID,Count(*) as CountF8 FROM `SRER_Form8`  where ((`ReceiptDate`='' OR `ReceiptDate` IS NULL) AND (`AppName`='' OR `AppName` IS NULL) AND (`RelationshipName`='' OR `RelationshipName` IS NULL) AND (`Relationship`='' OR `Relationship` IS NULL) AND (`Status`='' OR `Status` IS NULL)) GROUP BY PartID) F8 "
                 . "ON (F8.PartID=P.PartID) LEFT JOIN "
                 . "(SELECT PartID,Count(*) as CountF8A FROM `SRER_Form8A`  where ((`ReceiptDate`='' OR `ReceiptDate` IS NULL) AND (`AppName`='' OR `AppName` IS NULL) AND (`RelationshipName`='' OR `RelationshipName` IS NULL) AND (`Relationship`='' OR `Relationship` IS NULL) AND (`Status`='' OR `Status` IS NULL)) GROUP BY PartID) F8A "
-                . "ON (F8A.PartID=P.PartID) GROUP BY UserName,ACNo,U.PartMapID";
+                . "ON (F8A.PartID=P.PartID) GROUP BY UserName,ACNo,U.UserMapID";
         ShowSRER($Query);
         //echo $Query;
         $Query = "Select SUM(CountF6) as TotalF6,SUM(CountF6A) as TotalF6A,SUM(CountF7) as TotalF7,SUM(CountF8) as TotalF8,SUM(CountF8A) as TotalF8A"
@@ -141,7 +141,7 @@ if (WebLib::GetVal($_POST, 'ACNo') != "")
         $Query = "SELECT UserName,ACNo,SUM(CountF6) as CountF6,SUM(CountF6A) as CountF6A,SUM(CountF7) as CountF7,"
                 . "SUM(CountF8) as CountF8,SUM(CountF8A) as CountF8A,(IFNULL(SUM(CountF6),0)+IFNULL(SUM(CountF6A),0)+IFNULL(SUM(CountF7),0)+"
                 . "IFNULL(SUM(CountF8),0)+IFNULL(SUM(CountF8A),0)) as Total "
-                . "FROM SRER_Users U INNER JOIN SRER_PartMap P ON U.PartMapID=P.PartMapID LEFT JOIN "
+                . "FROM SRER_Users U INNER JOIN SRER_PartMap P ON U.UserMapID=P.UserMapID LEFT JOIN "
                 . "(SELECT PartID,Count(*) as CountF6 FROM `SRER_Form6`  where (LOWER(TRIM(`Status`))='accepted') GROUP BY PartID) F6 "
                 . "ON (F6.PartID=P.PartID) LEFT JOIN "
                 . "(SELECT PartID,Count(*) as CountF6A FROM `SRER_Form6A`  where (LOWER(TRIM(`Status`))='accepted') GROUP BY PartID) F6A "
@@ -163,7 +163,7 @@ if (WebLib::GetVal($_POST, 'ACNo') != "")
         $Query = "SELECT UserName,ACNo,SUM(CountF6) as CountF6,SUM(CountF6A) as CountF6A,SUM(CountF7) as CountF7,"
                 . "SUM(CountF8) as CountF8,SUM(CountF8A) as CountF8A,(IFNULL(SUM(CountF6),0)+IFNULL(SUM(CountF6A),0)+IFNULL(SUM(CountF7),0)+"
                 . "IFNULL(SUM(CountF8),0)+IFNULL(SUM(CountF8A),0)) as Total "
-                . "FROM SRER_Users U INNER JOIN SRER_PartMap P ON U.PartMapID=P.PartMapID LEFT JOIN "
+                . "FROM SRER_Users U INNER JOIN SRER_PartMap P ON U.UserMapID=P.UserMapID LEFT JOIN "
                 . "(SELECT PartID,Count(*) as CountF6 FROM `SRER_Form6`  where (LOWER(TRIM(`Status`))='rejected') GROUP BY PartID) F6 "
                 . "ON (F6.PartID=P.PartID) LEFT JOIN "
                 . "(SELECT PartID,Count(*) as CountF6A FROM `SRER_Form6A`  where (LOWER(TRIM(`Status`))='rejected') GROUP BY PartID) F6A "

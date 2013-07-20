@@ -75,12 +75,12 @@ if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
     case 'GetACParts':
       $Query = 'Select `ACNo`,`ACName`'
               . ' FROM `' . MySQL_Pre . 'SRER_ACs`'
-              . ' Where `PartMapID`=?';
+              . ' Where `UserMapID`=?';
       $DataResp['ACs'] = array();
       doQuery($DataResp['ACs'], $Query, array(WebLib::GetVal($_SESSION, 'UserMapID')));
       $Query = 'Select `PartID`,`PartNo`,`PartName`,`ACNo`'
               . ' FROM `' . MySQL_Pre . 'SRER_PartMap`'
-              . ' Where `PartMapID`=?';
+              . ' Where `UserMapID`=?';
       $DataResp['Parts'] = array();
       doQuery($DataResp['Parts'], $Query, array(WebLib::GetVal($_SESSION, 'UserMapID')));
       break;
@@ -92,7 +92,7 @@ if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
   if (strnatcmp(phpversion(), '5.4') >= 0) {
     $AjaxResp = json_encode($DataResp, JSON_PRETTY_PRINT);
   } else {
-    $AjaxResp = WebLib::prettyPrint(json_encode($DataResp));
+    $AjaxResp = json_encode($DataResp); //WebLib::prettyPrint(json_encode($DataResp));
   }
   unset($DataResp);
 

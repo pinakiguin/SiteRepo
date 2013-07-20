@@ -79,7 +79,7 @@ if (WebLib::GetVal($_POST, 'ACNo') != "")
       $Query = "SELECT ACNo as `AC Name`,PartNo,PartName,SUM(CountF6) as CountF6,SUM(CountF6A) as CountF6A,SUM(CountF7) as CountF7,"
               . "SUM(CountF8) as CountF8,SUM(CountF8A) as CountF8A,(IFNULL(SUM(CountF6),0)+IFNULL(SUM(CountF6A),0)+IFNULL(SUM(CountF7),0)+"
               . "IFNULL(SUM(CountF8),0)+IFNULL(SUM(CountF8A),0)) as Total "
-              . "FROM SRER_Users U INNER JOIN SRER_PartMap P ON U.PartMapID=P.PartMapID AND U.PartMapID=" . WebLib::GetVal($_SESSION, 'PartMapID', TRUE) . " LEFT JOIN "
+              . "FROM SRER_Users U INNER JOIN SRER_PartMap P ON U.UserMapID=P.UserMapID AND U.UserMapID=" . WebLib::GetVal($_SESSION, 'UserMapID', TRUE) . " LEFT JOIN "
               . "(SELECT PartID,Count(*) as CountF6 FROM `SRER_Form6` GROUP BY PartID) F6 "
               . "ON (F6.PartID=P.PartID) LEFT JOIN "
               . "(SELECT PartID,Count(*) as CountF6A FROM `SRER_Form6A` GROUP BY PartID) F6A "
