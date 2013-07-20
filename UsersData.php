@@ -23,6 +23,30 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
         }
         break;
 
+      case 'Impersonate':
+        if (WebLib::GetVal($_POST, 'UserMapID') !== NULL) {
+          if (WebLib::GetVal($_SESSION, 'ImpFromUserMapID') === NULL) {
+            $_SESSION['ImpFromUserMapID'] = $_SESSION['UserMapID'];
+            $_SESSION['ImpFromUserName'] = $_SESSION['UserName'];
+          }
+          $_SESSION['UserMapID'] = WebLib::GetVal($_POST, 'UserMapID');
+          $_SESSION['UserName'] = 'Impersonated-' . $Data->do_max_query('Select UserName From `' . MySQL_Pre . 'Users`'
+                          . ' Where `UserMapID`=' . $_SESSION['UserMapID']);
+          $_SESSION['Msg'] = $_SESSION['UserName'];
+        } else {
+          $_SESSION['Msg'] = 'Select the User to Impersonate!';
+        }
+        break;
+
+      case 'Stop Impersonating':
+        if (WebLib::GetVal($_SESSION, 'ImpFromUserMapID') !== NULL) {
+          $_SESSION['UserMapID'] = $_SESSION['ImpFromUserMapID'];
+          $_SESSION['UserName'] = $_SESSION['ImpFromUserName'];
+          unset($_SESSION['ImpFromUserMapID']);
+          unset($_SESSION['ImpFromUserName']);
+        }
+        break;
+
       case 'Activate':
         $Query = 'Update `' . MySQL_Pre . 'Users` Set `Activated`=1'
                 . ' Where `Activated`=0 AND `CtrlMapID`=' . WebLib::GetVal($_SESSION, 'UserMapID', TRUE)
@@ -31,7 +55,6 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
                         . ' Where UserMapID=\'' . WebLib::GetVal($_POST, 'UserMapID') . '\''));
         $Subject = 'User Account Activated - SRER 2014';
         $Body = '<span>Your UserID: <b>' . $User[1] . '</b> is now Activated</span>';
-        $Mail = json_decode(GMailSMTP($User[1], $User[0], $Subject, $Body));
         break;
 
       case 'De-Activate':
@@ -42,7 +65,6 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
                 . ' Where UserMapID=\'' . WebLib::GetVal($_POST, 'UserMapID') . '\''));
         $Subject = 'User Account De-Activated - SRER 2014';
         $Body = '<span>Your UserID: <b>' . $User[1] . '</b> is now De-Activated</span>';
-        $Mail = json_decode(GMailSMTP($User[1], $User[0], $Subject, $Body));
         break;
 
       case 'Un-Register':
@@ -54,7 +76,6 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
         $Subject = 'User Account Un-Registered - SRER 2014';
         $Body = '<span>Your UserID: <b>' . $User[1] . '</b> is now Un-Registered</span><br/>'
                 . '<b>Please Register again to change EmailID and Password</b>';
-        $Mail = json_decode(GMailSMTP($User[1], $User[0], $Subject, $Body));
         break;
 
       /**
@@ -68,7 +89,6 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
         $Subject = 'User Account Changed - SRER 2014';
         $Body = '<span>A New District in now assigned Your UserID: <b>' . $User[1] . '</b></span><br/>'
                 . '<b>Please Login to check it out.</b>';
-        $Mail = json_decode(GMailSMTP($User[1], $User[0], $Subject, $Body));
         $_SESSION['Msg'] = 'Whole District Assigned Successfully!';
         break;
 
@@ -83,7 +103,6 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
         $Subject = 'User Account Changed - SRER 2014';
         $Body = '<span>A New Assembly Constituency in now assigned Your UserID: <b>' . $User[1] . '</b></span><br/>'
                 . '<b>Please Login to check it out.</b>';
-        $Mail = json_decode(GMailSMTP($User[1], $User[0], $Subject, $Body));
         $_SESSION['Msg'] = 'Whole AC Assigned Successfully!';
         break;
 
@@ -98,7 +117,6 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
         $Subject = 'User Account Changed - SRER 2014';
         $Body = '<span>A New District in now assigned Your UserID: <b>' . $User[1] . '</b></span><br/>'
                 . '<b>Please Login to check it out.</b>';
-        $Mail = json_decode(GMailSMTP($User[1], $User[0], $Subject, $Body));
         $_SESSION['Msg'] = 'Part Assigned Successfully!';
         break;
     }
@@ -107,7 +125,9 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
       if ($Inserted > 0) {
         if (WebLib::GetVal($_POST, 'CmdSubmit') === 'Create') {
           $_SESSION['Msg'] = 'User Created Successfully!';
-        } else {
+        } else if (WebLib::GetVal($User, 1)) {
+          $GmailResp = GMailSMTP($User[1], $User[0], $Subject, $Body);
+          $Mail = json_decode($GmailResp);
           if (1 || $Mail->Sent === TRUE) {
             if (WebLib::GetVal($_SESSION, 'Msg') === '') {
               $_SESSION['Msg'] = 'User ' . WebLib::GetVal($_POST, 'CmdSubmit') . 'd Successfully!';
@@ -117,12 +137,14 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
           }
         }
       } else {
-        $_SESSION['Msg'] = $Query; //'Unable to ' . WebLib::GetVal($_POST, 'CmdSubmit') . '!';
+        $_SESSION['Msg'] = 'Unable to ' . WebLib::GetVal($_POST, 'CmdSubmit') . '!';
       }
     }
   }
 }
 $_SESSION['FormToken'] = md5($_SERVER['REMOTE_ADDR'] . session_id() . microtime());
 $Data->do_close();
+unset($Mail);
+unset($GmailResp);
 unset($Data);
 ?>

@@ -162,12 +162,12 @@ class WebLib {
    * @param bool $ForSQL If set to true then SQLSafe else htmlspecialchars will be applied
    * @param bool $HTMLSafe If FALSE then OutPut without htmlspecialchars
    * @return null|$Array[$Index]
-   * @example WebLib::GetVal($Array, $Index) = htmlspecialchars
-   * @example WebLib::GetVal($Array, $Index, TRUE) = SqlSafe
-   * @example WebLib::GetVal($Array, $Index, FALSE, FALSE) = raw output
+   * @example WebLib::GetVal($Array, $Index) = htmlspecialchars | NULL
+   * @example WebLib::GetVal($Array, $Index, TRUE) = SqlSafe | ''
+   * @example WebLib::GetVal($Array, $Index, FALSE, FALSE) = raw output | NULL
    */
   public static function GetVal($Array, $Index, $ForSQL = FALSE, $HTMLSafe = TRUE) {
-    if (!isset($Array[$Index])) {
+    if (!isset($Array[$Index]) || ($Array[$Index] === '')) {
       return ($ForSQL) ? '' : NULL;
     } else {
       if ($ForSQL) {

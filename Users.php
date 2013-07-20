@@ -32,8 +32,8 @@ WebLib::JQueryInclude();
   <div class="Header">
   </div>
   <?php
-  WebLib::ShowMenuBar();
   include 'UsersData.php';
+  WebLib::ShowMenuBar();
   $Data = new MySQLiDB();
   ?>
   <div class="content">
@@ -71,6 +71,10 @@ WebLib::JQueryInclude();
           <input type="hidden" name="FormToken" value="<?php echo WebLib::GetVal($_SESSION, 'FormToken') ?>" />
           <br />
           <input type="button" id="CmdCreate" value="Create New User" />
+          <input type="submit" name="CmdSubmit" value="Impersonate" />
+          <?php if (WebLib::GetVal($_SESSION, 'ImpFromUserMapID') !== NULL) { ?>
+            <input type="submit" name="CmdSubmit" value="Stop Impersonating" />
+          <?php } ?>
           <input type="submit" name="CmdSubmit" value="Activate" />
           <input type="submit" name="CmdSubmit" value="De-Activate" />
           <input type="submit" name="CmdSubmit" value="Un-Register" /><hr/>
@@ -114,11 +118,11 @@ WebLib::JQueryInclude();
       <h3>Users:</h3>
       <?php
     }
-    if (WebLib::GetVal($_SESSION, 'Query') === NULL) {
-      $_SESSION['Query'] = 'Select `UserID` as `E-Mail Address`,`UserName`,`LoginCount`,`LastLoginTime`,`Registered`,`Activated`'
-              . ' FROM `' . MySQL_Pre . 'Users` '
-              . ' Where `CtrlMapID`=' . WebLib::GetVal($_SESSION, 'UserMapID', TRUE);
-    }
+    //if (WebLib::GetVal($_SESSION, 'Query') === NULL) {
+    $_SESSION['Query'] = 'Select `UserID` as `E-Mail Address`,`UserName`,`LoginCount`,`LastLoginTime`,`Registered`,`Activated`'
+            . ' FROM `' . MySQL_Pre . 'Users` '
+            . ' Where `CtrlMapID`=' . WebLib::GetVal($_SESSION, 'UserMapID', TRUE);
+    //}
     $Data->ShowTable($_SESSION['Query']);
     ?>
   </div>
