@@ -3,7 +3,7 @@
  * and open the template in the editor.
  * @ todo Turned on the Checkboxes of changed records
  * @ todo Don't make ajax call if no row selected
- * 
+ *
  * @todo Data validation to be done before submit
  * @todo If Non existent data sent for deletion then it is being added instead of doing nothing
  * @todo If No Part Selected appropriate message to be displayed
@@ -108,20 +108,26 @@ $(function() {
     }
   })
           .done(function(data) {
-    var DataResp = $.parseJSON(data);
-    delete data;
-    $('#AjaxToken').val(DataResp.AjaxToken);
-    $('#Msg').html(DataResp.Msg);
-    $('#ED').html(DataResp.RT);
-    var Options = '<option value=""></option>';
-    $.each(DataResp.ACs.Data,
-            function(index, value) {
-              Options += '<option value="' + value.ACNo + '">' + value.ACNo + ' - ' + value.ACName + '</option>';
-            });
-    $('#ACNo').html(Options)
-            .trigger("liszt:updated");
-    $('#PartID').data('Parts', DataResp.Parts);
-    delete DataResp;
+    try {
+      var DataResp = $.parseJSON(data);
+      delete data;
+      $('#AjaxToken').val(DataResp.AjaxToken);
+      $('#Msg').html(DataResp.Msg);
+      $('#ED').html(DataResp.RT);
+      var Options = '<option value=""></option>';
+      $.each(DataResp.ACs.Data,
+              function(index, value) {
+                Options += '<option value="' + value.ACNo + '">' + value.ACNo + ' - ' + value.ACName + '</option>';
+              });
+      $('#ACNo').html(Options)
+              .trigger("liszt:updated");
+      $('#PartID').data('Parts', DataResp.Parts);
+      delete DataResp;
+    }
+    catch (e) {
+      $('#Msg').html('Server Error:' + e);
+      $('#Error').html(data);
+    }
   })
           .fail(function(msg) {
     $('#Msg').html(msg);
@@ -156,21 +162,26 @@ $(function() {
         }
       })
               .done(function(data) {
-        //$('#Error').html(data);
-        var DataResp = $.parseJSON(data);
-        delete data;
-        $('#AjaxToken').val(DataResp.AjaxToken);
-        $('#Msg').html(DataResp.Msg);
-        $.each(DataResp.Data,
-                function(index, value) {
-                  $.each(value, function(key, data) {
-                    var Field = $('#' + $('#ActiveSRERForm').val() + key + index + '_D');
-                    Field.val(data);
-                    SaveFieldData(Field);
+        try {
+          var DataResp = $.parseJSON(data);
+          delete data;
+          $('#AjaxToken').val(DataResp.AjaxToken);
+          $('#Msg').html(DataResp.Msg);
+          $.each(DataResp.Data,
+                  function(index, value) {
+                    $.each(value, function(key, data) {
+                      var Field = $('#' + $('#ActiveSRERForm').val() + key + index + '_D');
+                      Field.val(data);
+                      SaveFieldData(Field);
+                    });
                   });
-                });
-        $('#ED').html(DataResp.RT);
-        delete DataResp;
+          $('#ED').html(DataResp.RT);
+          delete DataResp;
+        }
+        catch (e) {
+          $('#Msg').html('Server Error:' + e);
+          $('#Error').html(data);
+        }
       })
               .fail(function(msg) {
         $('#Msg').html(msg);
@@ -218,7 +229,6 @@ $(function() {
           }
         })
                 .done(function(data) {
-          //$('#Error').append(document.createTextNode(data));
           try {
             var DataResp = $.parseJSON(data);
             delete data;
@@ -226,9 +236,11 @@ $(function() {
             $('#Msg').html(DataResp.Msg);
             $('#ED').html(DataResp.RT);
             delete DataResp;
+            $('#' + $('#ActiveSRERForm').val() + 'CmdEdit').click();
           }
           catch (e) {
             $('#Msg').html('Server Error:' + e);
+            $('#Error').html(data);
           }
         })
                 .fail(function(msg) {
@@ -265,14 +277,19 @@ $(function() {
         }
       })
               .done(function(data) {
-        //$('#Error').append(document.createTextNode(data));
-        var DataResp = $.parseJSON(data);
-        delete data;
-        $('#AjaxToken').val(DataResp.AjaxToken);
-        $('#Msg').html(DataResp.Msg);
-        $('#' + $('#ActiveSRERForm').val() + 'FromRow').val(DataResp.Data[0].LastSL);
-        $('#ED').html(DataResp.RT);
-        delete DataResp;
+        try {
+          var DataResp = $.parseJSON(data);
+          delete data;
+          $('#AjaxToken').val(DataResp.AjaxToken);
+          $('#Msg').html(DataResp.Msg);
+          $('#' + $('#ActiveSRERForm').val() + 'FromRow').val(DataResp.Data[0].LastSL);
+          $('#ED').html(DataResp.RT);
+          delete DataResp;
+        }
+        catch (e) {
+          $('#Msg').html('Server Error:' + e);
+          $('#Error').html(data);
+        }
       })
               .fail(function(msg) {
         $('#Msg').html(msg);
