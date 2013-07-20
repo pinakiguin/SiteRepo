@@ -370,7 +370,6 @@ class WebLib {
         $ObjDB->do_ins_query(self::GetTableDefs('SRER_Districts'));
         $ObjDB->do_ins_query(self::GetTableDefs('SRER_ACs'));
         $ObjDB->do_ins_query(self::GetTableDefs('SRER_PartMap'));
-        $ObjDB->do_ins_query(self::GetTableDefs('SRER_PartMapData'));
         $ObjDB->do_close();
         break;
     }
