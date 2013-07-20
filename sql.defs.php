@@ -203,19 +203,20 @@ function SQLDefs($ObjectName) {
               . '`ACNo` varchar(3) DEFAULT NULL,'
               . '`ACName` varchar(25) DEFAULT NULL,'
               . '`DistCode` varchar(2) DEFAULT NULL,'
-              . '`PartMapID` int(3) DEFAULT NULL'
+              . '`UserMapID` int(5) DEFAULT 1'
               . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
       break;
     case 'SRER_Districts':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . 'SRER_Districts` ('
               . '`DistCode` varchar(2) DEFAULT NULL,'
               . '`District` varchar(17) DEFAULT NULL'
+              . '`UserMapID` int(5) DEFAULT 1'
               . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
       break;
     case 'SRER_PartMap':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . 'SRER_PartMap` ('
               . '`PartID` int(10) NOT NULL AUTO_INCREMENT,'
-              . '`PartMapID` int(10) DEFAULT NULL,'
+              . '`UserMapID` int(5) DEFAULT 1,'
               . '`PartNo` varchar(50) DEFAULT NULL,'
               . '`PartName` varchar(50) DEFAULT NULL,'
               . '`ACNo` varchar(3) DEFAULT NULL,'
