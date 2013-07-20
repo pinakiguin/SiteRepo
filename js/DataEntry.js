@@ -1,10 +1,16 @@
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
- * @todo Turned on the Checkboxes of changed records
+ * @ todo Turned on the Checkboxes of changed records
+ * @ todo Don't make ajax call if no row selected
+ * @todo Data validation to be done befor submit
  */
 
 $(function() {
+
+  /**
+   * Binds Receiptdate Field with datepicker
+   */
   $(".ReceiptDate").datepicker({
     dateFormat: 'yy-mm-dd',
     showOtherMonths: true,
@@ -12,10 +18,13 @@ $(function() {
     showButtonPanel: true,
     showAnim: "slideDown",
     onClose: function() {
-      DataChanged(this)
+      DataChanged(this);
     }
   });
 
+  /**
+   * Binds Date of birth field with datepicker
+   */
   $(".DOB").datepicker({
     dateFormat: 'yy-mm-dd',
     maxDate: new Date("1996-01-01"),
@@ -24,7 +33,7 @@ $(function() {
     showButtonPanel: true,
     showAnim: "slideDown",
     onClose: function() {
-      DataChanged(this)
+      DataChanged(this);
     }
   });
 
@@ -41,9 +50,11 @@ $(function() {
    *  OnChange put PartID into hidden field #ActivePartID
    *  @todo PartID Selected
    */
-  $('#PartID').chosen({width: "400px",
+  $('#PartID')
+          .chosen({width: "400px",
     no_results_text: "Oops, nothing found!"
-  }).change(function() {
+  })
+          .change(function() {
     $('#ActivePartID').val(this.value);
   });
 
@@ -52,9 +63,11 @@ $(function() {
    * @todo ACNo Change event registered
    *
    */
-  $('#ACNo').chosen({width: "300px",
+  $('#ACNo')
+          .chosen({width: "300px",
     no_results_text: "Oops, nothing found!"
-  }).change(function() {
+  })
+          .change(function() {
     var Options = '<option value=""></option>';
     var Parts = $('#PartID').data('Parts');
     var ACNo = $('#ACNo').val();
@@ -114,7 +127,8 @@ $(function() {
    * @todo CmdEdit Click
    *
    */
-  $('[id$="CmdEdit"]').each(function() {
+  $('[id$="CmdEdit"]')
+          .each(function() {
     $(this).bind('click', function() {
       ClearAll();
       $('#Msg').html('Editing Please Wait...');
@@ -161,12 +175,13 @@ $(function() {
 
   /**
    * Insert the rows acordingly
-   * @todo CmdSave Click [Currently Working to Get Last SlNo]
-   * @todo Save only those rows that are selected by checkbox
+   * @todo CmdSave Click
+   * @ todo Save only those rows that are selected by checkbox
    * @todo Clear Checkboxes on Save
    */
 
-  $('[id$="CmdSave"]').each(function() {
+  $('[id$="CmdSave"]')
+          .each(function() {
     $(this).bind('click', function() {
       $('#Error').html('CmdSave: ');
       $('#Msg').html('Preparing to Save Please Wait...');
@@ -182,46 +197,52 @@ $(function() {
         });
         Params[i++]["PartID"] = $('#ActivePartID').val();
       });
-      $.ajax({
-        type: 'POST',
-        url: '../MySQLiDB.ajax.php',
-        dataType: 'html',
-        xhrFields: {
-          withCredentials: true
-        },
-        data: {
-          'AjaxToken': $('#AjaxToken').val(),
-          'CallAPI': 'PutSRERData',
-          'TableName': $('#ActiveSRERForm').val(),
-          'Params': Params
-        }
-      })
-              .done(function(data) {
-        $('#Error').append(document.createTextNode(data));
-        try {
-          var DataResp = $.parseJSON(data);
-          delete data;
-          $('#AjaxToken').val(DataResp.AjaxToken);
-          $('#Msg').html(DataResp.Msg);
-          $('#ED').html(DataResp.RT);
-          delete DataResp;
-        }
-        catch (e) {
-          $('#Msg').html('Server Error:' + e);
-        }
-      })
-              .fail(function(msg) {
-        $('#Msg').html(msg);
-      });
+      if (i > 0) {
+        $.ajax({
+          type: 'POST',
+          url: '../MySQLiDB.ajax.php',
+          dataType: 'html',
+          xhrFields: {
+            withCredentials: true
+          },
+          data: {
+            'AjaxToken': $('#AjaxToken').val(),
+            'CallAPI': 'PutSRERData',
+            'TableName': $('#ActiveSRERForm').val(),
+            'Params': Params
+          }
+        })
+                .done(function(data) {
+          $('#Error').append(document.createTextNode(data));
+          try {
+            var DataResp = $.parseJSON(data);
+            delete data;
+            $('#AjaxToken').val(DataResp.AjaxToken);
+            $('#Msg').html(DataResp.Msg);
+            $('#ED').html(DataResp.RT);
+            delete DataResp;
+          }
+          catch (e) {
+            $('#Msg').html('Server Error:' + e);
+          }
+        })
+                .fail(function(msg) {
+          $('#Msg').html(msg);
+        });
+      } else {
+        $('#Msg').html('Nothing to Save...');
+      }
     });
   });
 
   /**
    * On New Click
    *
-   * @todo CmdNew Click [Currently Working to Get Last SlNo]
+   * @todo CmdNew Click
+   * @ todo Implemented to Get Last SlNo
    */
-  $('[id$="CmdNew"]').each(function() {
+  $('[id$="CmdNew"]')
+          .each(function() {
     $(this).bind('click', function() {
       $('#Msg').html('Creating Please Wait...');
       $.ajax({
@@ -237,21 +258,18 @@ $(function() {
           'TableName': $('#ActiveSRERForm').val(),
           'Params': new Array($('#ActivePartID').val())
         }
-      }).done(function(data) {
-        //$('#Error').append(document.createTextNode(data));
+      })
+              .done(function(data) {
+        $('#Error').append(document.createTextNode(data));
         var DataResp = $.parseJSON(data);
         delete data;
         $('#AjaxToken').val(DataResp.AjaxToken);
         $('#Msg').html(DataResp.Msg);
-        /*$.each(DataResp.Data,
-         function(index, value) {
-         $.each(value, function(key, data) {
-         $('#' + $('#ActiveSRERForm').val() + key + index).val(data);
-         });
-         });*/
+        $('#' + $('#ActiveSRERForm').val() + 'FromRow').val(DataResp.Data[0].LastSL);
         $('#ED').html(DataResp.RT);
         delete DataResp;
-      }).fail(function(msg) {
+      })
+              .fail(function(msg) {
         $('#Msg').html(msg);
       });
       ClearAll();
@@ -260,14 +278,15 @@ $(function() {
 
   /**
    * @todo CmdDel Click
-   * @todo Make API Call directly to delete.
-   * @toto Implement SaveFieldData and DataChanged on Delete
+   * @ todo Made API Call via save to delete.
+   * @ toto Implemented SaveFieldData and DataChanged on Delete via save
    */
-  $('[id$="CmdDel"]').each(function() {
+  $('[id$="CmdDel"]')
+          .each(function() {
     $(this).bind('click', function() {
       $('#Msg').html('RecordID: ');
-      $('input[type="checkbox"]').filter(':checked').each(function() {
-
+      $('input[type="checkbox"]').filter(':checked')
+              .each(function() {
         $('#Msg').append(document.createTextNode($(this).val() + ', '));
         $('[id!="' + $('#ActiveSRERForm').val() + 'RowID' + $(this).attr('id').slice(-3) + '"]'
                 + '[id$="' + $(this).attr('id').slice(-3) + '"]'
@@ -280,7 +299,8 @@ $(function() {
   /**
    * Stores the initial data and bind the blur event of all fields
    */
-  $('[id$="_D"]').each(function() {
+  $('[id$="_D"]')
+          .each(function() {
     $(this).bind('blur', function() {
       DataChanged(this);
     });
@@ -324,7 +344,7 @@ function SaveFieldData(Obj) {
 /**
  * Check the element data if it is still as it was while loaded from Database
  *
- * @todo Check the whole row if any data has been changed turn the corresponding checkbox acordingly
+ * @ todo Check the whole row if any data has been changed turn the corresponding checkbox acordingly
  *
  * @param {jQuery} Obj
  * @returns {undefined}

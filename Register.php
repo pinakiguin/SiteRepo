@@ -23,7 +23,7 @@ WebLib::IncludeJS("js/md5.js");
     if (WebLib::GetVal($_POST, 'UserID') !== NULL) {
       $email = WebLib::GetVal($_POST, 'UserID', TRUE);
       $MobileNo = WebLib::GetVal($_POST, 'MobileNo', TRUE);
-      //@todo Send Email after registration Specifing UserID for verification and password.
+      //@ todo Send Email after registration Specifing UserID for verification and password.
       $Pass = WebLib::GeneratePassword(10, 2, 2, 2);
       $PartMapID = WebLib::GetVal($_POST, 'PartMapID', TRUE);
       if (WebLib::StaticCaptcha()) {

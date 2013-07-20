@@ -3,6 +3,9 @@
 /**
  * API For Ajax Calls from a valid authenticated session.
  *
+ * @todo Return appropriate flags of action taken on each record
+ * @todo in ajax reply acording to which the selected rows can get unseleted
+ *
  * The JSON Object will Contain Four Top Level Nodes
  * 1. $DataResp['AjaxToken'] => Token for preventing atacks like CSRF and Sesion Hijack
  * 2. $DataResp['Data']
@@ -10,7 +13,7 @@
  * 4. $DataResp['Msg']
  * 5. $DataResp['RT'] => Response Time of the Script
  *
- * * @example ($_POST=array(
+ * @example ($_POST=array(
  *              'CallAPI'=>'GetData',
  *              'AjaxToken'=>'$$$$')
  *
@@ -23,7 +26,7 @@ require_once('class.MySQLiDBHelper.php');
 require_once 'php-mailer/GMail.lib.php';
 if (!isset($_SESSION))
   session_start();
-//@todo Enable AjaxToken currently disabled
+//@ todo Enable AjaxToken currently disabled
 $CSRF = (WebLib::GetVal($_POST, 'AjaxToken') === WebLib::GetVal($_SESSION, 'Token'));
 if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
   $_SESSION['LifeTime'] = time();
@@ -40,6 +43,15 @@ if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
       ChangePassword($DataResp, WebLib::GetVal($_POST, 'OldPass'));
       break;
 
+    case 'GetLastSl':
+      SetCurrForm(WebLib::GetVal($_POST, 'TableName'));
+      $Query = 'Select count(*) as LastSL '
+              . ' FROM ' . WebLib::GetVal($_SESSION, 'TableName', FALSE, FALSE)
+              . ' Where `PartID`=?';
+      doQuery($DataResp, $Query, WebLib::GetVal($_POST, 'Params', FALSE, FALSE));
+      $DataResp['Msg'] = 'Total Data in this Form of this Part: ' . $DataResp['Data'][0]['LastSL'];
+      break;
+
     case 'GetSRERData':
       SetCurrForm(WebLib::GetVal($_POST, 'TableName'));
       $Query = 'Select ' . WebLib::GetVal($_SESSION, 'Fields', FALSE, FALSE)
@@ -48,7 +60,7 @@ if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
       doQuery($DataResp, $Query, WebLib::GetVal($_POST, 'Params', FALSE, FALSE));
       break;
 
-    // @todo [Currently Working to Insert Data]
+    // @ todo [Currently Working to Insert Data]
     case 'PutSRERData':
       SetCurrForm(WebLib::GetVal($_POST, 'TableName'));
       $Params = WebLib::GetVal($_POST, 'Params', FALSE, FALSE);
@@ -141,26 +153,32 @@ function doQuery(&$DataResp, $Query, $Params = NULL) {
 }
 
 /**
- * Performs Insert Query
+ * Performs Insert, Update & Delete Query
  *
  * @param ref $DataResp
  * @param string $tableName
- * @param Object $insertData
+ * @param array $saveData
  */
-function SaveData(&$DataResp, $tableName, $insertData) {
+function SaveData(&$DataResp, $tableName, $saveData) {
   $Data = new MySQLiDBHelper(HOST_Name, MySQL_User, MySQL_Pass, MySQL_DB);
-  $DataResp['Data']['Row'] = $insertData;
+  $DataResp['Data']['Row'] = $saveData;
   $Saved = FALSE;
-  if (is_array($insertData)) {
-    if ($insertData['RowID'] === "") {
-      $Saved = $Data->insert($tableName, $insertData);
+  if (is_array($saveData)) {
+    if ($saveData['RowID'] === "") {
+      $Saved = $Data->insert($tableName, $saveData);
       $Action = 'Added[' . $Data->getInsertId() . ']';
     } else {
-      $Data->where('RowID', $insertData['RowID']);
-      $Saved = $Data->update($tableName, $insertData);
-      $Action = 'Updated[' . $insertData['RowID'] . ']';
+      if ($saveData['SlNo'] !== "") {
+        $Data->where('RowID', $saveData['RowID']);
+        $Saved = $Data->update($tableName, $saveData);
+        $Action = 'Updated[' . $saveData['RowID'] . ']';
+      } else {
+        $Data->where('RowID', $saveData['RowID']);
+        $Saved = $Data->delete($tableName);
+        $Action = 'Deleted[' . $saveData['RowID'] . ']';
+      }
     }
-    $Action .= ': ' . $insertData['SlNo'];
+    $Action .= ': ' . $saveData['SlNo'];
     if ($Saved) {
       $DataResp['Msg'] .= '|' . $Action;
     } else {
