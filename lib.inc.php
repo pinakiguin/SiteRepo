@@ -608,6 +608,28 @@ class WebLib {
     return $new_json;
   }
 
+  /**
+   * Returns the leafnodes of a subtree from a given node
+   *
+   * @todo Searches the whole tree every time, tree should be reduced to subtrees filtering by parents
+   *
+   * @param (ref) array $Tree[](P,C);
+   * @param int $Node (P)
+   * @param (ref) string $LeafNodes='' will contain the leafnodes 'C,C,C,'
+   */
+  private function LeafNodes(&$Tree, $Node, &$LeafNodes) {
+    $Leaf = TRUE;
+    for ($i = 0; $i < count($Tree); $i++) {
+      if ($Node === $Tree[$i]['P']) {
+        $Leaf = FALSE;
+        LeafNodes($Tree, $Tree[$i]['C'], $LeafNodes);
+      }
+    }
+    if ($Leaf === TRUE) {
+      $LeafNodes .=$Node . ',';
+    }
+  }
+
 }
 
 ?>
