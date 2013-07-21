@@ -3,7 +3,7 @@
 /**
  * API For Ajax Calls from a valid authenticated session.
  *
- * @todo Return appropriate flags of action taken on each record
+ * @ todo Return appropriate flags of action taken on each record
  * @todo in ajax reply acording to which the selected rows can get unseleted
  *
  * The JSON Object will Contain Four Top Level Nodes
@@ -64,10 +64,9 @@ if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
     case 'PutSRERData':
       SetCurrForm(WebLib::GetVal($_POST, 'TableName'));
       $Params = WebLib::GetVal($_POST, 'Params', FALSE, FALSE);
-      $DataResp['Data']['POST'] = $_POST;
       $DataResp['Msg'] = 'Rows Sent: ' . count($Params);
       for ($i = 0; $i < count($Params); $i++) {
-        SaveData($DataResp, $_SESSION['TableName'], $Params[$i]);
+        SaveData($DataResp, $_SESSION['TableName'], $Params[$i], $i);
       }
       //doQuery($DataResp, $Query, $PostData[0]);
       break;
@@ -160,31 +159,56 @@ function doQuery(&$DataResp, $Query, $Params = NULL) {
  * @param string $tableName
  * @param array $saveData
  */
-function SaveData(&$DataResp, $tableName, $saveData) {
+function SaveData(&$DataResp, $tableName, $saveData, $RowIndex = NULL) {
   $Data = new MySQLiDBHelper(HOST_Name, MySQL_User, MySQL_Pass, MySQL_DB);
-  $DataResp['Data']['Row'] = $saveData;
   $Saved = FALSE;
+  $Result['Index'] = $saveData['Index'];
+  $Action = NULL;
+  unset($saveData['Index']);
   if (is_array($saveData)) {
     if ($saveData['RowID'] === "") {
       $Saved = $Data->insert($tableName, $saveData);
-      $Action = 'Added[' . $Data->getInsertId() . ']';
+      if ($Saved > 0) {
+        $Result['Saved'] = TRUE;
+        $Result['RowID'] = $Data->getInsertId();
+      } else {
+        $Result['Saved'] = FALSE;
+        $Result['RowID'] = NULL;
+        $Action = 'not Added[' . $saveData['SlNo'] . ']';
+      }
     } else {
       if ($saveData['SlNo'] !== "") {
         $Data->where('RowID', $saveData['RowID']);
         $Saved = $Data->update($tableName, $saveData);
-        $Action = 'Updated[' . $saveData['RowID'] . ']';
+        if ($Saved > 0) {
+          $Result['Saved'] = TRUE;
+          $Result['RowID'] = $saveData['RowID'];
+        } else {
+          $Result['Saved'] = FALSE;
+          $Result['RowID'] = $saveData['RowID'];
+          $Action = 'not Updated[' . $saveData['SlNo'] . ']';
+        }
       } else {
         $Data->where('RowID', $saveData['RowID']);
         $Saved = $Data->delete($tableName);
-        $Action = 'Deleted[' . $saveData['RowID'] . ']';
+        if ($Saved > 0) {
+          $Result['Saved'] = TRUE;
+          $Result['RowID'] = '';
+        } else {
+          $Result['Saved'] = FALSE;
+          $Result['RowID'] = $saveData['RowID'];
+          $Action = 'not Deleted[' . $saveData['SlNo'] . ']';
+        }
       }
     }
-    $Action .= ': ' . $saveData['SlNo'];
-    if ($Saved) {
-      $DataResp['Msg'] .= '|' . $Action;
-    } else {
-      $DataResp['Msg'] .= '|not ' . $Action;
-    }
+    unset($saveData['RowID']);
+    //$saveData['SlNo'] = '*' . $saveData['SlNo'];
+    $Result['Data'] = $saveData;
+    $DataResp['Data'][$RowIndex] = $Result;
+    unset($Result);
+    unset($saveData);
+    if ($Action !== NULL)
+      $DataResp['Msg'] .= ' | ' . $Action;
   } else {
     $DataResp['Msg'] .= ' But nothing to Save!';
   }

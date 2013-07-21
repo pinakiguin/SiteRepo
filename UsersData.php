@@ -2,6 +2,7 @@
 
 /*
  * @todo Fetch District AC and Parts Combo Data on seperate request via ajax
+ * @todo Keep All District, AC, Parts available for parent users
  */
 
 $Data = new MySQLiDB();

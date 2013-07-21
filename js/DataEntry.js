@@ -191,9 +191,10 @@ $(function() {
 
   /**
    * Insert the rows acordingly
+   * 
    * @todo CmdSave Click
    * @ todo Save only those rows that are selected by checkbox
-   * @todo Clear Checkboxes on Save
+   * @ todo Clear Checkboxes on Save
    */
 
   $('[id$="CmdSave"]')
@@ -211,6 +212,7 @@ $(function() {
                 .each(function() {
           Params[i][$(this).attr('id').slice($('#ActiveSRERForm').val().length, -3)] = $(this).val();
         });
+        Params[i]["Index"] = $(this).attr('id').slice(-3, -2);
         Params[i++]["PartID"] = $('#ActivePartID').val();
       });
       if (i > 0) {
@@ -234,12 +236,25 @@ $(function() {
             delete data;
             $('#AjaxToken').val(DataResp.AjaxToken);
             $('#Msg').html(DataResp.Msg);
+            $.each(DataResp.Data, function(index, value) {
+              if (value.Saved === true) {
+                var ChkRowID = $('#' + $('#ActiveSRERForm').val() + 'RowID' + value.Index + '_D');
+                ChkRowID.val(value.RowID);
+                SaveFieldData(ChkRowID);
+                $.each(value.Data, function(key, data) {
+                  var Field = $('#' + $('#ActiveSRERForm').val() + key + value.Index + '_D');
+                  Field.val(data);
+                  $('#Msg').append(document.createTextNode(data));
+                  SaveFieldData(Field);
+                });
+                ChkRowID.blur();
+              }
+            });
             $('#ED').html(DataResp.RT);
             delete DataResp;
-            $('#' + $('#ActiveSRERForm').val() + 'CmdEdit').click();
           }
           catch (e) {
-            $('#Msg').html('Server Error:' + e);
+            $('#Msg').html(''.e);
             $('#Error').html(data);
           }
         })
