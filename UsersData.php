@@ -88,7 +88,7 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
         $User = explode('|', $Data->do_max_query('Select CONCAT(`UserName`,\'|\',`UserID`) FROM `' . MySQL_Pre . 'Users`'
                         . ' Where UserMapID=' . WebLib::GetVal($_POST, 'UserMapID')));
         $Subject = 'User Account Changed - SRER 2014';
-        $Body = '<span>A New District in now assigned Your UserID: <b>' . $User[1] . '</b></span><br/>'
+        $Body = '<span>A New District is now assigned to Your UserID: <b>' . $User[1] . '</b></span><br/>'
                 . '<b>Please Login to check it out.</b>';
         $_SESSION['Msg'] = 'Whole District Assigned Successfully!';
         break;
@@ -102,7 +102,7 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
         $User = explode('|', $Data->do_max_query('Select CONCAT(`UserName`,\'|\',`UserID`) FROM `' . MySQL_Pre . 'Users`'
                         . ' Where UserMapID=' . WebLib::GetVal($_POST, 'UserMapID')));
         $Subject = 'User Account Changed - SRER 2014';
-        $Body = '<span>A New Assembly Constituency in now assigned Your UserID: <b>' . $User[1] . '</b></span><br/>'
+        $Body = '<span>A New Assembly Constituency is now assigned to Your UserID: <b>' . $User[1] . '</b></span><br/>'
                 . '<b>Please Login to check it out.</b>';
         $_SESSION['Msg'] = 'Whole AC Assigned Successfully!';
         break;
@@ -111,12 +111,13 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
        * @todo User will be assigned a Part only if user is Activated
        */
       case 'Assign Part':
+        $Parts = implode(',', $_POST['PartID']);
         $Query = 'Update `' . MySQL_Pre . 'SRER_PartMap` Set `UserMapID`=' . WebLib::GetVal($_POST, 'UserMapID')
-                . ' Where `PartID`=\'' . WebLib::GetVal($_POST, 'PartID', TRUE) . '\'';
+                . ' Where `PartID` IN(' . $Data->SqlSafe($Parts) . ');';
         $User = explode('|', $Data->do_max_query('Select CONCAT(`UserName`,\'|\',`UserID`) FROM `' . MySQL_Pre . 'Users`'
                         . ' Where UserMapID=' . WebLib::GetVal($_POST, 'UserMapID')));
         $Subject = 'User Account Changed - SRER 2014';
-        $Body = '<span>A New District in now assigned Your UserID: <b>' . $User[1] . '</b></span><br/>'
+        $Body = '<span>New Part(s) is now assigned to Your UserID: <b>' . $User[1] . '</b></span><br/>'
                 . '<b>Please Login to check it out.</b>';
         $_SESSION['Msg'] = 'Part Assigned Successfully!';
         break;
