@@ -125,7 +125,7 @@ function ChangePassword(&$DataResp, $OldPass) {
     $Body = '<span>Your new password for UserID: <b>'
             . $Result[0]['UserID'] . '</b> is <b>' . $Pass . '</b></span>';
     $Mail = json_decode(GMailSMTP($Result[0]['UserID'], $Result[0]['UserName'], $Subject, $Body));
-    if ($Mail->Sent === TRUE) {
+    if ($Mail->Sent) {
       $DataResp['Msg'] = 'Password Changed Successfully!';
     }
   } else {

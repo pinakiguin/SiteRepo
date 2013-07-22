@@ -191,7 +191,7 @@ $(function() {
 
   /**
    * Insert the rows acordingly
-   * 
+   *
    * @todo CmdSave Click
    * @ todo Save only those rows that are selected by checkbox
    * @ todo Clear Checkboxes on Save
@@ -237,7 +237,7 @@ $(function() {
             $('#AjaxToken').val(DataResp.AjaxToken);
             $('#Msg').html(DataResp.Msg);
             $.each(DataResp.Data, function(index, value) {
-              if (value.Saved === true) {
+              if (value.Saved) {
                 var ChkRowID = $('#' + $('#ActiveSRERForm').val() + 'RowID' + value.Index + '_D');
                 ChkRowID.val(value.RowID);
                 SaveFieldData(ChkRowID);
@@ -464,11 +464,11 @@ function validatedate(inputText) {
       {
         lyear = true;
       }
-      if ((lyear === false) && (dd >= 29))
+      if ((!lyear) && (dd >= 29))
       {
         return false;
       }
-      if ((lyear === true) && (dd > 29))
+      if ((lyear) && (dd > 29))
       {
         return false;
       }

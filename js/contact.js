@@ -43,7 +43,7 @@ function do_submit() {
   {
     window.alert("Please give your Email-Id!");
   }
-  else if (checkemail(v_email) !== true)
+  else if (!checkemail(v_email))
   {
     window.alert("Please input a valid email address!");
   }

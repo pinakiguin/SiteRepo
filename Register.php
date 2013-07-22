@@ -42,7 +42,7 @@ WebLib::IncludeJS("js/md5.js");
           //$_SESSION['Msg'] = "<h3>Regristration successful.</h3>"
           //        . "<b>Please Note: </b>Password is sent to: {$MobileNo}";
           WebLib::ShowMsg();
-          if ($MailSent->Sent === TRUE) {
+          if ($MailSent->Sent) {
             $_SESSION['Msg'] = "<h3>Regristration successful.</h3>"
                     . "<b>Please Note: </b>Password is sent to: {$email}";
           }

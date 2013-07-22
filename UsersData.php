@@ -130,7 +130,7 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
         } else if (WebLib::GetVal($User, 1)) {
           $GmailResp = GMailSMTP($User[1], $User[0], $Subject, $Body);
           $Mail = json_decode($GmailResp);
-          if (1 || $Mail->Sent === TRUE) {
+          if ($Mail->Sent) {
             if (WebLib::GetVal($_SESSION, 'Msg') === '') {
               $_SESSION['Msg'] = 'User ' . WebLib::GetVal($_POST, 'CmdSubmit') . 'd Successfully!';
             }

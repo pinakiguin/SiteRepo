@@ -121,7 +121,7 @@ class MySQLiDBHelper {
     $this->_query = filter_var($query, FILTER_SANITIZE_STRING);
     $stmt = $this->_prepareQuery();
 
-    if (is_array($bindParams) === true) {
+    if (is_array($bindParams)) {
       $params = array(''); // Create the empty 0 index
       foreach ($bindParams as $prop => $val) {
         $params[0] .= $this->_determineType($val);
