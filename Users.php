@@ -99,7 +99,7 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
             <?php
             $Query = 'Select `ACNo`,CONCAT(`DistCode`,\' - \',`ACNo`,\' - \',`ACName`) as `ACName` '
                     . ' FROM `' . MySQL_Pre . 'SRER_ACs` '
-                    . ' Where `DistCode`=\'' . WebLib::GetVal($_POST, 'DistCode') . '\' AND `UserMapID`=' . WebLib::GetVal($_SESSION, 'UserMapID', TRUE)
+                    . ' Where `DistCode`=\'' . WebLib::GetVal($_POST, 'DistCode') . '\' '
                     . ' Order By `ACNo`';
             $Data->show_sel('ACNo', 'ACName', $Query, WebLib::GetVal($_POST, 'ACNo'));
             ?>
@@ -128,8 +128,6 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
             //}
             $Data->ShowTable($_SESSION['Query']);
             ?>
-          </div>
-          <div class="FieldGroup">
             <?php
             $_SESSION['Query'] = 'Select `District`,`ACNo`,`ACName`'
                     . ' FROM `' . MySQL_Pre . 'SRER_ACs` A '
@@ -138,7 +136,7 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
             $Data->ShowTable($_SESSION['Query']);
             ?>
           </div>
-          <div class="FieldGroup">
+          <div class="FieldGroup"  style="height: 400px;overflow:auto;">
             <?php
             $_SESSION['Query'] = 'Select `ACNo`,`PartNo`,`PartName`'
                     . ' FROM `' . MySQL_Pre . 'SRER_PartMap`'

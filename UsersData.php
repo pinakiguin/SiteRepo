@@ -85,6 +85,11 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
       case 'Assign Whole District':
         $Query = 'Update `' . MySQL_Pre . 'SRER_Districts` Set `UserMapID`=' . WebLib::GetVal($_POST, 'UserMapID')
                 . ' Where `DistCode`=\'' . WebLib::GetVal($_POST, 'DistCode', TRUE) . '\'';
+        $Updated = $Data->do_ins_query($Query);
+        if ($Updated > 0) {
+          $Query = 'Update `' . MySQL_Pre . 'SRER_ACs` Set `UserMapID`=' . WebLib::GetVal($_POST, 'UserMapID')
+                  . ' Where `DistCode`=\'' . WebLib::GetVal($_POST, 'DistCode', TRUE) . '\'';
+        }
         $User = explode('|', $Data->do_max_query('Select CONCAT(`UserName`,\'|\',`UserID`) FROM `' . MySQL_Pre . 'Users`'
                         . ' Where UserMapID=' . WebLib::GetVal($_POST, 'UserMapID')));
         $Subject = 'User Account Changed - SRER 2014';
@@ -99,6 +104,11 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
       case 'Assign Whole AC':
         $Query = 'Update `' . MySQL_Pre . 'SRER_ACs` Set `UserMapID`=' . WebLib::GetVal($_POST, 'UserMapID')
                 . ' Where `ACNo`=\'' . WebLib::GetVal($_POST, 'ACNo', TRUE) . '\'';
+        $Updated = $Data->do_ins_query($Query);
+        if ($Updated > 0) {
+          $Query = 'Update `' . MySQL_Pre . 'SRER_PartMap` Set `UserMapID`=' . WebLib::GetVal($_POST, 'UserMapID')
+                  . ' Where `ACNo`=\'' . WebLib::GetVal($_POST, 'ACNo', TRUE) . '\'';
+        }
         $User = explode('|', $Data->do_max_query('Select CONCAT(`UserName`,\'|\',`UserID`) FROM `' . MySQL_Pre . 'Users`'
                         . ' Where UserMapID=' . WebLib::GetVal($_POST, 'UserMapID')));
         $Subject = 'User Account Changed - SRER 2014';
