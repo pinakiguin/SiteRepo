@@ -61,7 +61,7 @@ WebLib::IncludeJS("Jcrop/js/jquery.Jcrop.min.js");
       modal: true,
       buttons: {
         "Update": function() {
-          var OldPassword = md5($('#OldPassWD').val() + $('#AjaxToken').val());
+          var OldPassword = MD5(MD5($('#OldPassWD').val()) + $('#AjaxToken').val());
           $.ajax({
             url: "MySQLiDB.ajax.php",
             type: "POST",
@@ -72,7 +72,7 @@ WebLib::IncludeJS("Jcrop/js/jquery.Jcrop.min.js");
             },
             dataType: "html"
           })
-                  .done(function() {
+                  .done(function(data) {
             try {
               var DataResp = $.parseJSON(data);
               delete data;

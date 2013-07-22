@@ -4,7 +4,7 @@
  * API For Ajax Calls from a valid authenticated session.
  *
  * @ todo Return appropriate flags of action taken on each record
- * @todo in ajax reply acording to which the selected rows can get unseleted
+ * @ todo in ajax reply acording to which the selected rows can get unseleted
  *
  * The JSON Object will Contain Four Top Level Nodes
  * 1. $DataResp['AjaxToken'] => Token for preventing atacks like CSRF and Sesion Hijack
@@ -113,20 +113,26 @@ exit();
 function ChangePassword(&$DataResp, $OldPass) {
   $Pass = WebLib::GeneratePassword(10, 2, 2, 2);
   $UserMapID = $_SESSION['UserMapID'];
+  $Data = new MySQLiDB();
+  $QryChgPwd = 'Update `' . MySQL_Pre . 'Users` Set `UserPass`=\'' . md5($Pass) . '\''
+          . ' Where `UserMapID`=' . $UserMapID . ' AND '
+          . ' MD5(CONCAT(`UserPass`,\'' . WebLib::GetVal($_SESSION, 'Token') . '\'))=\'' . $OldPass . '\''; //
+  $Updated = $Data->do_ins_query($QryChgPwd);
+  $Data->do_close();
+  unset($Data);
   $Data = new MySQLiDBHelper(HOST_Name, MySQL_User, MySQL_Pass, MySQL_DB);
-  $Data->where('UserMapID', $UserMapID);
-  $Data->where('MD5(CONCAT(`UserPass`,' . WebLib::GetVal($_SESSION, 'Token') . '))', $OldPass);
-
-  $Updated = $Data->update('`' . MySQL_Pre . 'Users`', array('UserPass' => md5($Pass)));
   if ($Updated > 0) {
     $Data->where('UserMapID', $UserMapID);
     $Result = $Data->query('Select `UserName`,`UserID` FROM `' . MySQL_Pre . 'Users`');
     $Subject = 'Change User Passowrd - SRER 2014';
     $Body = '<span>Your new password for UserID: <b>'
             . $Result[0]['UserID'] . '</b> is <b>' . $Pass . '</b></span>';
+    $DataResp['Msg'] = 'Password Changed Successfully!';
     $Mail = json_decode(GMailSMTP($Result[0]['UserID'], $Result[0]['UserName'], $Subject, $Body));
     if ($Mail->Sent) {
       $DataResp['Msg'] = 'Password Changed Successfully!';
+    } else {
+      $DataResp['Msg'] .= ' But Unable to Send eMail!';
     }
   } else {
     $DataResp['Msg'] = 'Unable to Change Password!';
