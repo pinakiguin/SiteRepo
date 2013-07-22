@@ -24,6 +24,15 @@ $(function() {
     showAnim: "slideDown",
     onClose: function() {
       DataChanged(this);
+      var curDate = new Date($(this).val());
+      $('#Msg').html('Date: ' + curDate);
+      if ((('' + curDate) === 'Invalid Date') && ($(this).val() !== '')) {
+        $(this).addClass('ui-state-error');
+      } else
+      {
+        $(this).datepicker('setDate', curDate);
+        $(this).removeClass('ui-state-error');
+      }
     }
   });
 
