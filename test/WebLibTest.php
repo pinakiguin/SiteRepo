@@ -271,6 +271,87 @@ class WebLibTest extends PHPUnit_Framework_TestCase {
     );
   }
 
+  /**
+   * @covers WebLib::StaticCaptcha
+   * @todo Implement testStaticCaptcha().
+   */
+  public function testLeafNodes() {
+    $i = 0;
+    $Tree = array();
+    $Tree[$i]['P'] = 0;
+    $Tree[$i++]['C'] = 1;
+    $Tree[$i]['P'] = 1;
+    $Tree[$i++]['C'] = 2;
+    $Tree[$i]['P'] = 2;
+    $Tree[$i++]['C'] = 3;
+    $Tree[$i]['P'] = 2;
+    $Tree[$i++]['C'] = 4;
+    $Tree[$i]['P'] = 4;
+    $Tree[$i++]['C'] = 5;
+    $Tree[$i]['P'] = 3;
+    $Tree[$i++]['C'] = 6;
+    $Tree[$i]['P'] = 6;
+    $Tree[$i++]['C'] = 7;
+    $Tree[$i]['P'] = 7;
+    $Tree[$i++]['C'] = 8;
+    $Tree[$i]['P'] = 5;
+    $Tree[$i++]['C'] = 9;
+    $Tree[$i]['P'] = 1;
+    $Tree[$i++]['C'] = 10;
+    $Tree[$i]['P'] = 2;
+    $Tree[$i++]['C'] = 11;
+    $Tree[$i]['P'] = 10;
+    $Tree[$i++]['C'] = 12;
+
+    $Leafs = '';
+    $this->object->LeafNodes($Tree, 0, $Leafs);
+    $this->assertEquals($Leafs, '8,9,11,12,');
+
+    $Leafs = '';
+    $this->object->LeafNodes($Tree, 1, $Leafs);
+    $this->assertEquals($Leafs, '8,9,11,12,');
+
+    $Leafs = '';
+    $this->object->LeafNodes($Tree, 2, $Leafs);
+    $this->assertEquals($Leafs, '8,9,11,');
+
+    $Leafs = '';
+    $this->object->LeafNodes($Tree, 3, $Leafs);
+    $this->assertEquals($Leafs, '8,');
+
+    $Leafs = '';
+    $this->object->LeafNodes($Tree, 4, $Leafs);
+    $this->assertEquals($Leafs, '9,');
+
+    $Leafs = '';
+    $this->object->LeafNodes($Tree, 5, $Leafs);
+    $this->assertEquals($Leafs, '9,');
+
+    $Leafs = '';
+    $this->object->LeafNodes($Tree, 6, $Leafs);
+    $this->assertEquals($Leafs, '8,');
+
+    $Leafs = '';
+    $this->object->LeafNodes($Tree, 7, $Leafs);
+    $this->assertEquals($Leafs, '8,');
+
+    $Leafs = '';
+    $this->object->LeafNodes($Tree, 8, $Leafs);
+    $this->assertEquals($Leafs, '8,');
+
+    $Leafs = '';
+    $this->object->LeafNodes($Tree, 9, $Leafs);
+    $this->assertEquals($Leafs, '9,');
+
+    $Leafs = '';
+    $this->object->LeafNodes($Tree, 10, $Leafs);
+    $this->assertEquals($Leafs, '12,');
+
+    $Leafs = '';
+    $this->object->LeafNodes($Tree, 11, $Leafs);
+    $this->assertEquals($Leafs, '11,');
+  }
+
 }
 
 ?>

@@ -617,12 +617,12 @@ class WebLib {
    * @param int $Node (P)
    * @param (ref) string $LeafNodes='' will contain the leafnodes 'C,C,C,'
    */
-  private function LeafNodes(&$Tree, $Node, &$LeafNodes) {
+  public static function LeafNodes(&$Tree, $Node, &$LeafNodes) {
     $Leaf = TRUE;
     for ($i = 0; $i < count($Tree); $i++) {
       if ($Node === $Tree[$i]['P']) {
         $Leaf = FALSE;
-        LeafNodes($Tree, $Tree[$i]['C'], $LeafNodes);
+        self::LeafNodes($Tree, $Tree[$i]['C'], $LeafNodes);
       }
     }
     if ($Leaf === TRUE) {
