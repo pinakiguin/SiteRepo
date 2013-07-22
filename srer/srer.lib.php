@@ -194,7 +194,15 @@ function SRERForm($FormName) {
                 <input type="text" id="<?php echo $FormName . 'ElectorSerialNoInPart' . $i . '_D'; ?>" />
               </td>
               <td>
-                <input type="text" id="<?php echo $FormName . 'NatureObjection' . $i . '_D'; ?>" />
+                <select id="<?php echo $FormName . 'NatureObjection' . $i . '_D'; ?>">
+                  <option value=""></option>
+                  <option value="N">My Name</option>
+                  <option value="A">Age</option>
+                  <option value="G">Father's/Mother's/Husband's Name</option>
+                  <option value="S">Sex</option>
+                  <option value="R">Address</option>
+                  <option value="E">EPIC No.</option>
+                </select>
               </td>
               <td>
                 <select id="<?php echo $FormName . 'Status' . $i . '_D'; ?>">
