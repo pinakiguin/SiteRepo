@@ -29,6 +29,7 @@ $(function() {
 
   /**
    * Binds Date of birth field with datepicker
+   * @todo Date Validation to be done properly
    */
   $(".DOB").datepicker({
     dateFormat: 'yy-mm-dd',
@@ -39,6 +40,20 @@ $(function() {
     showAnim: "slideDown",
     onClose: function() {
       DataChanged(this);
+      var curDate = new Date($(this).val());
+      var maxDate = new Date("1996-01-01");
+      maxDate.setDate(maxDate.getDate() + 1); // add one day
+      maxDate.setHours(0, 0, 0, 0); // clear time portion for correct results
+      //console.log(this.value, curDate, maxDate);
+      $('#Msg').html('Date: ' + curDate);
+      if (((curDate > maxDate) || (('' + curDate) === 'Invalid Date')) && ($(this).val() !== '')) {
+        //alert("invalid date");
+        $(this).addClass('ui-state-error');
+      } else
+      {
+        $(this).datepicker('setDate', curDate);
+        $(this).removeClass('ui-state-error');
+      }
     }
   });
 

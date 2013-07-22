@@ -1,7 +1,7 @@
 <?php
 /**
  * @todo Integrate SMS Gateway
- * @todo Working on User Management Module
+ * @ todo Working on User Management Module
  */
 require_once('lib.inc.php');
 include_once 'php-mailer/GMail.lib.php';
