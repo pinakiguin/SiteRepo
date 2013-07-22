@@ -32,8 +32,6 @@ if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
   $_SESSION['LifeTime'] = time();
   $_SESSION['RT'] = microtime(TRUE);
   $_SESSION['CheckAuth'] = 'Valid';
-  $_SESSION['Token'] = md5($_SERVER['REMOTE_ADDR'] . session_id() . $_SESSION['ET']);
-  $DataResp['AjaxToken'] = $_SESSION['Token'];
   $DataResp['Data'] = array();
   $DataResp['Mail'] = array();
   $DataResp['Msg'] = '';
@@ -85,6 +83,8 @@ if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
       doQuery($DataResp['Parts'], $Query, array(WebLib::GetVal($_SESSION, 'UserMapID')));
       break;
   }
+  $_SESSION['Token'] = md5($_SERVER['REMOTE_ADDR'] . session_id() . $_SESSION['ET']);
+  $DataResp['AjaxToken'] = $_SESSION['Token'];
   $DataResp['RT'] = '<b>Response Time:</b> '
           . round(microtime(TRUE) - WebLib::GetVal($_SESSION, 'RT'), 6) . ' Sec';
   //PHP 5.4+ is required for JSON_PRETTY_PRINT
@@ -106,19 +106,19 @@ exit();
 
 /**
  * Changes the password of current user
- * @todo Verify the Salting method
+ * @ todo Verify the Salting method
  * @param type $DataResp
- * @param string $OldPass Salted MD5 String as MD5(PassWord.MD5(Salt))
+ * @param string $OldPass Salted MD5 String as MD5(PassWord + Salt)
  */
 function ChangePassword(&$DataResp, $OldPass) {
   $Pass = WebLib::GeneratePassword(10, 2, 2, 2);
   $UserMapID = $_SESSION['UserMapID'];
   $Data = new MySQLiDBHelper(HOST_Name, MySQL_User, MySQL_Pass, MySQL_DB);
   $Data->where('UserMapID', $UserMapID);
-  $Data->where('UserPass', $OldPass);
+  $Data->where('MD5(CONCAT(`UserPass`,' . WebLib::GetVal($_SESSION, 'Token') . '))', $OldPass);
 
   $Updated = $Data->update('`' . MySQL_Pre . 'Users`', array('UserPass' => md5($Pass)));
-  if ($Updated) {
+  if ($Updated > 0) {
     $Data->where('UserMapID', $UserMapID);
     $Result = $Data->query('Select `UserName`,`UserID` FROM `' . MySQL_Pre . 'Users`');
     $Subject = 'Change User Passowrd - SRER 2014';
