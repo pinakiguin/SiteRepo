@@ -632,4 +632,45 @@ class WebLib {
 
 }
 
+/**
+ * Class for using with array_filter() to pass more that one argument to the callback function
+ *
+ *  Array
+ *  (
+ *    [0] => Array
+ *        (
+ *          [FilterKey] => ABC //$FilterValue=ABC;
+ *          [AnotherKey] => 50
+ *        )
+ *
+ *    [1] => Array
+ *        (
+ *          [FilterKey] => XYZ
+ *          [AnotherKey] => 69
+ *        )
+ *  ...
+ *  )
+ * @example array_filter(array $ToBeFiltered, array(new FilterSame('FilterKey', $FilterValue), 'IsSame'))
+ *
+ */
+class FilterSame {
+
+  private $Value;
+  private $Key;
+
+  public function __construct($Key, $Value) {
+    $this->Key = $Key;
+    $this->Value = $Value;
+  }
+
+  public function IsSame($SearchArray) {
+    if ($SearchArray[$this->Key] === $this->Value) {
+      return TRUE;
+    } else {
+      return FALSE;
+    }
+  }
+
+}
+
 ?>
