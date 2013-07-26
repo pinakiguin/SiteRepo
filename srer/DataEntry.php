@@ -37,7 +37,7 @@ if (intval(WebLib::GetVal($_REQUEST, 'ID')) > 0)
   <div class="Header">
   </div>
   <?php
-  WebLib::ShowMenuBar()
+  WebLib::ShowMenuBar('SRER')
   ?>
   <div class="content" style="padding-top: 10px;">
     <span class="Message" id="Msg" style="float: right;">

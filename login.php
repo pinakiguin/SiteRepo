@@ -108,7 +108,7 @@ WebLib::IncludeJS("js/md5.js");
   <div class="Header">
   </div>
   <?php
-  WebLib::ShowMenuBar();
+  WebLib::ShowMenuBar('WebSite');
   ?>
   <div class="content">
     <?php
@@ -148,7 +148,7 @@ WebLib::IncludeJS("js/md5.js");
         <input type="hidden" name="LoginToken" value="<?php echo WebLib::GetVal($_SESSION, 'Token'); ?>" />
         <input style="width:80px;" type="submit" value="Login"
                onClick="document.getElementById('UserPass').value = MD5(MD5(document.getElementById('UserPass').value)
-                             + '<?php echo md5(WebLib::GetVal($_SESSION, 'Token')); ?>');"/>
+                           + '<?php echo md5(WebLib::GetVal($_SESSION, 'Token')); ?>');"/>
         <a href="Register.php">Register</a>
       </form>
 

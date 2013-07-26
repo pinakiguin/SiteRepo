@@ -374,6 +374,16 @@ class WebLib {
         $ObjDB->do_ins_query(self::GetTableDefs('MenuData'));
         $ObjDB->do_close();
         break;
+      case 'CP':
+        $ObjDB = new MySQLiDB();
+        $ObjDB->do_ins_query(self::GetTableDefs('CP_Groups'));
+        $ObjDB->do_ins_query(self::GetTableDefs('CP_Blocks'));
+        $ObjDB->do_ins_query(self::GetTableDefs('CP_Personnel'));
+        $ObjDB->do_ins_query(self::GetTableDefs('CP_CountingTables'));
+        $ObjDB->do_ins_query(self::GetTableDefs('CP_Posting'));
+        $ObjDB->do_ins_query(self::GetTableDefs('CP_Pool'));
+        $ObjDB->do_close();
+        break;
     }
   }
 
@@ -483,23 +493,38 @@ class WebLib {
   /**
    * Shows the menubar and menu items depending on the session
    */
-  public static function ShowMenuBar() {
+  public static function ShowMenuBar($AppID = null) {
     echo '<div class="MenuBar"><ul>';
     WebLib::ShowMenuitem('Home', 'index.php');
-
     if (WebLib::GetVal($_SESSION, 'CheckAuth') !== 'Valid') {
-      WebLib::ShowMenuitem('Registration', 'Register.php');
-      WebLib::ShowMenuitem('Log In!', 'login.php');
-    } else {
-      WebLib::ShowMenuitem('Data Entry', 'srer/DataEntry.php');
-      WebLib::ShowMenuitem('Admin Page', 'srer/Admin.php');
-      WebLib::ShowMenuitem('Reports', 'srer/Reports.php');
-      WebLib::ShowMenuitem(WebLib::GetVal($_SESSION, 'UserName') . '\'s Profile', 'Profile.php');
-      WebLib::ShowMenuitem('Manage Users', 'Users.php');
-      WebLib::ShowMenuitem('User Activity', 'AuditLogs.php');
-      WebLib::ShowMenuitem('Log Out!', 'login.php?LogOut=1');
+      $AppID = null;
     }
-    //WebLib::ShowMenuitem(WebLib::GetVal($_SESSION, 'CheckAuth'), '#');
+    switch ($AppID) {
+      case 'WebSite':
+        WebLib::ShowMenuitem('SRER-2014', 'srer');
+        WebLib::ShowMenuitem('Panchayat Election 2013', 'cp');
+        WebLib::ShowMenuitem('Log Out!', 'login.php?LogOut=1');
+        break;
+      case 'SRER':
+        WebLib::ShowMenuitem('Data Entry', 'srer/DataEntry.php');
+        WebLib::ShowMenuitem('Admin Page', 'srer/Admin.php');
+        WebLib::ShowMenuitem('Reports', 'srer/Reports.php');
+        WebLib::ShowMenuitem(WebLib::GetVal($_SESSION, 'UserName') . '\'s Profile', 'Profile.php');
+        WebLib::ShowMenuitem('Manage Users', 'Users.php');
+        WebLib::ShowMenuitem('User Activity', 'AuditLogs.php');
+        WebLib::ShowMenuitem('Log Out!', 'login.php?LogOut=1');
+        break;
+      case 'CP':
+        WebLib::ShowMenuitem('Counting Personnel Randomization', 'cp/GroupCP.php');
+        WebLib::ShowMenuitem('Reports', 'cp/Reports.php');
+        WebLib::ShowMenuitem('Log Out!', 'login.php?LogOut=1');
+        break;
+      default:
+        WebLib::ShowMenuitem('Registration', 'Register.php');
+        WebLib::ShowMenuitem('Log In!', 'login.php');
+        break;
+    }
+//WebLib::ShowMenuitem(WebLib::GetVal($_SESSION, 'CheckAuth'), '#');
     echo '</ul></div>';
   }
 

@@ -24,7 +24,7 @@ if (WebLib::GetVal($_POST, 'ACNo') != "")
   <div class="Header">
   </div>
   <?php
-  WebLib::ShowMenuBar()
+  WebLib::ShowMenuBar('SRER')
   ?>
   <div class="content">
     <h2><?php echo AppTitle; ?></h2>
