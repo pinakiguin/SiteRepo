@@ -3,7 +3,7 @@ require_once('../lib.inc.php');
 require_once '../class.MySQLiDBHelper.php';
 
 WebLib::AuthSession();
-WebLib::Html5Header("Data Entry");
+WebLib::Html5Header("Randomization");
 WebLib::IncludeCSS();
 WebLib::JQueryInclude();
 WebLib::IncludeCSS('cp/css/GroupCP.css');
@@ -67,11 +67,7 @@ WebLib::IncludeJS('js/additional-methods.min.js');
         <tr>
           <th>Assembly Name</th>
           <th>Assembly Code</th>
-          <th>Counting Tables</th>
-          <th>Counting Officer</th>
-          <th>Counting Assistant</th>
-          <th>Reserve Counting Officer</th>
-          <th>Reserve Counting Assistant</th>
+          <th>Tables</th>
           <th>Status</th>
         </tr>
       </thead>
@@ -79,7 +75,7 @@ WebLib::IncludeJS('js/additional-methods.min.js');
       </tbody>
       <tfoot>
         <tr>
-          <td colspan="8">
+          <td colspan="4">
             <input id="GetRequiredCP" type="button" value="Load Requirements"/>
             <input id="MakeGroupCP" type="button" value="Start Randomization"/>
           </td>

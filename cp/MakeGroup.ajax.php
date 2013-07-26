@@ -19,11 +19,13 @@ if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
       $CountingTablesQry = 'Select BlockName,Assembly,Tables from `' . MySQL_Pre . 'CP_CountingTables` T'
               . ' JOIN `' . MySQL_Pre . 'CP_Blocks` B ON (T.Assembly=B.BlockCode)';
       $DataResp['Data'] = $Data->query($CountingTablesQry);
+      $DataResp['Msg'] = 'Total Records: ' . count($DataResp['Data']);
       break;
     case 'MakeGroupCP':
-      $Post = WebLib::GetVal($_POST, 'Post');
-      $AsmCode = WebLib::GetVal($_POST, 'AssemblyCode');
-      $DataResp['Msg'] = MakeGroupCP($AsmCode, $Post);
+      $Params = WebLib::GetVal($_POST, 'Params', false, false);
+      $Posts = WebLib::GetVal($_POST, 'Posts', false, false);
+      $DataResp['Data']['Status'] = MakeGroupCP($Params, $Posts);
+      $DataResp['Msg'] = 'Finished: ' . $Params['BlockName'];
       break;
     default:
       break;
@@ -48,13 +50,13 @@ if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
 header("HTTP/1.1 404 Not Found");
 exit();
 
-function MakeGroupCP($CountingTables, $Post) {
+function MakeGroupCP($Block, $Posts) {
   $Data = new MySQLiDBHelper(HOST_Name, MySQL_User, MySQL_Pass, MySQL_DB);
-  $CountTotal = 0;
-  foreach ($CountingTables as $Block) {
+  $CountTotal = 'Done';
+  foreach ($Posts as $Post) {
     $CP_PoolQry = 'Select PersSL from ' . MySQL_Pre . 'CP_Pool';
     $Data->where('AssemblyCode', $Block['Assembly']);
-    $Data->where('`Post`', $Post);
+    $Data->where('`Post`', (($Post < 3) ? $Post : 2));
     $GroupCP = $Data->query($CP_PoolQry);
     shuffle($GroupCP);
     $GroupID = 1;
@@ -67,12 +69,16 @@ function MakeGroupCP($CountingTables, $Post) {
         }
       }
       $RandCP['PersSL'] = $PersCP['PersSL'];
-      $RandCP['GroupID'] = $Reserve . $GroupID;
+      $RandCP['GroupID'] = $Reserve . str_pad($GroupID, 3, '0', STR_PAD_LEFT);
       $RandCP['AssemblyCode'] = $Block['Assembly'];
       $Data->insert(MySQL_Pre . 'CP_Groups', $RandCP);
       $GroupID++;
     }
-    $CountTotal+=$GroupID;
+    if ($GroupID > 1) {
+      $CountTotal.=': ' . $GroupID;
+    } elseif ($CountTotal === 'Done') {
+      $CountTotal = 'Not Alloted';
+    }
   }
   return $CountTotal;
 }
