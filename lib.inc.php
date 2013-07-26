@@ -356,6 +356,7 @@ class WebLib {
         $ObjDB->do_ins_query(self::GetTableDefs('Uploads'));
         $ObjDB->do_ins_query(self::GetTableDefs('Users'));
         $ObjDB->do_ins_query(self::GetTableDefs('UsersData'));
+        $ObjDB->do_ins_query(self::GetTableDefs('MenuItems'));
         $ObjDB->do_close();
         break;
       case 'SRER':
@@ -370,6 +371,7 @@ class WebLib {
         $ObjDB->do_ins_query(self::GetTableDefs('SRER_Districts'));
         $ObjDB->do_ins_query(self::GetTableDefs('SRER_ACs'));
         $ObjDB->do_ins_query(self::GetTableDefs('SRER_PartMap'));
+        $ObjDB->do_ins_query(self::GetTableDefs('MenuData'));
         $ObjDB->do_close();
         break;
     }
@@ -484,6 +486,7 @@ class WebLib {
   public static function ShowMenuBar() {
     echo '<div class="MenuBar"><ul>';
     WebLib::ShowMenuitem('Home', 'index.php');
+
     if (WebLib::GetVal($_SESSION, 'CheckAuth') !== 'Valid') {
       WebLib::ShowMenuitem('Registration', 'Register.php');
       WebLib::ShowMenuitem('Log In!', 'login.php');

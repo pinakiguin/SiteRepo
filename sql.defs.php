@@ -85,6 +85,22 @@ function SQLDefs($ObjectName) {
               . '(`UserID`, `UserName`, `UserPass`, `UserMapID`, `CtrlMapID`,`Registered`, `Activated`) '
               . 'VALUES (\'Admin\',\'Super Administrator\',\'ceb6c970658f31504a901b89dcd3e461\',1,0,1,1);';
       break;
+    case 'MenuItems':
+      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . 'MenuItems` ('
+              . '`MenuID` int(11) NOT NULL AUTO_INCREMENT,'
+              . '`ParentMenuID` int(11) NOT NULL,'
+              . '`AuthMenu` tinyint(1) NOT NULL DEFAULT \'1\','
+              . '`Caption` varchar(50) NOT NULL,'
+              . '`URL` varchar(50) NOT NULL,'
+              . ' PRIMARY KEY (`MenuID`)'
+              . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
+      break;
+    case 'MenuData':
+      $SqlDB = 'INSERT INTO `WebSite_MenuItems` (`MenuID`, `ParentMenuID`, `AuthMenu`, `Caption`, `URL`) VALUES'
+              . '(1, 0, 1, \'SRER\', \'srer/index.php\'),'
+              . '(2, 1, 1, \'Data Entry\', \'srer/DataEntry.php\'),'
+              . '(3, 2, 1, \'Reports\', \'srer/Reports.php\');';
+      break;
     case 'SRER_FieldNames':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . 'SRER_FieldNames` ('
               . '`FieldName` varchar(20) NOT NULL,'
