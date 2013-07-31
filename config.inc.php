@@ -20,12 +20,12 @@ define('MySQL_User', 'root');
 define('MySQL_Pass', 'mysql');
 
 /**
- * Defines MySQL Server DB Name
+ * Defines MySQL Server Database Name
  */
 define('MySQL_DB', 'WebSite');
 
 /**
- * Defines MySQL Server Hostname
+ * Defines MySQL Database Table Prefix
  */
 define('MySQL_Pre', 'WebSite_');
 
@@ -47,22 +47,22 @@ define('AppTitle', 'Paschim Medinipur');
 /**
  * Defines Application's Unique Installation ID
  *
- * 1. Validates Against Multiple sessions
- * 2. Used to Encrypt Passwords in Database
+ * 1. Validates Against Multiple applications in the same domain
+ * 2. Used to Encrypt Passwords in Database (kept at server side never sent to client)
  */
 define('AppKey', 'e$#KH+)&Q5&CP3798k7$quyxGfR48+vX');
 
 /**
  * Defines Existence of tables
  *
- * If set to TRUE then Databse will be created
+ * If set to TRUE then Database tables will be created
  */
 define('NeedsDB', TRUE);
 
 /**
  * Defines use of SMS Gateway
  *
- * If set to TRUE then SMS will be Sent
+ * If set to TRUE then SMSs will be Sent
  */
 define('UseSMSGW', FALSE);
 ?>
