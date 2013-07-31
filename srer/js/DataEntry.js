@@ -121,7 +121,7 @@ $(function() {
    */
   $.ajax({
     type: 'POST',
-    url: '../MySQLiDB.ajax.php',
+    url: 'MySQLiDB.ajax.php',
     dataType: 'html',
     xhrFields: {
       withCredentials: true
@@ -173,7 +173,7 @@ $(function() {
       }
       $.ajax({
         type: 'POST',
-        url: '../MySQLiDB.ajax.php',
+        url: 'MySQLiDB.ajax.php',
         dataType: 'html',
         xhrFields: {
           withCredentials: true
@@ -242,7 +242,7 @@ $(function() {
       if (i > 0) {
         $.ajax({
           type: 'POST',
-          url: '../MySQLiDB.ajax.php',
+          url: 'MySQLiDB.ajax.php',
           dataType: 'html',
           xhrFields: {
             withCredentials: true
@@ -303,7 +303,7 @@ $(function() {
       $('#Msg').html('Creating Please Wait...');
       $.ajax({
         type: 'POST',
-        url: '../MySQLiDB.ajax.php',
+        url: 'MySQLiDB.ajax.php',
         dataType: 'html',
         xhrFields: {
           withCredentials: true
