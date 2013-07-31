@@ -56,15 +56,17 @@ function MakeGroupCP($Block, $Posts) {
   foreach ($Posts as $Post) {
     $CP_PoolQry = 'Select PersSL from ' . MySQL_Pre . 'CP_Pool';
     $Data->where('AssemblyCode', $Block['Assembly']);
-    $Data->where('`Post`', (($Post < 3) ? $Post : 2));
+    $Data->where('`Post`', (($Post === '3') ? '2' : $Post));
     $GroupCP = $Data->query($CP_PoolQry);
     shuffle($GroupCP);
-    $GroupID = 1;
+    $GroupID = 0;
     $Reserve = '';
     foreach ($GroupCP as $PersCP) {
+      $GroupID++;
       if ($GroupID > $Block['Tables']) {
         $Reserve = 'R';
-        if (((count($GroupCP) / 2) > $GroupID) && ($Post === 2)) {
+        if (((count($GroupCP) / 2) < $GroupID) && ($Post === '2')) {
+          $GroupID--;
           break;
         }
       }
@@ -72,12 +74,11 @@ function MakeGroupCP($Block, $Posts) {
       $RandCP['GroupID'] = $Reserve . str_pad($GroupID, 3, '0', STR_PAD_LEFT);
       $RandCP['AssemblyCode'] = $Block['Assembly'];
       $Data->insert(MySQL_Pre . 'CP_Groups', $RandCP);
-      $GroupID++;
     }
-    if ($GroupID > 1) {
+    if ($GroupID > 0) {
       $CountTotal.=': ' . $GroupID;
     } elseif ($CountTotal === 'Done') {
-      $CountTotal = 'Not Alloted';
+      $CountTotal = 'Already Randomized';
     }
   }
   return $CountTotal;
