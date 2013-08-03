@@ -1,5 +1,5 @@
 <?php
-include_once 'lib.inc.php';
+require_once 'lib.inc.php';
 WebLib::AuthSession();
 WebLib::Html5Header("User Activity");
 WebLib::IncludeCSS();

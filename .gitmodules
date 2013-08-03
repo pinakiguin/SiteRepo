@@ -19,3 +19,6 @@
 [submodule "php-mailer"]
 	path = php-mailer
 	url = https://github.com/abusalam/GMail-SMTP.git
+[submodule "FPDF"]
+	path = FPDF
+	url = https://github.com/abusalam/FPDF.git
