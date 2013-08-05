@@ -152,7 +152,7 @@ body {
   list-style-image: none;
   list-style-type: none;
   margin: 0px;
-  min-width: 1154px;
+  /*min-width: 1024px;*/
   font-family: Calibri, Georgia, "Book Antiqua", Verdana;
   font-size: medium;
 }

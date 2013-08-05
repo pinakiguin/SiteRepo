@@ -495,36 +495,39 @@ class WebLib {
    */
   public static function ShowMenuBar($AppID = null) {
     echo '<div class="MenuBar"><ul>';
-    WebLib::ShowMenuitem('Home', 'index.php');
     if (WebLib::GetVal($_SESSION, 'CheckAuth') !== 'Valid') {
       $AppID = null;
     }
     switch ($AppID) {
       case 'WebSite':
+        WebLib::ShowMenuitem('Home', 'index.php');
         WebLib::ShowMenuitem('SRER-2014', 'srer');
-        WebLib::ShowMenuitem('Panchayat Election 2013', 'cp');
+        //WebLib::ShowMenuitem('Panchayat Election 2013', 'cp');
         WebLib::ShowMenuitem('Log Out!', 'login.php?LogOut=1');
         break;
       case 'SRER':
+        WebLib::ShowMenuitem('Home', 'srer/index.php');
         WebLib::ShowMenuitem('Data Entry', 'srer/DataEntry.php');
-        WebLib::ShowMenuitem('Admin Page', 'srer/Admin.php');
+        //WebLib::ShowMenuitem('Admin Page', 'srer/Admin.php');
         WebLib::ShowMenuitem('Reports', 'srer/Reports.php');
-        WebLib::ShowMenuitem(WebLib::GetVal($_SESSION, 'UserName') . '\'s Profile', 'Profile.php');
-        WebLib::ShowMenuitem('Manage Users', 'Users.php');
-        WebLib::ShowMenuitem('User Activity', 'AuditLogs.php');
+        //WebLib::ShowMenuitem(WebLib::GetVal($_SESSION, 'UserName') . '\'s Profile', 'Profile.php');
+        //WebLib::ShowMenuitem('Manage Users', 'Users.php');
+        //WebLib::ShowMenuitem('User Activity', 'AuditLogs.php');
         WebLib::ShowMenuitem('Log Out!', 'login.php?LogOut=1');
         break;
       case 'CP':
+        WebLib::ShowMenuitem('Home', 'cp/index.php');
         WebLib::ShowMenuitem('Counting Personnel Randomization', 'cp/GroupCP.php');
         WebLib::ShowMenuitem('Reports', 'cp/Reports.php');
         WebLib::ShowMenuitem('Log Out!', 'login.php?LogOut=1');
         break;
       default:
-        WebLib::ShowMenuitem('Registration', 'Register.php');
+        //WebLib::ShowMenuitem('Registration', 'Register.php');
+        WebLib::ShowMenuitem('Home', 'index.php');
         WebLib::ShowMenuitem('Log In!', 'login.php');
         break;
     }
-//WebLib::ShowMenuitem(WebLib::GetVal($_SESSION, 'CheckAuth'), '#');
+    //WebLib::ShowMenuitem(WebLib::GetVal($_SESSION, 'ID'), '#');
     echo '</ul></div>';
   }
 
