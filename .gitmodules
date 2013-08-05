@@ -22,3 +22,6 @@
 [submodule "FPDF"]
 	path = FPDF
 	url = https://github.com/abusalam/FPDF.git
+[submodule "eRecruitment"]
+	path = eRecruitment
+	url = https://github.com/abusalam/eRecruitment.git
