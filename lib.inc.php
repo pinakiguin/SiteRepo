@@ -503,6 +503,7 @@ class WebLib {
         WebLib::ShowMenuitem('Home', 'index.php');
         WebLib::ShowMenuitem('SRER-2014', 'srer');
         //WebLib::ShowMenuitem('Panchayat Election 2013', 'cp');
+        WebLib::ShowMenuitem('RSBY-2014', 'rsby');
         WebLib::ShowMenuitem('Log Out!', 'login.php?LogOut=1');
         break;
       case 'SRER':
@@ -519,6 +520,12 @@ class WebLib {
         WebLib::ShowMenuitem('Home', 'cp/index.php');
         WebLib::ShowMenuitem('Counting Personnel Randomization', 'cp/GroupCP.php');
         WebLib::ShowMenuitem('Reports', 'cp/Reports.php');
+        WebLib::ShowMenuitem('Log Out!', 'login.php?LogOut=1');
+        break;
+      case 'RSBY':
+        WebLib::ShowMenuitem('Home', 'rsby/index.php');
+        WebLib::ShowMenuitem('Data Entry', 'rsby/Modify.php');
+        WebLib::ShowMenuitem('Reports', 'rsby/Reports.php');
         WebLib::ShowMenuitem('Log Out!', 'login.php?LogOut=1');
         break;
       default:
