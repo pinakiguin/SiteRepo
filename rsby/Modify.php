@@ -4,6 +4,11 @@ require_once('../lib.inc.php');
 WebLib::AuthSession();
 WebLib::Html5Header('RSBY-2014');
 WebLib::IncludeCSS();
+WebLib::JQueryInclude();
+WebLib::IncludeCSS('css/chosen.min.css');
+WebLib::IncludeJS('js/chosen.jquery.min.js');
+WebLib::IncludeJS('rsby/js/Modify.js');
+WebLib::IncludeCSS('rsby/css/Modify.css');
 if (NeedsDB) {
   WebLib::CreateDB('RSBY');
 }
@@ -52,7 +57,7 @@ if (NeedsDB) {
       ?></span>
     <form id="frmModify" method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" style="text-align:left;" autocomplete="off" >
       <label for="BlockCode"><strong>Block:</strong>
-        <select name="BlockCode">
+        <select name="BlockCode" class="chzn-select">
           <?php
           $QryBlocks = 'Select RSBY_BlockCode,BlockName ' . $RSBY_UnMatched . ' group by BlockName';
           $Data->show_sel('RSBY_BlockCode', 'BlockName', $QryBlocks, $POST_BlockCode);
@@ -60,7 +65,7 @@ if (NeedsDB) {
         </select>
       </label>
       <label for="PanchayatCode"><strong>Panchayat:</strong>
-        <select name="PanchayatCode">
+        <select name="PanchayatCode" class="chzn-select">
           <?php
           $QryPanchayats = 'Select Panchayat_TownCode,PanchayatName ' . $RSBY_UnMatched
                   . ' AND RSBY_BlockCode=\'' . $POST_BlockCode . '\' group by PanchayatName';
@@ -68,7 +73,7 @@ if (NeedsDB) {
           ?>
         </select>
       </label>
-      <input type="submit" name="Cmd" value="Refresh"/>
+      <input type="submit" name="Cmd" class="button" value="Refresh"/>
       <?php
       $QryUnMatchedCount = 'Select `VillageName`,`MouzaCode`,`RegistrationNo`,`ApplicantName`,`FatherHusbandName`,`Gender`,`Age`,`Caste` '
               . $RSBY_UnMatched . ' AND Panchayat_TownCode = \'' . $POST_PanchayatCode . '\' ORDER BY `VillageName` limit 15';
@@ -101,19 +106,19 @@ if (NeedsDB) {
       </table>
       <label for="MouzaCode" style="margin-left:11px;
              "><strong><img src="arrow_ltr.png" />Selected Beneficiaries belongs to Census Mouza:</strong>
-        <select name="MouzaCode">
+        <select name="MouzaCode" class="chzn-select">
           <?php
           $Qry = "Select VillageCode, concat(`VillageCode`, ' - ', `VillageName`) as VillageName from `" . MySQL_Pre . "RSBY_MstVillage` Where BlockCode = '" . $POST_BlockCode . "' AND Panchayat_TownCode = '" . $POST_PanchayatCode . "' group by VillageName";
           $Data->show_sel('VillageCode', 'VillageName', $Qry, $POST_MouzaCode);
           ?>
         </select>
       </label>
-      <Input type="Submit" name="Cmd" value="Save" />
+      <Input type="Submit" name="Cmd" value="Save" class="button"/>
       <?php
       //echo $Qry;
-      ////echo $QryBlocks;
+      //echo $QryBlocks;
       //echo $QryPanchayats;
-      echo $QryUnMatchedCount;
+      //echo $QryUnMatchedCount;
       ?>
     </form>
     <?php
@@ -126,5 +131,11 @@ if (NeedsDB) {
   <div class="footer">
     <?php WebLib::FooterInfo(); ?>
   </div>
+  <script>
+    $('.chzn-select')
+            .chosen({width: "300px",
+      no_results_text: "Oops, nothing found!"
+    });
+  </script>
 </body>
 </html>
