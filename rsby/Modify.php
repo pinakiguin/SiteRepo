@@ -25,28 +25,28 @@ if (NeedsDB) {
     $POST_BlockCode = WebLib::GetVal($_POST, 'BlockCode', true);
     $POST_PanchayatCode = WebLib::GetVal($_POST, 'PanchayatCode', true);
     $POST_MouzaCode = WebLib::GetVal($_POST, 'MouzaCode', true);
-    $RSBY_UnMatched = "From RSBY_MGNREGA M,RSBY_UnMatched U where U.RegistrationNo=M.RegistrationNo AND ApplicantNo=1 AND U.MouzaCode is null";
+    $RSBY_UnMatched = 'From `' . MySQL_Pre . 'RSBY_NREGA` Where MouzaCode is null';
     ?>
     <span class="Message"><?php
       if ((WebLib::GetVal($_POST, 'Cmd') == "Save") && (isset($_POST['RegNo']))) {
         $r = 0;
         $Updates = 0;
         while ($r < count($_POST['RegNo'])) {
-          $Query = "Update RSBY_UnMatched Set MouzaCode='" . $POST_MouzaCode . "'"
-                  . " Where RegistrationNo='" . mysql_real_escape_string($_POST['RegNo'][$r]) . "' LIMIT 1;";
+          $Query = 'Update `' . MySQL_Pre . 'RSBY_MGNREGA` Set MouzaCode=\'' . $POST_MouzaCode . '\''
+                  . ' Where RegistrationNo=\'' . WebLib::GetVal($_POST['RegNo'], $r, true) . '\' LIMIT 1;';
           $Updates+=$Data->do_ins_query($Query);
           //echo $Query;
           $r++;
         }
-        echo "Rashtriya Swasthya Bima Yojna - (" . ($Updates) . ") UnMatched Updated!";
+        echo "Total - (" . ($Updates) . ") UnMatched Updated!";
       } else {
         if ($POST_PanchayatCode != "") {
           $UnMatchCountBlock = $Data->do_max_query("Select count(*) " . $RSBY_UnMatched . " AND RSBY_BlockCode='" . $POST_BlockCode . "'");
           $UnMatchCount = $Data->do_max_query("Select count(*) " . $RSBY_UnMatched . " AND Panchayat_TownCode='" . $POST_PanchayatCode . "'");
-          echo "Rashtriya Swasthya Bima Yojna - UnMatched in Block (" . $UnMatchCountBlock . ") Panchayat (" . $UnMatchCount . ")";
+          echo "Total - UnMatched in Block (" . $UnMatchCountBlock . ") Panchayat (" . $UnMatchCount . ")";
         } else if ($POST_BlockCode != "") {
           $UnMatchCount = $Data->do_max_query("Select count(*) " . $RSBY_UnMatched . " AND RSBY_BlockCode='" . $POST_BlockCode . "'");
-          echo "Rashtriya Swasthya Bima Yojna - UnMatched in Block (" . $UnMatchCount . ")";
+          echo "Total - UnMatched in Block (" . $UnMatchCount . ")";
         }
       }
       ?></span>
@@ -54,41 +54,67 @@ if (NeedsDB) {
       <label for="BlockCode"><strong>Block:</strong>
         <select name="BlockCode">
           <?php
-          $Data->show_sel('RSBY_BlockCode', 'BlockName', "Select RSBY_BlockCode,BlockName " . $RSBY_UnMatched . " group by BlockName", $POST_BlockCode);
+          $QryBlocks = 'Select RSBY_BlockCode,BlockName ' . $RSBY_UnMatched . ' group by BlockName';
+          $Data->show_sel('RSBY_BlockCode', 'BlockName', $QryBlocks, $POST_BlockCode);
           ?>
         </select>
       </label>
       <label for="PanchayatCode"><strong>Panchayat:</strong>
         <select name="PanchayatCode">
           <?php
-          $Data->show_sel('Panchayat_TownCode', 'PanchayatName', "Select Panchayat_TownCode,PanchayatName " . $RSBY_UnMatched . " AND RSBY_BlockCode='" . $POST_BlockCode . "' group by PanchayatName", $POST_PanchayatCode);
+          $QryPanchayats = 'Select Panchayat_TownCode,PanchayatName ' . $RSBY_UnMatched
+                  . ' AND RSBY_BlockCode=\'' . $POST_BlockCode . '\' group by PanchayatName';
+          $Data->show_sel('Panchayat_TownCode', 'PanchayatName', $QryPanchayats, $POST_PanchayatCode);
           ?>
         </select>
       </label>
       <input type="submit" name="Cmd" value="Refresh"/>
       <?php
-      $QryUnMatchedCount = "Select M.`RegistrationNo`,`RH_ID`,`ApplicantName`,`VillageName`,M.MouzaCode " . $RSBY_UnMatched . " AND Panchayat_TownCode='" . $POST_PanchayatCode . "' ORDER BY `VillageName` limit 15";
-      //echo $QryUnMatchedCount;
+      $QryUnMatchedCount = 'Select `VillageName`,`MouzaCode`,`RegistrationNo`,`ApplicantName`,`FatherHusbandName`,`Gender`,`Age`,`Caste` '
+              . $RSBY_UnMatched . ' AND Panchayat_TownCode = \'' . $POST_PanchayatCode . '\' ORDER BY `VillageName` limit 15';
       $Count = $Data->do_sel_query($QryUnMatchedCount);
       ?>
       <table rules="all" frame="box" width="100%" cellpadding="5" cellspacing="1">
-        <tr><th align="center" width="20px">Tick</th><th>Village Name - (UnMatched MouzaCode)</th><th>RegistrationNo</th><th>RHS ID</th><th>Applicant Name</th></tr>
+        <tr><th align="center" width="20px">Tick</th>
+          <th>Village Name - (MouzaCode)</th>
+          <th>RegistrationNo</th>
+          <th>Applicant Name</th>
+          <th>Father/Husband Name</th>
+          <th>Gender</th>
+          <th>Age</th>
+          <th>Caste</th>
+        </tr>
         <?php
         for ($i = 0; $i < $Count; $i++) {
-          $row = $Data->get_n_row();
-          echo '<tr><td  align="center" width="20px"><input type="checkbox" name="RegNo[]" value="' . htmlspecialchars($row[0]) . '"/></td><td>' . htmlspecialchars($row[3]) . " - (" . htmlspecialchars($row[4]) . ")</td><td>" . htmlspecialchars($row[0]) . '</td><td><input type="text" name="RHSID[]" size="25" value="' . htmlspecialchars($row[1]) . '"/></td><td>' . htmlspecialchars($row[2]) . "</td></tr>";
+          $row = $Data->get_row();
+          echo '<tr><td  align="center" width="20px">'
+          . '<input type="checkbox" name="RegNo[]" value="' . htmlspecialchars($row['RegistrationNo']) . '"/></td>'
+          . '<td>' . htmlspecialchars($row['VillageName']) . ' - (' . htmlspecialchars($row['MouzaCode']) . ')</td>'
+          . '<td>' . htmlspecialchars($row['RegistrationNo']) . '</td>'
+          . '<td>' . htmlspecialchars($row['ApplicantName']) . '</td>'
+          . '<td>' . htmlspecialchars($row['FatherHusbandName']) . '</td>'
+          . '<td>' . htmlspecialchars($row['Gender']) . '</td>'
+          . '<td>' . htmlspecialchars($row['Age']) . '</td>'
+          . '<td>' . htmlspecialchars($row['Caste']) . '</td></tr>';
         }
         ?>
       </table>
-      <label for="MouzaCode" style="margin-left:11px;"><strong><img src="arrow_ltr.png" />Selected Beneficiaries belongs to Census Mouza:</strong>
+      <label for="MouzaCode" style="margin-left:11px;
+             "><strong><img src="arrow_ltr.png" />Selected Beneficiaries belongs to Census Mouza:</strong>
         <select name="MouzaCode">
           <?php
-          $Qry = "Select VillageCode,concat(`VillageCode`,' - ',`VillageName`) as VillageName from RSBY_MstVillage Where BlockCode='" . $POST_BlockCode . "' AND Panchayat_TownCode='" . $POST_PanchayatCode . "' group by VillageName";
+          $Qry = "Select VillageCode, concat(`VillageCode`, ' - ', `VillageName`) as VillageName from `" . MySQL_Pre . "RSBY_MstVillage` Where BlockCode = '" . $POST_BlockCode . "' AND Panchayat_TownCode = '" . $POST_PanchayatCode . "' group by VillageName";
           $Data->show_sel('VillageCode', 'VillageName', $Qry, $POST_MouzaCode);
           ?>
         </select>
       </label>
       <Input type="Submit" name="Cmd" value="Save" />
+      <?php
+      //echo $Qry;
+      ////echo $QryBlocks;
+      //echo $QryPanchayats;
+      echo $QryUnMatchedCount;
+      ?>
     </form>
     <?php
 //$Data->ShowTable('select BlockCode,BlockName from RSBY_MstBlock order by BlockName');
