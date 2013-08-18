@@ -1,6 +1,10 @@
 <?php
-include_once 'lib.inc.php';
-include_once 'php-mailer/GMail.lib.php';
+ini_set('display_errors', '1');
+error_reporting(E_ALL);
+
+require_once 'lib.inc.php';
+require_once 'php-mailer/GMail.lib.php';
+require_once 'smsgw/smsgw.inc.php';
 WebLib::initHTML5page("Home");
 WebLib::IncludeCSS();
 WebLib::IncludeJS("js/md5.js");
@@ -14,12 +18,15 @@ WebLib::IncludeJS("js/md5.js");
   </div>
   <div class="Header"></div>
   <?php
-  WebLib::ShowMenuBar();
+  WebLib::ShowMenuBar('WebSite');
   ?>
   <div class="content">
     <h2>User Registration</h2>
     <?php
     $Data = new MySQLiDB();
+    $UnregisteredUsers = $Data->do_sel_query('Select `UserMapID`,`UserName` '
+            . ' FROM `' . MySQL_Pre . 'Users` '
+            . ' Where `Registered`=0 AND `Activated`=0;');
     if (WebLib::GetVal($_POST, 'UserID') !== NULL) {
       $email = WebLib::GetVal($_POST, 'UserID', TRUE);
       $MobileNo = WebLib::GetVal($_POST, 'MobileNo', TRUE);
@@ -38,13 +45,18 @@ WebLib::IncludeJS("js/md5.js");
           $Subject = "User Account Details - SRER 2014";
           $Body = "<b>UserID: </b><span> {$email}</span><br/>"
                   . "<b>Password: </b><span> {$Pass}</span>";
-          $MailSent = json_decode(GMailSMTP($email, $UserName, $Subject, $Body));
-          //$_SESSION['Msg'] = "<h3>Regristration successful.</h3>"
-          //        . "<b>Please Note: </b>Password is sent to: {$MobileNo}";
+          $TxtBody = 'UserID: ' . $email . "\r\n" . 'Password: ' . $Pass;
+          $SentSMS = '';
+          if (UseSMSGW === true) {
+            SMSGW::SendSMS($TxtBody, $MobileNo);
+            $SentSMS = ' and ' . $MobileNo;
+          }
+          $MailSent = json_decode(GMailSMTP($email, $UserName, $Subject, $Body, $TxtBody));
+
           WebLib::ShowMsg();
           if ($MailSent->Sent) {
             $_SESSION['Msg'] = "<h3>Regristration successful.</h3>"
-                    . "<b>Please Note: </b>Password is sent to: {$email}";
+                    . "<b>Please Note: </b>Password is sent to: {$email}" . $SentSMS;
           }
           WebLib::ShowMsg();
         } else {
@@ -53,7 +65,7 @@ WebLib::IncludeJS("js/md5.js");
       } else {
         echo "<h3>You solution of the Math in the image is wrong.</h3>";
       }
-    } else {
+    } elseif ($UnregisteredUsers > 0) {
       ?>
       <form name="feed_frm" method="post" action="<?php echo WebLib::GetVal($_SERVER, 'PHP_SELF', FALSE); ?>" >
         <div class="FieldGroup">
@@ -87,6 +99,8 @@ WebLib::IncludeJS("js/md5.js");
         </div>
       </form>
       <?php
+    } else {
+      echo "<h3>All Users are registered.</h3>";
     }
     ?>
     <div style="clear:both;"></div>

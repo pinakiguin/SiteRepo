@@ -1,10 +1,10 @@
 <?php
 
-require_once 'config.inc.php';
+require_once 'smsgw/config.inc.php';
 
 class SMSGW {
 
-  public function SendSMS($SMSData, $MobileNo) {
+  public static function SendSMS($SMSData, $MobileNo) {
 
     $uname = urlencode(SMSGW_USER);
 

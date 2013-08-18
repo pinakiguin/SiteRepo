@@ -4,7 +4,8 @@
  * @ todo Working on User Management Module
  */
 require_once('lib.inc.php');
-include_once 'php-mailer/GMail.lib.php';
+require_once 'php-mailer/GMail.lib.php';
+require_once 'smsgw/smsgw.inc.php';
 WebLib::AuthSession();
 WebLib::Html5Header('Users');
 WebLib::IncludeCSS();
@@ -38,7 +39,7 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
   </div>
   <?php
   include 'UsersData.php';
-  WebLib::ShowMenuBar();
+  WebLib::ShowMenuBar('WebSite');
   $Data = new MySQLiDB();
   ?>
   <div class="content">
