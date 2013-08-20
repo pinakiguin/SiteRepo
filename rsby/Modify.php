@@ -29,6 +29,7 @@ if (NeedsDB) {
     $Data = new MySQLiDB();
     $POST_BlockCode = WebLib::GetVal($_POST, 'BlockCode', true);
     $POST_PanchayatCode = WebLib::GetVal($_POST, 'PanchayatCode', true);
+    $POST_SansadCode = WebLib::GetVal($_POST, 'SansadCode', true);
     $POST_MouzaCode = WebLib::GetVal($_POST, 'MouzaCode', true);
     $RSBY_UnMatched = 'From `' . MySQL_Pre . 'RSBY_NREGA` Where MouzaCode is null';
     ?>
@@ -73,10 +74,20 @@ if (NeedsDB) {
           ?>
         </select>
       </label>
+      <label for="SansadCode"><strong>Sansad:</strong>
+        <select name="SansadCode" class="chzn-select">
+          <?php
+          $QryVillages = 'Select VillageName,VillageName ' . $RSBY_UnMatched
+                  . ' AND Panchayat_TownCode=\'' . $POST_PanchayatCode . '\' group by VillageName';
+          $Data->show_sel('VillageName', 'VillageName', $QryVillages, $POST_SansadCode);
+          ?>
+        </select>
+      </label>
       <input type="submit" name="Cmd" class="button" value="Refresh"/>
       <?php
       $QryUnMatchedCount = 'Select `VillageName`,`MouzaCode`,`RegistrationNo`,`ApplicantName`,`FatherHusbandName`,`Gender`,`Age`,`Caste` '
-              . $RSBY_UnMatched . ' AND Panchayat_TownCode = \'' . $POST_PanchayatCode . '\' ORDER BY `VillageName` limit 15';
+              . $RSBY_UnMatched . ' AND Panchayat_TownCode = \'' . $POST_PanchayatCode
+              . '\' AND VillageName=\'' . $POST_SansadCode . '\' ORDER BY `VillageName` limit 15';
       $Count = $Data->do_sel_query($QryUnMatchedCount);
       ?>
       <table rules="all" frame="box" width="100%" cellpadding="5" cellspacing="1">
