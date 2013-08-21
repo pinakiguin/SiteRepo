@@ -193,35 +193,6 @@ WebLib::IncludeJS("Jcrop/js/jquery.Jcrop.min.js");
     WebLib::ShowMsg();
     $Data = new MySQLiDB();
     ?>
-    <div class="FieldGroup">
-      <?php
-      $_SESSION['Query'] = 'Select `DistCode`,`District`'
-              . ' FROM `' . MySQL_Pre . 'SRER_Districts` '
-              . ' Where `UserMapID`=' . WebLib::GetVal($_SESSION, 'UserMapID', TRUE);
-      $Rows = $Data->ShowTable($_SESSION['Query']);
-      echo 'Total Records:' . $Rows;
-      ?>
-    </div>
-    <div class="FieldGroup" style="height: 500px;overflow:auto;">
-      <?php
-      $_SESSION['Query'] = 'Select `District`,`ACNo`,`ACName`'
-              . ' FROM `' . MySQL_Pre . 'SRER_ACs` A '
-              . ' JOIN `' . MySQL_Pre . 'SRER_Districts` D ON(A.`DistCode`=D.`DistCode`)'
-              . ' Where A.`UserMapID`=' . WebLib::GetVal($_SESSION, 'UserMapID', TRUE);
-      $Rows = $Data->ShowTable($_SESSION['Query']);
-      echo 'Total Records:' . $Rows;
-      ?>
-    </div>
-    <div class="FieldGroup" style="height: 500px;overflow:auto;">
-      <?php
-      $_SESSION['Query'] = 'Select `ACNo`,`PartNo`,`PartName`'
-              . ' FROM `' . MySQL_Pre . 'SRER_PartMap`'
-              . ' Where `UserMapID`=' . WebLib::GetVal($_SESSION, 'UserMapID', TRUE);
-      $Rows = $Data->ShowTable($_SESSION['Query']);
-      echo 'Total Records:' . $Rows;
-      ?>
-    </div>
-    <div style="clear: both;"></div>
     <form action="<?php echo WebLib::GetVal($_SERVER, 'PHP_SELF'); ?>" method="post">
       <div id="chgpwd-form" title="Change Password" style="display: none;">
         <input type="password" placeholder="Enter Old Password" name="OldPassWD" id="OldPassWD" />

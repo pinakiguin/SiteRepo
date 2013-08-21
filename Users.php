@@ -72,10 +72,9 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
                     . ' Order By `UserName`';
             $Data->show_sel('UserMapID', 'UserName', $Query, WebLib::GetVal($_POST, 'UserMapID'));
             ?>
-          </select><input type="submit" name="CmdSubmit" value="Show" /><hr/>
-          <br />
+          </select>
+          <hr/>
           <input type="hidden" name="FormToken" value="<?php echo WebLib::GetVal($_SESSION, 'FormToken') ?>" />
-          <br />
           <input type="button" id="CmdCreate" value="Create New User" />
           <input type="submit" name="CmdSubmit" value="Impersonate" />
           <?php if (WebLib::GetVal($_SESSION, 'ImpFromUserMapID') !== NULL) { ?>
@@ -83,75 +82,13 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
           <?php } ?>
           <input type="submit" name="CmdSubmit" value="Activate" />
           <input type="submit" name="CmdSubmit" value="De-Activate" />
-          <input type="submit" name="CmdSubmit" value="Un-Register" /><hr/>
-          <label for="UserName">District:</label><br/>
-          <select name="DistCode" data-placeholder="Select a District" onchange="document.frmEditUser.submit();">
-            <?php
-            $Query = 'Select `DistCode`,CONCAT(`DistCode`,\' - \',`District`) as `District` '
-                    . ' FROM `' . MySQL_Pre . 'SRER_Districts` '
-                    . ' Where `UserMapID`=' . WebLib::GetVal($_SESSION, 'UserMapID', TRUE)
-                    . ' Order By `District`';
-            $Data->show_sel('DistCode', 'District', $Query, WebLib::GetVal($_POST, 'DistCode'));
-            ?>
-          </select>
-          <input type="submit" name="CmdSubmit" value="Assign Whole District" /><br />
-          <label for="UserName">Assembly Constituency:</label><br/>
-          <select name="ACNo" data-placeholder="Select an Assembly Constituency" onchange="document.frmEditUser.submit();">
-            <?php
-            $Query = 'Select `ACNo`,CONCAT(`DistCode`,\' - \',`ACNo`,\' - \',`ACName`) as `ACName` '
-                    . ' FROM `' . MySQL_Pre . 'SRER_ACs` '
-                    . ' Where `DistCode`=\'' . WebLib::GetVal($_POST, 'DistCode') . '\' '
-                    . ' Order By `ACNo`';
-            $Data->show_sel('ACNo', 'ACName', $Query, WebLib::GetVal($_POST, 'ACNo'));
-            ?>
-          </select>
-          <input type="submit" name="CmdSubmit" value="Assign Whole AC" /><br />
-          <label for="UserName">Part:</label><br/>
-          <select name="PartID[]" data-placeholder="Select Parts" multiple="multiple" >
-            <?php
-            $Query = 'Select `PartID`,CONCAT(`PartNo`,\' - \',`PartName`) as `PartName` '
-                    . ' FROM `' . MySQL_Pre . 'SRER_PartMap` '
-                    . ' Where `ACNo`=\'' . WebLib::GetVal($_POST, 'ACNo') . '\'' // AND `UserMapID`=' . WebLib::GetVal($_SESSION, 'UserMapID', TRUE)
-                    . ' Order By `PartNo`';
-            $Data->show_sel('PartID', 'PartName', $Query, WebLib::GetVal($_POST, 'PartID'));
-            ?>
-          </select>
-          <input type="submit" name="CmdSubmit" value="Assign Part" />
+          <input type="submit" name="CmdSubmit" value="Un-Register" />
+          <hr/>
         </div>
-        <?php
-        if (WebLib::GetVal($_POST, 'UserMapID') !== NULL) {
-          ?>
-          <div class="FieldGroup">
-            <?php
-            $_SESSION['Query'] = 'Select `DistCode`,`District`'
-                    . ' FROM `' . MySQL_Pre . 'SRER_Districts` '
-                    . ' Where `UserMapID`=' . WebLib::GetVal($_POST, 'UserMapID', TRUE);
-            //}
-            $Data->ShowTable($_SESSION['Query']);
-            ?>
-            <?php
-            $_SESSION['Query'] = 'Select `District`,`ACNo`,`ACName`'
-                    . ' FROM `' . MySQL_Pre . 'SRER_ACs` A '
-                    . ' JOIN `' . MySQL_Pre . 'SRER_Districts` D ON(A.`DistCode`=D.`DistCode`)'
-                    . ' Where A.`UserMapID`=' . WebLib::GetVal($_POST, 'UserMapID', TRUE);
-            $Data->ShowTable($_SESSION['Query']);
-            ?>
-          </div>
-          <div class="FieldGroup"  style="height: 400px;overflow:auto;">
-            <?php
-            $_SESSION['Query'] = 'Select `ACNo`,`PartNo`,`PartName`'
-                    . ' FROM `' . MySQL_Pre . 'SRER_PartMap`'
-                    . ' Where `UserMapID`=' . WebLib::GetVal($_POST, 'UserMapID', TRUE);
-            $Data->ShowTable($_SESSION['Query']);
-            ?>
-          </div>
-          <?php
-        }
-        ?>
       </form>
       <div style="clear:both;"></div>
-      <hr />
       <h3>Users:</h3>
+      <hr />
       <?php
     }
     //if (WebLib::GetVal($_SESSION, 'Query') === NULL) {

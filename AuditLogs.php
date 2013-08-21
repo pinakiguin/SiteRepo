@@ -14,7 +14,7 @@ WebLib::IncludeCSS();
   <div class="Header">
   </div>
   <?php
-  WebLib::ShowMenuBar();
+  WebLib::ShowMenuBar('WebSite');
   ?>
   <div class="content">
     <h2>Activity Logs</h2>
