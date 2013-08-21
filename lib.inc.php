@@ -419,6 +419,7 @@ class WebLib {
   public static function InitSess() {
     if (!isset($_SESSION))
       session_start();
+    self::SetURI();
     $sess_id = md5(microtime());
     $_SESSION['ET'] = microtime(TRUE);
     $_SESSION['Debug'] = WebLib::GetVal($_SESSION, 'Debug')
@@ -440,6 +441,7 @@ class WebLib {
   public static function AuthSession() {
     if (!isset($_SESSION))
       session_start();
+    self::SetURI();
     $_SESSION['ET'] = microtime(TRUE);
     $_SESSION['Debug'] = WebLib::GetVal($_SESSION, 'Debug') . 'InSession_AUTH';
     $SessRet = WebLib::CheckAuth();
@@ -461,6 +463,7 @@ class WebLib {
         session_unset();
         session_destroy();
         session_start();
+        self::SetURI();
         $_SESSION = array();
         $_SESSION['Debug'] = WebLib::GetVal($_SESSION, 'Debug') . $SessRet . 'SESSION_TOKEN-!Valid';
         header('Location: ' . BaseDIR . 'login.php');
@@ -665,6 +668,18 @@ class WebLib {
     }
     if ($Leaf === TRUE) {
       $LeafNodes .=$Node . ',';
+    }
+  }
+
+  /**
+   * Sets the REQUEST_URI if not set
+   */
+  public static function SetURI() {
+    if (!isset($_SERVER['REQUEST_URI'])) {
+      $_SERVER['REQUEST_URI'] = substr($_SERVER['PHP_SELF'], 1);
+      if (isset($_SERVER['QUERY_STRING'])) {
+        $_SERVER['REQUEST_URI'].='?' . $_SERVER['QUERY_STRING'];
+      }
     }
   }
 
