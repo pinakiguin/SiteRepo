@@ -102,16 +102,16 @@ class WebLib {
     echo '<title>' . $PageTitle . ' - ' . $AppTitle . '</title>';
     echo '<meta name="robots" content="noarchive,noodp">';
     echo '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
-    echo '<script src="' . WebLib::GetAbsoluteURLFolder() . 'js/modernizr-latest.js" type="text/javascript"></script>';
+    echo '<script src="' . $_SESSION['BaseURL'] . 'js/modernizr-latest.js" type="text/javascript"></script>';
   }
 
   /**
    * Generates call to jQuery Scripts in Head Section
    */
   public static function JQueryInclude() {
-    echo '<link type="text/css" href="' . WebLib::GetAbsoluteURLFolder() . 'css/dark-hive/jquery-ui-1.10.3.custom.min.css" rel="Stylesheet" />'
-    . '<script type="text/javascript" src="' . WebLib::GetAbsoluteURLFolder() . 'js/jquery-1.10.2.min.js"></script>'
-    . '<script type="text/javascript" src="' . WebLib::GetAbsoluteURLFolder() . 'js/jquery-ui-1.10.3.custom.min.js"></script>';
+    echo '<link type="text/css" href="' . $_SESSION['BaseURL'] . 'css/dark-hive/jquery-ui-1.10.3.custom.min.css" rel="Stylesheet" />'
+    . '<script type="text/javascript" src="' . $_SESSION['BaseURL'] . 'js/jquery-1.10.2.min.js"></script>'
+    . '<script type="text/javascript" src="' . $_SESSION['BaseURL'] . 'js/jquery-ui-1.10.3.custom.min.js"></script>';
   }
 
   /**
@@ -122,7 +122,7 @@ class WebLib {
    * @param string $JavaScript src including path
    */
   public static function IncludeJS($PathToJS) {
-    echo '<script type="text/javascript" src="' . WebLib::GetAbsoluteURLFolder() . $PathToJS . '"></script>';
+    echo '<script type="text/javascript" src="' . $_SESSION['BaseURL'] . $PathToJS . '"></script>';
   }
 
   /**
@@ -133,7 +133,7 @@ class WebLib {
    * @param string $CSS href including path
    */
   public static function IncludeCSS($PathToCSS = 'css/Style.css') {
-    echo '<link type="text/css" href="' . WebLib::GetAbsoluteURLFolder() . $PathToCSS . '" rel="Stylesheet" />';
+    echo '<link type="text/css" href="' . $_SESSION['BaseURL'] . $PathToCSS . '" rel="Stylesheet" />';
   }
 
   /**
@@ -229,17 +229,6 @@ class WebLib {
       $size = strlen($chars);
     }
     return $str;
-  }
-
-  /**
-   * Returns absolute web directory based on BaseDIR(defined constant).
-   *
-   * @return string Absolute web directory path eg. https://www.paschimmedinipur.gov.in/eRecruitment/
-   */
-  public static function GetAbsoluteURLFolder() {
-    $scriptFolder = (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on')) ? 'https://' : 'http://';
-    $scriptFolder .= $_SERVER['HTTP_HOST'] . BaseDIR;
-    return $scriptFolder;
   }
 
   /**
@@ -425,7 +414,7 @@ class WebLib {
     $_SESSION['Debug'] = WebLib::GetVal($_SESSION, 'Debug')
             . 'InInitPage(' . WebLib::GetVal($_SESSION, 'SESSION_TOKEN')
             . ' = ' . WebLib::GetVal($_COOKIE, 'SESSION_TOKEN', TRUE) . ')';
-    setcookie('SESSION_TOKEN', $sess_id, (time() + (LifeTime * 60)), BaseDIR);
+    setcookie('SESSION_TOKEN', $sess_id, (time() + (LifeTime * 60)), $_SESSION['BaseDIR']);
     $_SESSION['SESSION_TOKEN'] = $sess_id;
     $_SESSION['LifeTime'] = time();
     if (WebLib::GetVal($_REQUEST, 'show_src')) {
@@ -466,12 +455,12 @@ class WebLib {
         self::SetURI();
         $_SESSION = array();
         $_SESSION['Debug'] = WebLib::GetVal($_SESSION, 'Debug') . $SessRet . 'SESSION_TOKEN-!Valid';
-        header('Location: ' . BaseDIR . 'login.php');
+        header('Location: ' . $_SESSION['BaseDIR'] . 'login.php');
         exit;
       } else {
         $_SESSION['Debug'] = WebLib::GetVal($_SESSION, 'Debug') . 'SESSION_TOKEN-Valid';
         $sess_id = md5(microtime());
-        setcookie('SESSION_TOKEN', $sess_id, (time() + (LifeTime * 60)), BaseDIR);
+        setcookie('SESSION_TOKEN', $sess_id, (time() + (LifeTime * 60)), $_SESSION['BaseDIR']);
         $_SESSION['SESSION_TOKEN'] = $sess_id;
         $_SESSION['LifeTime'] = time();
         $LogQuery = 'INSERT INTO `' . MySQL_Pre . 'Logs` (`SessionID`, `IP`, `Referrer`, `UserAgent`, `UserID`, `URL`, `Action`, `Method`, `URI`) '
@@ -501,12 +490,16 @@ class WebLib {
     if (WebLib::GetVal($_SESSION, 'CheckAuth') !== 'Valid') {
       $AppID = null;
     }
+
     switch ($AppID) {
       case 'WebSite':
         WebLib::ShowMenuitem('Home', 'index.php');
         WebLib::ShowMenuitem('SRER-2014', 'srer');
         //WebLib::ShowMenuitem('Panchayat Election 2013', 'cp');
-        WebLib::ShowMenuitem('RSBY-2014', 'rsby');
+        //WebLib::ShowMenuitem('RSBY-2014', 'rsby');
+        WebLib::ShowMenuitem(WebLib::GetVal($_SESSION, 'UserName') . '\'s Profile', 'Profile.php');
+        WebLib::ShowMenuitem('Manage Users', 'Users.php');
+        WebLib::ShowMenuitem('User Activity', 'AuditLogs.php');
         WebLib::ShowMenuitem('Log Out!', 'login.php?LogOut=1');
         break;
       case 'SRER':
@@ -514,9 +507,7 @@ class WebLib {
         WebLib::ShowMenuitem('Data Entry', 'srer/DataEntry.php');
         //WebLib::ShowMenuitem('Admin Page', 'srer/Admin.php');
         WebLib::ShowMenuitem('Reports', 'srer/Reports.php');
-        //WebLib::ShowMenuitem(WebLib::GetVal($_SESSION, 'UserName') . '\'s Profile', 'Profile.php');
-        //WebLib::ShowMenuitem('Manage Users', 'Users.php');
-        //WebLib::ShowMenuitem('User Activity', 'AuditLogs.php');
+        WebLib::ShowMenuitem(WebLib::GetVal($_SESSION, 'UserName') . '\'s Profile', 'srer/Profile.php');
         WebLib::ShowMenuitem('Log Out!', 'login.php?LogOut=1');
         break;
       case 'CP':
@@ -532,8 +523,8 @@ class WebLib {
         WebLib::ShowMenuitem('Log Out!', 'login.php?LogOut=1');
         break;
       default:
-        //WebLib::ShowMenuitem('Registration', 'Register.php');
         WebLib::ShowMenuitem('Home', 'index.php');
+        WebLib::ShowMenuitem('Registration', 'Register.php');
         WebLib::ShowMenuitem('Log In!', 'login.php');
         break;
     }
@@ -542,9 +533,9 @@ class WebLib {
   }
 
   public static function ShowMenuitem($Caption, $URL) {
-    $Class = ($_SERVER['SCRIPT_NAME'] === BaseDIR . $URL) ? 'SelMenuitems' : 'Menuitems';
+    $Class = ($_SERVER['SCRIPT_NAME'] === $_SESSION['BaseDIR'] . $URL) ? 'SelMenuitems' : 'Menuitems';
     echo '<li class = "' . $Class . '">'
-    . '<a href = "' . WebLib::GetAbsoluteURLFolder() . $URL . '">' . $Caption . '</a>'
+    . '<a href = "' . $_SESSION['BaseURL'] . $URL . '">' . $Caption . '</a>'
     . '</li>';
   }
 
@@ -673,8 +664,18 @@ class WebLib {
 
   /**
    * Sets the REQUEST_URI if not set
+   * Sets the paths for AppROOT, BaseDIR & BaseURL
    */
   public static function SetURI() {
+
+    $_SESSION['AppROOT'] = realpath(dirname(__FILE__)) . '/';
+
+    $root = pathinfo($_SESSION['AppROOT'] . '/s');
+    $_SESSION['BaseDIR'] = '/' . basename($root['dirname']) . '/';
+
+    $Proto = (self::GetVal($_SERVER, 'HTTPS') === 'on') ? 'https://' : 'http://';
+    $_SESSION['BaseURL'] = $Proto . $_SERVER['HTTP_HOST'] . $_SESSION['BaseDIR'];
+
     if (!isset($_SERVER['REQUEST_URI'])) {
       $_SERVER['REQUEST_URI'] = substr($_SERVER['PHP_SELF'], 1);
       if (isset($_SERVER['QUERY_STRING'])) {

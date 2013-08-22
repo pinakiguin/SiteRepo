@@ -37,7 +37,7 @@ define('LifeTime', '20');
 /**
  * Defines path after Hostname of the script to generate menu links
  */
-define('BaseDIR', '/SiteRepo/');
+define('BaseDIR', realpath(dirname(__FILE__)) . '/');
 
 /**
  * Defines Title of the page
