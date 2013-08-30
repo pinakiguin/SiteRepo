@@ -2,7 +2,7 @@
 /**
  * @todo User Password Change incomplete [Working currently]
  */
-require_once('../lib.inc.php');
+require_once(__DIR__ . '/../lib.inc.php');
 WebLib::AuthSession();
 WebLib::Html5Header("Profile");
 WebLib::IncludeCSS();
@@ -21,7 +21,7 @@ WebLib::IncludeJS("Jcrop/js/jquery.Jcrop.min.js");
   <div class="Header">
   </div>
   <?php
-  WebLib::ShowMenuBar('WebSite');
+  WebLib::ShowMenuBar('SRER');
   ?>
   <div class="content">
     <span class="Message" id="Msg">

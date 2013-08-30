@@ -1,5 +1,5 @@
 <?php
-require_once('srer.lib.php');
+require_once(__DIR__ . '/srer.lib.php');
 
 WebLib::AuthSession();
 WebLib::Html5Header("SRER Report");

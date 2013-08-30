@@ -3,9 +3,9 @@
  * @todo Integrate SMS Gateway
  * @ todo Working on User Management Module
  */
-require_once('lib.inc.php');
-require_once 'php-mailer/GMail.lib.php';
-require_once 'smsgw/smsgw.inc.php';
+require_once(__DIR__ . '/lib.inc.php');
+require_once __DIR__ . '/php-mailer/GMail.lib.php';
+require_once __DIR__ . '/smsgw/smsgw.inc.php';
 WebLib::AuthSession();
 WebLib::Html5Header('Users');
 WebLib::IncludeCSS();
@@ -38,7 +38,7 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
   <div class="Header">
   </div>
   <?php
-  include 'UsersData.php';
+  include __DIR__ . '/UsersData.php';
   WebLib::ShowMenuBar('WebSite');
   $Data = new MySQLiDB();
   ?>

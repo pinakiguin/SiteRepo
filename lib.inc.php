@@ -6,8 +6,8 @@
  * @todo Menus made to be Database driven
  * @todo *** VVI *** Make Modernizr to display message if browser is not capable.
  */
-require_once 'MySQLiDB.inc.php';
-require_once 'sql.defs.php';
+require_once __DIR__ . '/MySQLiDB.inc.php';
+require_once __DIR__ . '/sql.defs.php';
 
 class WebLib {
 
@@ -455,7 +455,7 @@ class WebLib {
         self::SetURI();
         $_SESSION = array();
         $_SESSION['Debug'] = WebLib::GetVal($_SESSION, 'Debug') . $SessRet . 'SESSION_TOKEN-!Valid';
-        header('Location: ' . $_SESSION['BaseDIR'] . 'login.php');
+        header('Location: ' . $_SESSION['AppROOT'] . '../login.php');
         exit;
       } else {
         $_SESSION['Debug'] = WebLib::GetVal($_SESSION, 'Debug') . 'SESSION_TOKEN-Valid';
@@ -507,7 +507,8 @@ class WebLib {
         WebLib::ShowMenuitem('Data Entry', 'srer/DataEntry.php');
         //WebLib::ShowMenuitem('Admin Page', 'srer/Admin.php');
         WebLib::ShowMenuitem('Reports', 'srer/Reports.php');
-        WebLib::ShowMenuitem(WebLib::GetVal($_SESSION, 'UserName') . '\'s Profile', 'srer/Profile.php');
+        //WebLib::ShowMenuitem(WebLib::GetVal($_SESSION, 'UserName') . '\'s Profile', 'srer/Profile.php');
+        WebLib::ShowMenuitem('Assign Parts', 'srer/Users.php');
         WebLib::ShowMenuitem('Log Out!', 'login.php?LogOut=1');
         break;
       case 'CP':
@@ -546,7 +547,7 @@ class WebLib {
    * @return bool
    */
   public static function StaticCaptcha($ShowImage = FALSE) {
-    require_once 'captcha/securimage.php';
+    require_once __DIR__ . '/captcha/securimage.php';
     $options = array(
         'database_driver' => Securimage::SI_DRIVER_MYSQL,
         'database_host' => HOST_Name,
@@ -668,7 +669,7 @@ class WebLib {
    */
   public static function SetURI() {
 
-    $_SESSION['AppROOT'] = realpath(dirname(__FILE__)) . '/';
+    $_SESSION['AppROOT'] = __DIR__ . '/';
 
     $root = pathinfo($_SESSION['AppROOT'] . '/s');
     $_SESSION['BaseDIR'] = '/' . basename($root['dirname']) . '/';

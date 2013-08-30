@@ -1,8 +1,8 @@
 <?php
 
 // captcha_display.php
-require_once 'lib.inc.php';
-require_once 'captcha/securimage.php';
+require_once __DIR__ . '/lib.inc.php';
+require_once __DIR__ . '/captcha/securimage.php';
 
 $captchaId = $_GET['captchaId'];
 

@@ -1,5 +1,5 @@
 <?php
-require_once('../lib.inc.php');
+require_once(__DIR__ . '/../lib.inc.php');
 
 WebLib::AuthSession();
 WebLib::Html5Header("SRER-2014");

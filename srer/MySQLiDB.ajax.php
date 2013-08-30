@@ -21,9 +21,9 @@
  *
 
  */
-require_once('../lib.inc.php');
-require_once('../class.MySQLiDBHelper.php');
-require_once '../php-mailer/GMail.lib.php';
+require_once ( __DIR__ . '/../lib.inc.php');
+require_once ( __DIR__ . '/../class.MySQLiDBHelper.php');
+require_once ( __DIR__ . '/../php-mailer/GMail.lib.php');
 if (!isset($_SESSION))
   session_start();
 //@ todo Enable AjaxToken currently disabled

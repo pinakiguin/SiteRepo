@@ -3,9 +3,9 @@
  * @todo Integrate SMS Gateway
  * @ todo Working on User Management Module
  */
-require_once('../lib.inc.php');
-require_once '../php-mailer/GMail.lib.php';
-require_once '../smsgw/smsgw.inc.php';
+require_once __DIR__ . '/../lib.inc.php';
+require_once __DIR__ . '/../php-mailer/GMail.lib.php';
+require_once __DIR__ . '/../smsgw/smsgw.inc.php';
 WebLib::AuthSession();
 WebLib::Html5Header('Users');
 WebLib::IncludeCSS();
@@ -38,8 +38,8 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
   <div class="Header">
   </div>
   <?php
-  include 'UsersData.php';
-  WebLib::ShowMenuBar('WebSite');
+  include __DIR__ . '/UsersData.php';
+  WebLib::ShowMenuBar('SRER');
   $Data = new MySQLiDB();
   ?>
   <div class="content">
@@ -73,19 +73,9 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
             $Data->show_sel('UserMapID', 'UserName', $Query, WebLib::GetVal($_POST, 'UserMapID'));
             ?>
           </select><input type="submit" name="CmdSubmit" value="Show" /><hr/>
-          <br />
           <input type="hidden" name="FormToken" value="<?php echo WebLib::GetVal($_SESSION, 'FormToken') ?>" />
-          <br />
-          <input type="button" id="CmdCreate" value="Create New User" />
-          <input type="submit" name="CmdSubmit" value="Impersonate" />
-          <?php if (WebLib::GetVal($_SESSION, 'ImpFromUserMapID') !== NULL) { ?>
-            <input type="submit" name="CmdSubmit" value="Stop Impersonating" />
-          <?php } ?>
-          <input type="submit" name="CmdSubmit" value="Activate" />
-          <input type="submit" name="CmdSubmit" value="De-Activate" />
-          <input type="submit" name="CmdSubmit" value="Un-Register" /><hr/>
-          <label for="UserName">District:</label><br/>
-          <select name="DistCode" data-placeholder="Select a District" onchange="document.frmEditUser.submit();">
+          <label for="DistCode">District:</label><br/>
+          <select id="DistCode"name="DistCode" data-placeholder="Select a District" onchange="document.frmEditUser.submit();">
             <?php
             $Query = 'Select `DistCode`,CONCAT(`DistCode`,\' - \',`District`) as `District` '
                     . ' FROM `' . MySQL_Pre . 'SRER_Districts` '
@@ -95,8 +85,8 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
             ?>
           </select>
           <input type="submit" name="CmdSubmit" value="Assign Whole District" /><br />
-          <label for="UserName">Assembly Constituency:</label><br/>
-          <select name="ACNo" data-placeholder="Select an Assembly Constituency" onchange="document.frmEditUser.submit();">
+          <label for="ACNo">Assembly Constituency:</label><br/>
+          <select id="ACNo" name="ACNo" data-placeholder="Select an Assembly Constituency" onchange="document.frmEditUser.submit();">
             <?php
             $Query = 'Select `ACNo`,CONCAT(`DistCode`,\' - \',`ACNo`,\' - \',`ACName`) as `ACName` '
                     . ' FROM `' . MySQL_Pre . 'SRER_ACs` '
@@ -106,8 +96,8 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
             ?>
           </select>
           <input type="submit" name="CmdSubmit" value="Assign Whole AC" /><br />
-          <label for="UserName">Part:</label><br/>
-          <select name="PartID[]" data-placeholder="Select Parts" multiple="multiple" >
+          <label for="PartID">Part:</label><br/>
+          <select id="PartID" name="PartID[]" data-placeholder="Select Parts" multiple="multiple" >
             <?php
             $Query = 'Select `PartID`,CONCAT(`PartNo`,\' - \',`PartName`) as `PartName` '
                     . ' FROM `' . MySQL_Pre . 'SRER_PartMap` '

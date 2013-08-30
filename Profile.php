@@ -2,7 +2,7 @@
 /**
  * @todo User Password Change incomplete [Working currently]
  */
-require_once('lib.inc.php');
+require_once(__DIR__ . '/lib.inc.php');
 WebLib::AuthSession();
 WebLib::Html5Header("Profile");
 WebLib::IncludeCSS();

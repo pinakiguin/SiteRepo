@@ -2,9 +2,9 @@
 ini_set('display_errors', '1');
 error_reporting(E_ALL);
 
-require_once 'lib.inc.php';
-require_once 'php-mailer/GMail.lib.php';
-require_once 'smsgw/smsgw.inc.php';
+require_once __DIR__ . '/lib.inc.php';
+require_once __DIR__ . '/php-mailer/GMail.lib.php';
+require_once __DIR__ . '/smsgw/smsgw.inc.php';
 WebLib::initHTML5page("Home");
 WebLib::IncludeCSS();
 WebLib::IncludeJS("js/md5.js");

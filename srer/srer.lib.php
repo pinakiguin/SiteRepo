@@ -1,5 +1,5 @@
 <?php
-require_once('../lib.inc.php');
+require_once(__DIR__ . '/../lib.inc.php');
 
 function GetPartName() {
   if (intval(WebLib::GetVal($_SESSION, 'PartID')) > 0) {
