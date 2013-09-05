@@ -162,7 +162,7 @@ body {
   background-image: url(../img/Heading.jpg);
   background-repeat: no-repeat;
   background-position: 25% center;
-  display: block;
+  display: none;
   clear: both;
   height: 95px;
   width: 100%;

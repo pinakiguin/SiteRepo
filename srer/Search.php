@@ -1,8 +1,7 @@
 <?php
 require_once(__DIR__ . '/srer.lib.php');
 
-WebLib::AuthSession();
-WebLib::Html5Header("SRER Report");
+WebLib::InitHTML5page("Search");
 WebLib::IncludeCSS();
 
 $Data = new MySQLiDB();
@@ -29,14 +28,13 @@ if (WebLib::GetVal($_POST, 'ACNo') != "")
   WebLib::ShowMenuBar('SRER')
   ?>
   <div class="content">
-    <h2>SRER Reports</h2>
+    <h2><?php echo AppTitle; ?></h2>
     <hr/>
-    <form name="frmSRER" method="post" action="<?php echo WebLib::GetVal($_SERVER, 'PHP_SELF'); ?>">
+    <form name="frmSRER" method="post" action="index.php">
       <label for="textfield">AC No.:</label>
       <select name="ACNo" onChange="document.frmSRER.submit();">
         <?php
-        $Query = 'Select ACNo,CONCAT(ACNo,\' - \',ACName) AS ACName from ' . MySQL_Pre . 'SRER_ACs'
-                . ' Where `DistCode`=' . DistCode . ' Order by ACNo';
+        $Query = 'Select ACNo,CONCAT(ACNo,\' - \',ACName) AS ACName from ' . MySQL_Pre . 'SRER_ACs Order by ACNo';
         $Data->show_sel('ACNo', 'ACName', $Query, WebLib::GetVal($_SESSION, 'ACNo', TRUE));
         ?>
       </select>
@@ -44,7 +42,7 @@ if (WebLib::GetVal($_POST, 'ACNo') != "")
       <select name="PartID">
         <?php
         $Query = 'Select PartID,CONCAT(PartNo,\' - \',PartName) as PartName from ' . MySQL_Pre . 'SRER_PartMap'
-                . ' Where ACNo=\'' . WebLib::GetVal($_SESSION, 'ACNo', TRUE) . ' Order by PartNo';
+                . ' Where ACNo=\'' . WebLib::GetVal($_SESSION, 'ACNo', TRUE) . "' Order by PartNo";
         $Data->show_sel('PartID', 'PartName', $Query, WebLib::GetVal($_SESSION, 'PartID'));
         ?>
       </select>

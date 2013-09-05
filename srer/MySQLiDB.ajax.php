@@ -72,10 +72,10 @@ if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
     case 'GetACParts':
       $Query = 'Select DISTINCT A.`ACNo`,`ACName`'
               . ' FROM `' . MySQL_Pre . 'SRER_ACs` A JOIN `' . MySQL_Pre . 'SRER_PartMap` P'
-              . ' ON (A.`ACNo`=P.`ACNo`) '
+              . ' ON (A.`ACNo`=P.`ACNo` AND A.`DistCode`=?) '
               . ' Where P.`UserMapID`=?';
       $DataResp['ACs'] = array();
-      doQuery($DataResp['ACs'], $Query, array(WebLib::GetVal($_SESSION, 'UserMapID')));
+      doQuery($DataResp['ACs'], $Query, array(DistCode, WebLib::GetVal($_SESSION, 'UserMapID')));
       $Query = 'Select `PartID`,`PartNo`,`PartName`,`ACNo`'
               . ' FROM `' . MySQL_Pre . 'SRER_PartMap`'
               . ' Where `UserMapID`=?';

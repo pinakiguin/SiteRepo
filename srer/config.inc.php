@@ -40,6 +40,11 @@ define('LifeTime', '20');
 define('BaseDIR', '/SiteRepo/');
 
 /**
+ * Defines District Code to display SRER Reports
+ */
+define('DistCode', '16');
+
+/**
  * Defines Title of the page
  */
 define('AppTitle', 'Summary Revesion of Electoral Roll 2014');

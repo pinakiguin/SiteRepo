@@ -505,7 +505,7 @@ class WebLib {
       case 'SRER':
         WebLib::ShowMenuitem('Home', 'srer/index.php');
         WebLib::ShowMenuitem('Data Entry', 'srer/DataEntry.php');
-        WebLib::ShowMenuitem('Admin Page', 'srer/Admin.php');
+        //WebLib::ShowMenuitem('Admin Page', 'srer/Admin.php');
         WebLib::ShowMenuitem('Reports', 'srer/Reports.php');
         //WebLib::ShowMenuitem(WebLib::GetVal($_SESSION, 'UserName') . '\'s Profile', 'srer/Profile.php');
         WebLib::ShowMenuitem('Assign Parts', 'srer/Users.php');
@@ -525,6 +525,7 @@ class WebLib {
         break;
       default:
         WebLib::ShowMenuitem('Home', 'index.php');
+        WebLib::ShowMenuitem('Search SRER Data', 'srer/Search.php');
         WebLib::ShowMenuitem('Registration', 'Register.php');
         WebLib::ShowMenuitem('Log In!', 'login.php');
         break;
