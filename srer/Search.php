@@ -30,7 +30,7 @@ if (WebLib::GetVal($_POST, 'ACNo') != "")
   <div class="content">
     <h2><?php echo AppTitle; ?></h2>
     <hr/>
-    <form name="frmSRER" method="post" action="index.php">
+    <form name="frmSRER" method="post" action="<?php echo WebLib::GetVal($_SERVER, 'PHP_SELF'); ?>">
       <label for="textfield">AC No.:</label>
       <select name="ACNo" onChange="document.frmSRER.submit();">
         <?php

@@ -7,7 +7,7 @@
  * @todo *** VVI *** Make Modernizr to display message if browser is not capable.
  */
 require_once __DIR__ . '/MySQLiDB.inc.php';
-require_once __DIR__ . '/sql.defs.php';
+require_once 'sql.defs.php'; //Include the nested sql.defs.php don't use __DIR__
 
 class WebLib {
 
