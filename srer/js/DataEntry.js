@@ -225,68 +225,73 @@ $(function() {
           .each(function() {
     $(this).bind('click', function() {
       //$('#Error').html('CmdSave: ');
-      $('#Msg').html('Preparing to Save Please Wait...');
-      var i = 0, j, Params = new Array('');
-      j = 0;
-      $('input[type="checkbox"]').filter(':checked')
-              .each(function() {
-        Params[i] = new Object();
-        $('#Msg').append(document.createTextNode($(this).val() + ', '));
-        $('[id$="' + $(this).attr('id').slice(-3) + '"][id^="' + $('#ActiveSRERForm').val() + '"]')
+      if (parseInt($('#ActivePartID').val()) > 0) {
+        $('#Msg').html('Preparing to Save Please Wait...');
+        var i = 0, j, Params = new Array('');
+        j = 0;
+        $('input[type="checkbox"]').filter(':checked')
                 .each(function() {
-          Params[i][$(this).attr('id').slice($('#ActiveSRERForm').val().length, -3)] = $(this).val();
+          Params[i] = new Object();
+          $('#Msg').append(document.createTextNode($(this).val() + ', '));
+          $('[id$="' + $(this).attr('id').slice(-3) + '"][id^="' + $('#ActiveSRERForm').val() + '"]')
+                  .each(function() {
+            Params[i][$(this).attr('id').slice($('#ActiveSRERForm').val().length, -3)] = $(this).val();
+          });
+          Params[i]["Index"] = $(this).attr('id').slice(-3, -2);
+          Params[i++]["PartID"] = $('#ActivePartID').val();
         });
-        Params[i]["Index"] = $(this).attr('id').slice(-3, -2);
-        Params[i++]["PartID"] = $('#ActivePartID').val();
-      });
-      if (i > 0) {
-        $.ajax({
-          type: 'POST',
-          url: 'MySQLiDB.ajax.php',
-          dataType: 'html',
-          xhrFields: {
-            withCredentials: true
-          },
-          data: {
-            'AjaxToken': $('#AjaxToken').val(),
-            'CallAPI': 'PutSRERData',
-            'TableName': $('#ActiveSRERForm').val(),
-            'Params': Params
-          }
-        })
-                .done(function(data) {
-          try {
-            var DataResp = $.parseJSON(data);
-            delete data;
-            $('#AjaxToken').val(DataResp.AjaxToken);
-            $('#Msg').html(DataResp.Msg);
-            $.each(DataResp.Data, function(index, value) {
-              if (value.Saved) {
-                var ChkRowID = $('#' + $('#ActiveSRERForm').val() + 'RowID' + value.Index + '_D');
-                ChkRowID.val(value.RowID);
-                SaveFieldData(ChkRowID);
-                $.each(value.Data, function(key, data) {
-                  var Field = $('#' + $('#ActiveSRERForm').val() + key + value.Index + '_D');
-                  Field.val(data);
-                  $('#Msg').append(document.createTextNode(data));
-                  SaveFieldData(Field);
-                });
-                ChkRowID.blur();
-              }
-            });
-            $('#ED').html(DataResp.RT);
-            delete DataResp;
-          }
-          catch (e) {
-            $('#Msg').html(''.e);
-            $('#Error').html(data);
-          }
-        })
-                .fail(function(msg) {
-          $('#Msg').html(msg);
-        });
-      } else {
-        $('#Msg').html('Nothing to Save...');
+        if (i > 0) {
+          $.ajax({
+            type: 'POST',
+            url: 'MySQLiDB.ajax.php',
+            dataType: 'html',
+            xhrFields: {
+              withCredentials: true
+            },
+            data: {
+              'AjaxToken': $('#AjaxToken').val(),
+              'CallAPI': 'PutSRERData',
+              'TableName': $('#ActiveSRERForm').val(),
+              'Params': Params
+            }
+          })
+                  .done(function(data) {
+            try {
+              var DataResp = $.parseJSON(data);
+              delete data;
+              $('#AjaxToken').val(DataResp.AjaxToken);
+              $('#Msg').html(DataResp.Msg);
+              $.each(DataResp.Data, function(index, value) {
+                if (value.Saved) {
+                  var ChkRowID = $('#' + $('#ActiveSRERForm').val() + 'RowID' + value.Index + '_D');
+                  ChkRowID.val(value.RowID);
+                  SaveFieldData(ChkRowID);
+                  $.each(value.Data, function(key, data) {
+                    var Field = $('#' + $('#ActiveSRERForm').val() + key + value.Index + '_D');
+                    Field.val(data);
+                    $('#Msg').append(document.createTextNode(data));
+                    SaveFieldData(Field);
+                  });
+                  ChkRowID.blur();
+                }
+              });
+              $('#ED').html(DataResp.RT);
+              delete DataResp;
+            }
+            catch (e) {
+              $('#Msg').html(''.e);
+              $('#Error').html(data);
+            }
+          })
+                  .fail(function(msg) {
+            $('#Msg').html(msg);
+          });
+        } else {
+          $('#Msg').html('Nothing to Save...');
+        }
+      }
+      else {
+        $('#Msg').html('Please select AC and Part...');
       }
     });
   });
