@@ -505,7 +505,7 @@ class WebLib {
       case 'SRER':
         WebLib::ShowMenuitem('Home', 'srer/index.php');
         WebLib::ShowMenuitem('Data Entry', 'srer/DataEntry.php');
-        //WebLib::ShowMenuitem('Admin Page', 'srer/Admin.php');
+        WebLib::ShowMenuitem('Admin Page', 'srer/Admin.php');
         WebLib::ShowMenuitem('Reports', 'srer/Reports.php');
         //WebLib::ShowMenuitem(WebLib::GetVal($_SESSION, 'UserName') . '\'s Profile', 'srer/Profile.php');
         WebLib::ShowMenuitem('Assign Parts', 'srer/Users.php');

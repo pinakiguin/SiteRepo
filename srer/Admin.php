@@ -33,7 +33,6 @@ if (WebLib::GetVal($_POST, 'ACNo') != "")
       <input type="submit" name="FormName" value="AC wise Data Entry Status" />
       <input type="submit" name="FormName" value="Block wise Data Entry Status" />
       <input type="submit" name="FormName" value="Block AC wise Data Entry Status" />
-      <input type="submit" name="FormName" value="Block AC wise Blank Records" />
       <input type="submit" name="FormName" value="Block AC wise Accepted" />
       <input type="submit" name="FormName" value="Block AC wise Rejected" /><hr /><br />
     </form>
