@@ -6,7 +6,6 @@
  *
  * @todo Data validation to be done before submit
  * @todo If Non existent data sent for deletion then it is being added instead of doing nothing
- * @todo If No Part Selected appropriate message to be displayed
  * @todo If ajax callback receives no data appropriate message to be displayed
  *
  */
@@ -58,8 +57,7 @@ $(function() {
       if (((curDate > maxDate) || (('' + curDate) === 'Invalid Date')) && ($(this).val() !== '')) {
         //alert("invalid date");
         $(this).addClass('ui-state-error');
-      } else
-      {
+      } else {
         $(this).datepicker('setDate', curDate);
         $(this).removeClass('ui-state-error');
       }

@@ -84,6 +84,7 @@ if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
       break;
   }
   $_SESSION['Token'] = md5($_SERVER['REMOTE_ADDR'] . session_id() . $_SESSION['ET']);
+  $_SESSION['LifeTime'] = time();
   $DataResp['AjaxToken'] = $_SESSION['Token'];
   $DataResp['RT'] = '<b>Response Time:</b> '
           . round(microtime(TRUE) - WebLib::GetVal($_SESSION, 'RT'), 6) . ' Sec';
