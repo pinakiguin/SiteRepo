@@ -1,5 +1,9 @@
 <?php
 require_once(__DIR__ . '/srer.lib.php');
+if (WebLib::GetVal($_POST, 'FormName') === 'Save as PDF') {
+  include __DIR__ . '/ShowPDF.php';
+  exit();
+}
 
 WebLib::AuthSession();
 WebLib::Html5Header("SRER Report");
@@ -44,12 +48,13 @@ if (WebLib::GetVal($_POST, 'ACNo') != "")
       <select name="PartID">
         <?php
         $Query = 'Select PartID,CONCAT(PartNo,\' - \',PartName) as PartName from ' . MySQL_Pre . 'SRER_PartMap'
-                . ' Where ACNo=\'' . WebLib::GetVal($_SESSION, 'ACNo', TRUE) . ' Order by PartNo';
+                . ' Where ACNo=' . WebLib::GetVal($_SESSION, 'ACNo', TRUE) . ' Order by PartNo';
         $Data->show_sel('PartID', 'PartName', $Query, WebLib::GetVal($_SESSION, 'PartID'));
         ?>
       </select>
       <?php //echo $Query;  ?>
       <input type="submit" name="FormName" value="Show" />
+      <input type="submit" name="FormName" value="Save as PDF" />
       <hr /><br />
     </form>
     <?php

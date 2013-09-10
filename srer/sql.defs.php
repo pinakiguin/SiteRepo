@@ -5,7 +5,7 @@ function SQLDefs($ObjectName) {
   switch ($ObjectName) {
     case 'SRER_FieldNames':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . 'SRER_FieldNames` ('
-              . '`FieldName` varchar(20) NOT NULL,'
+              . '`FieldName` varchar(25) NOT NULL,'
               . '`Description` varchar(100) DEFAULT NULL,'
               . ' PRIMARY KEY (`FieldName`)'
               . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
