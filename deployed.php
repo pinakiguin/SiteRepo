@@ -8,7 +8,7 @@ if ($saveData['SiteURL'] !== '') {
   $Data = new MySQLiDBHelper(HOST_Name, MySQL_User, MySQL_Pass, MySQL_DB);
   $saveData['Data'] = json_encode($_POST);
   $saveData['Remark'] = $_SERVER['REMOTE_ADDR'];
-  $Inserted = $Data->insert(MySQL_Pre . 'Deployed', $saveData);
+  $Data->insert(MySQL_Pre . 'Deployed', $saveData);
   unset($saveData);
   unset($Data);
   exit();

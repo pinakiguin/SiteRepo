@@ -5,9 +5,6 @@ WebLib::AuthSession();
 WebLib::Html5Header("Admin Page");
 WebLib::IncludeCSS();
 
-//if (WebLib::GetVal($_SESSION,'UserName') != "Admin")
-//  exit;
-//SetCurrForm();
 if (intval(WebLib::GetVal($_POST, 'PartID')) > 0)
   $_SESSION['PartID'] = intval(WebLib::GetVal($_POST, 'PartID'));
 if (WebLib::GetVal($_POST, 'ACNo') != "")
@@ -42,9 +39,11 @@ if (WebLib::GetVal($_POST, 'ACNo') != "")
     echo "<h3>" . WebLib::GetVal($_SESSION, 'AdminView') . "</h3>";
     Switch (WebLib::GetVal($_SESSION, 'AdminView')) {
       case 'User Activity':
-        $Query = "Select `UserName` as `User Name`,`LoginCount`,CONVERT_TZ(`LastLoginTime`,'+00:00','+05:30') as LastLoginTime,"
+        $Query = "Select `UserName` as `User Name`,`LoginCount`,"
+                . "CONVERT_TZ(`LastLoginTime`,'+00:00','+05:30') as LastLoginTime,"
                 . "CONVERT_TZ(L.`AccessTime`,'+00:00','+05:30') as LastAccessTime,Li.`IP`,Li.`Action`"
-                . " from `" . MySQL_Pre . "Users` U,(Select UserID,max(`AccessTime`) as AccessTime,max(LogID) as MaxLogID"
+                . " from `" . MySQL_Pre . "Users` U,"
+                . "(Select UserID,max(`AccessTime`) as AccessTime,max(LogID) as MaxLogID"
                 . " from `" . MySQL_Pre . "Logs` Group by UserID ) L"
                 . ", `" . MySQL_Pre . "Logs` Li"
                 . " where UserMapID=L.UserID AND L.MaxLogID=Li.LogID order by LastLoginTime desc";
@@ -52,7 +51,8 @@ if (WebLib::GetVal($_POST, 'ACNo') != "")
         break;
       case 'AC wise Data Entry Status':
         $Query = "SELECT ACNo,SUM(CountF6) as CountF6,SUM(CountF6A) as CountF6A,SUM(CountF7) as CountF7,"
-                . "SUM(CountF8) as CountF8,SUM(CountF8A) as CountF8A,(IFNULL(SUM(CountF6),0)+IFNULL(SUM(CountF6A),0)+IFNULL(SUM(CountF7),0)+"
+                . "SUM(CountF8) as CountF8,SUM(CountF8A) as CountF8A,"
+                . "(IFNULL(SUM(CountF6),0)+IFNULL(SUM(CountF6A),0)+IFNULL(SUM(CountF7),0)+"
                 . "IFNULL(SUM(CountF8),0)+IFNULL(SUM(CountF8A),0)) as Total "
                 . "FROM `" . MySQL_Pre . "SRER_PartMap` P LEFT JOIN "
                 . "(SELECT PartID,Count(*) as CountF6 FROM `" . MySQL_Pre . "SRER_Form6` GROUP BY PartID) F6 "
@@ -66,15 +66,18 @@ if (WebLib::GetVal($_POST, 'ACNo') != "")
                 . "(SELECT PartID,Count(*) as CountF8A FROM `" . MySQL_Pre . "SRER_Form8A` GROUP BY PartID) F8A "
                 . "ON (F8A.PartID=P.PartID) GROUP BY ACNo";
         ShowSRER($Query);
-        $Query = "Select SUM(CountF6) as TotalF6,SUM(CountF6A) as TotalF6A,SUM(CountF7) as TotalF7,SUM(CountF8) as TotalF8,SUM(CountF8A) as TotalF8A"
-                . ",SUM(Total) as Total FROM ({$Query}) as T";
+        $Query = "Select SUM(CountF6) as TotalF6,SUM(CountF6A) as TotalF6A,SUM(CountF7) as TotalF7,"
+                . " SUM(CountF8) as TotalF8,SUM(CountF8A) as TotalF8A,"
+                . " SUM(Total) as Total FROM ({$Query}) as T";
         ShowSRER($Query);
         break;
       case 'Block wise Data Entry Status':
         $Query = "SELECT UserName,SUM(CountF6) as CountF6,SUM(CountF6A) as CountF6A,SUM(CountF7) as CountF7,"
-                . "SUM(CountF8) as CountF8,SUM(CountF8A) as CountF8A,(IFNULL(SUM(CountF6),0)+IFNULL(SUM(CountF6A),0)+IFNULL(SUM(CountF7),0)+"
+                . "SUM(CountF8) as CountF8,SUM(CountF8A) as CountF8A,"
+                . "(IFNULL(SUM(CountF6),0)+IFNULL(SUM(CountF6A),0)+IFNULL(SUM(CountF7),0)+"
                 . "IFNULL(SUM(CountF8),0)+IFNULL(SUM(CountF8A),0)) as Total "
-                . "FROM `" . MySQL_Pre . "Users` U INNER JOIN " . MySQL_Pre . "SRER_PartMap P ON U.UserMapID=P.UserMapID LEFT JOIN "
+                . "FROM `" . MySQL_Pre . "Users` U INNER JOIN " . MySQL_Pre . "SRER_PartMap P "
+                . " ON U.UserMapID=P.UserMapID LEFT JOIN "
                 . "(SELECT PartID,Count(*) as CountF6 FROM `" . MySQL_Pre . "SRER_Form6` GROUP BY PartID) F6 "
                 . "ON (F6.PartID=P.PartID) LEFT JOIN "
                 . "(SELECT PartID,Count(*) as CountF6A FROM `" . MySQL_Pre . "SRER_Form6A` GROUP BY PartID) F6A "
@@ -86,99 +89,89 @@ if (WebLib::GetVal($_POST, 'ACNo') != "")
                 . "(SELECT PartID,Count(*) as CountF8A FROM `" . MySQL_Pre . "SRER_Form8A` GROUP BY PartID) F8A "
                 . "ON (F8A.PartID=P.PartID) GROUP BY UserName";
         ShowSRER($Query);
-        //echo $Query;
-        $Query = "Select SUM(CountF6) as TotalF6,SUM(CountF6A) as TotalF6A,SUM(CountF7) as TotalF7,SUM(CountF8) as TotalF8,SUM(CountF8A) as TotalF8A"
-                . ",SUM(Total) as Total FROM ({$Query}) as T";
+        $Query = "Select SUM(CountF6) as TotalF6,SUM(CountF6A) as TotalF6A,SUM(CountF7) as TotalF7,"
+                . " SUM(CountF8) as TotalF8,SUM(CountF8A) as TotalF8A,"
+                . " SUM(Total) as Total FROM ({$Query}) as T";
         ShowSRER($Query);
-        //echo $Query;
         break;
       case 'Block AC wise Data Entry Status':
         $Query = "SELECT UserName,ACNo,SUM(CountF6) as CountF6,SUM(CountF6A) as CountF6A,SUM(CountF7) as CountF7,"
-                . "SUM(CountF8) as CountF8,SUM(CountF8A) as CountF8A,(IFNULL(SUM(CountF6),0)+IFNULL(SUM(CountF6A),0)+IFNULL(SUM(CountF7),0)+"
+                . "SUM(CountF8) as CountF8,SUM(CountF8A) as CountF8A,"
+                . "(IFNULL(SUM(CountF6),0)+IFNULL(SUM(CountF6A),0)+IFNULL(SUM(CountF7),0)+"
                 . "IFNULL(SUM(CountF8),0)+IFNULL(SUM(CountF8A),0)) as Total "
-                . "FROM SRER_Users U INNER JOIN SRER_PartMap P ON U.UserMapID=P.UserMapID LEFT JOIN "
-                . "(SELECT PartID,Count(*) as CountF6 FROM `SRER_Form6` GROUP BY PartID) F6 "
+                . "FROM `" . MySQL_Pre . "Users` U INNER JOIN `" . MySQL_Pre . "SRER_PartMap` P "
+                . " ON U.UserMapID=P.UserMapID LEFT JOIN "
+                . "(SELECT PartID,Count(*) as CountF6 FROM `" . MySQL_Pre . "SRER_Form6` GROUP BY PartID) F6 "
                 . "ON (F6.PartID=P.PartID) LEFT JOIN "
-                . "(SELECT PartID,Count(*) as CountF6A FROM `SRER_Form6A` GROUP BY PartID) F6A "
+                . "(SELECT PartID,Count(*) as CountF6A FROM `" . MySQL_Pre . "SRER_Form6A` GROUP BY PartID) F6A "
                 . "ON (F6A.PartID=P.PartID) LEFT JOIN "
-                . "(SELECT PartID,Count(*) as CountF7 FROM `SRER_Form7` GROUP BY PartID) F7 "
+                . "(SELECT PartID,Count(*) as CountF7 FROM `" . MySQL_Pre . "SRER_Form7` GROUP BY PartID) F7 "
                 . "ON (F7.PartID=P.PartID) LEFT JOIN "
-                . "(SELECT PartID,Count(*) as CountF8 FROM `SRER_Form8` GROUP BY PartID) F8 "
+                . "(SELECT PartID,Count(*) as CountF8 FROM `" . MySQL_Pre . "SRER_Form8` GROUP BY PartID) F8 "
                 . "ON (F8.PartID=P.PartID) LEFT JOIN "
-                . "(SELECT PartID,Count(*) as CountF8A FROM `SRER_Form8A` GROUP BY PartID) F8A "
+                . "(SELECT PartID,Count(*) as CountF8A FROM `" . MySQL_Pre . "SRER_Form8A` GROUP BY PartID) F8A "
                 . "ON (F8A.PartID=P.PartID) GROUP BY UserName,ACNo";
         ShowSRER($Query);
-        //echo $Query;
-        $Query = "Select SUM(CountF6) as TotalF6,SUM(CountF6A) as TotalF6A,SUM(CountF7) as TotalF7,SUM(CountF8) as TotalF8,SUM(CountF8A) as TotalF8A"
-                . ",SUM(Total) as Total FROM ({$Query}) as T";
+        $Query = "Select SUM(CountF6) as TotalF6,SUM(CountF6A) as TotalF6A,SUM(CountF7) as TotalF7,"
+                . " SUM(CountF8) as TotalF8,SUM(CountF8A) as TotalF8A,"
+                . " SUM(Total) as Total FROM ({$Query}) as T";
         ShowSRER($Query);
-        //echo $Query;
-        break;
-      case 'Block AC wise Blank Records':
-        $Query = "SELECT U.UserMapID as UserID,UserName,ACNo,SUM(CountF6) as CountF6,SUM(CountF6A) as CountF6A,SUM(CountF7) as CountF7,"
-                . "SUM(CountF8) as CountF8,SUM(CountF8A) as CountF8A,(IFNULL(SUM(CountF6),0)+IFNULL(SUM(CountF6A),0)+IFNULL(SUM(CountF7),0)+"
-                . "IFNULL(SUM(CountF8),0)+IFNULL(SUM(CountF8A),0)) as Total "
-                . "FROM SRER_Users U INNER JOIN SRER_PartMap P ON U.UserMapID=P.UserMapID LEFT JOIN "
-                . "(SELECT PartID,Count(*) as CountF6 FROM `SRER_Form6`  where ((`ReceiptDate`='' OR `ReceiptDate` IS NULL) AND (`AppName`='' OR `AppName` IS NULL) AND (`RelationshipName`='' OR `RelationshipName` IS NULL) AND (`Relationship`='' OR `Relationship` IS NULL) AND (`Status`='' OR `Status` IS NULL)) GROUP BY PartID) F6 "
-                . "ON (F6.PartID=P.PartID) LEFT JOIN "
-                . "(SELECT PartID,Count(*) as CountF6A FROM `SRER_Form6A`  where ((`ReceiptDate`='' OR `ReceiptDate` IS NULL) AND (`AppName`='' OR `AppName` IS NULL) AND (`RelationshipName`='' OR `RelationshipName` IS NULL) AND (`Relationship`='' OR `Relationship` IS NULL) AND (`Status`='' OR `Status` IS NULL)) GROUP BY PartID) F6A "
-                . "ON (F6A.PartID=P.PartID) LEFT JOIN "
-                . "(SELECT PartID,Count(*) as CountF7 FROM `SRER_Form7` Where ((`ReceiptDate`='' OR `ReceiptDate` IS NULL) AND (`ObjectorName`='' OR `ObjectorName` IS NULL) AND (`PartNo`='' OR `PartNo` IS NULL) AND (`SerialNoInPart`='' OR `SerialNoInPart` IS NULL) AND (`DelPersonName`='' OR `DelPersonName` IS NULL) AND (`ObjectReason`='' OR `ObjectReason` IS NULL) AND (`Status` ='' OR `Status` IS NULL)) GROUP BY PartID) F7 "
-                . "ON (F7.PartID=P.PartID) LEFT JOIN "
-                . "(SELECT PartID,Count(*) as CountF8 FROM `SRER_Form8`  where ((`ReceiptDate`='' OR `ReceiptDate` IS NULL) AND (`AppName`='' OR `AppName` IS NULL) AND (`RelationshipName`='' OR `RelationshipName` IS NULL) AND (`Relationship`='' OR `Relationship` IS NULL) AND (`Status`='' OR `Status` IS NULL)) GROUP BY PartID) F8 "
-                . "ON (F8.PartID=P.PartID) LEFT JOIN "
-                . "(SELECT PartID,Count(*) as CountF8A FROM `SRER_Form8A`  where ((`ReceiptDate`='' OR `ReceiptDate` IS NULL) AND (`AppName`='' OR `AppName` IS NULL) AND (`RelationshipName`='' OR `RelationshipName` IS NULL) AND (`Relationship`='' OR `Relationship` IS NULL) AND (`Status`='' OR `Status` IS NULL)) GROUP BY PartID) F8A "
-                . "ON (F8A.PartID=P.PartID) GROUP BY UserName,ACNo,U.UserMapID";
-        ShowSRER($Query);
-        //echo $Query;
-        $Query = "Select SUM(CountF6) as TotalF6,SUM(CountF6A) as TotalF6A,SUM(CountF7) as TotalF7,SUM(CountF8) as TotalF8,SUM(CountF8A) as TotalF8A"
-                . ",SUM(Total) as Total FROM ({$Query}) as T";
-        ShowSRER($Query);
-        //echo $Query;
         break;
       case 'Block AC wise Accepted':
         $Query = "SELECT UserName,ACNo,SUM(CountF6) as CountF6,SUM(CountF6A) as CountF6A,SUM(CountF7) as CountF7,"
-                . "SUM(CountF8) as CountF8,SUM(CountF8A) as CountF8A,(IFNULL(SUM(CountF6),0)+IFNULL(SUM(CountF6A),0)+IFNULL(SUM(CountF7),0)+"
+                . "SUM(CountF8) as CountF8,SUM(CountF8A) as CountF8A,(IFNULL(SUM(CountF6),0)+"
+                . "IFNULL(SUM(CountF6A),0)+IFNULL(SUM(CountF7),0)+"
                 . "IFNULL(SUM(CountF8),0)+IFNULL(SUM(CountF8A),0)) as Total "
-                . "FROM SRER_Users U INNER JOIN SRER_PartMap P ON U.UserMapID=P.UserMapID LEFT JOIN "
-                . "(SELECT PartID,Count(*) as CountF6 FROM `SRER_Form6`  where (LOWER(TRIM(`Status`))='accepted') GROUP BY PartID) F6 "
-                . "ON (F6.PartID=P.PartID) LEFT JOIN "
-                . "(SELECT PartID,Count(*) as CountF6A FROM `SRER_Form6A`  where (LOWER(TRIM(`Status`))='accepted') GROUP BY PartID) F6A "
-                . "ON (F6A.PartID=P.PartID) LEFT JOIN "
-                . "(SELECT PartID,Count(*) as CountF7 FROM `SRER_Form7` Where (LOWER(TRIM(`Status`))='accepted') GROUP BY PartID) F7 "
-                . "ON (F7.PartID=P.PartID) LEFT JOIN "
-                . "(SELECT PartID,Count(*) as CountF8 FROM `SRER_Form8`  where (LOWER(TRIM(`Status`))='accepted') GROUP BY PartID) F8 "
-                . "ON (F8.PartID=P.PartID) LEFT JOIN "
-                . "(SELECT PartID,Count(*) as CountF8A FROM `SRER_Form8A`  where (LOWER(TRIM(`Status`))='accepted') GROUP BY PartID) F8A "
-                . "ON (F8A.PartID=P.PartID) GROUP BY UserName,ACNo";
+                . " FROM `" . MySQL_Pre . "Users` U INNER JOIN `" . MySQL_Pre . "SRER_PartMap` P "
+                . " ON (U.UserMapID=P.UserMapID) LEFT JOIN "
+                . "(SELECT PartID,Count(*) as CountF6 FROM `" . MySQL_Pre . "SRER_Form6`  "
+                . " Where (LOWER(TRIM(`Status`))='a') GROUP BY PartID) F6 "
+                . " ON (F6.PartID=P.PartID) LEFT JOIN "
+                . "(SELECT PartID,Count(*) as CountF6A FROM `" . MySQL_Pre . "SRER_Form6A` "
+                . " Where (LOWER(TRIM(`Status`))='a') GROUP BY PartID) F6A "
+                . " ON (F6A.PartID=P.PartID) LEFT JOIN "
+                . "(SELECT PartID,Count(*) as CountF7 FROM `" . MySQL_Pre . "SRER_Form7` "
+                . " Where (LOWER(TRIM(`Status`))='a') GROUP BY PartID) F7 "
+                . " ON (F7.PartID=P.PartID) LEFT JOIN "
+                . "(SELECT PartID,Count(*) as CountF8 FROM `" . MySQL_Pre . "SRER_Form8` "
+                . " Where (LOWER(TRIM(`Status`))='a') GROUP BY PartID) F8 "
+                . " ON (F8.PartID=P.PartID) LEFT JOIN "
+                . "(SELECT PartID,Count(*) as CountF8A FROM `" . MySQL_Pre . "SRER_Form8A` "
+                . " Where (LOWER(TRIM(`Status`))='a') GROUP BY PartID) F8A "
+                . " ON (F8A.PartID=P.PartID) GROUP BY UserName,ACNo";
         ShowSRER($Query);
-        //echo $Query;
-        $Query = "Select SUM(CountF6) as TotalF6,SUM(CountF6A) as TotalF6A,SUM(CountF7) as TotalF7,SUM(CountF8) as TotalF8,SUM(CountF8A) as TotalF8A"
-                . ",SUM(Total) as Total FROM ({$Query}) as T";
+        $Query = "Select SUM(CountF6) as TotalF6,SUM(CountF6A) as TotalF6A,SUM(CountF7) as TotalF7,"
+                . " SUM(CountF8) as TotalF8,SUM(CountF8A) as TotalF8A,"
+                . " SUM(Total) as Total FROM ({$Query}) as T";
         ShowSRER($Query);
-        //echo $Query;
         break;
       case 'Block AC wise Rejected':
         $Query = "SELECT UserName,ACNo,SUM(CountF6) as CountF6,SUM(CountF6A) as CountF6A,SUM(CountF7) as CountF7,"
-                . "SUM(CountF8) as CountF8,SUM(CountF8A) as CountF8A,(IFNULL(SUM(CountF6),0)+IFNULL(SUM(CountF6A),0)+IFNULL(SUM(CountF7),0)+"
+                . "SUM(CountF8) as CountF8,SUM(CountF8A) as CountF8A,"
+                . "(IFNULL(SUM(CountF6),0)+IFNULL(SUM(CountF6A),0)+IFNULL(SUM(CountF7),0)+"
                 . "IFNULL(SUM(CountF8),0)+IFNULL(SUM(CountF8A),0)) as Total "
-                . "FROM SRER_Users U INNER JOIN SRER_PartMap P ON U.UserMapID=P.UserMapID LEFT JOIN "
-                . "(SELECT PartID,Count(*) as CountF6 FROM `SRER_Form6`  where (LOWER(TRIM(`Status`))='rejected') GROUP BY PartID) F6 "
-                . "ON (F6.PartID=P.PartID) LEFT JOIN "
-                . "(SELECT PartID,Count(*) as CountF6A FROM `SRER_Form6A`  where (LOWER(TRIM(`Status`))='rejected') GROUP BY PartID) F6A "
-                . "ON (F6A.PartID=P.PartID) LEFT JOIN "
-                . "(SELECT PartID,Count(*) as CountF7 FROM `SRER_Form7` Where (LOWER(TRIM(`Status`))='rejected') GROUP BY PartID) F7 "
-                . "ON (F7.PartID=P.PartID) LEFT JOIN "
-                . "(SELECT PartID,Count(*) as CountF8 FROM `SRER_Form8`  where (LOWER(TRIM(`Status`))='rejected') GROUP BY PartID) F8 "
-                . "ON (F8.PartID=P.PartID) LEFT JOIN "
-                . "(SELECT PartID,Count(*) as CountF8A FROM `SRER_Form8A`  where (LOWER(TRIM(`Status`))='rejected') GROUP BY PartID) F8A "
-                . "ON (F8A.PartID=P.PartID) GROUP BY UserName,ACNo";
+                . "FROM `" . MySQL_Pre . "Users` U INNER JOIN `" . MySQL_Pre . "SRER_PartMap` P "
+                . " ON U.UserMapID=P.UserMapID LEFT JOIN "
+                . "(SELECT PartID,Count(*) as CountF6 FROM `" . MySQL_Pre . "SRER_Form6` "
+                . " Where (LOWER(TRIM(`Status`))='r') GROUP BY PartID) F6 "
+                . " ON (F6.PartID=P.PartID) LEFT JOIN "
+                . "(SELECT PartID,Count(*) as CountF6A FROM `" . MySQL_Pre . "SRER_Form6A` "
+                . " Where (LOWER(TRIM(`Status`))='r') GROUP BY PartID) F6A "
+                . " ON (F6A.PartID=P.PartID) LEFT JOIN "
+                . "(SELECT PartID,Count(*) as CountF7 FROM `" . MySQL_Pre . "SRER_Form7` "
+                . " Where (LOWER(TRIM(`Status`))='r') GROUP BY PartID) F7 "
+                . " ON (F7.PartID=P.PartID) LEFT JOIN "
+                . "(SELECT PartID,Count(*) as CountF8 FROM `" . MySQL_Pre . "SRER_Form8` "
+                . " Where (LOWER(TRIM(`Status`))='r') GROUP BY PartID) F8 "
+                . " ON (F8.PartID=P.PartID) LEFT JOIN "
+                . "(SELECT PartID,Count(*) as CountF8A FROM `" . MySQL_Pre . "SRER_Form8A` "
+                . " Where (LOWER(TRIM(`Status`))='r') GROUP BY PartID) F8A "
+                . " ON (F8A.PartID=P.PartID) GROUP BY UserName,ACNo";
         ShowSRER($Query);
-        //echo $Query;
-        $Query = "Select SUM(CountF6) as TotalF6,SUM(CountF6A) as TotalF6A,SUM(CountF7) as TotalF7,SUM(CountF8) as TotalF8,SUM(CountF8A) as TotalF8A"
-                . ",SUM(Total) as Total FROM ({$Query}) as T";
+        $Query = "Select SUM(CountF6) as TotalF6,SUM(CountF6A) as TotalF6A,SUM(CountF7) as TotalF7,"
+                . " SUM(CountF8) as TotalF8,SUM(CountF8A) as TotalF8A,"
+                . " SUM(Total) as Total FROM ({$Query}) as T";
         ShowSRER($Query);
-        //echo $Query;
         break;
     }
     ?>
