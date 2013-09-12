@@ -42,7 +42,7 @@ define('DistCode', '16');
 /**
  * Defines Title of the page
  */
-define('AppTitle', 'Paschim Medinipur');
+define('AppTitle', 'Polling Personnel 2014');
 
 /**
  * Defines Application's Unique Installation ID

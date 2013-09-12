@@ -509,6 +509,7 @@ class WebLib {
       case 'WebSite':
         WebLib::ShowMenuitem('Home', 'index.php');
         WebLib::ShowMenuitem('SRER-2014', 'srer');
+        WebLib::ShowMenuitem('Polling Personnel 2014', 'pp');
         //WebLib::ShowMenuitem('Panchayat Election 2013', 'cp');
         //WebLib::ShowMenuitem('RSBY-2014', 'rsby');
         WebLib::ShowMenuitem(WebLib::GetVal($_SESSION, 'UserName') . '\'s Profile', 'Profile.php');
@@ -523,6 +524,14 @@ class WebLib {
         WebLib::ShowMenuitem('Reports', 'srer/Reports.php');
         //WebLib::ShowMenuitem(WebLib::GetVal($_SESSION, 'UserName') . '\'s Profile', 'srer/Profile.php');
         WebLib::ShowMenuitem('Assign Parts', 'srer/Users.php');
+        WebLib::ShowMenuitem('Log Out!', 'login.php?LogOut=1');
+        break;
+      case 'PP':
+        WebLib::ShowMenuitem('Home', 'pp/index.php');
+        WebLib::ShowMenuitem('Office Entry - Format PP1', 'pp/Office.php');
+        WebLib::ShowMenuitem('Personnel Entry - Format PP2', 'pp/Personnel.php');
+        WebLib::ShowMenuitem('Randomization', 'pp/GroupPP.php');
+        WebLib::ShowMenuitem('Reports', 'pp/Reports.php');
         WebLib::ShowMenuitem('Log Out!', 'login.php?LogOut=1');
         break;
       case 'CP':
@@ -680,25 +689,33 @@ class WebLib {
 
   /**
    * Sets the REQUEST_URI if not set
-   * Sets the paths for AppROOT, BaseDIR & BaseURL
    */
   public static function SetURI() {
-
-    $_SESSION['AppROOT'] = __DIR__ . '/';
-
-    $root = pathinfo($_SESSION['AppROOT'] . '/s');
-    $_SESSION['BaseDIR'] = '/' . basename($root['dirname']) . '/';
-
-    $Proto = (self::GetVal($_SERVER, 'HTTPS') === 'on') ? 'https://' : 'http://';
-    $_SESSION['BaseURL'] = $Proto . $_SERVER['HTTP_HOST'] . $_SESSION['BaseDIR'];
-
     if (!isset($_SERVER['REQUEST_URI'])) {
       $_SERVER['REQUEST_URI'] = substr($_SERVER['PHP_SELF'], 1);
       if (isset($_SERVER['QUERY_STRING'])) {
         $_SERVER['REQUEST_URI'].='?' . $_SERVER['QUERY_STRING'];
       }
     }
-    self::DeployInfo();
+  }
+
+  /**
+   * Sets the paths for AppROOT, BaseDIR & BaseURL
+   */
+  public static function SetPATH() {
+    if (!isset($_SESSION))
+      session_start();
+    if (self::GetVal($_SESSION, 'BaseDIR') === NULL) {
+      $_SESSION['AppROOT'] = __DIR__ . '/';
+      $root = pathinfo($_SESSION['AppROOT'] . '/s');
+      $_SESSION['BaseDIR'] = '/' . basename($root['dirname']) . '/';
+      if ($_SERVER['SCRIPT_NAME'] !== $_SESSION['BaseDIR'] . 'index.php') {
+        $_SESSION['BaseDIR'] = substr($_SERVER['SCRIPT_NAME'], 0, strlen($_SERVER['SCRIPT_NAME']) - 9);
+      }
+      $Proto = (self::GetVal($_SERVER, 'HTTPS') === 'on') ? 'https://' : 'http://';
+      $_SESSION['BaseURL'] = $Proto . $_SERVER['HTTP_HOST'] . $_SESSION['BaseDIR'];
+      self::DeployInfo();
+    }
   }
 
 }

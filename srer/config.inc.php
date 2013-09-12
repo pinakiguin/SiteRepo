@@ -35,11 +35,6 @@ define('MySQL_Pre', 'WebSite_');
 define('LifeTime', '20');
 
 /**
- * Defines path after Hostname of the script to generate menu links
- */
-define('BaseDIR', '/SiteRepo/');
-
-/**
  * Defines District Code to display SRER Reports
  */
 define('DistCode', '16');

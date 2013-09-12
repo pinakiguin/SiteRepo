@@ -92,7 +92,7 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
       <?php
     }
     //if (WebLib::GetVal($_SESSION, 'Query') === NULL) {
-    $_SESSION['Query'] = 'Select `UserID` as `E-Mail Address`,`UserName`,`LoginCount`,`LastLoginTime`,`Registered`,`Activated`'
+    $_SESSION['Query'] = 'Select `UserID` as `E-Mail Address`,`UserName`,`MobileNo`,`LoginCount`,`LastLoginTime`,`Registered`,`Activated`'
             . ' FROM `' . MySQL_Pre . 'Users` '
             . ' Where `CtrlMapID`=' . WebLib::GetVal($_SESSION, 'UserMapID', TRUE);
     //}

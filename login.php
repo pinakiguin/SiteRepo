@@ -8,8 +8,12 @@
  */
 $FailedTry = 2; //No of Allowed failed login without captcha
 
-require_once('lib.inc.php');
+require_once __DIR__ . '/lib.inc.php';
 session_start();
+
+if (WebLib::GetVal($_SESSION, 'BaseDIR') === NULL) {
+  header('Location: index.php');
+}
 $_SESSION['ET'] = microtime(TRUE);
 $Data = new MySQLiDB();
 $ID = WebLib::GetVal($_SESSION, 'ID');
@@ -148,7 +152,7 @@ WebLib::IncludeJS("js/md5.js");
         <input type="hidden" name="LoginToken" value="<?php echo WebLib::GetVal($_SESSION, 'Token'); ?>" />
         <input style="width:80px;" type="submit" value="Login"
                onClick="document.getElementById('UserPass').value = MD5(MD5(document.getElementById('UserPass').value)
-                           + '<?php echo md5(WebLib::GetVal($_SESSION, 'Token')); ?>');"/>
+                             + '<?php echo md5(WebLib::GetVal($_SESSION, 'Token')); ?>');"/>
         <a href="Register.php">Register</a>
       </form>
 

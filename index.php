@@ -13,7 +13,8 @@ if (strnatcmp(phpversion(), '5.3') >= 0) {
   die('Required PHP Version: 5.3 or later. <br/> You have: ' . phpversion());
 }
 
-WebLib::InitHTML5page("Home");
+WebLib::SetPATH();
+WebLib::InitHTML5page('Home');
 WebLib::IncludeCSS();
 ?>
 </head>
