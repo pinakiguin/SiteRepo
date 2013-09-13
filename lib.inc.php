@@ -403,13 +403,16 @@ class WebLib {
     if (WebLib::GetVal($_REQUEST, 'LogOut')) {
       return 'LogOut';
     } else if (WebLib::GetVal($_SESSION, 'LifeTime') < (time() - (LifeTime * 60))) {
-      return 'TimeOut(' . WebLib::GetVal($_SESSION, 'LifeTime') . '-' . (time() - (LifeTime * 60)) . ')';
+      return 'TimeOut(' . time() . '-' . WebLib::GetVal($_SESSION, 'LifeTime') . '='
+              . (time() - WebLib::GetVal($_SESSION, 'LifeTime')) . ' Sec)';
     } else if (WebLib::GetVal($_SESSION, 'SESSION_TOKEN') != WebLib::GetVal($_COOKIE, 'SESSION_TOKEN')) {
-      $_SESSION['Debug'] = '(' . WebLib::GetVal($_SESSION, 'SESSION_TOKEN') . ' = ' . WebLib::GetVal($_COOKIE, 'SESSION_TOKEN') . ')';
-      return 'INVALID SESSION (' . WebLib::GetVal($_SESSION, 'SESSION_TOKEN') . ' = ' . WebLib::GetVal($_COOKIE, 'SESSION_TOKEN') . ')';
+      $_SESSION['Debug'] = '(' . WebLib::GetVal($_SESSION, 'SESSION_TOKEN')
+              . ' = ' . WebLib::GetVal($_COOKIE, 'SESSION_TOKEN') . ')';
+      return 'INVALID SESSION TOKEN (' . WebLib::GetVal($_SESSION, 'SESSION_TOKEN')
+              . ' = ' . WebLib::GetVal($_COOKIE, 'SESSION_TOKEN') . ')';
     } elseif (WebLib::GetVal($_SESSION, 'ID') !== session_id()) {
       $_SESSION['Debug'] = '(' . WebLib::GetVal($_SESSION, 'ID') . ' = ' . session_id() . ')';
-      return 'INVALID SESSION (' . WebLib::GetVal($_SESSION, 'ID') . ' = ' . session_id() . ')';
+      return 'INVALID SESSION ID (' . WebLib::GetVal($_SESSION, 'ID') . ' = ' . session_id() . ')';
     } elseif (WebLib::GetVal($_SESSION, 'UserMapID') !== NULL) {
       return 'Valid';
     }
@@ -518,7 +521,7 @@ class WebLib {
         WebLib::ShowMenuitem('Log Out!', 'login.php?LogOut=1');
         break;
       case 'SRER':
-        WebLib::ShowMenuitem('Home', 'srer/index.php');
+        WebLib::ShowMenuitem('Home', 'index.php');
         WebLib::ShowMenuitem('Data Entry', 'srer/DataEntry.php');
         WebLib::ShowMenuitem('Admin Page', 'srer/Admin.php');
         WebLib::ShowMenuitem('Reports', 'srer/Reports.php');
@@ -527,7 +530,7 @@ class WebLib {
         WebLib::ShowMenuitem('Log Out!', 'login.php?LogOut=1');
         break;
       case 'PP':
-        WebLib::ShowMenuitem('Home', 'pp/index.php');
+        WebLib::ShowMenuitem('Home', 'index.php');
         WebLib::ShowMenuitem('Office Entry - Format PP1', 'pp/Office.php');
         WebLib::ShowMenuitem('Personnel Entry - Format PP2', 'pp/Personnel.php');
         WebLib::ShowMenuitem('Randomization', 'pp/GroupPP.php');
@@ -535,13 +538,13 @@ class WebLib {
         WebLib::ShowMenuitem('Log Out!', 'login.php?LogOut=1');
         break;
       case 'CP':
-        WebLib::ShowMenuitem('Home', 'cp/index.php');
+        WebLib::ShowMenuitem('Home', 'index.php');
         WebLib::ShowMenuitem('Counting Personnel Randomization', 'cp/GroupCP.php');
         WebLib::ShowMenuitem('Reports', 'cp/Reports.php');
         WebLib::ShowMenuitem('Log Out!', 'login.php?LogOut=1');
         break;
       case 'RSBY':
-        WebLib::ShowMenuitem('Home', 'rsby/index.php');
+        WebLib::ShowMenuitem('Home', 'index.php');
         WebLib::ShowMenuitem('Data Entry', 'rsby/Modify.php');
         WebLib::ShowMenuitem('Reports', 'rsby/Reports.php');
         WebLib::ShowMenuitem('Log Out!', 'login.php?LogOut=1');

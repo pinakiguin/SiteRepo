@@ -14,71 +14,6 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
   } else {
     // Authenticated Inputs
     switch (WebLib::GetVal($_POST, 'CmdSubmit')) {
-      case 'Create':
-        if (strlen(WebLib::GetVal($_POST, 'UserName')) > 2) {
-          $Query = 'Insert Into `' . MySQL_Pre . 'Users` (`UserName`,`CtrlMapID`,`Registered`,`Activated`)'
-                  . ' Values(\'' . WebLib::GetVal($_POST, 'UserName', TRUE) . '\',' . WebLib::GetVal($_SESSION, 'UserMapID', TRUE) . ',0,0)';
-        } else {
-          $Query = '';
-          $_SESSION['Msg'] = 'UserName must be at least 3 characters or more.';
-        }
-        break;
-
-      case 'Impersonate':
-        if (WebLib::GetVal($_POST, 'UserMapID') !== NULL) {
-          if (WebLib::GetVal($_SESSION, 'ImpFromUserMapID') === NULL) {
-            $_SESSION['ImpFromUserMapID'] = $_SESSION['UserMapID'];
-            $_SESSION['ImpFromUserName'] = $_SESSION['UserName'];
-          }
-          $_SESSION['UserMapID'] = WebLib::GetVal($_POST, 'UserMapID');
-          $_SESSION['UserName'] = 'Impersonated-' . $Data->do_max_query('Select UserName From `' . MySQL_Pre . 'Users`'
-                          . ' Where `UserMapID`=' . $_SESSION['UserMapID']);
-          $_SESSION['Msg'] = $_SESSION['UserName'];
-        } else {
-          $_SESSION['Msg'] = 'Select the User to Impersonate!';
-        }
-        break;
-
-      case 'Stop Impersonating':
-        if (WebLib::GetVal($_SESSION, 'ImpFromUserMapID') !== NULL) {
-          $_SESSION['UserMapID'] = $_SESSION['ImpFromUserMapID'];
-          $_SESSION['UserName'] = $_SESSION['ImpFromUserName'];
-          unset($_SESSION['ImpFromUserMapID']);
-          unset($_SESSION['ImpFromUserName']);
-        }
-        break;
-
-      case 'Activate':
-        $Query = 'Update `' . MySQL_Pre . 'Users` Set `Activated`=1'
-                . ' Where `Activated`=0 AND `CtrlMapID`=' . WebLib::GetVal($_SESSION, 'UserMapID', TRUE)
-                . ' AND `UserMapID`=' . WebLib::GetVal($_POST, 'UserMapID');
-        $User = explode('|', $Data->do_max_query('Select CONCAT(`UserName`,\'|\',`UserID`) FROM `' . MySQL_Pre . 'Users`'
-                        . ' Where UserMapID=\'' . WebLib::GetVal($_POST, 'UserMapID') . '\''));
-        $Subject = 'User Account Activated - SRER 2014';
-        $Body = '<span>Your UserID: <b>' . $User[1] . '</b> is now Activated</span>';
-        break;
-
-      case 'De-Activate':
-        $Query = 'Update `' . MySQL_Pre . 'Users` Set `Activated`=0'
-                . ' Where `Activated`=1 AND `CtrlMapID`=' . WebLib::GetVal($_SESSION, 'UserMapID', TRUE)
-                . ' AND `UserMapID`=' . WebLib::GetVal($_POST, 'UserMapID');
-        $User = explode('|', $User = $Data->do_max_query('Select CONCAT(`UserName`,\'|\',`UserID`) FROM `' . MySQL_Pre . 'Users`'
-                . ' Where UserMapID=\'' . WebLib::GetVal($_POST, 'UserMapID') . '\''));
-        $Subject = 'User Account De-Activated - SRER 2014';
-        $Body = '<span>Your UserID: <b>' . $User[1] . '</b> is now De-Activated</span>';
-        break;
-
-      case 'Un-Register':
-        $Query = 'Update `' . MySQL_Pre . 'Users` Set `Registered`=0,`Activated`=0'
-                . ' Where `Registered`=1 AND `CtrlMapID`=' . WebLib::GetVal($_SESSION, 'UserMapID', TRUE)
-                . ' AND `UserMapID`=' . WebLib::GetVal($_POST, 'UserMapID');
-        $User = explode('|', $Data->do_max_query('Select CONCAT(`UserName`,\'|\',`UserID`) FROM `' . MySQL_Pre . 'Users`'
-                        . ' Where UserMapID=\'' . WebLib::GetVal($_POST, 'UserMapID') . '\''));
-        $Subject = 'User Account Un-Registered - SRER 2014';
-        $Body = '<span>Your UserID: <b>' . $User[1] . '</b> is now Un-Registered</span><br/>'
-                . '<b>Please Register again to change EmailID and Password</b>';
-        break;
-
       /**
        * @todo User will be assigned a District only if user is Activated
        */
@@ -135,9 +70,7 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
     if ($Query !== '') {
       $Inserted = $Data->do_ins_query($Query);
       if ($Inserted > 0) {
-        if (WebLib::GetVal($_POST, 'CmdSubmit') === 'Create') {
-          $_SESSION['Msg'] = 'User Created Successfully!';
-        } else if (WebLib::GetVal($User, 1)) {
+        if (WebLib::GetVal($User, 1)) {
           $GmailResp = GMailSMTP($User[1], $User[0], $Subject, $Body);
           $Mail = json_decode($GmailResp);
           if ($Mail->Sent) {

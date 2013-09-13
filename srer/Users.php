@@ -50,18 +50,7 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
     WebLib::ShowMsg();
     if ($_SESSION['action'] == 0) {
       ?>
-      <div class="FieldGroup" id="CreateUser-dialog-form" style="display:none">
-        <form name="frmCreateUser" id="frmCreateUser" method="post" action="<?php echo WebLib::GetVal($_SERVER, 'PHP_SELF'); ?>">
-          <label for="UserName">User Name: </label>
-          <input type="text" name="UserName" id="UserName" required="required" />
-          <br />
-          <input type="hidden" name="FormToken" value="<?php echo WebLib::GetVal($_SESSION, 'FormToken') ?>" />
-          <br />
-          <input type="submit" id="CmdCreateSubmit" name="CmdSubmit" value="Create" />
-        </form>
-      </div>
-
-      <form name="frmEditUser" id="frmCreateUser" method="post" action="<?php echo WebLib::GetVal($_SERVER, 'PHP_SELF'); ?>">
+      <form name="frmEditUser" id="frmAssignParts" method="post" action="<?php echo WebLib::GetVal($_SERVER, 'PHP_SELF'); ?>">
         <div class="FieldGroup">
           <label for="UserName">Select User: </label><br/>
           <select name="UserMapID" data-placeholder="Select an User">
@@ -90,7 +79,7 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
             <?php
             $Query = 'Select `ACNo`,CONCAT(`DistCode`,\' - \',`ACNo`,\' - \',`ACName`) as `ACName` '
                     . ' FROM `' . MySQL_Pre . 'SRER_ACs` '
-                    . ' Where `DistCode`=\'' . WebLib::GetVal($_POST, 'DistCode') . '\' '
+                    . ' Where `DistCode`=\'' . WebLib::GetVal($_POST, 'DistCode') . '\' OR `UserMapID`=' . WebLib::GetVal($_SESSION, 'UserMapID', TRUE)
                     . ' Order By `ACNo`';
             $Data->show_sel('ACNo', 'ACName', $Query, WebLib::GetVal($_POST, 'ACNo'));
             ?>
@@ -101,7 +90,7 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
             <?php
             $Query = 'Select `PartID`,CONCAT(`PartNo`,\' - \',`PartName`) as `PartName` '
                     . ' FROM `' . MySQL_Pre . 'SRER_PartMap` '
-                    . ' Where `ACNo`=\'' . WebLib::GetVal($_POST, 'ACNo') . '\'' // AND `UserMapID`=' . WebLib::GetVal($_SESSION, 'UserMapID', TRUE)
+                    . ' Where `ACNo`=\'' . WebLib::GetVal($_POST, 'ACNo') . '\' OR `UserMapID`=' . WebLib::GetVal($_SESSION, 'UserMapID', TRUE)
                     . ' Order By `PartNo`';
             $Data->show_sel('PartID', 'PartName', $Query, WebLib::GetVal($_POST, 'PartID'));
             ?>
@@ -144,11 +133,11 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
       <h3>Users:</h3>
       <?php
     }
-    //if (WebLib::GetVal($_SESSION, 'Query') === NULL) {
-    $_SESSION['Query'] = 'Select `UserID` as `E-Mail Address`,`UserName`,`LoginCount`,`LastLoginTime`,`Registered`,`Activated`'
-            . ' FROM `' . MySQL_Pre . 'Users` '
-            . ' Where `CtrlMapID`=' . WebLib::GetVal($_SESSION, 'UserMapID', TRUE);
-    //}
+    if (WebLib::GetVal($_SESSION, 'Query') === NULL) {
+      $_SESSION['Query'] = 'Select `UserID` as `E-Mail Address`,`UserName`,`LoginCount`,`LastLoginTime`,`Registered`,`Activated`'
+              . ' FROM `' . MySQL_Pre . 'Users` '
+              . ' Where `CtrlMapID`=' . WebLib::GetVal($_SESSION, 'UserMapID', TRUE);
+    }
     $Data->ShowTable($_SESSION['Query']);
     ?>
   </div>
