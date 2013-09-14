@@ -427,6 +427,10 @@ class WebLib {
   public static function InitSess() {
     if (!isset($_SESSION))
       session_start();
+    if (self::GetVal($_SESSION, 'BaseDIR') === NULL) {
+      header("HTTP/1.1 404 Not Found");
+      exit();
+    }
     self::SetURI();
     $sess_id = md5(microtime());
     $_SESSION['ET'] = microtime(TRUE);
