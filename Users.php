@@ -3,7 +3,7 @@
  * @todo Integrate SMS Gateway
  * @ todo Working on User Management Module
  */
-require_once(__DIR__ . '/lib.inc.php');
+require_once __DIR__ . '/lib.inc.php';
 require_once __DIR__ . '/php-mailer/GMail.lib.php';
 require_once __DIR__ . '/smsgw/smsgw.inc.php';
 WebLib::AuthSession();

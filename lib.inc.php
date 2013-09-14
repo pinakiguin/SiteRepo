@@ -319,6 +319,7 @@ class WebLib {
     echo 'Designed and Developed By <strong>National Informatics Centre</strong>, Paschim Medinipur District Centre<br/>'
     . 'L. A. Building (2nd floor), Collectorate Compound, Midnapore<br/>'
     . 'West Bengal - 721101 , India Phone : +91-3222-263506, Email: wbmdp(a)nic.in<br/>';
+    echo `git describe --tags`;
     $_SESSION['ED'] = round(microtime(TRUE) - WebLib::GetVal($_SESSION, 'ET'), 3);
     $reg = new MySQLiDB();
     $reg->do_ins_query('INSERT INTO ' . MySQL_Pre . 'VisitorLogs(`SessionID`, `IP`, `Referrer`, `UserAgent`, `URL`, `Action`, `Method`, `URI`, `ED`)'
@@ -360,6 +361,7 @@ class WebLib {
         $ObjDB->do_ins_query(self::GetTableDefs('Users'));
         $ObjDB->do_ins_query(self::GetTableDefs('UsersData'));
         $ObjDB->do_ins_query(self::GetTableDefs('MenuItems'));
+        $ObjDB->do_ins_query(self::GetTableDefs('Helpline'));
         $ObjDB->do_close();
         break;
       case 'SRER':
@@ -517,6 +519,7 @@ class WebLib {
         //WebLib::ShowMenuitem('RSBY-2014', 'rsby');
         WebLib::ShowMenuitem(WebLib::GetVal($_SESSION, 'UserName') . '\'s Profile', 'Profile.php');
         WebLib::ShowMenuitem('Manage Users', 'Users.php');
+        WebLib::ShowMenuitem('Helpline', 'Helpline.php');
         WebLib::ShowMenuitem('User Activity', 'AuditLogs.php');
         WebLib::ShowMenuitem('Log Out!', 'login.php?LogOut=1');
         break;

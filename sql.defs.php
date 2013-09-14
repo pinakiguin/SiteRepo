@@ -101,6 +101,20 @@ function SQLDefs($ObjectName) {
               . '(2, 1, 1, \'Data Entry\', \'srer/DataEntry.php\'),'
               . '(3, 2, 1, \'Reports\', \'srer/Reports.php\');';
       break;
+    case 'Helpline':
+      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . 'Helpline` ('
+              . '`HelpID` bigint(20) NOT NULL AUTO_INCREMENT,'
+              . '`IP` varchar(15) NOT NULL,'
+              . '`SessionID` varchar(32) NOT NULL,'
+              . '`UserMapID` bigint(20) NOT NULL,'
+              . '`TxtQry` varchar(1024) NOT NULL,'
+              . '`Replied` int(1) NOT NULL DEFAULT \'0\','
+              . '`ReplyTxt` varchar(1024) DEFAULT NULL,'
+              . '`QryTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,'
+              . '`ReplyTime` timestamp NULL DEFAULT NULL,'
+              . 'PRIMARY KEY (`HelpID`)'
+              . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
+      break;
   }
   return $SqlDB;
 }
