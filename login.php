@@ -13,6 +13,7 @@ session_start();
 
 if (WebLib::GetVal($_SESSION, 'BaseDIR') === NULL) {
   header('Location: index.php');
+  exit();
 }
 $_SESSION['ET'] = microtime(TRUE);
 $Data = new MySQLiDB();

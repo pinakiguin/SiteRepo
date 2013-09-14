@@ -158,10 +158,10 @@ class WebLib {
    * @param string $PageTitle Title of the page
    */
   public static function InitHTML5page($PageTitle = '') {
-    WebLib::InitSess();
-    WebLib::Html5Header($PageTitle);
-    if (WebLib::GetVal($_REQUEST, 'show_src')) {
-      if (WebLib::GetVal($_REQUEST, 'show_src') == 'me')
+    self::InitSess();
+    self::Html5Header($PageTitle);
+    if (self::GetVal($_REQUEST, 'show_src')) {
+      if (self::GetVal($_REQUEST, 'show_src') == 'me')
         show_source(substr($_SERVER['PHP_SELF'], 1, strlen($_SERVER['PHP_SELF'])));
     }
   }
@@ -274,8 +274,8 @@ class WebLib {
    */
 
   public static function ShowMsg() {
-    if (WebLib::GetVal($_SESSION, 'Msg') != '') {
-      echo '<span class="Message">' . WebLib::GetVal($_SESSION, 'Msg', FALSE, FALSE) . '</span><br/>';
+    if (self::GetVal($_SESSION, 'Msg') != '') {
+      echo '<span class="Message">' . self::GetVal($_SESSION, 'Msg', FALSE, FALSE) . '</span><br/>';
       $_SESSION['Msg'] = '';
     }
   }
@@ -308,7 +308,7 @@ class WebLib {
     echo '<strong > Last Updated On:</strong> &nbsp;&nbsp;' . date('l d F Y g:i:s A ', filemtime($strfile))
     . ' IST &nbsp;&nbsp;&nbsp;<b>Your IP: </b>' . $_SERVER['REMOTE_ADDR']
     . '&nbsp;&nbsp;&nbsp;<b>Visits:</b>&nbsp;&nbsp;' . $visitor_num
-    . '&nbsp;&nbsp;&nbsp;<span id="ED"><b>Loaded In:</b> ' . round(microtime(TRUE) - WebLib::GetVal($_SESSION, 'ET'), 3) . ' Sec</span>';
+    . '&nbsp;&nbsp;&nbsp;<span id="ED"><b>Loaded In:</b> ' . round(microtime(TRUE) - self::GetVal($_SESSION, 'ET'), 3) . ' Sec</span>';
     $reg->do_close();
   }
 
@@ -320,17 +320,17 @@ class WebLib {
     . 'L. A. Building (2nd floor), Collectorate Compound, Midnapore<br/>'
     . 'West Bengal - 721101 , India Phone : +91-3222-263506, Email: wbmdp(a)nic.in<br/>';
     echo `git describe --tags`;
-    $_SESSION['ED'] = round(microtime(TRUE) - WebLib::GetVal($_SESSION, 'ET'), 3);
+    $_SESSION['ED'] = round(microtime(TRUE) - self::GetVal($_SESSION, 'ET'), 3);
     $reg = new MySQLiDB();
     $reg->do_ins_query('INSERT INTO ' . MySQL_Pre . 'VisitorLogs(`SessionID`, `IP`, `Referrer`, `UserAgent`, `URL`, `Action`, `Method`, `URI`, `ED`)'
-            . ' Values(\'' . WebLib::GetVal($_SESSION, 'ID', TRUE) . '\', \'' . $_SERVER['REMOTE_ADDR'] . '\', \''
-            . WebLib::GetVal($_SERVER, 'HTTP_REFERER', TRUE) . '\', \''
+            . ' Values(\'' . self::GetVal($_SESSION, 'ID', TRUE) . '\', \'' . $_SERVER['REMOTE_ADDR'] . '\', \''
+            . self::GetVal($_SERVER, 'HTTP_REFERER', TRUE) . '\', \''
             . $reg->SqlSafe($_SERVER['HTTP_USER_AGENT']) . '\', \''
             . $reg->SqlSafe($_SERVER['PHP_SELF']) . '\', \''
             . $reg->SqlSafe($_SERVER['SCRIPT_NAME']) . '\', \''
             . $reg->SqlSafe($_SERVER['REQUEST_METHOD']) . '\', \''
             . $reg->SqlSafe($_SERVER['REQUEST_URI']) . '\','
-            . WebLib::GetVal($_SESSION, 'ED') . ');');
+            . self::GetVal($_SESSION, 'ED') . ');');
     $reg->do_close();
     $_SESSION['ED'] = 0;
   }
@@ -398,24 +398,24 @@ class WebLib {
    * @return string <b>(Browsing|LogOut|TimeOut|INVALID SESSION|Valid)</b>
    */
   public static function CheckAuth() {
-    $_SESSION['Debug'] = WebLib::GetVal($_SESSION, 'Debug') . 'CheckAuth';
-    if ((WebLib::GetVal($_SESSION, 'UserMapID') === NULL)) {
+    $_SESSION['Debug'] = self::GetVal($_SESSION, 'Debug') . 'CheckAuth';
+    if ((self::GetVal($_SESSION, 'UserMapID') === NULL)) {
       return 'Browsing';
     }
-    if (WebLib::GetVal($_REQUEST, 'LogOut')) {
+    if (self::GetVal($_REQUEST, 'LogOut')) {
       return 'LogOut';
-    } else if (WebLib::GetVal($_SESSION, 'LifeTime') < (time() - (LifeTime * 60))) {
-      return 'TimeOut(' . time() . '-' . WebLib::GetVal($_SESSION, 'LifeTime') . '='
-              . (time() - WebLib::GetVal($_SESSION, 'LifeTime')) . ' Sec)';
-    } else if (WebLib::GetVal($_SESSION, 'SESSION_TOKEN') != WebLib::GetVal($_COOKIE, 'SESSION_TOKEN')) {
-      $_SESSION['Debug'] = '(' . WebLib::GetVal($_SESSION, 'SESSION_TOKEN')
-              . ' = ' . WebLib::GetVal($_COOKIE, 'SESSION_TOKEN') . ')';
-      return 'INVALID SESSION TOKEN (' . WebLib::GetVal($_SESSION, 'SESSION_TOKEN')
-              . ' = ' . WebLib::GetVal($_COOKIE, 'SESSION_TOKEN') . ')';
-    } elseif (WebLib::GetVal($_SESSION, 'ID') !== session_id()) {
-      $_SESSION['Debug'] = '(' . WebLib::GetVal($_SESSION, 'ID') . ' = ' . session_id() . ')';
-      return 'INVALID SESSION ID (' . WebLib::GetVal($_SESSION, 'ID') . ' = ' . session_id() . ')';
-    } elseif (WebLib::GetVal($_SESSION, 'UserMapID') !== NULL) {
+    } else if (self::GetVal($_SESSION, 'LifeTime') < (time() - (LifeTime * 60))) {
+      return 'TimeOut(' . time() . '-' . self::GetVal($_SESSION, 'LifeTime') . '='
+              . (time() - self::GetVal($_SESSION, 'LifeTime')) . ' Sec)';
+    } else if (self::GetVal($_SESSION, 'SESSION_TOKEN') != self::GetVal($_COOKIE, 'SESSION_TOKEN')) {
+      $_SESSION['Debug'] = '(' . self::GetVal($_SESSION, 'SESSION_TOKEN')
+              . ' = ' . self::GetVal($_COOKIE, 'SESSION_TOKEN') . ')';
+      return 'INVALID SESSION TOKEN (' . self::GetVal($_SESSION, 'SESSION_TOKEN')
+              . ' = ' . self::GetVal($_COOKIE, 'SESSION_TOKEN') . ')';
+    } elseif (self::GetVal($_SESSION, 'ID') !== session_id()) {
+      $_SESSION['Debug'] = '(' . self::GetVal($_SESSION, 'ID') . ' = ' . session_id() . ')';
+      return 'INVALID SESSION ID (' . self::GetVal($_SESSION, 'ID') . ' = ' . session_id() . ')';
+    } elseif (self::GetVal($_SESSION, 'UserMapID') !== NULL) {
       return 'Valid';
     }
   }
@@ -434,13 +434,13 @@ class WebLib {
     self::SetURI();
     $sess_id = md5(microtime());
     $_SESSION['ET'] = microtime(TRUE);
-    $_SESSION['Debug'] = WebLib::GetVal($_SESSION, 'Debug')
-            . 'InInitPage(' . WebLib::GetVal($_SESSION, 'SESSION_TOKEN')
-            . ' = ' . WebLib::GetVal($_COOKIE, 'SESSION_TOKEN', TRUE) . ')';
+    $_SESSION['Debug'] = self::GetVal($_SESSION, 'Debug')
+            . 'InInitPage(' . self::GetVal($_SESSION, 'SESSION_TOKEN')
+            . ' = ' . self::GetVal($_COOKIE, 'SESSION_TOKEN', TRUE) . ')';
     setcookie('SESSION_TOKEN', $sess_id, (time() + (LifeTime * 60)), $_SESSION['BaseDIR']);
     $_SESSION['SESSION_TOKEN'] = $sess_id;
     $_SESSION['LifeTime'] = time();
-    if (WebLib::GetVal($_REQUEST, 'show_src')) {
+    if (self::GetVal($_REQUEST, 'show_src')) {
       if ($_REQUEST['show_src'] == 'me')
         show_source(substr($_SERVER['PHP_SELF'], 1, strlen($_SERVER['PHP_SELF'])));
     }
@@ -455,19 +455,19 @@ class WebLib {
       session_start();
     self::SetURI();
     $_SESSION['ET'] = microtime(TRUE);
-    $_SESSION['Debug'] = WebLib::GetVal($_SESSION, 'Debug') . 'InSession_AUTH';
-    $SessRet = WebLib::CheckAuth();
+    $_SESSION['Debug'] = self::GetVal($_SESSION, 'Debug') . 'InSession_AUTH';
+    $SessRet = self::CheckAuth();
     $_SESSION['CheckAuth'] = $SessRet;
     $reg = new MySQLiDB();
-    if (WebLib::GetVal($_REQUEST, 'NoAuth'))
-      initSess();
+    if (self::GetVal($_REQUEST, 'NoAuth'))
+      self::InitSess();
     else {
       if ($SessRet !== 'Valid') {
         $reg->do_ins_query('INSERT INTO `' . MySQL_Pre . 'Logs` (`SessionID`, `IP`, `Referrer`, `UserAgent`, `UserID`, `URL`, `Action`, `Method`, `URI`)'
-                . ' Values(\'' . WebLib::GetVal($_SESSION, 'ID', TRUE) . '\', \'' . $_SERVER['REMOTE_ADDR'] . '\', \''
-                . WebLib::GetVal($_SERVER, 'HTTP_REFERER', TRUE) . '\', \''
+                . ' Values(\'' . self::GetVal($_SESSION, 'ID', TRUE) . '\', \'' . $_SERVER['REMOTE_ADDR'] . '\', \''
+                . self::GetVal($_SERVER, 'HTTP_REFERER', TRUE) . '\', \''
                 . $reg->SqlSafe($_SERVER['HTTP_USER_AGENT']) . '\', \''
-                . WebLib::GetVal($_SESSION, 'UserMapID', TRUE) . '\', \''
+                . self::GetVal($_SESSION, 'UserMapID', TRUE) . '\', \''
                 . $reg->SqlSafe($_SERVER['PHP_SELF']) . '\', \'' . $SessRet . ' ('
                 . $reg->SqlSafe($_SERVER['SCRIPT_NAME']) . ')\', \''
                 . $reg->SqlSafe($_SERVER['REQUEST_METHOD']) . '\', \''
@@ -477,20 +477,20 @@ class WebLib {
         session_start();
         self::SetURI();
         $_SESSION = array();
-        $_SESSION['Debug'] = WebLib::GetVal($_SESSION, 'Debug') . $SessRet . 'SESSION_TOKEN-!Valid';
-        header('Location: ' . $_SESSION['AppROOT'] . '../login.php');
+        $_SESSION['Debug'] = self::GetVal($_SESSION, 'Debug') . $SessRet . 'SESSION_TOKEN-!Valid';
+        header('Location: ' . $_SESSION['BaseDIR'] . 'login.php');
         exit;
       } else {
-        $_SESSION['Debug'] = WebLib::GetVal($_SESSION, 'Debug') . 'SESSION_TOKEN-Valid';
+        $_SESSION['Debug'] = self::GetVal($_SESSION, 'Debug') . 'SESSION_TOKEN-Valid';
         $sess_id = md5(microtime());
         setcookie('SESSION_TOKEN', $sess_id, (time() + (LifeTime * 60)), $_SESSION['BaseDIR']);
         $_SESSION['SESSION_TOKEN'] = $sess_id;
         $_SESSION['LifeTime'] = time();
         $LogQuery = 'INSERT INTO `' . MySQL_Pre . 'Logs` (`SessionID`, `IP`, `Referrer`, `UserAgent`, `UserID`, `URL`, `Action`, `Method`, `URI`) '
-                . ' Values(\'' . WebLib::GetVal($_SESSION, 'ID') . '\', \'' . $_SERVER['REMOTE_ADDR'] . '\', \''
-                . WebLib::GetVal($_SERVER, 'HTTP_REFERER', TRUE) . '\', \''
-                . WebLib::GetVal($_SERVER, 'HTTP_USER_AGENT', TRUE) . '\', \''
-                . WebLib::GetVal($_SESSION, 'UserMapID') . '\', \''
+                . ' Values(\'' . self::GetVal($_SESSION, 'ID') . '\', \'' . $_SERVER['REMOTE_ADDR'] . '\', \''
+                . self::GetVal($_SERVER, 'HTTP_REFERER', TRUE) . '\', \''
+                . self::GetVal($_SERVER, 'HTTP_USER_AGENT', TRUE) . '\', \''
+                . self::GetVal($_SESSION, 'UserMapID') . '\', \''
                 . $reg->SqlSafe($_SERVER['PHP_SELF']) . '\', \'' . $SessRet . ' ('
                 . $reg->SqlSafe($_SERVER['SCRIPT_NAME']) . ')\', \''
                 . $reg->SqlSafe($_SERVER['REQUEST_METHOD']) . '\', \''
@@ -498,7 +498,7 @@ class WebLib {
         $reg->do_ins_query($LogQuery);
       }
     }
-    if (WebLib::GetVal($_REQUEST, 'show_src') !== NULL) {
+    if (self::GetVal($_REQUEST, 'show_src') !== NULL) {
       echo $LogQuery;
       if ($_REQUEST['show_src'] == 'me')
         show_source(substr($_SERVER['PHP_SELF'], 1, strlen($_SERVER['PHP_SELF'])));
@@ -510,60 +510,60 @@ class WebLib {
    */
   public static function ShowMenuBar($AppID = null) {
     echo '<div class="MenuBar"><ul>';
-    if (WebLib::GetVal($_SESSION, 'CheckAuth') !== 'Valid') {
+    if (self::GetVal($_SESSION, 'CheckAuth') !== 'Valid') {
       $AppID = null;
     }
 
     switch ($AppID) {
       case 'WebSite':
-        WebLib::ShowMenuitem('Home', 'index.php');
-        WebLib::ShowMenuitem('SRER-2014', 'srer');
-        WebLib::ShowMenuitem('Polling Personnel 2014', 'pp');
-        //WebLib::ShowMenuitem('Panchayat Election 2013', 'cp');
-        //WebLib::ShowMenuitem('RSBY-2014', 'rsby');
-        WebLib::ShowMenuitem(WebLib::GetVal($_SESSION, 'UserName') . '\'s Profile', 'Profile.php');
-        WebLib::ShowMenuitem('Manage Users', 'Users.php');
-        WebLib::ShowMenuitem('Helpline', 'Helpline.php');
-        WebLib::ShowMenuitem('User Activity', 'AuditLogs.php');
-        WebLib::ShowMenuitem('Log Out!', 'login.php?LogOut=1');
+        self::ShowMenuitem('Home', 'index.php');
+        self::ShowMenuitem('SRER-2014', 'srer');
+        self::ShowMenuitem('Polling Personnel 2014', 'pp');
+        //self::ShowMenuitem('Panchayat Election 2013', 'cp');
+        //self::ShowMenuitem('RSBY-2014', 'rsby');
+        self::ShowMenuitem(self::GetVal($_SESSION, 'UserName') . '\'s Profile', 'Profile.php');
+        self::ShowMenuitem('Manage Users', 'Users.php');
+        self::ShowMenuitem('Helpline', 'Helpline.php');
+        self::ShowMenuitem('User Activity', 'AuditLogs.php');
+        self::ShowMenuitem('Log Out!', 'login.php?LogOut=1');
         break;
       case 'SRER':
-        WebLib::ShowMenuitem('Home', 'index.php');
-        WebLib::ShowMenuitem('Data Entry', 'srer/DataEntry.php');
-        WebLib::ShowMenuitem('Admin Page', 'srer/Admin.php');
-        WebLib::ShowMenuitem('Reports', 'srer/Reports.php');
-        //WebLib::ShowMenuitem(WebLib::GetVal($_SESSION, 'UserName') . '\'s Profile', 'srer/Profile.php');
-        WebLib::ShowMenuitem('Assign Parts', 'srer/Users.php');
-        WebLib::ShowMenuitem('Log Out!', 'login.php?LogOut=1');
+        self::ShowMenuitem('Home', 'index.php');
+        self::ShowMenuitem('Data Entry', 'srer/DataEntry.php');
+        self::ShowMenuitem('Admin Page', 'srer/Admin.php');
+        self::ShowMenuitem('Reports', 'srer/Reports.php');
+        //self::ShowMenuitem(self::GetVal($_SESSION, 'UserName') . '\'s Profile', 'srer/Profile.php');
+        self::ShowMenuitem('Assign Parts', 'srer/Users.php');
+        self::ShowMenuitem('Log Out!', 'login.php?LogOut=1');
         break;
       case 'PP':
-        WebLib::ShowMenuitem('Home', 'index.php');
-        WebLib::ShowMenuitem('Office Entry - Format PP1', 'pp/Office.php');
-        WebLib::ShowMenuitem('Personnel Entry - Format PP2', 'pp/Personnel.php');
-        WebLib::ShowMenuitem('Randomization', 'pp/GroupPP.php');
-        WebLib::ShowMenuitem('Reports', 'pp/Reports.php');
-        WebLib::ShowMenuitem('Log Out!', 'login.php?LogOut=1');
+        self::ShowMenuitem('Home', 'index.php');
+        self::ShowMenuitem('Office Entry - Format PP1', 'pp/Office.php');
+        self::ShowMenuitem('Personnel Entry - Format PP2', 'pp/Personnel.php');
+        self::ShowMenuitem('Randomization', 'pp/GroupPP.php');
+        self::ShowMenuitem('Reports', 'pp/Reports.php');
+        self::ShowMenuitem('Log Out!', 'login.php?LogOut=1');
         break;
       case 'CP':
-        WebLib::ShowMenuitem('Home', 'index.php');
-        WebLib::ShowMenuitem('Counting Personnel Randomization', 'cp/GroupCP.php');
-        WebLib::ShowMenuitem('Reports', 'cp/Reports.php');
-        WebLib::ShowMenuitem('Log Out!', 'login.php?LogOut=1');
+        self::ShowMenuitem('Home', 'index.php');
+        self::ShowMenuitem('Counting Personnel Randomization', 'cp/GroupCP.php');
+        self::ShowMenuitem('Reports', 'cp/Reports.php');
+        self::ShowMenuitem('Log Out!', 'login.php?LogOut=1');
         break;
       case 'RSBY':
-        WebLib::ShowMenuitem('Home', 'index.php');
-        WebLib::ShowMenuitem('Data Entry', 'rsby/Modify.php');
-        WebLib::ShowMenuitem('Reports', 'rsby/Reports.php');
-        WebLib::ShowMenuitem('Log Out!', 'login.php?LogOut=1');
+        self::ShowMenuitem('Home', 'index.php');
+        self::ShowMenuitem('Data Entry', 'rsby/Modify.php');
+        self::ShowMenuitem('Reports', 'rsby/Reports.php');
+        self::ShowMenuitem('Log Out!', 'login.php?LogOut=1');
         break;
       default:
-        WebLib::ShowMenuitem('Home', 'index.php');
-        WebLib::ShowMenuitem('Search SRER Data', 'srer/Search.php');
-        WebLib::ShowMenuitem('Registration', 'Register.php');
-        WebLib::ShowMenuitem('Log In!', 'login.php');
+        self::ShowMenuitem('Home', 'index.php');
+        self::ShowMenuitem('Search SRER Data', 'srer/Search.php');
+        self::ShowMenuitem('Registration', 'Register.php');
+        self::ShowMenuitem('Log In!', 'login.php');
         break;
     }
-    //WebLib::ShowMenuitem(WebLib::GetVal($_SESSION, 'ID'), '#');
+    //self::ShowMenuitem(self::GetVal($_SESSION, 'ID'), '#');
     echo '</ul></div>';
   }
 
@@ -598,9 +598,9 @@ class WebLib {
       . '<label for="captcha_code">Solve the above: </label><br/>'
       . '<input placeholder="Solution of the math" type="text" name="captcha_code" value="" required />';
     } else {
-      $captcha_code = WebLib::GetVal($_POST, 'captcha_code');
+      $captcha_code = self::GetVal($_POST, 'captcha_code');
       if ($captcha_code !== NULL) {
-        $VerifyID = WebLib::GetVal($_POST, 'captchaId');
+        $VerifyID = self::GetVal($_POST, 'captchaId');
         $ValidCaptcha = Securimage::checkByCaptchaId($VerifyID, $captcha_code, $options);
         return $ValidCaptcha;
       }
