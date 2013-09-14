@@ -713,11 +713,7 @@ class WebLib {
       session_start();
     if (self::GetVal($_SESSION, 'BaseDIR') === NULL) {
       $_SESSION['AppROOT'] = __DIR__ . '/';
-      $root = pathinfo($_SESSION['AppROOT'] . '/s');
-      $_SESSION['BaseDIR'] = '/' . basename($root['dirname']) . '/';
-      if ($_SERVER['SCRIPT_NAME'] !== $_SESSION['BaseDIR'] . 'index.php') {
-        $_SESSION['BaseDIR'] = substr($_SERVER['SCRIPT_NAME'], 0, strlen($_SERVER['SCRIPT_NAME']) - 9);
-      }
+      $_SESSION['BaseDIR'] = substr($_SERVER['SCRIPT_NAME'], 0, strlen($_SERVER['SCRIPT_NAME']) - 9);
       $Proto = (self::GetVal($_SERVER, 'HTTPS') === 'on') ? 'https://' : 'http://';
       $_SESSION['BaseURL'] = $Proto . $_SERVER['HTTP_HOST'] . $_SESSION['BaseDIR'];
       self::DeployInfo();
