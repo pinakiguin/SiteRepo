@@ -478,8 +478,8 @@ class WebLib {
         self::SetURI();
         $_SESSION = array();
         $_SESSION['Debug'] = self::GetVal($_SESSION, 'Debug') . $SessRet . 'SESSION_TOKEN-!Valid';
-        header('Location: ' . $_SESSION['BaseDIR'] . 'login.php');
-        exit;
+        header("HTTP/1.1 404 Not Found");
+        exit();
       } else {
         $_SESSION['Debug'] = self::GetVal($_SESSION, 'Debug') . 'SESSION_TOKEN-Valid';
         $sess_id = md5(microtime());
