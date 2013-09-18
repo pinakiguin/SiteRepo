@@ -92,6 +92,8 @@ class WebLib {
    * Deployment info of the server
    */
   public static function DeployInfo() {
+    $_SESSION['Version'] = `git describe --tags`;
+    $_SESSION['AppTitle'] = AppTitle;
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
     curl_setopt($ch, CURLOPT_URL, 'https://www.paschimmedinipur.gov.in');
@@ -319,7 +321,7 @@ class WebLib {
     echo 'Designed and Developed By <strong>National Informatics Centre</strong>, Paschim Medinipur District Centre<br/>'
     . 'L. A. Building (2nd floor), Collectorate Compound, Midnapore<br/>'
     . 'West Bengal - 721101 , India Phone : +91-3222-263506, Email: wbmdp(a)nic.in<br/>';
-    echo `git describe --tags`;
+    echo $_SESSION['Version'];
     $_SESSION['ED'] = round(microtime(TRUE) - self::GetVal($_SESSION, 'ET'), 3);
     $reg = new MySQLiDB();
     $reg->do_ins_query('INSERT INTO ' . MySQL_Pre . 'VisitorLogs(`SessionID`, `IP`, `Referrer`, `UserAgent`, `URL`, `Action`, `Method`, `URI`, `ED`)'

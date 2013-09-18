@@ -2,6 +2,8 @@
 
 require_once(__DIR__ . '/lib.inc.php');
 $saveData['SiteURL'] = WebLib::GetVal($_POST, 'BaseURL', true);
+$saveData['AppTitle'] = WebLib::GetVal($_POST, 'AppTitle', true);
+$saveData['Version'] = WebLib::GetVal($_POST, 'Version', true);
 
 if ($saveData['SiteURL'] !== '') {
   require_once(__DIR__ . '/class.MySQLiDBHelper.php');
