@@ -180,7 +180,7 @@ class SRER_PDF extends PDF {
     $this->Cell(0, 7, "Summary Revision of Electoral Roll 2014", 0, 1, "C");
     $this->Cell(0, 6, $this->title, 0, 1, "C");
     $this->SetFont('Arial', 'B', 8);
-    $this->Cell(0, 5, $_SESSION['Part']['PartName'], 0, 1, "C");
+    $this->Cell(0, 5, $_SESSION['PDFName'], 0, 1, "C");
   }
 
   function PreFooter() {

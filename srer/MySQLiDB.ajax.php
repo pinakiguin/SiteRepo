@@ -54,7 +54,7 @@ if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
       SetCurrForm(WebLib::GetVal($_POST, 'TableName'));
       $Query = 'Select ' . WebLib::GetVal($_SESSION, 'Fields', FALSE, FALSE)
               . ' FROM ' . WebLib::GetVal($_SESSION, 'TableName', FALSE, FALSE)
-              . ' Where `PartID`=? LIMIT ?,?';
+              . ' Where `PartID`=? Order By SlNo LIMIT ?,?';
       doQuery($DataResp, $Query, WebLib::GetVal($_POST, 'Params', FALSE, FALSE));
       break;
 

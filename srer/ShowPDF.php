@@ -8,6 +8,9 @@ $Data = new MySQLiDBHelper(HOST_Name, MySQL_User, MySQL_Pass, MySQL_DB);
 $Data->where('PartID', $_POST['PartID']);
 $_SESSION['Part'] = $Data->get(MySQL_Pre . 'SRER_PartMap', 1);
 $_SESSION['Part'] = $_SESSION['Part'][0];
+$_SESSION['PDFName'] = $_SESSION['Part']['ACNo']
+        . '-' . $_SESSION['Part']['PartNo'] . '-'
+        . $_SESSION['Part']['PartName'];
 unset($Data);
 
 if (intval($_SESSION['Part']['PartID']) > 0) {
@@ -75,8 +78,7 @@ function ShowPDF(&$pdf, $SRERForm, $Finish = 0) {
   $pdf->AddPage();
   $pdf->Details($Query, 0);
   if ($Finish) {
-    $PDFName = $_SESSION['Part']['ACNo'] . '[' . $_SESSION['Part']['PartNo'] . ']' . $_SESSION['Part']['PartName'];
-    $pdf->Output($PDFName . ".pdf", "D");
+    $pdf->Output($_SESSION['PDFName'] . ".pdf", "D");
     unset($pdf);
     exit();
   }
