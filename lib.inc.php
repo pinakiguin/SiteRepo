@@ -714,12 +714,12 @@ class WebLib {
   /**
    * Sets the paths for AppROOT, BaseDIR & BaseURL
    */
-  public static function SetPATH() {
+  public static function SetPATH($PageLength = 9) {
     if (!isset($_SESSION))
       session_start();
     if (self::GetVal($_SESSION, 'BaseDIR') === NULL) {
       $_SESSION['AppROOT'] = __DIR__ . '/';
-      $_SESSION['BaseDIR'] = substr($_SERVER['SCRIPT_NAME'], 0, strlen($_SERVER['SCRIPT_NAME']) - 9);
+      $_SESSION['BaseDIR'] = substr($_SERVER['SCRIPT_NAME'], 0, strlen($_SERVER['SCRIPT_NAME']) - $PageLength);
       $Proto = (self::GetVal($_SERVER, 'HTTPS') === 'on') ? 'https://' : 'http://';
       $_SESSION['BaseURL'] = $Proto . $_SERVER['HTTP_HOST'] . $_SESSION['BaseDIR'];
       self::DeployInfo();

@@ -1,6 +1,7 @@
 <?php
 require_once(__DIR__ . '/srer.lib.php');
 
+WebLib::SetPATH(15);
 WebLib::InitHTML5page("Search");
 WebLib::IncludeCSS();
 
