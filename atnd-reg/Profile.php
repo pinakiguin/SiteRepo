@@ -25,7 +25,7 @@ WebLib::IncludeJS("Jcrop/js/jquery.Jcrop.min.js");
           $(this).dialog("close");
         }
         else {
-          alert('Password is not complex!');
+          alert('Password Complexity atleast 80 is required!');
         }
       } else {
         alert('New passwords don\'t match');
@@ -34,6 +34,16 @@ WebLib::IncludeJS("Jcrop/js/jquery.Jcrop.min.js");
 
     $('input[type="button"]').button();
     $('#Msg').text('');
+    $('#NewPassWD').keyup(function() {
+      $('#PwdScore').html('Password Complexity: ' + scorePassword($(this).val()));
+    });
+    $('#CnfPassWD').keyup(function() {
+      if (($('#NewPassWD').val() === $('#CnfPassWD').val())) {
+        $('#PwdMatch').html('Passwords Matched');
+      } else {
+        $('#PwdMatch').html('Passwords Not Matched');
+      }
+    });
   });
   function scorePassword(pass) {
     var score = 0;
@@ -105,8 +115,8 @@ WebLib::IncludeJS("Jcrop/js/jquery.Jcrop.min.js");
       <h2>Change Password</h2>
       <div id="chgpwd-dlg" title="Change Password">
         <input type="password" placeholder="Old Password" name="OldPassWD" id="OldPassWD" /><br/>
-        <input type="password" placeholder="New Password" name="NewPassWD" id="NewPassWD" /><br/>
-        <input type="password" placeholder="Confirm Password" name="CnfPassWD" id="CnfPassWD" />
+        <input type="password" placeholder="New Password" name="NewPassWD" id="NewPassWD" /><span id="PwdScore"></span><br/>
+        <input type="password" placeholder="Confirm Password" name="CnfPassWD" id="CnfPassWD" /><span id="PwdMatch"></span>
       </div>
       <input type="hidden" id="AjaxToken" name="FormToken"
              value="<?php echo WebLib::GetVal($_SESSION, 'Token'); ?>" />

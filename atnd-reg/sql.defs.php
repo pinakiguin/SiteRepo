@@ -12,6 +12,14 @@ function SQLDefs($ObjectName) {
               . ' PRIMARY KEY (`AtndID`)'
               . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
       break;
+    case 'ATND_View':
+      $SqlDB = 'CREATE VIEW `' . MySQL_Pre . 'ATND_View` AS '
+              . ' Select `U`.`UserName` AS `UserName`,`R`.`InDateTime` AS `InDateTime`,'
+              . ' `R`.`OutDateTime` AS `OutDateTime` '
+              . ' From (`' . MySQL_Pre . 'Users` `U` join `' . MySQL_Pre . 'ATND_Register` `R` '
+              . ' ON((`R`.`UserMapID` = `U`.`UserMapID`))) '
+              . ' Where (`R`.`UserMapID` > 1) Order By `R`.`AtndID`;';
+      break;
   }
   return $SqlDB;
 }

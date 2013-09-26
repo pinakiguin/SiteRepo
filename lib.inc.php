@@ -394,6 +394,7 @@ class WebLib {
       case 'ATND':
         $ObjDB = new MySQLiDB();
         $ObjDB->do_ins_query(self::GetTableDefs('ATND_Register'));
+        $ObjDB->do_ins_query(self::GetTableDefs('ATND_View'));
         $ObjDB->do_close();
         break;
     }
@@ -735,6 +736,7 @@ class WebLib {
       $Proto = (self::GetVal($_SERVER, 'HTTPS') === 'on') ? 'https://' : 'http://';
       $_SESSION['BaseURL'] = $Proto . $_SERVER['HTTP_HOST'] . $_SESSION['BaseDIR'];
       self::DeployInfo();
+      //$_SESSION['Version'] = 'v1.1-15-ge290fb2';
     }
   }
 
