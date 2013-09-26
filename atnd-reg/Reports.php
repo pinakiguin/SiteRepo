@@ -22,15 +22,16 @@ $Data = new MySQLiDB();
   <div class="content">
     <h2>Attendance Report</h2>
     <hr/>
-    <form name="frmSRER" method="post" action="<?php echo WebLib::GetVal($_SERVER, 'PHP_SELF'); ?>">
+    <form name="frmAtndRpt" method="post" action="<?php echo WebLib::GetVal($_SERVER, 'PHP_SELF'); ?>">
       <label for="textfield">Month:</label>
-      <!--select name="ACNo" onChange="document.frmSRER.submit();">
-      <?php
-      $Query = 'Select ACNo,CONCAT(ACNo,\' - \',ACName) AS ACName from ' . MySQL_Pre . 'SRER_ACs'
-              . ' Where `DistCode`=' . DistCode . ' Order by ACNo';
-      $Data->show_sel('ACNo', 'ACName', $Query, WebLib::GetVal($_SESSION, 'ACNo', TRUE));
-      ?>
-      </select-->
+      <select name="MonYr">
+        <?php
+        $Query = 'Select DATE_FORMAT(`InDateTime`,"%m-%Y") as `MonYr`,'
+                . ' DATE_FORMAT(`InDateTime`,"%b-%Y") as `MonthYear` FROM `' . MySQL_Pre . 'ATND_Register`'
+                . ' Where `UserMapID`=' . $_SESSION['UserMapID'] . '  GROUP BY DATE_FORMAT(`InDateTime`,"%m-%Y")';
+        $Data->show_sel('MonYr', 'MonthYear', $Query, WebLib::GetVal($_POST, 'MonYr'));
+        ?>
+      </select>
       <?php //echo $Query;   ?>
       <input type="submit" name="FormName" value="Show" />
       <hr /><br />
@@ -39,7 +40,8 @@ $Data = new MySQLiDB();
     $Query = 'SELECT DATE_FORMAT(`InDateTime`,"%d-%m-%Y") as `Attendance Date`, '
             . ' DATE_FORMAT(`InDateTime`,"%r") as `In Time`, '
             . ' DATE_FORMAT(`OutDateTime`,"%r") as `Out Time` FROM `' . MySQL_Pre . 'ATND_Register`'
-            . ' WHERE `UserMapID`=' . $_SESSION['UserMapID'] . ' ORDER BY `AtndID`;';
+            . ' WHERE DATE_FORMAT(`InDateTime`,"%m-%Y")=\'' . WebLib::GetVal($_POST, 'MonYr', true) . '\''
+            . ' AND `UserMapID`=' . $_SESSION['UserMapID'] . ' ORDER BY `AtndID`;';
     $Data->ShowTable($Query);
     $Data->do_close();
     ?>

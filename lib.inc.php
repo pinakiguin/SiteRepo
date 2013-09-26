@@ -391,6 +391,11 @@ class WebLib {
         $ObjDB->do_ins_query(self::GetTableDefs('CP_Pool'));
         $ObjDB->do_close();
         break;
+      case 'ATND':
+        $ObjDB = new MySQLiDB();
+        $ObjDB->do_ins_query(self::GetTableDefs('ATND_Register'));
+        $ObjDB->do_close();
+        break;
     }
   }
 
@@ -556,6 +561,13 @@ class WebLib {
         self::ShowMenuitem('Home', 'index.php');
         self::ShowMenuitem('Data Entry', 'rsby/Modify.php');
         self::ShowMenuitem('Reports', 'rsby/Reports.php');
+        self::ShowMenuitem('Log Out!', 'login.php?LogOut=1');
+        break;
+      case 'ATND':
+        self::ShowMenuitem('Home', 'index.php');
+        self::ShowMenuitem('Attendance Register', 'atnd-reg/Attendance.php');
+        self::ShowMenuitem('Reports', 'atnd-reg/Reports.php');
+        self::ShowMenuitem(self::GetVal($_SESSION, 'UserName') . '\'s Profile', 'atnd-reg/Profile.php');
         self::ShowMenuitem('Log Out!', 'login.php?LogOut=1');
         break;
       default:
