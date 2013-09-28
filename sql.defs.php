@@ -14,6 +14,13 @@ function SQLDefs($ObjectName) {
               . ' PRIMARY KEY (`PageID`)'
               . ') ENGINE = InnoDB DEFAULT CHARSET = utf8;';
       break;
+    case 'IntraNIC':
+      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . 'IntraNIC` ('
+              . '`RemoteIP` varchar(15) NOT NULL,'
+              . '`LocationName` varchar(30) NOT NULL,'
+              . ' PRIMARY KEY (`RemoteIP`)'
+              . ') ENGINE = InnoDB DEFAULT CHARSET = utf8;';
+      break;
     case 'Logs':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . 'Logs` ('
               . '`LogID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,'

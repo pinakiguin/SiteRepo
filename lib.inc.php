@@ -6,6 +6,20 @@
  * @todo Menus made to be Database driven
  * @todo *** VVI *** Make Modernizr to display message if browser is not capable.
  */
+/**
+ * block attempts to directly run this script from script directory
+ */
+//if (getcwd() == dirname(__FILE__)) {
+//die('Attack stopped');
+//}
+
+/**
+ * Minimum PHP version;
+ */
+if (version_compare(phpversion(), '5.3.0', 'lt')) {
+  die('PHP 5.3+ is required');
+}
+
 require_once __DIR__ . '/MySQLiDB.inc.php';
 require_once 'sql.defs.php'; //Include the nested sql.defs.php don't use __DIR__
 
@@ -357,6 +371,7 @@ class WebLib {
       case 'WebSite':
         $ObjDB = new MySQLiDB();
         $ObjDB->do_ins_query(self::GetTableDefs('Visits'));
+        $ObjDB->do_ins_query(self::GetTableDefs('IntraNIC'));
         $ObjDB->do_ins_query(self::GetTableDefs('VisitorLogs'));
         $ObjDB->do_ins_query(self::GetTableDefs('Logs'));
         $ObjDB->do_ins_query(self::GetTableDefs('Uploads'));
@@ -737,6 +752,22 @@ class WebLib {
       $_SESSION['BaseURL'] = $Proto . $_SERVER['HTTP_HOST'] . $_SESSION['BaseDIR'];
       self::DeployInfo();
       //$_SESSION['Version'] = 'v1.1-15-ge290fb2';
+    }
+  }
+
+  /**
+   * Restricts Access to the script from Specified IP Addresses in IntraNIC Table
+   */
+  public static function IntraNIC() {
+    $Data = new MySQLiDBHelper(HOST_Name, MySQL_User, MySQL_Pass, MySQL_DB);
+    $Data->where('RemoteIP', $_SERVER['REMOTE_ADDR']);
+    $AllowedIP = $Data->get('`' . MySQL_Pre . 'IntraNIC`');
+
+    if (count($AllowedIP) === 0) {
+      if ($_SERVER['REMOTE_ADDR'] !== '10.26.19.4') {
+        header('HTTP/1.0 404 Not Found');
+        exit;
+      }
     }
   }
 
