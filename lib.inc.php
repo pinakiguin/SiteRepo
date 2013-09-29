@@ -5,22 +5,22 @@
  * @todo HelpLine has to be added
  * @todo Menus made to be Database driven
  * @todo *** VVI *** Make Modernizr to display message if browser is not capable.
- */
-/**
+ *
+ *
  * block attempts to directly run this script from script directory
- */
-//if (getcwd() == dirname(__FILE__)) {
-//die('Attack stopped');
-//}
-
-/**
+ *
+ * if (getcwd() == dirname(__FILE__)) {
+ *   die('Attack stopped');
+ * }
+ *
+ *
  * Minimum PHP version;
+ * if (version_compare(phpversion(), '5.3.0', 'lt')) {
+ *   die('PHP 5.3+ is required');
+ * }
  */
-if (version_compare(phpversion(), '5.3.0', 'lt')) {
-  die('PHP 5.3+ is required');
-}
-
 require_once __DIR__ . '/MySQLiDB.inc.php';
+require_once __DIR__ . '/class.MySQLiDBHelper.php';
 require_once 'sql.defs.php'; //Include the nested sql.defs.php don't use __DIR__
 
 class WebLib {
@@ -378,6 +378,10 @@ class WebLib {
         $ObjDB->do_ins_query(self::GetTableDefs('Users'));
         $ObjDB->do_ins_query(self::GetTableDefs('UsersData'));
         $ObjDB->do_ins_query(self::GetTableDefs('MenuItems'));
+        $ObjDB->do_ins_query(self::GetTableDefs('MenuData'));
+        $ObjDB->do_ins_query(self::GetTableDefs('MenuACL'));
+        $ObjDB->do_ins_query(self::GetTableDefs('DataACL'));
+        $ObjDB->do_ins_query(self::GetTableDefs('RestrictedMenus'));
         $ObjDB->do_ins_query(self::GetTableDefs('Helpline'));
         $ObjDB->do_close();
         break;
@@ -422,6 +426,7 @@ class WebLib {
    */
   public static function CheckAuth() {
     $_SESSION['Debug'] = self::GetVal($_SESSION, 'Debug') . 'CheckAuth';
+    $ScriptURL = str_replace(self::GetVal($_SESSION, 'BaseDIR'), '', $_SERVER['SCRIPT_NAME']);
     if ((self::GetVal($_SESSION, 'UserMapID') === NULL)) {
       return 'Browsing';
     }
@@ -438,6 +443,8 @@ class WebLib {
     } elseif (self::GetVal($_SESSION, 'ID') !== session_id()) {
       $_SESSION['Debug'] = '(' . self::GetVal($_SESSION, 'ID') . ' = ' . session_id() . ')';
       return 'INVALID SESSION ID (' . self::GetVal($_SESSION, 'ID') . ' = ' . session_id() . ')';
+    } elseif (self::IsAllowed($ScriptURL) === false) {
+      return 'Restricted!';
     } elseif (self::GetVal($_SESSION, 'UserMapID') !== NULL) {
       return 'Valid';
     }
@@ -529,71 +536,48 @@ class WebLib {
   }
 
   /**
+   * Checks if the page is Restricted in MenuACL or Not
+   *
+   * @param string $URL
+   * @return boolean
+   */
+  private static function IsAllowed($URL) {
+    if (isset($_SESSION['RestrictedMenus'])) {
+      $Allowed = array_filter($_SESSION['RestrictedMenus'], array(new FilterSame('URL', $URL), 'IsSame'));
+    } else {
+      $Allowed = array();
+    }
+    if (count($Allowed) === 0) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
    * Shows the menubar and menu items depending on the session
    */
   public static function ShowMenuBar($AppID = null) {
     echo '<div class="MenuBar"><ul>';
     if (self::GetVal($_SESSION, 'CheckAuth') !== 'Valid') {
-      $AppID = null;
+      $AppID = '';
+    } else if (!isset($_SESSION['RestrictedMenus'])) {
+      $MenuData = new MySQLiDBHelper(HOST_Name, MySQL_User, MySQL_Pass, MySQL_DB);
+      $MenuData->where('UserMapID', self::GetVal($_SESSION, 'UserMapID'));
+      $_SESSION['RestrictedMenus'] = $MenuData->get('`' . MySQL_Pre . 'RestrictedMenus`');
+      unset($MenuData);
     }
-
-    switch ($AppID) {
-      case 'WebSite':
-        self::ShowMenuitem('Home', 'index.php');
-        self::ShowMenuitem('SRER-2014', 'srer');
-        self::ShowMenuitem('Polling Personnel 2014', 'pp');
-        //self::ShowMenuitem('Panchayat Election 2013', 'cp');
-        //self::ShowMenuitem('RSBY-2014', 'rsby');
-        self::ShowMenuitem(self::GetVal($_SESSION, 'UserName') . '\'s Profile', 'Profile.php');
-        self::ShowMenuitem('Manage Users', 'Users.php');
-        self::ShowMenuitem('Helpline', 'Helpline.php');
-        self::ShowMenuitem('User Activity', 'AuditLogs.php');
-        self::ShowMenuitem('Log Out!', 'login.php?LogOut=1');
-        break;
-      case 'SRER':
-        self::ShowMenuitem('Home', 'index.php');
-        self::ShowMenuitem('Data Entry', 'srer/DataEntry.php');
-        self::ShowMenuitem('Admin Page', 'srer/Admin.php');
-        self::ShowMenuitem('Reports', 'srer/Reports.php');
-        //self::ShowMenuitem(self::GetVal($_SESSION, 'UserName') . '\'s Profile', 'srer/Profile.php');
-        self::ShowMenuitem('Assign Parts', 'srer/Users.php');
-        self::ShowMenuitem('Log Out!', 'login.php?LogOut=1');
-        break;
-      case 'PP':
-        self::ShowMenuitem('Home', 'index.php');
-        self::ShowMenuitem('Office Entry - Format PP1', 'pp/Office.php');
-        self::ShowMenuitem('Personnel Entry - Format PP2', 'pp/Personnel.php');
-        self::ShowMenuitem('Randomization', 'pp/GroupPP.php');
-        self::ShowMenuitem('Reports', 'pp/Reports.php');
-        self::ShowMenuitem('Log Out!', 'login.php?LogOut=1');
-        break;
-      case 'CP':
-        self::ShowMenuitem('Home', 'index.php');
-        self::ShowMenuitem('Counting Personnel Randomization', 'cp/GroupCP.php');
-        self::ShowMenuitem('Reports', 'cp/Reports.php');
-        self::ShowMenuitem('Log Out!', 'login.php?LogOut=1');
-        break;
-      case 'RSBY':
-        self::ShowMenuitem('Home', 'index.php');
-        self::ShowMenuitem('Data Entry', 'rsby/Modify.php');
-        self::ShowMenuitem('Reports', 'rsby/Reports.php');
-        self::ShowMenuitem('Log Out!', 'login.php?LogOut=1');
-        break;
-      case 'ATND':
-        self::ShowMenuitem('Home', 'index.php');
-        self::ShowMenuitem('Attendance Register', 'atnd-reg/Attendance.php');
-        self::ShowMenuitem('Reports', 'atnd-reg/Reports.php');
-        self::ShowMenuitem(self::GetVal($_SESSION, 'UserName') . '\'s Profile', 'atnd-reg/Profile.php');
-        self::ShowMenuitem('Log Out!', 'login.php?LogOut=1');
-        break;
-      default:
-        self::ShowMenuitem('Home', 'index.php');
-        self::ShowMenuitem('Search SRER Data', 'srer/Search.php');
-        self::ShowMenuitem('Registration', 'Register.php');
-        self::ShowMenuitem('Log In!', 'login.php');
-        break;
+    if (!isset($_SESSION['MenuItems'])) {
+      $MenuData = new MySQLiDBHelper(HOST_Name, MySQL_User, MySQL_Pass, MySQL_DB);
+      $MenuData->where('Activated', '1');
+      $_SESSION['MenuItems'] = $MenuData->get('`' . MySQL_Pre . 'MenuItems`');
+      unset($MenuData);
     }
-    //self::ShowMenuitem(self::GetVal($_SESSION, 'ID'), '#');
+    $MenuItems = array_filter($_SESSION['MenuItems'], array(new FilterSame('AppID', $AppID), 'IsSame'));
+    foreach ($MenuItems as $MenuItem) {
+      if (self::IsAllowed($MenuItem['URL'])) {
+        self::ShowMenuitem($MenuItem['Caption'], $MenuItem['URL']);
+      }
+    }
     echo '</ul></div>';
   }
 

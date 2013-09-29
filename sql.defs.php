@@ -95,18 +95,70 @@ function SQLDefs($ObjectName) {
     case 'MenuItems':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . 'MenuItems` ('
               . '`MenuID` int(11) NOT NULL AUTO_INCREMENT,'
-              . '`ParentMenuID` int(11) NOT NULL,'
+              . '`AppID` varchar(10) NOT NULL,'
+              . '`MenuOrder` int(11) NOT NULL,'
               . '`AuthMenu` tinyint(1) NOT NULL DEFAULT \'1\','
               . '`Caption` varchar(50) NOT NULL,'
               . '`URL` varchar(50) NOT NULL,'
+              . '`Activated` tinyint(1) NOT NULL DEFAULT \'1\','
               . ' PRIMARY KEY (`MenuID`)'
               . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
       break;
     case 'MenuData':
-      $SqlDB = 'INSERT INTO `WebSite_MenuItems` (`MenuID`, `ParentMenuID`, `AuthMenu`, `Caption`, `URL`) VALUES'
-              . '(1, 0, 1, \'SRER\', \'srer/index.php\'),'
-              . '(2, 1, 1, \'Data Entry\', \'srer/DataEntry.php\'),'
-              . '(3, 2, 1, \'Reports\', \'srer/Reports.php\');';
+      $SqlDB = 'INSERT INTO `' . MySQL_Pre . 'MenuItems` '
+              . '(`MenuID`,`AppID`,`MenuOrder`,`AuthMenu`,`Caption`,`URL`,`Activated`) VALUES'
+              . '( 1, \'\', 1, 0, \'Home\', \'index.php\', 1),'
+              . '( 2, \'\', 2, 0, \'Registration\', \'Register.php\', 1),'
+              . '( 3, \'\', 3, 0, \'Login\', \'login.php\', 1),'
+              . '( 4, \'WebSite\', 1, 0, \'Home\', \'index.php\', 1),'
+              . '( 5, \'WebSite\', 2, 1, \'SRER-2014\', \'srer\', 1),'
+              . '( 6, \'WebSite\', 3, 1, \'Polling Personnel 2014\', \'pp\', 0),'
+              . '( 7, \'WebSite\', 4, 1, \'Counting Personnel 2013\', \'cp\', 0),'
+              . '( 8, \'WebSite\', 5, 1, \'RSBY-2014\', \'rsby\', 0),'
+              . '( 9, \'WebSite\', 6, 1, \'Attendance Register\', \'atnd-reg\', 0),'
+              . '(10, \'WebSite\', 7, 1, \'User Profile\', \'Profile.php\', 1),'
+              . '(11, \'WebSite\', 8, 1, \'Manage Users\', \'Users.php\', 1),'
+              . '(12, \'WebSite\', 9, 1, \'Helpline\', \'Helpline.php\', 1),'
+              . '(13, \'WebSite\',10, 1, \'User Activity\', \'AuditLogs.php\', 1),'
+              . '(14, \'WebSite\',11, 1, \'Log Out!\', \'login.php?LogOut=1\', 1),'
+              . '(15, \'SRER\', 1, 0, \'Home\', \'index.php\', 1),'
+              . '(16, \'SRER\', 2, 1, \'Data Entry\', \'srer/DataEntry.php\', 1),'
+              . '(17, \'SRER\', 3, 1, \'Admin Page\', \'srer/Admin.php\', 1),'
+              . '(18, \'SRER\', 4, 1, \'Reports\', \'srer/Reports.php\', 1),'
+              . '(19, \'SRER\', 5, 1, \'Assign Parts\', \'srer/Users.php\', 1),'
+              . '(20, \'SRER\', 6, 1, \'Log Out!\', \'login.php?LogOut=1\', 1),'
+              . '(21, \'ATND\', 1, 0, \'Home\', \'index.php\', 1),'
+              . '(22, \'ATND\', 2, 1, \'Attendance Register\', \'atnd-reg/Attendance.php\', 1),'
+              . '(23, \'ATND\', 3, 1, \'Reports\', \'atnd-reg/Reports.php\', 1),'
+              . '(24, \'ATND\', 4, 1, \'User Profile\', \'atnd-reg/Profile.php\', 1),'
+              . '(25, \'ATND\', 5, 1, \'Log Out!\', \'login.php?LogOut=1\', 1),'
+              . '(26, \'PP\', 1, 0, \'Home\', \'index.php\', 1),'
+              . '(27, \'PP\', 2, 1, \'Office Entry - Format PP1\', \'pp/Office.php\', 1),'
+              . '(28, \'PP\', 3, 1, \'Personnel Entry - Format PP2\', \'pp/Personnel.php\', 1),'
+              . '(29, \'PP\', 4, 1, \'Randomization\', \'pp/GroupPP.php\', 1),'
+              . '(30, \'PP\', 5, 1, \'Reports\', \'pp/Reports.php\', 1),'
+              . '(31, \'PP\', 6, 1, \'Log Out!\', \'login.php?LogOut=1\', 1);';
+      break;
+    case 'MenuACL':
+      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . 'MenuACL` ('
+              . '`AclID` int(11) NOT NULL AUTO_INCREMENT,'
+              . '`MenuID` int(11) NOT NULL,'
+              . '`UserMapID` int(11) NOT NULL,'
+              . '`Activated` tinyint(1) NOT NULL DEFAULT \'1\','
+              . ' PRIMARY KEY (`AclID`),'
+              . ' UNIQUE KEY `UserMenu` (`MenuID`,`UserMapID`)'
+              . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
+      break;
+    case 'DataACL':
+      $SqlDB = 'INSERT INTO `' . MySQL_Pre . 'MenuACL`'
+              . '(`AclID`,`MenuID`, `UserMapID`, `Activated`) Values'
+              . '(1,11,1,1),(2,17,1,1),(3,19,1,1);';
+      break;
+    case 'RestrictedMenus':
+      $SqlDB = 'CREATE OR REPLACE VIEW `' . MySQL_Pre . 'RestrictedMenus` AS '
+              . ' SELECT `URL`,`UserMapID` FROM `' . MySQL_Pre . 'MenuItems` `M` '
+              . ' JOIN `' . MySQL_Pre . 'MenuACL` `U` ON `U`.`MenuID`=`M`.`MenuID`'
+              . ' WHERE `M`.`Activated`=1 AND `U`.`Activated`=1';
       break;
     case 'Helpline':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . 'Helpline` ('
