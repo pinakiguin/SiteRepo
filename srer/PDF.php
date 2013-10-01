@@ -67,36 +67,6 @@ class SRER_PDF extends PDF {
     $this->Cell(0, 0, 'Page: ' . $this->PageNo() . ' of {nb}', 0, 1, 'R');
   }
 
-  private function SplitLn($s, $SlNo = 1) {
-    $c = 0;
-    $this->maxln = 0;
-    $ns = array();
-    while ($c < count($s)) {
-      $ns[$c] = $this->SplitStr($s[$c], $this->colw[$c]);
-      $c++;
-    }
-    return $ns;
-  }
-
-  function SplitStr($s, $w) {
-    $ns = "";
-    $ln = "";
-    $i = 0;
-    $wd = preg_split('# #', $s);
-    while ($i < count($wd)) {
-      if ((($this->GetStringWidth($ln) + $this->GetStringWidth($wd[$i])) >= $w) && ($ln != "") && (substr_count($s, '|') == 0)) {
-        $ns = $ns . trim($ln) . '|';
-        $ln = "";
-      } else {
-        $ln = $ln . ' ' . $wd[$i];
-        $i++;
-      }
-    }
-    $ns = $ns . trim($ln);
-    $this->maxln = max(substr_count($ns, '|'), $this->maxln);
-    return $ns;
-  }
-
   function SetColW($cols) {
     $i = 0;
     while ($i < count($cols)) {

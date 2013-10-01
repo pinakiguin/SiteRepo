@@ -1,12 +1,18 @@
 <?php
 require_once(__DIR__ . '/srer.lib.php');
-if (WebLib::GetVal($_POST, 'FormName') === 'Save as PDF') {
-  include __DIR__ . '/ShowPDF.php';
-  exit();
+switch (WebLib::GetVal($_POST, 'FormName')) {
+  case 'Save as PDF':
+    include __DIR__ . '/ShowPDF.php';
+    exit();
+    break;
+  case 'Download Manuscript':
+    include __DIR__ . '/Manuscript.php';
+    exit();
+    break;
 }
 
 WebLib::AuthSession();
-WebLib::Html5Header("SRER Report");
+WebLib::Html5Header('SRER Report');
 WebLib::IncludeCSS();
 
 $Data = new MySQLiDB();
@@ -30,7 +36,7 @@ if (WebLib::GetVal($_POST, 'ACNo') != "")
   <div class="Header">
   </div>
   <?php
-  WebLib::ShowMenuBar('SRER')
+  WebLib::ShowMenuBar('SRER');
   ?>
   <div class="content">
     <h2>SRER Reports</h2>
@@ -55,6 +61,7 @@ if (WebLib::GetVal($_POST, 'ACNo') != "")
       <?php //echo $Query;  ?>
       <input type="submit" name="FormName" value="Show" />
       <input type="submit" name="FormName" value="Save as PDF" />
+      <input type="submit" name="FormName" value="Download Manuscript" />
       <hr /><br />
     </form>
     <?php
