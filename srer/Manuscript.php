@@ -76,7 +76,7 @@ function ManuscriptPDF(&$pdf, $SRERForm, $Finish = 0) {
   $Data = new MySQLiDB();
   $i = 0;
   $Query = "Select {$_SESSION['Fields']} from {$_SESSION['TableName']} "
-          . " Where PartID={$_SESSION['Part']['PartID']} AND LOWER(TRIM(`Status`))='a'";
+          . " Where PartID={$_SESSION['Part']['PartID']} AND LOWER(TRIM(`Status`))='a' Order By SlNo";
   $Data->do_sel_query($Query);
 
   while ($i < $Data->ColCount) {
