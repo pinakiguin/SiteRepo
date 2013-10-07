@@ -117,7 +117,7 @@ class MySQLiDB {
    */
   public function SqlSafe($StrValue) {
     $this->do_connect();
-    return mysql_real_escape_string(htmlspecialchars($StrValue));
+    return mysql_real_escape_string($StrValue);
   }
 
   /**
@@ -247,7 +247,7 @@ class MySQLiDB {
   function GetCaption($ColName, $FieldsTable = "SRER_FieldNames") {
     $Fields = new MySQLiDB();
     $ColHead = $Fields->do_max_query("Select `Description` from `" . MySQL_Pre . "{$FieldsTable}`"
-            . " Where `FieldName`='{$ColName}'");
+      . " Where `FieldName`='{$ColName}'");
     $Fields->do_close();
     unset($Fields);
     return (!$ColHead ? $ColName : $ColHead);
