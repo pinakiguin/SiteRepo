@@ -83,7 +83,7 @@ class MAN_PDF extends PDF {
           $this->Wrap($this->colw[$i], $row[$i]);
         $i++;
       }
-      if (($this->title === 'Proforma - A') || ($this->title === 'Proforma - E')) {
+      if ($this->title !== 'Proforma - D') {
         $i = 0;
         $this->Ln();
         while ($i < count($this->colw)) {
