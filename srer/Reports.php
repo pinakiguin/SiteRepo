@@ -6,6 +6,8 @@ switch (WebLib::GetVal($_POST, 'FormName')) {
     exit();
     break;
   case 'Download Manuscript':
+    $_SESSION['Datewise'] = '0';
+  case 'Download Datewise Manuscript':
     include __DIR__ . '/Manuscript.php';
     exit();
     break;
@@ -50,8 +52,8 @@ if (WebLib::GetVal($_POST, 'ACNo') != "")
         $Data->show_sel('ACNo', 'ACName', $Query, WebLib::GetVal($_SESSION, 'ACNo', TRUE));
         ?>
       </select>
-      <label for="textfield">Part No.:</label>
-      <select name="PartID">
+      <label for="PartID">Part No.:</label>
+      <select id="PartID" name="PartID">
         <?php
         $Query = 'Select PartID,CONCAT(PartNo,\' - \',PartName) as PartName from ' . MySQL_Pre . 'SRER_PartMap'
                 . ' Where ACNo=' . WebLib::GetVal($_SESSION, 'ACNo', TRUE) . ' Order by PartNo';
@@ -61,7 +63,12 @@ if (WebLib::GetVal($_POST, 'ACNo') != "")
       <?php //echo $Query;  ?>
       <input type="submit" name="FormName" value="Show" />
       <input type="submit" name="FormName" value="Save as PDF" />
-      <input type="submit" name="FormName" value="Download Manuscript" />
+      <input type="submit" id="DateTo" name="FormName" value="Download Manuscript" /><br/>
+      <label for="DateFrom">Date of Receipt From:</label>
+      <input type="text" id="DateFrom" name="DateFrom" placeholder="YYYY-MM-DD" value="<?php echo WebLib::GetVal($_SESSION, 'DateFrom'); ?>" />
+      <label for="DateTo">To:</label>
+      <input type="text" name="DateTo" placeholder="YYYY-MM-DD" value="<?php echo WebLib::GetVal($_SESSION, 'DateTo'); ?>" />
+      <input type="submit" id="DateTo" name="FormName" value="Download Datewise Manuscript" />
       <hr /><br />
     </form>
     <?php

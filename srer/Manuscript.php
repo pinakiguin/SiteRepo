@@ -4,12 +4,20 @@ require_once __DIR__ . '/../lib.inc.php';
 require_once __DIR__ . '/Manuscript.pdf.php';
 require_once __DIR__ . '/../class.MySQLiDBHelper.php';
 $Data = new MySQLiDBHelper(HOST_Name, MySQL_User, MySQL_Pass, MySQL_DB);
-$Data->where('PartID', $_POST['PartID']);
+$Data->where('PartID', WebLib::GetVal($_POST, 'PartID'));
 $_SESSION['Part'] = $Data->get(MySQL_Pre . 'SRER_PartMap', 1);
 $_SESSION['Part'] = $_SESSION['Part'][0];
 $_SESSION['PDFName'] = $_SESSION['Part']['ACNo']
         . '-' . $_SESSION['Part']['PartNo'] . '-'
         . $_SESSION['Part']['PartName'] . '-Manuscript';
+$_SESSION['DateFrom'] = WebLib::ToDBDate(WebLib::GetVal($_POST, 'DateFrom'));
+$_SESSION['DateTo'] = WebLib::ToDBDate(WebLib::GetVal($_POST, 'DateTo'));
+if (WebLib::GetVal($_SESSION, 'Datewise') === '0') {
+  $_SESSION['DateWiseQry'] = '';
+} else {
+  $_SESSION['DateWiseQry'] = '`ReceiptDate` BETWEEN \'' . $_SESSION['DateFrom'] . '\' AND \'' . $_SESSION['DateTo'] . '\' AND ';
+  $_SESSION['PDFName'] = $_SESSION['PDFName'] . '[' . $_SESSION['DateFrom'] . '_' . $_SESSION['DateTo'] . ']';
+}
 unset($Data);
 
 if (intval($_SESSION['Part']['PartID']) > 0) {
@@ -75,8 +83,8 @@ function ManuscriptPDF(&$pdf, $SRERForm, $Finish = 0) {
   $ColHead = & $pdf->cols[0];
   $Data = new MySQLiDB();
   $i = 0;
-  $Query = "Select {$_SESSION['Fields']} from {$_SESSION['TableName']} "
-          . " Where PartID={$_SESSION['Part']['PartID']} AND LOWER(TRIM(`Status`))='a' Order By SlNo";
+  $Query = 'Select ' . $_SESSION['Fields'] . ' from ' . $_SESSION['TableName']
+          . ' Where ' . $_SESSION['DateWiseQry'] . ' `PartID`=' . $_SESSION['Part']['PartID'] . ' AND LOWER(TRIM(`Status`))=\'a\' Order By SlNo';
   $Data->do_sel_query($Query);
 
   while ($i < $Data->ColCount) {
