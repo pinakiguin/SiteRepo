@@ -1,8 +1,9 @@
 <?php
 ini_set('display_errors', 'On');
 require_once __DIR__ . '/../lib.inc.php';
+require_once __DIR__ . '/../class.MySQLiDBHelper.php';
 WebLib::AuthSession();
-WebLib::Html5Header('Attendance Register');
+WebLib::Html5Header('Website Uploads');
 WebLib::IncludeCSS();
 WebLib::JQueryInclude();
 ?>
@@ -40,14 +41,13 @@ WebLib::JQueryInclude();
   WebLib::ShowMenuBar('ATND');
   ?>
   <div class="content">
-    <h2>Tenders</h2>
+    <h2>Website Uploads</h2>
     <Form enctype="multipart/form-data" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>?AdminUpload" method="post" >
       <b>Department: </b><br/>
       <input style="width:400px;" type="text" name="Dept" id="Dept"/>
       <select name="Topic">
         <option value="0">Tender</option>
         <option value="1">Recruitment</option>
-        <option value="3">Panchayat General Election 2013</option>
         <option value="4">Notice Board</option>
       </select>
       <br/>
@@ -66,24 +66,20 @@ WebLib::JQueryInclude();
     </form>
     <?php
     if (isset($_FILES['attachment']['name']) && ($_FILES['attachment']['error'] === 0) && !empty($_FILES['attachment']['name'])) {
-      $reg = new MySQLiDB();
-      $reg->Debug = 1;
-      $name = WebLib::GetVal($_FILES['attachment'], 'name', true);
-      $mime = WebLib::GetVal($_FILES['attachment'], 'type', true);
-      $data = $reg->SqlSafe(file_get_contents($_FILES['attachment']['tmp_name']));
-      $size = intval($_FILES['attachment']['size']);
-      if (!empty($data)) {
-        $InsQuery = 'INSERT INTO `uploads` ('
-          . '`Dept`, `Subject`, `Topic`, `Dated`, `Expiry`, `Attachment`, `size`, `mime`,`file`, `UploadedOn`)'
-          . ' VALUES (\'' . WebLib::GetVal($_POST, 'Dept', true) . '\',\''
-          . WebLib::GetVal($_REQUEST, 'Subject', true) . '\', '
-          . WebLib::GetVal($_POST, 'Topic', true) . ',\''
-          . WebLib::ToDBDate(WebLib::GetVal($_POST, 'Dated')) . '\', \''
-          . WebLib::ToDBDate(WebLib::GetVal($_POST, 'Expiry'))
-          . "', '{$name}', {$size}, '{$mime}', '{$data}', CURRENT_TIMESTAMP);";
-        $r = $reg->do_ins_query($InsQuery);
-      }
-      if ($r > 0) {
+      $reg = new MySQLiDBHelper(HOST_Name, MySQL_User, MySQL_Pass, MySQL_DB);
+
+      $UploadData['Dept'] = WebLib::GetVal($_POST, 'Dept');
+      $UploadData['Subject'] = WebLib::GetVal($_POST, 'Subject');
+      $UploadData['Topic'] = WebLib::GetVal($_POST, 'Topic');
+      $UploadData['Dated'] = WebLib::GetVal($_POST, 'Dated');
+      $UploadData['Expiry'] = WebLib::GetVal($_POST, 'Expiry');
+
+      $UploadData['Attachment'] = $_FILES['attachment']['name'];
+      $UploadData['mime'] = $_FILES['attachment']['type'];
+      $UploadData['size'] = $_FILES['attachment']['size'];
+      $UploadData['file'] = file_get_contents($_FILES['attachment']['tmp_name']);
+
+      if ($reg->insert('uploads', $UploadData)) {
         echo '<h3 style="color:#228b22;">Suuccessfully uploaded!</h3>';
       } else {
         echo '<h3 style="color:#ff0000;">Unable to upload!</h3>';

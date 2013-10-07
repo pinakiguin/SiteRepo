@@ -8,7 +8,7 @@ if (isset($_GET['ID'])) {
   $Data = new MySQLiDB();
   // Fetch the file information
   $query = " SELECT `Attachment`,`mime`, `Size`, `file` FROM `uploads` "
-    . " WHERE `UploadID` = " . intval($LetterID) . " and not Deleted";
+          . " WHERE `UploadID` = " . intval($LetterID) . " and not Deleted";
   $result = $Data->do_sel_query($query);
 
   if ($result > 0) {
