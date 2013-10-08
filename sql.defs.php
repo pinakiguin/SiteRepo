@@ -149,11 +149,6 @@ function SQLDefs($ObjectName) {
               . ' UNIQUE KEY `UserMenu` (`MenuID`,`UserMapID`)'
               . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
       break;
-    case 'DataACL':
-      $SqlDB = 'INSERT INTO `' . MySQL_Pre . 'MenuACL`'
-              . '(`AclID`,`MenuID`, `UserMapID`, `Activated`) Values'
-              . '(1,11,1,1),(2,17,1,1),(3,19,1,1);';
-      break;
     case 'RestrictedMenus':
       $SqlDB = 'CREATE OR REPLACE VIEW `' . MySQL_Pre . 'RestrictedMenus` AS '
               . ' SELECT `URL`,`UserMapID` FROM `' . MySQL_Pre . 'MenuItems` `M` '

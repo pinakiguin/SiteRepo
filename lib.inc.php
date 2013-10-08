@@ -176,10 +176,6 @@ class WebLib {
   public static function InitHTML5page($PageTitle = '') {
     self::InitSess();
     self::Html5Header($PageTitle);
-    if (self::GetVal($_REQUEST, 'show_src')) {
-      if (self::GetVal($_REQUEST, 'show_src') == 'me')
-        show_source(substr($_SERVER['PHP_SELF'], 1, strlen($_SERVER['PHP_SELF'])));
-    }
   }
 
   /**
@@ -380,7 +376,6 @@ class WebLib {
         $ObjDB->do_ins_query(self::GetTableDefs('MenuItems'));
         $ObjDB->do_ins_query(self::GetTableDefs('MenuData'));
         $ObjDB->do_ins_query(self::GetTableDefs('MenuACL'));
-        $ObjDB->do_ins_query(self::GetTableDefs('DataACL'));
         $ObjDB->do_ins_query(self::GetTableDefs('RestrictedMenus'));
         $ObjDB->do_ins_query(self::GetTableDefs('Helpline'));
         $ObjDB->do_close();
@@ -470,9 +465,8 @@ class WebLib {
     setcookie('SESSION_TOKEN', $sess_id, (time() + (LifeTime * 60)), $_SESSION['BaseDIR']);
     $_SESSION['SESSION_TOKEN'] = $sess_id;
     $_SESSION['LifeTime'] = time();
-    if (self::GetVal($_REQUEST, 'show_src')) {
-      if ($_REQUEST['show_src'] == 'me')
-        show_source(substr($_SERVER['PHP_SELF'], 1, strlen($_SERVER['PHP_SELF'])));
+    if (self::GetVal($_REQUEST, 'show_src') === 'me') {
+      show_source($_SERVER['SCRIPT_FILENAME']);
     }
   }
 
