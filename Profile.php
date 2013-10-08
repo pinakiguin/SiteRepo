@@ -13,164 +13,65 @@ WebLib::IncludeJS("Jcrop/js/jquery.Jcrop.min.js");
 ?>
 <script>
   $(function() {
-    function updateCoords(c) {
-      $('#x').val(c.x);
-      $('#y').val(c.y);
-      $('#w').val(c.w);
-      $('#h').val(c.h);
-      $('#AdmitPhoto').hide();
-      $('#lblAdmitPhoto').hide();
-    }
-    var name = $("#name"),
-            email = $("#email"),
-            password = $("#password"),
-            allFields = $([]).add(name).add(email).add(password),
-            tips = $(".validateTips");
-    function updateTips(t) {
-      tips
-              .text(t)
-              .addClass("ui-state-highlight");
-      setTimeout(function() {
-        tips.removeClass("ui-state-highlight", 1500);
-      }, 500);
-    }
-
-    function checkLength(o, n, min, max) {
-      if (o.val().length > max || o.val().length < min) {
-        o.addClass("ui-state-error");
-        updateTips("Length of " + n + " must be between " +
-                min + " and " + max + ".");
-        return false;
-      } else {
-        return true;
-      }
-    }
-
-    function checkRegexp(o, regexp, n) {
-      if (!(regexp.test(o.val()))) {
-        o.addClass("ui-state-error");
-        updateTips(n);
-        return false;
-      } else {
-        return true;
-      }
-    }
-
-    $("#chgpwd-form").dialog({
-      autoOpen: false,
-      modal: true,
-      buttons: {
-        "Update": function() {
-          var OldPassword = MD5(MD5($('#OldPassWD').val()) + $('#AjaxToken').val());
-          $.ajax({
-            url: "MySQLiDB.ajax.php",
-            type: "POST",
-            data: {
-              'AjaxToken': $('#AjaxToken').val(),
-              'CallAPI': 'ChgPwd',
-              'OldPass': OldPassword
-            },
-            dataType: "html"
-          })
-                  .done(function(data) {
-            try {
-              var DataResp = $.parseJSON(data);
-              delete data;
-              $('#AjaxToken').val(DataResp.AjaxToken);
-              $('#Msg').html(DataResp.Msg);
-              $('#ED').html(DataResp.RT);
-              delete DataResp;
-            }
-            catch (e) {
-              $('#Msg').html('' + e);
-              $('#Error').html(data);
-            }
-
-          })
-                  .fail(function() {
-            $('#Msg').html(msg);
-          });
-          $(this).dialog("close");
-        },
-        Cancel: function() {
-          $(this).dialog("close");
-        }
-      },
-      close: function() {
-        allFields.val("").removeClass("ui-state-error");
-      }
-    });
-
-    $("#ChgPwd")
+    $('#ChgPwd')
             .button()
             .click(function() {
-      $("#chgpwd-form").dialog("open");
-    });
-
-    $("#photo-form")
-            .dialog({
-      autoOpen: false,
-      height: 'auto',
-      width: 'auto',
-      modal: true,
-      buttons: {
-        "Update": function() {
-
-        },
-        Cancel: function() {
+      if (($('#NewPassWD').val() === $('#CnfPassWD').val())) {
+        if (scorePassword($('#CnfPassWD').val()) >= 80) {
+          $('#OldPassWD').val(MD5(MD5($('#OldPassWD').val()) + $('#AjaxToken').val()));
+          $('#NewPassWD').val(MD5(MD5($('#NewPassWD').val()) + $('#CnfPassWD').val()));
+          $('#CnfPassWD').val(MD5($('#CnfPassWD').val()));
+          $('#ChgPwd-frm').submit();
           $(this).dialog("close");
         }
-      },
-      close: function() {
-        allFields.val("").removeClass("ui-state-error");
+        else {
+          alert('Password Complexity atleast 80 is required!');
+        }
+      } else {
+        alert('New passwords don\'t match');
       }
-    });
-    $("#update-photo")
-            .button()
-            .click(function() {
-      $("#photo-form").dialog("open");
     });
 
     $('input[type="button"]').button();
     $('#Msg').text('');
-  });
-  $('input[type=file]').change(function(e) {
-    if (typeof FileReader === "undefined")
-      return true;
-    var elem = $(this);
-    var files = e.target.files;
-    for (var i = 0, file; (file = files[i]); i++) {
-      if (file.type.match('image.*')) {
-        var reader = new FileReader();
-        reader.onload = (function(theFile) {
-          return function(e) {
-            var image = e.target.result;
-            previewDiv = $('.ViewPhoto', elem.parent());
-            previewDiv.attr({"src": image,
-              "complete": function() {
-                $('.ViewPhoto').Jcrop({
-                  bgColor: 'black',
-                  bgOpacity: .4,
-                  setSelect: [0, 0, 180, 240],
-                  aspectRatio: 3 / 4,
-                  allowSelect: false,
-                  onSelect: updateCoords
-                });
-              }
-            });
-          };
-        })(file);
-        reader.readAsDataURL(file);
+    $('#NewPassWD').keyup(function() {
+      $('#PwdScore').html('(' + scorePassword($(this).val()) + '/100)');
+    });
+    $('#CnfPassWD').keyup(function() {
+      if (($('#NewPassWD').val() === $('#CnfPassWD').val())) {
+        $('#PwdMatch').html('Matched');
+      } else {
+        $('#PwdMatch').html('Not Matched');
       }
-    }
+    });
   });
-  function updateCoords(c) {
-    $('#x').val(c.x);
-    $('#y').val(c.y);
-    $('#w').val(c.w);
-    $('#h').val(c.h);
-    $('#AdmitPhoto').hide();
-    $('#lblAdmitPhoto').hide();
+  function scorePassword(pass) {
+    var score = 0;
+    if (!pass)
+      return score;
+
+    // award every unique letter until 5 repetitions
+    var letters = new Object();
+    for (var i = 0; i < pass.length; i++) {
+      letters[pass[i]] = (letters[pass[i]] || 0) + 1;
+      score += 5.0 / letters[pass[i]];
+    }
+
+    // bonus points for mixing it up
+    var variations = {
+      digits: /\d/.test(pass),
+      lower: /[a-z]/.test(pass),
+      upper: /[A-Z]/.test(pass),
+      nonWords: /\W/.test(pass),
+    }
+
+    variationCount = 0;
+    for (var check in variations) {
+      variationCount += (variations[check] == true) ? 1 : 0;
+    }
+    score += (variationCount - 1) * 10;
+
+    return parseInt(score);
   }
 </script>
 </head>
@@ -190,30 +91,37 @@ WebLib::IncludeJS("Jcrop/js/jquery.Jcrop.min.js");
       <b>Loading please wait...</b>
     </span>
     <?php
+    $Query = '';
+    if ((WebLib::GetVal($_POST, 'CnfPassWD') !== null) && ($_SESSION['Token'] === WebLib::GetVal($_POST, 'FormToken'))) {
+      $Data = new MySQLiDB();
+      $Pass = WebLib::GetVal($_POST, 'CnfPassWD', TRUE);
+      $UserMapID = WebLib::GetVal($_SESSION, 'UserMapID', TRUE);
+      $Query = 'Update `' . MySQL_Pre . 'Users` '
+              . ' SET `UserPass`=\'' . $Pass . '\' '
+              . ' Where Registered=1 AND Activated=1 AND UserMapID=\'' . $UserMapID . '\''
+              . ' AND MD5(concat(`UserPass`,\'' . WebLib::GetVal($_SESSION, 'Token', TRUE) . '\'))'
+              . ' =\'' . WebLib::GetVal($_POST, 'OldPassWD', TRUE) . '\';';
+      if ($Data->do_ins_query($Query) > 0) {
+        $_SESSION['Msg'] = 'Password Changed Successfully!';
+      } else {
+        $_SESSION['Msg'] = 'Unable to change password!';
+      }
+      $Data->do_close();
+    }
+    $_SESSION['Token'] = md5($_SERVER['REMOTE_ADDR'] . session_id() . $_SESSION['ET']);
     WebLib::ShowMsg();
-    $Data = new MySQLiDB();
     ?>
-    <form action="<?php echo WebLib::GetVal($_SERVER, 'PHP_SELF'); ?>" method="post">
-      <div id="chgpwd-form" title="Change Password" style="display: none;">
-        <input type="password" placeholder="Enter Old Password" name="OldPassWD" id="OldPassWD" />
-      </div>
-      <div class="FieldGroup" id="photo-form" title="Change Photo" style="display: none;">
-        <div class="UploadPhoto">
-          <img class="ViewPhoto" src="" alt="User Photo">
-          <label id="lblAdmitPhoto" for="AdmitPhoto">Select a Photograph:</label>
-          <input type="file" id="AdmitPhoto" name="AdmitPhoto" accept="image/*" required="">
-        </div>
-        <input type="hidden" id="x" name="x" />
-        <input type="hidden" id="y" name="y" />
-        <input type="hidden" id="w" name="w" />
-        <input type="hidden" id="h" name="h" />
+    <form id="ChgPwd-frm" action="<?php echo WebLib::GetVal($_SERVER, 'PHP_SELF'); ?>" method="post">
+      <h2>Change Password</h2>
+      <div id="chgpwd-dlg" title="Change Password">
+        <input type="password" placeholder="Old Password" name="OldPassWD" id="OldPassWD" /><br/>
+        <input type="password" placeholder="New Password" name="NewPassWD" id="NewPassWD" /><span id="PwdScore"></span><br/>
+        <input type="password" placeholder="Confirm Password" name="CnfPassWD" id="CnfPassWD" /><span id="PwdMatch"></span>
       </div>
       <input type="hidden" id="AjaxToken" name="FormToken"
              value="<?php echo WebLib::GetVal($_SESSION, 'Token'); ?>" />
-      <!--input type="button" value="Upload Photo" /-->
       <input type="button" id="ChgPwd" value="Change Password" />
     </form>
-    <pre id="Error"></pre>
   </div>
   <div class="pageinfo">
     <?php WebLib::PageInfo(); ?>
