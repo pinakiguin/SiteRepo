@@ -50,7 +50,7 @@ define('AppTitle', 'Paschim Medinipur');
  * 1. Validates Against Multiple applications in the same domain
  * 2. Used to Encrypt Passwords in Database (kept at server side never sent to client)
  */
-define('AppKey', 'e$#KH+)&Q5&CP3798k7$quyxGfR48+vX');
+define('AppKey', 'eKHQ5CP3798k7quyxGfR48vX');
 
 /**
  * Defines Existence of tables

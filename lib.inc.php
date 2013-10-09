@@ -440,6 +440,8 @@ class WebLib {
       return 'INVALID SESSION ID (' . self::GetVal($_SESSION, 'ID') . ' = ' . session_id() . ')';
     } elseif (self::IsAllowed($ScriptURL) === false) {
       return 'Restricted!';
+    } elseif (self::GetVal($_SESSION, 'AppKey') !== AppKey) {
+      return 'Invalid AppKey(' . self::GetVal($_SESSION, 'AppKey') . '-' . AppKey . ')!';
     } elseif (self::GetVal($_SESSION, 'UserMapID') !== NULL) {
       return 'Valid';
     }
@@ -723,11 +725,19 @@ class WebLib {
   public static function SetPATH($PageLength = 9) {
     if (!isset($_SESSION))
       session_start();
+    if (self::GetVal($_SESSION, 'AppKey') !== AppKey) {
+      session_unset();
+      session_destroy();
+      session_start();
+      self::SetURI();
+      $_SESSION = array();
+    }
     if (self::GetVal($_SESSION, 'BaseDIR') === NULL) {
       $_SESSION['AppROOT'] = __DIR__ . '/';
       $_SESSION['BaseDIR'] = substr($_SERVER['SCRIPT_NAME'], 0, strlen($_SERVER['SCRIPT_NAME']) - $PageLength);
       $Proto = (self::GetVal($_SERVER, 'HTTPS') === 'on') ? 'https://' : 'http://';
       $_SESSION['BaseURL'] = $Proto . $_SERVER['HTTP_HOST'] . $_SESSION['BaseDIR'];
+      $_SESSION['AppKey'] = AppKey;
       self::DeployInfo();
       //$_SESSION['Version'] = 'v1.1-15-ge290fb2';
     }
