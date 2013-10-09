@@ -57,12 +57,12 @@ define('AppKey', 'eKHQ5CP3798k7quyxGfR48vX');
  *
  * If set to TRUE then Database tables will be created
  */
-define('NeedsDB', TRUE);
+define('NeedsDB', true);
 
 /**
  * Defines use of SMS Gateway
  *
  * If set to TRUE then SMSs will be Sent
  */
-define('UseSMSGW', FALSE);
+define('UseSMSGW', false);
 ?>

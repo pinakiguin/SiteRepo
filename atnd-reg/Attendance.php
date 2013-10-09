@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../lib.inc.php';
+require_once __DIR__ . '/../smsgw/smsgw.inc.php';
 WebLib::AuthSession();
 WebLib::Html5Header('Attendance Register');
 WebLib::IncludeCSS();
@@ -47,6 +48,12 @@ function PrintArr($Arr) {
         $_SESSION['Query'] = $AtndQuery;
         if ($Data->do_ins_query($AtndQuery) > 0) {
           $_SESSION['Msg'] = 'Attendance Registered!';
+          if (UseSMSGW === true) {
+            $TxtSMS = $_SESSION['InOut'] . ': ' . $_SESSION['UserName'] . "\n"
+                    . ' From: ' . $_SERVER['REMOTE_ADDR'] . "\n"
+                    . ' On: ' . date('d/m/Y l H:i:s A', $_SESSION['ATND_TIME']);
+            SMSGW::SendSMS($TxtSMS, AdminMobile);
+          }
         } else {
           $_SESSION['Msg'] = 'Unable to Register Attendance!';
         }

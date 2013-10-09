@@ -298,12 +298,9 @@ class WebLib {
    */
   public static function PageInfo() {
     $strfile = strtok($_SERVER['PHP_SELF'], '/');
-//echo $_SERVER['PHP_SELF'].' | '.$strfile;
     $str = strtok('/');
-//echo ' | '.$str;
     while ($str) {
       $strfile = $str;
-//echo ' | '.$strfile;
       $str = strtok('/');
     }
     $reg = new MySQLiDB();
@@ -739,7 +736,7 @@ class WebLib {
       $_SESSION['BaseURL'] = $Proto . $_SERVER['HTTP_HOST'] . $_SESSION['BaseDIR'];
       $_SESSION['AppKey'] = AppKey;
       self::DeployInfo();
-      //$_SESSION['Version'] = 'v1.1-15-ge290fb2';
+      //$_SESSION['Version'] = 'v1.1-30-gbcffe1e 20131009';
     }
   }
 
