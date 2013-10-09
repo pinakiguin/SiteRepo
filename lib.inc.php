@@ -564,8 +564,8 @@ class WebLib {
     }
     if (!isset($_SESSION['MenuItems'])) {
       $MenuData = new MySQLiDBHelper(HOST_Name, MySQL_User, MySQL_Pass, MySQL_DB);
-      $MenuData->where('Activated', '1');
-      $_SESSION['MenuItems'] = $MenuData->get('`' . MySQL_Pre . 'MenuItems`');
+      $MenuQry = 'Select * from `' . MySQL_Pre . 'MenuItems` Where `Activated` Order By `MenuOrder`';
+      $_SESSION['MenuItems'] = $MenuData->rawQuery($MenuQry);
       unset($MenuData);
     }
     $MenuItems = array_filter($_SESSION['MenuItems'], array(new FilterSame('AppID', $AppID), 'IsSame'));
