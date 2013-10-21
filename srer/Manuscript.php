@@ -41,7 +41,7 @@ if (intval($_SESSION['Part']['PartID']) > 0) {
 
   $pdf->FormDesc = 'List of Deletion';
   $_SESSION['TableName'] = MySQL_Pre . 'SRER_Form7';
-  $_SESSION['Fields'] = '`SlNo` as `Sl.No. of|Draft Roll *`,`ObjectorName` as `Name`,\'\' as `Sex`,\'\' as `Age`,'
+  $_SESSION['Fields'] = '`SlNo` as `Sl.No. of|Draft Roll *`,`DelPersonName` as `Name`,\'\' as `Sex`,\'\' as `Age`,'
           . '\'\' as `EPIC No. if any`,`ObjectReason` as `Reason for Deletion|(E / S / R / M / Q)`,'
           . '\'\' as `Process followed|(Form-7/Rule 21 A)`';
   $ColWidths = array(

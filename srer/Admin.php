@@ -28,6 +28,7 @@ if (WebLib::GetVal($_POST, 'ACNo') != "")
     <form name="frmSRER" method="post" action="<?php WebLib::GetVal($_SERVER, 'PHP_SELF') ?>">
       <input type="submit" name="FormName" value="User Activity" />
       <input type="submit" name="FormName" value="AC wise Data Entry Status" />
+      <input type="submit" name="FormName" value="AC wise Accepted Male Female (Form6)" />
       <input type="submit" name="FormName" value="Block wise Data Entry Status" />
       <input type="submit" name="FormName" value="Block AC wise Data Entry Status" />
       <input type="submit" name="FormName" value="Block AC wise Accepted" />
@@ -260,6 +261,22 @@ if (WebLib::GetVal($_POST, 'ACNo') != "")
         ShowSRER($Query);
         $Query = "Select SUM(CountF6) as TotalF6,SUM(CountF6A) as TotalF6A,SUM(CountF7) as TotalF7,"
                 . " SUM(CountF8) as TotalF8,SUM(CountF8A) as TotalF8A,"
+                . " SUM(Total) as Total FROM ({$Query}) as T";
+        ShowSRER($Query);
+        break;
+      case 'AC wise Accepted Male Female (Form6)':
+        $Query = "SELECT `ACNo`,SUM(MaleCount) as `Male`,SUM(FemCount) as `Female`,"
+                . "(IFNULL(SUM(MaleCount),0)+IFNULL(SUM(FemCount),0)) as Total "
+                . " FROM `" . MySQL_Pre . "Users` U INNER JOIN `" . MySQL_Pre . "SRER_PartMap` P "
+                . " ON (U.UserMapID=P.UserMapID) LEFT JOIN "
+                . "(SELECT PartID,Count(*) as `MaleCount` FROM `" . MySQL_Pre . "SRER_Form6`  "
+                . " Where (LOWER(TRIM(`Status`))='a' AND LOWER(TRIM(`Sex`))='m') GROUP BY PartID) F6M "
+                . " ON (F6M.PartID=P.PartID) LEFT JOIN "
+                . "(SELECT PartID,Count(*) as `FemCount` FROM `" . MySQL_Pre . "SRER_Form6` "
+                . " Where (LOWER(TRIM(`Status`))='a' AND LOWER(TRIM(`Sex`))='f') GROUP BY PartID) F6F "
+                . " ON (F6F.PartID=P.PartID) GROUP BY ACNo";
+        ShowSRER($Query);
+        $Query = "Select SUM(Male) as `Total Male`,SUM(Female) as `Total Female`,"
                 . " SUM(Total) as Total FROM ({$Query}) as T";
         ShowSRER($Query);
         break;
