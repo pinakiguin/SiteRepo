@@ -6,7 +6,7 @@ if ($_SERVER['SCRIPT_FILENAME'] === __FILE__) {
 $reg = new MySQLiDBHelper(HOST_Name, MySQL_User, MySQL_Pass, MySQL_DB);
 
 if (isset($_REQUEST['Delete'])) {
-  $DelData['Deleted'] = true;
+  $DelData['Deleted'] = 1;
   $reg->where('UploadID', WebLib::GetVal($_REQUEST, 'Delete'));
   $reg->update('uploads', $DelData);
 }

@@ -36,7 +36,7 @@ function PrintArr($Arr) {
       <?php
       $Data = new MySQLiDB();
 
-      if (WebLib::GetVal($_POST, 'CmdAtnd') !== null) {
+      if ((WebLib::GetVal($_POST, 'CmdAtnd') !== null) && (WebLib::GetVal($_SESSION, 'AtndDone') !== '1')) {
         if ($_SESSION['InOut'] === 'In') {
           $AtndQuery = 'INSERT INTO `' . MySQL_Pre . 'ATND_Register` (`UserMapID`, `InDateTime`) '
                   . 'VALUES (' . $_SESSION['UserMapID'] . ',FROM_UNIXTIME(' . $_SESSION['ATND_TIME'] . '));';
@@ -48,6 +48,7 @@ function PrintArr($Arr) {
         $_SESSION['Query'] = $AtndQuery;
         if ($Data->do_ins_query($AtndQuery) > 0) {
           $_SESSION['Msg'] = 'Attendance Registered!';
+          $_SESSION['AtndDone'] = '1';
           if (UseSMSGW === true) {
             $TxtSMS = $_SESSION['InOut'] . ': ' . $_SESSION['UserName'] . "\n"
                     . ' From: ' . $_SERVER['REMOTE_ADDR'] . "\n"
@@ -65,8 +66,6 @@ function PrintArr($Arr) {
               . ' WHERE `UserMapID`=' . $_SESSION['UserMapID'] . ' AND `InDateTime`>CURDATE();';
       $_SESSION['AtndID'] = $Data->do_max_query($Query);
 
-      $InOut['In Time'] = null;
-
       $Query = 'SELECT DATE_FORMAT(`InDateTime`,"%d-%m-%Y") as `Attendance Date`, '
               . ' DATE_FORMAT(`InDateTime`,"%r") as `In Time`, '
               . ' DATE_FORMAT(`OutDateTime`,"%r") as `Out Time` FROM `' . MySQL_Pre . 'ATND_Register`'
@@ -74,11 +73,15 @@ function PrintArr($Arr) {
 
       $_SESSION['ATND_TIME'] = time();
       $_SESSION['InOut'] = ($_SESSION['AtndID'] === 0 ? 'In' : 'Out');
+      if (WebLib::GetVal($_SESSION, 'AtndDone') !== '1') {
+        ?>
+        <span class="Notice"><b style="font-size:large;">Attendance for <?php echo date('d-m-Y') . ':'; ?></b>
+          <input class="button" name="CmdAtnd" id="CmdAtnd" type="submit"
+                 value="<?php echo $_SESSION['InOut'] . ' : ' . date('H:i:s a', $_SESSION['ATND_TIME']); ?>"/>
+        </span>
+        <?php
+      }
       ?>
-      <span class="Notice"><b style="font-size:large;">Attendance for <?php echo date('d-m-Y') . ':'; ?></b>
-        <input class="button" name="CmdAtnd" id="CmdAtnd" type="submit"
-               value="<?php echo $_SESSION['InOut'] . ' : ' . date('H:i:s a', $_SESSION['ATND_TIME']); ?>"/>
-      </span>
     </form>
     <?php
     //PrintArr($_SESSION);
