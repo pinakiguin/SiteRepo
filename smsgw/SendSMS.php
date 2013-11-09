@@ -7,7 +7,7 @@ require_once(__DIR__ . '/../lib.inc.php');
 require_once __DIR__ . '/../smsgw/smsgw.inc.php';
 $saveData['MobileNo'] = WebLib::GetVal($_POST, 'MobileNo', true);
 $saveData['TxtSMS'] = WebLib::GetVal($_POST, 'TxtSMS', true) . "\n"
-        . '--' . "\n" . date('d/m/Y l H:i:s A', time()) . "\n" . ' NIC SMS Gateway';
+        . '--' . "\n" . date('l d/m/Y H:i:s', time()) . "\n" . 'NIC SMS Gateway';
 
 if (($_SERVER['REMOTE_ADDR'] === '208.91.198.76') || ($_SERVER['REMOTE_ADDR'] === '10.26.19.4')) {
   require_once(__DIR__ . '/../class.MySQLiDBHelper.php');

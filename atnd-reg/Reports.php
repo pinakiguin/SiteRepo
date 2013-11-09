@@ -37,7 +37,7 @@ $Data = new MySQLiDB();
       <hr /><br />
     </form>
     <?php
-    $Query = 'SELECT DATE_FORMAT(`InDateTime`,"%d-%m-%Y") as `Attendance Date`, '
+    $Query = 'SELECT DATE_FORMAT(`InDateTime`,"%d-%m-%Y %W") as `Attendance Date`, '
             . ' DATE_FORMAT(`InDateTime`,"%r") as `In Time`, '
             . ' DATE_FORMAT(`OutDateTime`,"%r") as `Out Time` FROM `' . MySQL_Pre . 'ATND_Register`'
             . ' WHERE DATE_FORMAT(`InDateTime`,"%m-%Y")=\'' . WebLib::GetVal($_POST, 'MonYr', true) . '\''
