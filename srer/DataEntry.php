@@ -11,7 +11,7 @@ WebLib::IncludeCSS();
 WebLib::JQueryInclude();
 WebLib::IncludeCSS('srer/css/DataEntry.css');
 WebLib::IncludeJS('srer/js/DataEntry.js');
-WebLib::IncludeCSS('css/chosen.min.css');
+WebLib::IncludeCSS('css/chosen.css');
 WebLib::IncludeJS('js/chosen.jquery.min.js');
 WebLib::IncludeJS('js/jquery.validate.min.js');
 WebLib::IncludeJS('js/additional-methods.min.js');

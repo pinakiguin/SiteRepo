@@ -8,7 +8,7 @@ WebLib::IncludeCSS();
 WebLib::JQueryInclude();
 WebLib::IncludeCSS('cp/css/GroupCP.css');
 WebLib::IncludeJS('cp/js/GroupCP.js');
-WebLib::IncludeCSS('css/chosen.min.css');
+WebLib::IncludeCSS('css/chosen.css');
 WebLib::IncludeJS('js/chosen.jquery.min.js');
 WebLib::IncludeJS('js/jquery.validate.min.js');
 WebLib::IncludeJS('js/additional-methods.min.js');

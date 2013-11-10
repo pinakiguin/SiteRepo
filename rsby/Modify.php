@@ -5,7 +5,7 @@ WebLib::AuthSession();
 WebLib::Html5Header('RSBY-2014');
 WebLib::IncludeCSS();
 WebLib::JQueryInclude();
-WebLib::IncludeCSS('css/chosen.min.css');
+WebLib::IncludeCSS('css/chosen.css');
 WebLib::IncludeJS('js/chosen.jquery.min.js');
 WebLib::IncludeJS('rsby/js/Modify.js');
 WebLib::IncludeCSS('rsby/css/Modify.css');

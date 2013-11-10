@@ -10,7 +10,7 @@ WebLib::AuthSession();
 WebLib::Html5Header('Users');
 WebLib::IncludeCSS();
 WebLib::JQueryInclude();
-WebLib::IncludeCSS('css/chosen.min.css');
+WebLib::IncludeCSS('css/chosen.css');
 WebLib::IncludeJS('js/chosen.jquery.min.js');
 ?>
 <script type="text/javascript" >
