@@ -449,6 +449,7 @@ class WebLib {
    *
    */
   public static function InitSess() {
+    date_default_timezone_set('Asia/Kolkata');
     if (!isset($_SESSION))
       session_start();
     if (self::GetVal($_SESSION, 'BaseDIR') === NULL) {
