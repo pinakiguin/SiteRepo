@@ -4,7 +4,6 @@ if (version_compare(phpversion(), '5.3.0', 'ge')) {
     include_once __DIR__ . '/lib.inc.php';
     if (NeedsDB) {
       WebLib::CreateDB("WebSite");
-      WebLib::CreateDB("SRER");
     }
   } else {
     die('Required PHP Extensions: mysql and mysqli  <br/> But you have: ' . implode(', ', get_loaded_extensions()));
