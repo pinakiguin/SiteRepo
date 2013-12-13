@@ -80,10 +80,21 @@ function SQLDefs($ObjectName) {
       break;
     case 'PP_Status':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . $ObjectName . '` ('
-              . '`StatusCode` varchar(2) DEFAULT NULL,'
+              . '`StatusCode` varchar(2) NOT NULL,'
               . '`StatusDesc` varchar(25) DEFAULT NULL,'
-              . ' PRIMARY KEY (`TypeCode`)'
+              . ' PRIMARY KEY (`StatusCode`)'
               . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
+      break;
+    case 'PP_DataStatus':
+      $SqlDB = 'INSERT INTO `' . MySQL_Pre . 'PP_Status` (`StatusCode`,`StatusDesc`) VALUES'
+              . '( \'01\', \'Central Government\'),'
+              . '( \'02\', \'State Government\'),'
+              . '( \'03\', \'Central Govt. Undertaking\'),'
+              . '( \'04\', \'State Govt. Undertaking\'),'
+              . '( \'05\', \'Local Bodies\'),'
+              . '( \'06\', \'Govt. Aided Organization\'),'
+              . '( \'07\', \'Autonomous Body\'),'
+              . '( \'08\', \'Others (Please Specify)\');';
       break;
     case 'PP_InstType':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . $ObjectName . '` ('
@@ -91,6 +102,23 @@ function SQLDefs($ObjectName) {
               . '`TypeDesc` varchar(25) DEFAULT NULL,'
               . ' PRIMARY KEY (`TypeCode`)'
               . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
+      break;
+    case 'PP_DataInstType':
+      $SqlDB = 'INSERT INTO `' . MySQL_Pre . 'PP_InstType` (`TypeCode`,`TypeDesc`) VALUES'
+              . '( \'01\', \'Department/Directorate/Other subordinate Government Office\'),'
+              . '( \'02\', \'Railways\'),'
+              . '( \'03\', \'BSNL\'),'
+              . '( \'04\', \'Bank\'),'
+              . '( \'05\', \'L1C/GIC etc Financial Institution\'),'
+              . '( \'06\', \'Income Tax/Customs or other Revenue Collection Authority\'),'
+              . '( \'07\', \'Primary School\'),'
+              . '( \'08\', \'Secondary/Higher Secondary School\'),'
+              . '( \'09\', \'College\'),'
+              . '( \'10\', \'University\'),'
+              . '( \'11\', \'Water/Electricity Supply\'),'
+              . '( \'12\', \'Panchayat Body\'),'
+              . '( \'13\', \'Municipal Body\'),'
+              . '( \'14\', \'Others (Please Specify)\');';
       break;
     case 'PP_PoliceStns':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . $ObjectName . '` ('
