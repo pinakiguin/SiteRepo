@@ -403,6 +403,25 @@ class WebLib {
         $ObjDB->do_ins_query(self::GetTableDefs('CP_Pool'));
         $ObjDB->do_close();
         break;
+      case 'PP':
+        $ObjDB = new MySQLiDB();
+        $ObjDB->do_ins_query(self::GetTableDefs('PP_Districts'));
+        $ObjDB->do_ins_query(self::GetTableDefs('PP_SubDivns'));
+        $ObjDB->do_ins_query(self::GetTableDefs('PP_Blocks'));
+        $ObjDB->do_ins_query(self::GetTableDefs('PP_DataBlocks'));
+        $ObjDB->do_ins_query(self::GetTableDefs('PP_Status'));
+        $ObjDB->do_ins_query(self::GetTableDefs('PP_DataStatus'));
+        $ObjDB->do_ins_query(self::GetTableDefs('PP_InstType'));
+        $ObjDB->do_ins_query(self::GetTableDefs('PP_DataInstType'));
+        $ObjDB->do_ins_query(self::GetTableDefs('PP_PoliceStns'));
+        $ObjDB->do_ins_query(self::GetTableDefs('PP_DataPoliceStns'));
+        $ObjDB->do_ins_query(self::GetTableDefs('PP_ACs'));
+        $ObjDB->do_ins_query(self::GetTableDefs('PP_DataACs'));
+        $ObjDB->do_ins_query(self::GetTableDefs('PP_Offices'));
+        $ObjDB->do_ins_query(self::GetTableDefs('PP_FieldNames'));
+        $ObjDB->do_ins_query(self::GetTableDefs('PP_DataFieldNames'));
+        $ObjDB->do_close();
+        break;
       case 'ATND':
         $ObjDB = new MySQLiDB();
         $ObjDB->do_ins_query(self::GetTableDefs('ATND_Register'));
