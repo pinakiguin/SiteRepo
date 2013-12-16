@@ -5,6 +5,7 @@ WebLib::AuthSession();
 WebLib::Html5Header('Format PP1');
 WebLib::IncludeCSS();
 WebLib::IncludeCSS('pp/css/Office.css');
+WebLib::JQueryInclude();
 WebLib::IncludeJS('pp/js/Office.js');
 if (NeedsDB) {
   WebLib::CreateDB('PP');
@@ -19,6 +20,7 @@ if (NeedsDB) {
   </div>
   <div class="Header"></div>
   <?php
+  include __DIR__ . '/OfficeData.php';
   WebLib::ShowMenuBar('PP');
   ?>
   <div class="content">
@@ -49,10 +51,10 @@ if (NeedsDB) {
       <div class="FieldGroup">
         <fieldset>
           <legend>Category</legend>
-          <label for="AddrPTS">Status:</label>
-          <input id="AddrPTS" name="AddrPTS" type="text" maxlength="50"/><br/>
-          <label for="AddrVTM">Nature of Office:</label>
-          <input id="AddrVTM" name="AddrVTM" type="text" maxlength="50"/><br/>
+          <label for="Status">Status:</label>
+          <input id="Status" name="Status" type="text" maxlength="50"/><br/>
+          <label for="InstType">Nature of Office:</label>
+          <input id="InstType" name="InstType" type="text" maxlength="50"/><br/>
         </fieldset>
         <fieldset>
           <legend>Contact Number</legend>
@@ -76,11 +78,34 @@ if (NeedsDB) {
         </fieldset>
       </div>
       <div style="clear: both;"></div>
-      <label for="ACNo">Assembly Constituency:</label>
-      <input id="ACNo" name="ACNo" type="text" maxlength="3"/><br/>
-      <input type="submit" name="CmdAction" value="Save" />
-      <input type="submit" name="CmdAction" value="Delete" />
+      <div class="FieldGroup">
+        <label for="ACNo">Assembly Constituency:</label>
+        <input id="ACNo" name="ACNo" type="text" maxlength="3"/>
+      </div>
+      <div class="FieldGroup">
+        <label for="Staffs">Total no. of Staffs:</label>
+        <input id="Staffs" name="Staffs" type="text" maxlength="4"/>
+      </div>
+      <br/>
+      <input id="CmdSaveUpdate" type="submit" name="CmdAction" value="Save" />
+      <input id="CmdDel" type="submit" name="CmdAction" value="Delete" />
+      <input type="hidden" name="FormToken" value="<?php echo WebLib::GetVal($_SESSION, 'FormToken') ?>" />
     </form>
+    <div style="float: left;text-align: left; width: 400px;">
+      <p>
+      <pre>
+        <?php
+        print_r($_POST);
+        ?>
+      </pre>
+      <?php
+      $Data = new MySQLiDBHelper(HOST_Name, MySQL_User, MySQL_Pass, MySQL_DB);
+      $Rows = $Data->get(MySQL_Pre . "PP_InstType");
+      echo json_encode($Rows);
+      ?>
+      </p>
+    </div>
+    <div style="clear: both;"></div>
   </div>
   <div class="pageinfo">
     <?php WebLib::PageInfo(); ?>

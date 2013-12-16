@@ -99,7 +99,7 @@ function SQLDefs($ObjectName) {
     case 'PP_InstType':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . $ObjectName . '` ('
               . '`TypeCode` varchar(2) NOT NULL,'
-              . '`TypeDesc` varchar(25) DEFAULT NULL,'
+              . '`TypeDesc` varchar(60) DEFAULT NULL,'
               . ' PRIMARY KEY (`TypeCode`)'
               . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
       break;
