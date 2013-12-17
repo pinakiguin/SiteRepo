@@ -118,7 +118,7 @@ class MySQLiDBHelper {
    * @return array Contains the returned rows from the query.
    */
   public function rawQuery($query, $bindParams = null) {
-    $this->_query = filter_var($query, FILTER_SANITIZE_STRING);
+    $this->_query = $query;
     $stmt = $this->_prepareQuery();
 
     if (is_array($bindParams)) {
