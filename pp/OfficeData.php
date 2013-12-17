@@ -16,53 +16,47 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
     switch (WebLib::GetVal($_POST, 'CmdAction')) {
 
       case 'Save':
-        if (strlen(WebLib::GetVal($_POST, 'UserName')) > 2) {
-          $Query = 'Insert Into `' . MySQL_Pre . 'PP_Offices` (`UserName`,`CtrlMapID`,`Registered`,`Activated`)'
-                  . ' Values(\'' . WebLib::GetVal($_POST, 'UserName', TRUE) . '\',' . WebLib::GetVal($_SESSION, 'UserMapID', TRUE) . ',0,0)';
-        } else {
-          $Query = '';
-          $_SESSION['Msg'] = 'UserName must be at least 3 characters or more.';
-        }
+        $Query = 'Insert Into `' . MySQL_Pre . 'PP_Offices` (`OfficeName`, `DesgOC`, `AddrPTS`, `AddrVTM`, '
+                . '`PostOffice`, `PSCode`, `SubDivnCode`, `DistCode`, `PinCode`, `Status`, `TypeCode`, '
+                . '`Phone`, `Fax`, `Mobile`, `EMail`, `Staffs`, `ACNo`)'
+                . ' Values(\'' . WebLib::GetVal($_SESSION['PostData'], 'OfficeName', TRUE)
+                . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'DesgOC', TRUE)
+                . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'AddrPTS', TRUE)
+                . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'AddrVTM', TRUE)
+                . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'PostOffice', TRUE)
+                . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'PSCode', TRUE)
+                . '\',\'' . WebLib::GetVal($_SESSION, 'SubDivnCode', TRUE)
+                . '\',\'' . WebLib::GetVal($_SESSION, 'DistCode', TRUE)
+                . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'PinCode', TRUE)
+                . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'Status', TRUE)
+                . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'InstType', TRUE)
+                . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'Phone', TRUE)
+                . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'Fax', TRUE)
+                . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'Mobile', TRUE)
+                . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'EMail', TRUE)
+                . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'Staffs', TRUE)
+                . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'ACNo', TRUE) . '\');';
         break;
 
       case 'Update':
-        $Query = 'Update `' . MySQL_Pre . 'PP_Offices` Set `Activated`=1'
-                . ' Where `Activated`=0 AND `CtrlMapID`=' . WebLib::GetVal($_SESSION, 'UserMapID', TRUE)
-                . ' AND `UserMapID`=' . WebLib::GetVal($_POST, 'UserMapID');
-        $User = explode('|', $Data->do_max_query('Select CONCAT(`UserName`,\'|\',`UserID`) FROM `' . MySQL_Pre . 'Users`'
-                        . ' Where UserMapID=\'' . WebLib::GetVal($_POST, 'UserMapID') . '\''));
-        $Subject = 'User Account Activated - SRER 2014';
-        $Body = '<span>Your UserID: <b>' . $User[1] . '</b> is now Activated</span>';
+        $Query = 'Update `' . MySQL_Pre . 'PP_Offices` Set `OfficeName`=\''
+                . WebLib::GetVal($_SESSION['PostData'], 'OfficeName', TRUE) . '\''
+                . ' Where `OfficeSL`=' . WebLib::GetVal($_POST, 'OfficeSL', true);
         break;
 
       case 'Delete':
         $Query = 'Update `' . MySQL_Pre . 'PP_Offices` Set `Activated`=0'
                 . ' Where `Activated`=1 AND `CtrlMapID`=' . WebLib::GetVal($_SESSION, 'UserMapID', TRUE)
                 . ' AND `UserMapID`=' . WebLib::GetVal($_POST, 'UserMapID');
-        $User = explode('|', $User = $Data->do_max_query('Select CONCAT(`UserName`,\'|\',`UserID`) FROM `' . MySQL_Pre . 'Users`'
-                . ' Where UserMapID=\'' . WebLib::GetVal($_POST, 'UserMapID') . '\''));
-        $Subject = 'User Account De-Activated - SRER 2014';
-        $Body = '<span>Your UserID: <b>' . $User[1] . '</b> is now De-Activated</span>';
         break;
     }
     if ($Query !== '') {
       $Inserted = $Data->do_ins_query($Query);
       if ($Inserted > 0) {
-        if (WebLib::GetVal($_POST, 'CmdSubmit') === 'Save') {
-          $_SESSION['Msg'] = 'Office Created Successfully!';
-        } else if (WebLib::GetVal($User, 1)) {
-          $GmailResp = GMailSMTP($User[1], $User[0], $Subject, $Body);
-          $Mail = json_decode($GmailResp);
-          if ($Mail->Sent) {
-            if (WebLib::GetVal($_SESSION, 'Msg') === '') {
-              $_SESSION['Msg'] = 'User ' . WebLib::GetVal($_POST, 'CmdSubmit') . 'd Successfully!';
-            }
-          } else {
-            $_SESSION['Msg'] = 'Action completed Successfully! But Unable to Send eMail!';
-          }
-        }
+        $_SESSION['Msg'] = 'Office ' . WebLib::GetVal($_POST, 'CmdAction') . 'd Successfully!';
+        $_SESSION['PostData'] = array();
       } else {
-        $_SESSION['Msg'] = 'Unable to ' . WebLib::GetVal($_POST, 'CmdSubmit') . '!';
+        $_SESSION['Msg'] = 'Unable to ' . WebLib::GetVal($_POST, 'CmdAction') . '!' . $Query;
       }
     }
   }

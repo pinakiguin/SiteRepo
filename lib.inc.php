@@ -405,6 +405,7 @@ class WebLib {
         break;
       case 'PP':
         $ObjDB = new MySQLiDB();
+        $ObjDB->do_ins_query(self::GetTableDefs('PP_UserBlockMaps'));
         $ObjDB->do_ins_query(self::GetTableDefs('PP_Districts'));
         $ObjDB->do_ins_query(self::GetTableDefs('PP_SubDivns'));
         $ObjDB->do_ins_query(self::GetTableDefs('PP_Blocks'));

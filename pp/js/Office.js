@@ -4,6 +4,59 @@
  */
 
 $(function() {
+  $("#OfficeName").autocomplete(
+          {source: "AjaxOffice.php",
+            minLength: 5,
+            select: function(event, ui) {
+              event.preventDefault();
+              $('#OfficeName').val(ui.item.label);
+              $('#OfficeSL').val(ui.item.value);
+              $.ajax({
+                type: 'POST',
+                url: 'MySQLiDB.pp.ajax.php',
+                dataType: 'html',
+                xhrFields: {
+                  withCredentials: true
+                },
+                data: {
+                  'AjaxToken': $('#AjaxToken').val(),
+                  'CallAPI': 'GetOffice',
+                  'Params': new Array($('#OfficeCode').val())
+                }
+              }).done(function(data) {
+                try {
+                  var DataResp = $.parseJSON(data);
+                  delete data;
+                  $('#AjaxToken').val(DataResp.AjaxToken);
+                  $('#Msg').html(DataResp.Msg);
+                  $.each(DataResp.Data,
+                          function(index, value) {
+                            $.each(value, function(key, data) {
+                              var Field = $('#' + key);
+                              Field.val(data);
+                            });
+                          });
+                  $('#ED').html(DataResp.RT);
+                  $('#CmdSaveUpdate').val('Update');
+                  delete DataResp;
+                }
+                catch (e) {
+                  $('#Msg').html('Server Error:' + e);
+                  $('#Error').html(data);
+                }
+              }).fail(function(msg) {
+                $('#Msg').html(msg);
+              });
+            },
+            autoFocus: true
+          }
+  );
+  $("#DesgOC").autocomplete(
+          {source: "AjaxDesgOC.php",
+            minLength: 2,
+            autoFocus: true
+          }
+  );
   $("#InstType").autocomplete(
           {source:
                     [

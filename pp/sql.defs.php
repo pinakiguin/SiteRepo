@@ -3,6 +3,13 @@
 function SQLDefs($ObjectName) {
   $SqlDB = '';
   switch ($ObjectName) {
+    case 'PP_UserBlockMaps':
+      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . $ObjectName . '` ('
+              . '`BlockCode` varchar(3) DEFAULT NULL,'
+              . '`UserMapID` int(5) DEFAULT 1,'
+              . ' PRIMARY KEY (`BlockCode`)'
+              . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
+      break;
     case 'PP_Districts':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . $ObjectName . '` ('
               . '`DistCode` varchar(2) DEFAULT NULL,'
