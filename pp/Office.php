@@ -24,8 +24,8 @@ if (NeedsDB) {
   LibPP::SetUserEnv();
   if (WebLib::GetVal($_POST, 'FormToken') !== null) {
     $_SESSION['PostData'] = WebLib::InpSanitize($_POST);
-  } elseif (!is_array($_SESSION['PostData'])) {
-    $_SESSION['PostData'] = array();
+  } elseif (!isset($_SESSION['PostData'])) {
+    $_SESSION['PostData'] = array('CmdAction' => 'Save');
   }
   include __DIR__ . '/OfficeData.php';
   WebLib::ShowMenuBar('PP');
@@ -112,7 +112,8 @@ if (NeedsDB) {
                value="<?php echo WebLib::GetVal($_SESSION['PostData'], 'Staffs') ?>"/>
       </div>
       <br/>
-      <input id="CmdSaveUpdate" type="submit" name="CmdAction" value="Save" />
+      <input id="CmdSaveUpdate" type="submit" name="CmdAction"
+             value="<?php echo WebLib::GetVal($_SESSION['PostData'], 'CmdAction') ?>" />
       <input id="CmdDel" type="submit" name="CmdAction" value="Delete" />
       <input type="hidden" name="FormToken" value="<?php echo WebLib::GetVal($_SESSION, 'FormToken') ?>" />
       <input type="hidden" id="AjaxToken" value="<?php echo WebLib::GetVal($_SESSION, 'Token'); ?>" />

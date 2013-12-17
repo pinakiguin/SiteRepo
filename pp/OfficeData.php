@@ -54,7 +54,7 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
       $Inserted = $Data->do_ins_query($Query);
       if ($Inserted > 0) {
         $_SESSION['Msg'] = 'Office ' . WebLib::GetVal($_POST, 'CmdAction') . 'd Successfully!';
-        $_SESSION['PostData'] = array();
+        $_SESSION['PostData'] = array('CmdAction' => 'Save');
       } else {
         $_SESSION['Msg'] = 'Unable to ' . WebLib::GetVal($_POST, 'CmdAction') . '!' . $Query;
       }
