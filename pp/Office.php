@@ -71,9 +71,9 @@ if (NeedsDB) {
           <label for="Status">Status:</label>
           <input id="Status" name="Status" type="text" maxlength="50"
                  value="<?php echo WebLib::GetVal($_SESSION['PostData'], 'Status') ?>"/><br/>
-          <label for="InstType">Nature of Office:</label>
-          <input id="InstType" name="InstType" type="text" maxlength="50"
-                 value="<?php echo WebLib::GetVal($_SESSION['PostData'], 'InstType') ?>"/><br/>
+          <label for="TypeCode">Nature of Office:</label>
+          <input id="TypeCode" name="TypeCode" type="text" maxlength="50"
+                 value="<?php echo WebLib::GetVal($_SESSION['PostData'], 'TypeCode') ?>"/><br/>
         </fieldset>
         <fieldset>
           <legend>Contact Number</legend>
@@ -118,21 +118,28 @@ if (NeedsDB) {
       <input type="hidden" name="FormToken" value="<?php echo WebLib::GetVal($_SESSION, 'FormToken') ?>" />
       <input type="hidden" id="AjaxToken" value="<?php echo WebLib::GetVal($_SESSION, 'Token'); ?>" />
     </form>
-    <div id="Msg" style="float: left;text-align: left; width: 400px;">
-      <p>
-      <pre>
+    <?php if (isset($_GET['Debug'])) { ?>
+      <div id="Debug" style="float: left;text-align: left; width: 400px;">
+        <p>
+        <pre>
+          <?php
+          print_r($_POST);
+          print_r($_SESSION);
+          ?>
+        </pre>
         <?php
-        print_r($_POST);
-        print_r($_SESSION);
+        $Data = new MySQLiDBHelper(HOST_Name, MySQL_User, MySQL_Pass, MySQL_DB);
+        $Rows = $Data->rawQuery('Select `ACNo` as `value`,concat(`ACNo`,\'-\',`ACName`) as `label` from `' . MySQL_Pre . "PP_ACs`");
+        echo json_encode($Rows);
         ?>
-      </pre>
+        </p>
+      </div>
       <?php
-      //$Data = new MySQLiDBHelper(HOST_Name, MySQL_User, MySQL_Pass, MySQL_DB);
-      //$Rows = $Data->get(MySQL_Pre . "PP_InstType");
-      //echo json_encode($Rows);
-      ?>
-      </p>
-    </div>
+    }
+    ?>
+    <span class="Message" id="Msg" style="float: left;">
+      <b>Loading please wait...</b>
+    </span>
     <pre id="Error"></pre>
     <div style="clear: both;"></div>
   </div>

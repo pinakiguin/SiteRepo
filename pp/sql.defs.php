@@ -209,14 +209,15 @@ function SQLDefs($ObjectName) {
               . '`SubDivnCode` varchar(4) DEFAULT NULL, '
               . '`DistCode` varchar(2) DEFAULT NULL, '
               . '`PinCode` varchar(6) DEFAULT NULL, '
-              . '`Status` varchar(2) DEFAULT NULL, '
-              . '`TypeCode` varchar(2) DEFAULT NULL, '
+              . '`Status` varchar(50) DEFAULT NULL, '
+              . '`TypeCode` varchar(50) DEFAULT NULL, '
               . '`Phone` varchar(11) DEFAULT NULL, '
               . '`Fax` varchar(11) DEFAULT NULL, '
               . '`Mobile` varchar(10) DEFAULT NULL, '
               . '`EMail` varchar(25) DEFAULT NULL, '
               . '`Staffs` int(5) DEFAULT NULL, '
               . '`ACNo` varchar(3) DEFAULT NULL, '
+              . '`UserMapID` varchar(5) DEFAULT NULL, '
               . ' PRIMARY KEY (`OfficeSL`)'
               . ' ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
     ';

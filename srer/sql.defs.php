@@ -126,7 +126,8 @@ function SQLDefs($ObjectName) {
               . '`ACNo` varchar(3) DEFAULT NULL,'
               . '`ACName` varchar(25) DEFAULT NULL,'
               . '`DistCode` varchar(2) DEFAULT NULL,'
-              . '`UserMapID` int(5) DEFAULT 1'
+              . '`UserMapID` int(5) DEFAULT 1,'
+              . ' PRIMARY KEY (`ACNo`)'
               . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
       break;
     case 'SRER_Districts':

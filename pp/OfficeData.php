@@ -29,7 +29,7 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
                 . '\',\'' . WebLib::GetVal($_SESSION, 'DistCode', TRUE)
                 . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'PinCode', TRUE)
                 . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'Status', TRUE)
-                . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'InstType', TRUE)
+                . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'TypeCode', TRUE)
                 . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'Phone', TRUE)
                 . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'Fax', TRUE)
                 . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'Mobile', TRUE)
@@ -39,15 +39,28 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
         break;
 
       case 'Update':
-        $Query = 'Update `' . MySQL_Pre . 'PP_Offices` Set `OfficeName`=\''
-                . WebLib::GetVal($_SESSION['PostData'], 'OfficeName', TRUE) . '\''
+        $Query = 'Update `' . MySQL_Pre . 'PP_Offices` Set '
+                . '`OfficeName`=\'' . WebLib::GetVal($_SESSION['PostData'], 'OfficeName', TRUE) . '\','
+                . '`DesgOC`=\'' . WebLib::GetVal($_SESSION['PostData'], 'DesgOC', TRUE) . '\','
+                . '`AddrPTS`=\'' . WebLib::GetVal($_SESSION['PostData'], 'AddrPTS', TRUE) . '\','
+                . '`AddrVTM`=\'' . WebLib::GetVal($_SESSION['PostData'], 'AddrVTM', TRUE) . '\', '
+                . '`PostOffice`=\'' . WebLib::GetVal($_SESSION['PostData'], 'PostOffice', TRUE) . '\','
+                . '`PSCode`=\'' . WebLib::GetVal($_SESSION['PostData'], 'PSCode', TRUE) . '\','
+                . '`PinCode`=\'' . WebLib::GetVal($_SESSION['PostData'], 'PinCode', TRUE) . '\', '
+                . '`Status`=\'' . WebLib::GetVal($_SESSION['PostData'], 'Status', TRUE) . '\', '
+                . '`TypeCode`=\'' . WebLib::GetVal($_SESSION['PostData'], 'TypeCode', TRUE) . '\', '
+                . '`Phone`=\'' . WebLib::GetVal($_SESSION['PostData'], 'Phone', TRUE) . '\', '
+                . '`Fax`=\'' . WebLib::GetVal($_SESSION['PostData'], 'Fax', TRUE) . '\', '
+                . '`Mobile`=\'' . WebLib::GetVal($_SESSION['PostData'], 'Mobile', TRUE) . '\', '
+                . '`EMail`=\'' . WebLib::GetVal($_SESSION['PostData'], 'EMail', TRUE) . '\', '
+                . '`Staffs`=\'' . WebLib::GetVal($_SESSION['PostData'], 'Staffs', TRUE) . '\', '
+                . '`ACNo`=\'' . WebLib::GetVal($_SESSION['PostData'], 'ACNo', TRUE) . '\''
                 . ' Where `OfficeSL`=' . WebLib::GetVal($_POST, 'OfficeSL', true);
         break;
 
       case 'Delete':
-        $Query = 'Update `' . MySQL_Pre . 'PP_Offices` Set `Activated`=0'
-                . ' Where `Activated`=1 AND `CtrlMapID`=' . WebLib::GetVal($_SESSION, 'UserMapID', TRUE)
-                . ' AND `UserMapID`=' . WebLib::GetVal($_POST, 'UserMapID');
+        $Query = 'Delete from `' . MySQL_Pre . 'PP_Offices` '
+                . ' Where `OfficeSL`=' . WebLib::GetVal($_POST, 'OfficeSL', true);
         break;
     }
     if ($Query !== '') {
