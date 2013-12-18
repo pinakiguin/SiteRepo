@@ -9,8 +9,6 @@ $(function() {
             minLength: 5,
             focus: function(event, ui) {
               event.preventDefault();
-              $('#OfficeName').val(ui.item.label);
-              $('#OfficeSL').val(ui.item.value);
             },
             select: function(event, ui) {
               event.preventDefault();

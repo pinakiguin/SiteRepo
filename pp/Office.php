@@ -36,7 +36,7 @@ if (NeedsDB) {
     <form class="FieldGroup" method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
       <div class="FieldGroup">
         <label for="OfficeName"><strong>Name of the Office:</strong></label>
-        <input id="OfficeName" name="OfficeName" type="text" maxlength="50"
+        <input id="OfficeName" name="OfficeName" type="text" maxlength="100"
                value="<?php echo WebLib::GetVal($_SESSION['PostData'], 'OfficeName') ?>"/>
         <input id="OfficeSL" name="OfficeSL" type="hidden" maxlength="5"
                value="<?php echo WebLib::GetVal($_SESSION['PostData'], 'OfficeSL') ?>"/>
@@ -95,7 +95,7 @@ if (NeedsDB) {
           </div>
           <div class="FieldGroup">
             <label for="EMail Address">E-Mail Address:</label>
-            <input id="EMail" name="EMail" type="text" maxlength="25"
+            <input id="EMail" name="EMail" type="text" maxlength="50"
                    value="<?php echo WebLib::GetVal($_SESSION['PostData'], 'EMail') ?>"/>
           </div>
         </fieldset>
