@@ -267,6 +267,7 @@ class WebLib {
    */
   public static function InpSanitize($PostData) {
     $Fields = '';
+    $_SESSION['Msg'] = "";
     $Data = new MySQLiDB();
     foreach ($PostData as $FieldName => &$Value) {
       $Value = $Data->SqlSafe($Value);
@@ -757,8 +758,8 @@ class WebLib {
       $Proto = (self::GetVal($_SERVER, 'HTTPS') === 'on') ? 'https://' : 'http://';
       $_SESSION['BaseURL'] = $Proto . $_SERVER['HTTP_HOST'] . $_SESSION['BaseDIR'];
       $_SESSION['AppKey'] = AppKey;
-      self::DeployInfo();
-      //$_SESSION['Version'] = 'v1.1-33-ge8d434f 20131025';
+      //self::DeployInfo();
+      $_SESSION['Version'] = 'v1.1-52-g1a0b816 20131219';
     }
   }
 

@@ -68,10 +68,10 @@ if (NeedsDB) {
       <div class="FieldGroup">
         <fieldset>
           <legend>Category</legend>
-          <label for="Status">Status:</label>
+          <label for="Status">Nature of Office:</label>
           <input id="Status" name="Status" type="text" maxlength="50"
                  value="<?php echo WebLib::GetVal($_SESSION['PostData'], 'Status') ?>"/><br/>
-          <label for="TypeCode">Nature of Office:</label>
+          <label for="TypeCode">Status:</label>
           <input id="TypeCode" name="TypeCode" type="text" maxlength="50"
                  value="<?php echo WebLib::GetVal($_SESSION['PostData'], 'TypeCode') ?>"/><br/>
         </fieldset>

@@ -16,26 +16,29 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
     switch (WebLib::GetVal($_POST, 'CmdAction')) {
 
       case 'Save':
-        $Query = 'Insert Into `' . MySQL_Pre . 'PP_Offices` (`OfficeName`, `DesgOC`, `AddrPTS`, `AddrVTM`, '
-                . '`PostOffice`, `PSCode`, `SubDivnCode`, `DistCode`, `PinCode`, `Status`, `TypeCode`, '
-                . '`Phone`, `Fax`, `Mobile`, `EMail`, `Staffs`, `ACNo`)'
-                . ' Values(\'' . WebLib::GetVal($_SESSION['PostData'], 'OfficeName', TRUE)
-                . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'DesgOC', TRUE)
-                . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'AddrPTS', TRUE)
-                . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'AddrVTM', TRUE)
-                . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'PostOffice', TRUE)
-                . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'PSCode', TRUE)
-                . '\',\'' . WebLib::GetVal($_SESSION, 'SubDivnCode', TRUE)
-                . '\',\'' . WebLib::GetVal($_SESSION, 'DistCode', TRUE)
-                . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'PinCode', TRUE)
-                . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'Status', TRUE)
-                . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'TypeCode', TRUE)
-                . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'Phone', TRUE)
-                . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'Fax', TRUE)
-                . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'Mobile', TRUE)
-                . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'EMail', TRUE)
-                . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'Staffs', TRUE)
-                . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'ACNo', TRUE) . '\');';
+        if ($_SESSION['Msg'] === "") {
+          $Query = 'Insert Into `' . MySQL_Pre . 'PP_Offices` (`OfficeName`, `DesgOC`, `AddrPTS`, `AddrVTM`, '
+                  . '`PostOffice`, `PSCode`, `SubDivnCode`, `DistCode`, `PinCode`, `Status`, `TypeCode`, '
+                  . '`Phone`, `Fax`, `Mobile`, `EMail`, `Staffs`, `ACNo`,`UserMapID`)'
+                  . ' Values(\'' . WebLib::GetVal($_SESSION['PostData'], 'OfficeName', TRUE)
+                  . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'DesgOC', TRUE)
+                  . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'AddrPTS', TRUE)
+                  . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'AddrVTM', TRUE)
+                  . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'PostOffice', TRUE)
+                  . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'PSCode', TRUE)
+                  . '\',\'' . WebLib::GetVal($_SESSION, 'SubDivnCode', TRUE)
+                  . '\',\'' . WebLib::GetVal($_SESSION, 'DistCode', TRUE)
+                  . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'PinCode', TRUE)
+                  . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'Status', TRUE)
+                  . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'TypeCode', TRUE)
+                  . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'Phone', TRUE)
+                  . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'Fax', TRUE)
+                  . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'Mobile', TRUE)
+                  . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'EMail', TRUE)
+                  . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'Staffs', TRUE)
+                  . '\',\'' . WebLib::GetVal($_SESSION['PostData'], 'ACNo', TRUE)
+                  . '\',' . WebLib::GetVal($_SESSION, 'UserMapID', TRUE) . ');';
+        }
         break;
 
       case 'Update':
