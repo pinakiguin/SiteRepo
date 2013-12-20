@@ -141,7 +141,11 @@ function SQLDefs($ObjectName) {
               . '(32, \'CP\', 1, 0, \'Home\', \'index.php\', 1),'
               . '(34, \'CP\', 2, 1, \'Counting Personnel Randomization\', \'cp/GroupCP.php\', 1),'
               . '(35, \'CP\', 3, 1, \'Reports\', \'cp/Reports.php\', 1),'
-              . '(36, \'CP\', 4, 1, \'Log Out!\', \'login.php?LogOut=1\', 1);';
+              . '(36, \'CP\', 4, 1, \'Log Out!\', \'login.php?LogOut=1\', 1);'
+              . '(37, \'WebSite\', 2, 1, \'Monthly Performance Report\', \'mpr\', 1),'
+              . '(38, \'MPR\', 1, 0, \'Home\', \'index.php\', 1),'
+              . '(39, \'MPR\', 2, 1, \'Department\', \'mpr/Department.php\', 1),'
+              . '(40, \'MPR\', 3, 1, \'Log Out!\', \'login.php?LogOut=1\', 1);';
       break;
     case 'MenuACL':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . 'MenuACL` ('
