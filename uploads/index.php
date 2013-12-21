@@ -38,7 +38,7 @@ WebLib::JQueryInclude();
   <div class="Header">
   </div>
   <?php
-  WebLib::ShowMenuBar('ATND');
+  WebLib::ShowMenuBar('WebSite');
   ?>
   <div class="content">
     <h2>Website Uploads</h2>
@@ -73,13 +73,14 @@ WebLib::JQueryInclude();
       $UploadData['Topic'] = WebLib::GetVal($_POST, 'Topic');
       $UploadData['Dated'] = WebLib::GetVal($_POST, 'Dated');
       $UploadData['Expiry'] = WebLib::GetVal($_POST, 'Expiry');
+      $UploadData['UserMapID'] = $_SESSION['UserMapID'];
 
       $UploadData['Attachment'] = $_FILES['attachment']['name'];
       $UploadData['mime'] = $_FILES['attachment']['type'];
       $UploadData['size'] = $_FILES['attachment']['size'];
       $UploadData['file'] = file_get_contents($_FILES['attachment']['tmp_name']);
 
-      if ($reg->insert('uploads', $UploadData)) {
+      if ($reg->insert(MySQL_Pre . 'Uploads', $UploadData)) {
         echo '<h3 style="color:#228b22;">Suuccessfully uploaded!</h3>';
       } else {
         echo '<h3 style="color:#ff0000;">Unable to upload!</h3>';

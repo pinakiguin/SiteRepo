@@ -11,8 +11,8 @@ if (isset($_REQUEST['Delete'])) {
   $reg->update('uploads', $DelData);
 }
 $query = 'SELECT `UploadID`,`Dept`,`Subject`,`Dated`,`Expiry`,`size`,`Attachment` '
-        . ' FROM `uploads` '
-        . ' Where NOT `Deleted` order by `UploadID` desc';
+        . ' FROM `' . MySQL_Pre . 'Uploads` '
+        . ' Where `UserMapID`=' . $_SESSION['UserMapID'] . ' AND NOT `Deleted` order by `UploadID` desc';
 $result = $reg->query($query);
 unset($reg);
 ?>

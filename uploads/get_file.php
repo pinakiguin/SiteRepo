@@ -7,7 +7,7 @@ if (isset($_GET['ID'])) {
   // Connect to the database
   $Data = new MySQLiDB();
   // Fetch the file information
-  $query = " SELECT `Attachment`,`mime`, `Size`, `file` FROM `uploads` "
+  $query = 'SELECT `Attachment`,`mime`, `Size`, `file` FROM `' . MySQL_Pre . 'Uploads` '
           . " WHERE `UploadID` = " . intval($LetterID) . " and not Deleted";
   $result = $Data->do_sel_query($query);
 
@@ -17,7 +17,8 @@ if (isset($_GET['ID'])) {
     // Print headers
     header("Content-Type: " . $row['mime']);
     header("Content-Length: " . $row['Size']);
-    header("Content-Disposition: inline;"); // filename=". $row['Attachment']);
+    header("Content-Disposition: attachment; filename=" . $row['Attachment']);
+    // header("Content-Disposition: inline;);
     // Print data
     echo $row['file'];
     exit;
