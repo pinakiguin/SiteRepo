@@ -219,6 +219,7 @@ class WebLib {
    * @return string
    */
   public static function ToDate($AppDate) {
+    date_default_timezone_set('Asia/Kolkata');
     if ($AppDate != '')
       return date('d-m-Y', strtotime($AppDate));
     else
@@ -232,6 +233,7 @@ class WebLib {
    * @return string
    */
   public static function ToDBDate($AppDate) {
+    date_default_timezone_set('Asia/Kolkata');
     if ($AppDate == '')
       return date('Y-m-d', time());
     else
