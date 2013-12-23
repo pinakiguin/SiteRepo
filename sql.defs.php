@@ -156,6 +156,7 @@ function SQLDefs($ObjectName) {
               . '`AclID` int(11) NOT NULL AUTO_INCREMENT,'
               . '`MenuID` int(11) NOT NULL,'
               . '`UserMapID` int(11) NOT NULL,'
+              . '`AllowOnly` BOOLEAN NOT NULL DEFAULT FALSE,'
               . '`Activated` tinyint(1) NOT NULL DEFAULT \'1\','
               . ' PRIMARY KEY (`AclID`),'
               . ' UNIQUE KEY `UserMenu` (`MenuID`,`UserMapID`)'
@@ -165,7 +166,7 @@ function SQLDefs($ObjectName) {
       $SqlDB = 'CREATE OR REPLACE VIEW `' . MySQL_Pre . 'RestrictedMenus` AS '
               . ' SELECT `URL`,`UserMapID` FROM `' . MySQL_Pre . 'MenuItems` `M` '
               . ' JOIN `' . MySQL_Pre . 'MenuACL` `U` ON `U`.`MenuID`=`M`.`MenuID`'
-              . ' WHERE `M`.`Activated`=1 AND `U`.`Activated`=1';
+              . ' WHERE `U`.`AllowOnly`=FALSE AND `M`.`Activated`=1 AND `U`.`Activated`=1';
       break;
     case 'Helpline':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . 'Helpline` ('
