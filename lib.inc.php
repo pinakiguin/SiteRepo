@@ -579,13 +579,13 @@ class WebLib {
     if (self::GetVal($_SESSION, 'CheckAuth') !== 'Valid') {
       $AppID = '';
     } else if (!isset($_SESSION['RestrictedMenus'])) {
-      $MenuData = new MySQLiDBHelper(HOST_Name, MySQL_User, MySQL_Pass, MySQL_DB);
+      $MenuData = new MySQLiDBHelper(); //HOST_Name, MySQL_User, MySQL_Pass, MySQL_DB);
       $MenuData->where('UserMapID', self::GetVal($_SESSION, 'UserMapID'));
       $_SESSION['RestrictedMenus'] = $MenuData->get('`' . MySQL_Pre . 'RestrictedMenus`');
       unset($MenuData);
     }
     if (!isset($_SESSION['MenuItems'])) {
-      $MenuData = new MySQLiDBHelper(HOST_Name, MySQL_User, MySQL_Pass, MySQL_DB);
+      $MenuData = new MySQLiDBHelper(); //HOST_Name, MySQL_User, MySQL_Pass, MySQL_DB);
       $MenuQry = 'Select * from `' . MySQL_Pre . 'MenuItems` Where `Activated` Order By `MenuOrder`';
       $_SESSION['MenuItems'] = $MenuData->rawQuery($MenuQry);
       unset($MenuData);

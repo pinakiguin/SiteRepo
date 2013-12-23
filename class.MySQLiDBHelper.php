@@ -72,7 +72,13 @@ class MySQLiDBHelper {
    * @param int $port
    */
 
-  public function __construct($host, $username, $password, $db, $port = NULL) {
+  public function __construct(
+  $host = HOST_Name, // Uses HOST_Name defined in congif.inc.php
+  $username = MySQL_User, // Uses MySQL_User defined in congif.inc.php
+  $password = MySQL_Pass, // Uses MySQL_Pass defined in congif.inc.php
+  $db = MySQL_DB, // Uses MySQL_DB defined in congif.inc.php
+  $port = NULL
+  ) {
     if ($port == NULL)
       $port = ini_get('mysqli.default_port');
 
@@ -386,7 +392,8 @@ class MySQLiDBHelper {
     }
     // Bind parameters to statment
     if ($hasTableData || $hasConditional) {
-      call_user_func_array(array($stmt, 'bind_param'), $this->refValues($this->_bindParams));
+      call_user_func_array(array($stmt, 'bind_param'),
+                           $this->refValues($this->_bindParams));
     }
 
     return $stmt;
@@ -432,7 +439,8 @@ class MySQLiDBHelper {
    */
   protected function _prepareQuery() {
     if (!$stmt = $this->_mysqli->prepare($this->_query)) {
-      trigger_error("Problem preparing query ($this->_query) " . $this->_mysqli->error, E_USER_ERROR);
+      trigger_error("Problem preparing query ($this->_query) " . $this->_mysqli->error,
+                    E_USER_ERROR);
     }
     return $stmt;
   }
