@@ -117,10 +117,10 @@ function SQLDefs($ObjectName) {
               . '( 7, \'WebSite\', 4, 1, \'Counting Personnel 2013\', \'cp\', 0),'
               . '( 8, \'WebSite\', 5, 1, \'RSBY-2014\', \'rsby\', 0),'
               . '( 9, \'WebSite\', 6, 1, \'Attendance Register\', \'atnd-reg\', 0),'
-              . '(10, \'WebSite\', 7, 1, \'User Profile\', \'Profile.php\', 1),'
+              . '(10, \'USER\', 2, 1, \'User Profile\', \'Profile.php\', 1),'
               . '(11, \'WebSite\', 8, 1, \'Manage Users\', \'Users.php\', 1),'
               . '(12, \'WebSite\', 9, 1, \'Helpline\', \'Helpline.php\', 1),'
-              . '(13, \'WebSite\',10, 1, \'User Activity\', \'AuditLogs.php\', 1),'
+              . '(13, \'USER\',3, 1, \'User Activity\', \'AuditLogs.php\', 1),'
               . '(14, \'WebSite\',11, 1, \'Log Out!\', \'login.php?LogOut=1\', 1),'
               . '(15, \'SRER\', 1, 0, \'Home\', \'index.php\', 1),'
               . '(16, \'SRER\', 2, 1, \'Data Entry\', \'srer/DataEntry.php\', 1),'
@@ -147,7 +147,9 @@ function SQLDefs($ObjectName) {
               . '(38, \'MPR\', 1, 0, \'Home\', \'index.php\', 1),'
               . '(39, \'MPR\', 2, 1, \'Department\', \'mpr/Department.php\', 1),'
               . '(41, \'WebSite\', 2, 1, \'Website Upload\', \'uploads\', 1),'
-              . '(42, \'MPR\', 3, 1, \'Log Out!\', \'login.php?LogOut=1\', 1);';
+              . '(42, \'MPR\', 3, 1, \'Log Out!\', \'login.php?LogOut=1\', 1),'
+              . '(43, \'USER\', 1, 0, \'Home\', \'index.php\', 1),'
+              . '(44, \'USER\', 4, 1, \'Log Out!\', \'login.php?LogOut=1\', 1);';
       break;
     case 'MenuACL':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . 'MenuACL` ('

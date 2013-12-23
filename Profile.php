@@ -84,7 +84,7 @@ WebLib::IncludeJS("Jcrop/js/jquery.Jcrop.min.js");
   <div class="Header">
   </div>
   <?php
-  WebLib::ShowMenuBar('WebSite');
+  WebLib::ShowMenuBar('USER');
   ?>
   <div class="content">
     <span class="Message" id="Msg">

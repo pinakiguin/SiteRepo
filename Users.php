@@ -39,7 +39,7 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
   </div>
   <?php
   include __DIR__ . '/UsersData.php';
-  WebLib::ShowMenuBar('WebSite');
+  WebLib::ShowMenuBar('USER');
   $Data = new MySQLiDB();
   ?>
   <div class="content">
