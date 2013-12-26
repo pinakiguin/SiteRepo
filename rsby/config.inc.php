@@ -35,11 +35,6 @@ define('MySQL_Pre', 'WebSite_');
 define('LifeTime', '20');
 
 /**
- * Defines path after Hostname of the script to generate menu links
- */
-define('BaseDIR', '/SiteRepo/');
-
-/**
  * Defines Title of the page
  */
 define('AppTitle', 'Rashtriya Swasthya Bima Yojna');
@@ -50,7 +45,7 @@ define('AppTitle', 'Rashtriya Swasthya Bima Yojna');
  * 1. Validates Against Multiple applications in the same domain
  * 2. Used to Encrypt Passwords in Database (kept at server side never sent to client)
  */
-define('AppKey', 'e$#KH+)&Q5&CP3798k7$quyxGfR48+vX');
+define('AppKey', 'eKH&Q5&CP3798k7$quyxGfR48+vX');
 
 /**
  * Defines Existence of tables
