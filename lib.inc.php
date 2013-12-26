@@ -744,6 +744,7 @@ class WebLib {
    * Sets the REQUEST_URI if not set
    */
   public static function SetURI() {
+    $_SESSION['ET'] = microtime(TRUE);
     if (!isset($_SERVER['REQUEST_URI'])) {
       $_SERVER['REQUEST_URI'] = substr($_SERVER['PHP_SELF'], 1);
       if (isset($_SERVER['QUERY_STRING'])) {
@@ -758,12 +759,13 @@ class WebLib {
   public static function SetPATH($PageLength = 9) {
     if (!isset($_SESSION))
       session_start();
+    $_SESSION['ET'] = microtime(TRUE);
     if (self::GetVal($_SESSION, 'AppKey') !== AppKey) {
       session_unset();
       session_destroy();
+      $_SESSION = array();
       session_start();
       self::SetURI();
-      $_SESSION = array();
     }
     if (self::GetVal($_SESSION, 'BaseDIR') === NULL) {
       $_SESSION['AppROOT'] = __DIR__ . '/';
