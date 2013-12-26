@@ -1,11 +1,11 @@
 <?php
 require_once('../lib.inc.php');
 
-WebLib::AuthSession();
-WebLib::Html5Header('RSBY-2014');
+WebLib::SetPATH(14);
+WebLib::Html5Header('RSBY-2013 (Round 4)');
 WebLib::IncludeCSS();
 if (NeedsDB) {
-  WebLib::CreateDB('RSBY');
+  WebLib::CreateDB('RSBY'); // Used Suitable Data of Round 4  Suitable.mdb
 }
 ?>
 </head>
@@ -16,9 +16,16 @@ if (NeedsDB) {
     <h1><?php echo AppTitle; ?></h1>
   </div>
   <div class="Header"></div>
-  <?php
-  WebLib::ShowMenuBar('RSBY');
-  ?>
+  <div class="MenuBar">
+    <ul>
+      <?php
+      WebLib::ShowMenuitem('Home', '../');
+      WebLib::ShowMenuitem('RSBY Beneficiary Data(Round 4)', 'rsby/Data.php');
+      WebLib::ShowMenuitem('Download', 'rsby/DownloadMDB.php');
+      WebLib::ShowMenuitem('Helpline', '../ContactUs.php');
+      ?>
+    </ul>
+  </div>
   <div class="content">
     <?php
 
@@ -41,10 +48,10 @@ if (NeedsDB) {
     ?>
   </div>
   <div class="pageinfo">
-<?php WebLib::PageInfo(); ?>
+    <?php WebLib::PageInfo(); ?>
   </div>
   <div class="footer">
-<?php WebLib::FooterInfo(); ?>
+    <?php WebLib::FooterInfo(); ?>
   </div>
 </body>
 </html>
