@@ -1,12 +1,15 @@
 <?php
 require_once('../lib.inc.php');
 
-WebLib::SetPATH(14);
+WebLib::SetPATH(13);
 WebLib::Html5Header('RSBY-2013 (Round 4)');
 WebLib::IncludeCSS();
-if (NeedsDB) {
-  WebLib::CreateDB('RSBY'); // Used Suitable Data of Round 4  Suitable.mdb
-}
+WebLib::JQueryInclude();
+WebLib::IncludeCSS('DataTables/media/css/jquery.dataTables_themeroller.css');
+//WebLib::IncludeCSS('DataTables/media/css/jquery.dataTables.css');
+//WebLib::IncludeJS('DataTables/media/js/jquery.js');
+WebLib::IncludeJS('DataTables/media/js/jquery.dataTables.js');
+WebLib::IncludeJS('rsby/js/Data.js');
 ?>
 </head>
 <body>
@@ -27,26 +30,31 @@ if (NeedsDB) {
     </ul>
   </div>
   <div class="content">
-    <?php
-
-    function ShowFiles($dir) {
-      $files = scandir($dir);
-      //print_r($files);
-      $rsby = array();
-      foreach ($files as $key => $file) {
-        if (strlen($file) > 4) {
-          $Token = md5($dir . $file . session_id() . $_SERVER['REMOTE_ADDR']);
-          $rsby[$Token]['DocName'] = $file;
-          $rsby[$Token]['Location'] = $dir . $file;
-          echo '<h3>Download: <a style="text-decoration:none;" target="_blank" href="Show.php?Token=' . $Token . '">' . $rsby[$Token]['DocName'] . '</a></h3>' . "\n";
-        }
-        //echo '<li><a style="text-decoration:none;" target="_blank" href="Show.php?Location='.$dir.$file.'&DocName='.substr(substr($file,0,strlen($file)-4),4).'">'.substr(substr($file,0,strlen($file)-4),4).'</a>';
-      }
-      $_SESSION['rsby'] = $rsby;
-    }
-
-    ShowFiles('data/');
-    ?>
+    <h2>Approved Beneficiary Data</h2>
+    <table id="example" class="display stripe row-border hover order-column" cellspacing="0" width="100%">
+      <thead>
+        <tr>
+          <th>URN</th>
+          <th>EName</th>
+          <th>Father_HusbandName</th>
+          <th>Door_HouseNo</th>
+          <th>VillageCode</th>
+          <th>Panchayat_TownCode</th>
+          <th>BlockCode</th>
+        </tr>
+      </thead>
+      <tfoot>
+        <tr>
+          <th>URN</th>
+          <th>EName</th>
+          <th>Father_HusbandName</th>
+          <th>Door_HouseNo</th>
+          <th>VillageCode</th>
+          <th>Panchayat_TownCode</th>
+          <th>BlockCode</th>
+        </tr>
+      </tfoot>
+    </table>
   </div>
   <div class="pageinfo">
     <?php WebLib::PageInfo(); ?>
