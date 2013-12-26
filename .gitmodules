@@ -25,3 +25,6 @@
 [submodule "eRecruitment"]
 	path = eRecruitment
 	url = https://github.com/abusalam/eRecruitment.git
+[submodule "DataTables"]
+	path = DataTables
+	url = https://github.com/abusalam/DataTables.git
