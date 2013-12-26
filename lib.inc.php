@@ -432,6 +432,17 @@ class WebLib {
         $ObjDB->do_ins_query(self::GetTableDefs('ATND_View'));
         $ObjDB->do_close();
         break;
+      case 'RSBY':
+        $ObjDB = new MySQLiDB();
+        $ObjDB->do_ins_query(self::GetTableDefs('RSBY_MstCategory'));
+        $ObjDB->do_ins_query(self::GetTableDefs('RSBY_MstRelation'));
+        $ObjDB->do_ins_query(self::GetTableDefs('RSBY_MstBlock'));
+        $ObjDB->do_ins_query(self::GetTableDefs('RSBY_MstPanchayatTown'));
+        $ObjDB->do_ins_query(self::GetTableDefs('RSBY_MstVillage'));
+        $ObjDB->do_ins_query(self::GetTableDefs('RSBY_TxnEnrollment'));
+        $ObjDB->do_ins_query(self::GetTableDefs('RSBY_TxnDependents'));
+        $ObjDB->do_close();
+        break;
     }
   }
 
