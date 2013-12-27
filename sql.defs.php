@@ -102,7 +102,8 @@ function SQLDefs($ObjectName) {
               . '`Caption` varchar(50) NOT NULL,'
               . '`URL` varchar(50) NOT NULL,'
               . '`Activated` tinyint(1) NOT NULL DEFAULT \'1\','
-              . ' PRIMARY KEY (`MenuID`)'
+              . ' PRIMARY KEY (`MenuID`),'
+              . ' UNIQUE (`AppID`,`URL`)'
               . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
       break;
     case 'MenuData':
