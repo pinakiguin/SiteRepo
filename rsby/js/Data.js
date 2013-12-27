@@ -21,4 +21,10 @@ $(function() {
      "paging": false,
      "jQueryUI": true,*/
   });
+
+  $('.chzn-select').chosen({width: "300px",
+    no_results_text: "Oops, nothing found!"
+  });
+
+  $('input[type="submit"]').button();
 });
