@@ -151,7 +151,7 @@ class MySQLiDBHelper {
    * @return array Contains the returned rows from the query.
    */
   public function query($query, $numRows = null) {
-    $this->_query = filter_var($query, FILTER_SANITIZE_STRING);
+    $this->_query = $query;
     $stmt = $this->_buildQuery($numRows);
     $stmt->execute();
     $this->reset();
@@ -392,8 +392,7 @@ class MySQLiDBHelper {
     }
     // Bind parameters to statment
     if ($hasTableData || $hasConditional) {
-      call_user_func_array(array($stmt, 'bind_param'),
-                           $this->refValues($this->_bindParams));
+      call_user_func_array(array($stmt, 'bind_param'), $this->refValues($this->_bindParams));
     }
 
     return $stmt;
@@ -439,8 +438,7 @@ class MySQLiDBHelper {
    */
   protected function _prepareQuery() {
     if (!$stmt = $this->_mysqli->prepare($this->_query)) {
-      trigger_error("Problem preparing query ($this->_query) " . $this->_mysqli->error,
-                    E_USER_ERROR);
+      trigger_error("Problem preparing query ($this->_query) " . $this->_mysqli->error, E_USER_ERROR);
     }
     return $stmt;
   }
