@@ -10,19 +10,19 @@ $(function() {
       {"data": "URN"},
       {"data": "EName"},
       {"data": "Father_HusbandName"},
-      {"data": "Door_HouseNo"},
-      {"data": "VillageCode"},
-      {"data": "Panchayat_TownCode"},
-      {"data": "BlockCode"}
+      {"data": "RSBYType"},
+      {"data": "CatCode"},
+      {"data": "BPLCitizen"},
+      {"data": "Minority"}
     ],
     "jQueryUI": true,
     "lengthMenu": [[50, 250, 500, -1], [50, 250, 500, "All"]],
-    "scrollY": 400/*,
+    "scrollY": 600/*,
      "paging": false,
      "jQueryUI": true,*/
   });
 
-  $('.chzn-select').chosen({width: "300px",
+  $('.chzn-select').chosen({width: "250px",
     no_results_text: "Oops, nothing found!"
   });
 
@@ -34,21 +34,21 @@ $(function() {
    */
   $('#ACNo')
           .chosen({width: "300px",
-    no_results_text: "Oops, nothing found!"
-  })
+            no_results_text: "Oops, nothing found!"
+          })
           .change(function() {
-    var Options = '<option value=""></option>';
-    var Parts = $('#PartID').data('Parts');
-    var ACNo = $('#ACNo').val();
-    $.each(Parts.Data,
-            function(index, value) {
-              if (value.ACNo === ACNo) {
-                Options += '<option value="' + value.PartID + '">'
-                        + value.PartNo + ' - ' + value.PartName
-                        + '</option>';
-              }
-            });
-    $('#PartID').html(Options)
-            .trigger("liszt:updated");
-  });
+            var Options = '<option value=""></option>';
+            var Parts = $('#PartID').data('Parts');
+            var ACNo = $('#ACNo').val();
+            $.each(Parts.Data,
+                    function(index, value) {
+                      if (value.ACNo === ACNo) {
+                        Options += '<option value="' + value.PartID + '">'
+                                + value.PartNo + ' - ' + value.PartName
+                                + '</option>';
+                      }
+                    });
+            $('#PartID').html(Options)
+                    .trigger("liszt:updated");
+          });
 });

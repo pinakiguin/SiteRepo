@@ -11,7 +11,7 @@ if (WebLib::GetVal($_SESSION, 'RSBY_VillageCode') !== null) {
   $AjaxResp['data'] = $Data
           ->where('VillageCode', WebLib::GetVal($_SESSION, 'RSBY_VillageCode'))
           ->query('Select `URN`, `EName`, `Father_HusbandName`,'
-          . ' `Door_HouseNo`, `VillageCode`, `Panchayat_TownCode`, `BlockCode`'
+          . ' `RSBYType`, `CatCode`, `BPLCitizen`, `Minority`'
           . ' From `' . MySQL_Pre . 'RSBY_TxnEnrollment` ');
   echo json_encode($AjaxResp);
   unset($Data);

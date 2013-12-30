@@ -13,6 +13,7 @@ WebLib::IncludeCSS('css/chosen.css');
 WebLib::IncludeJS('js/chosen.jquery.min.js');
 WebLib::IncludeJS('rsby/js/Data.js');
 WebLib::IncludeCSS('rsby/css/Data.css');
+WebLib::IncludeCSS('rsby/css/forms.css');
 ?>
 </head>
 <body>
@@ -33,7 +34,6 @@ WebLib::IncludeCSS('rsby/css/Data.css');
     </ul>
   </div>
   <div class="content">
-    <h2>Approved Beneficiary Data</h2>
     <?php
     $Data = new MySQLiDB();
     if (WebLib::GetVal($_POST, 'CmdRefresh') === 'Refresh') {
@@ -42,78 +42,82 @@ WebLib::IncludeCSS('rsby/css/Data.css');
       $_SESSION['RSBY_VillageCode'] = WebLib::GetVal($_POST, 'VillageCode', true);
     }
     ?>
-    <form id = "frmModify" method = "post" action = "<?php echo WebLib::GetVal($_SERVER, 'PHP_SELF'); ?>"
-          style = "text-align:left;" autocomplete = "off" >
-      <div class="FieldGroup">
-        <label for = "BlockCode"><strong>Block/Municipality:</strong><br/>
-          <select name = "BlockCode" class = "chzn-select">
-            <?php
-            $QryBlocks = 'Select BlockCode,CONCAT(BlockCode,\'-\',BlockName) as BlockName FROM `' . MySQL_Pre . 'RSBY_MstBlock`';
-            $Data->show_sel('BlockCode', 'BlockName', $QryBlocks, WebLib::GetVal($_SESSION, 'RSBY_BlockCode'));
-            ?>
-          </select>
-        </label>
-      </div>
-      <div class="FieldGroup">
-        <label for="PanchayatCode"><strong>Panchayat/Municipality:</strong><br/>
-          <select name="PanchayatCode" class="chzn-select">
-            <?php
-            $QryPanchayats = 'Select Panchayat_TownCode,CONCAT(Panchayat_TownCode,\'-\',Panchayat_TownName) as PanchayatName '
-                    . ' FROM `' . MySQL_Pre . 'RSBY_MstPanchayatTown`'
-                    . ' Where BlockCode=\'' . WebLib::GetVal($_SESSION, 'RSBY_BlockCode', true) . '\'';
-            $Data->show_sel('Panchayat_TownCode', 'PanchayatName', $QryPanchayats, WebLib::GetVal($_SESSION, 'RSBY_PanchayatCode'));
-            ?>
-          </select>
-        </label>
-      </div>
-      <div class="FieldGroup">
-        <label for="VillageCode"><strong>Village/Ward:</strong><br/>
-          <select name="VillageCode" class="chzn-select">
-            <?php
-            $QryVillages = 'Select VillageCode,CONCAT(VillageCode,\'-\',VillageName) as VillageName '
-                    . ' FROM `' . MySQL_Pre . 'RSBY_MstVillage`'
-                    . ' Where Panchayat_TownCode=\'' . WebLib::GetVal($_SESSION, 'RSBY_PanchayatCode', true) . '\'';
-            $Data->show_sel('VillageCode', 'VillageName', $QryVillages, WebLib::GetVal($_SESSION, 'RSBY_VillageCode'));
-            ?>
-          </select>
-        </label>
-      </div>
-      <div class="FieldGroup">
-        <input type="submit" name="CmdRefresh" value="Refresh"/>
-      </div>
-    </form>
-    <div style="clear: both;"></div>
-    <br/>
-    <?php
-    if (WebLib::GetVal($_SESSION, 'RSBY_VillageCode') !== null) {
-      ?>
-      <table id="example" class="display stripe row-border hover order-column" cellspacing="0" width="100%">
-        <thead>
-          <tr>
-            <th>URN</th>
-            <th>EName</th>
-            <th>Father_HusbandName</th>
-            <th>Door_HouseNo</th>
-            <th>VillageCode</th>
-            <th>Panchayat_TownCode</th>
-            <th>BlockCode</th>
-          </tr>
-        </thead>
-        <tfoot>
-          <tr>
-            <th>URN</th>
-            <th>EName</th>
-            <th>Father_HusbandName</th>
-            <th>Door_HouseNo</th>
-            <th>VillageCode</th>
-            <th>Panchayat_TownCode</th>
-            <th>BlockCode</th>
-          </tr>
-        </tfoot>
-      </table>
+    <div class="formWrapper">
+      <h3>Search Approved Beneficiary Data (Round-4)</h3>
+      <form id = "frmModify" method = "post" action = "<?php echo WebLib::GetVal($_SERVER, 'PHP_SELF'); ?>"
+            style = "text-align:left;" autocomplete = "off" >
+        <div class="FieldGroup">
+          <label for = "BlockCode"><strong>Block/Municipality:</strong><br/>
+            <select name = "BlockCode" class = "chzn-select">
+              <?php
+              $QryBlocks = 'Select BlockCode,CONCAT(BlockCode,\'-\',BlockName) as BlockName FROM `' . MySQL_Pre . 'RSBY_MstBlock`';
+              $Data->show_sel('BlockCode', 'BlockName', $QryBlocks, WebLib::GetVal($_SESSION, 'RSBY_BlockCode'));
+              ?>
+            </select>
+          </label>
+        </div>
+        <div class="FieldGroup">
+          <label for="PanchayatCode"><strong>Panchayat/Municipality:</strong><br/>
+            <select name="PanchayatCode" class="chzn-select">
+              <?php
+              $QryPanchayats = 'Select Panchayat_TownCode,CONCAT(Panchayat_TownCode,\'-\',Panchayat_TownName) as PanchayatName '
+                      . ' FROM `' . MySQL_Pre . 'RSBY_MstPanchayatTown`'
+                      . ' Where BlockCode=\'' . WebLib::GetVal($_SESSION, 'RSBY_BlockCode', true) . '\'';
+              $Data->show_sel('Panchayat_TownCode', 'PanchayatName', $QryPanchayats, WebLib::GetVal($_SESSION, 'RSBY_PanchayatCode'));
+              ?>
+            </select>
+          </label>
+        </div>
+        <div class="FieldGroup">
+          <label for="VillageCode"><strong>Village/Ward:</strong><br/>
+            <select name="VillageCode" class="chzn-select">
+              <?php
+              $QryVillages = 'Select VillageCode,CONCAT(VillageCode,\'-\',VillageName) as VillageName '
+                      . ' FROM `' . MySQL_Pre . 'RSBY_MstVillage`'
+                      . ' Where Panchayat_TownCode=\'' . WebLib::GetVal($_SESSION, 'RSBY_PanchayatCode', true) . '\'';
+              $Data->show_sel('VillageCode', 'VillageName', $QryVillages, WebLib::GetVal($_SESSION, 'RSBY_VillageCode'));
+              ?>
+            </select>
+          </label>
+        </div>
+        <div class="FieldGroup">
+          <br/>
+          <input type="submit" name="CmdRefresh" value="Refresh"/>
+        </div>
+      </form>
+      <div style="clear: both;"></div>
+      <br/>
       <?php
-    }
-    ?>
+      if (WebLib::GetVal($_SESSION, 'RSBY_VillageCode') !== null) {
+        ?>
+        <table id="example" class="display stripe row-border hover order-column" cellspacing="0" width="100%">
+          <thead>
+            <tr>
+              <th>URN</th>
+              <th>Name of Household</th>
+              <th>Name of Father/Husband</th>
+              <th>RSBY Type</th>
+              <th>Category Code</th>
+              <th>BPL Citizen</th>
+              <th>Minority</th>
+            </tr>
+          </thead>
+          <tfoot>
+            <tr>
+              <th>URN</th>
+              <th>Name of Household</th>
+              <th>Name of Father/Husband</th>
+              <th>RSBY Type</th>
+              <th>Category Code</th>
+              <th>BPL Citizen</th>
+              <th>Minority</th>
+            </tr>
+          </tfoot>
+        </table>
+        <?php
+      }
+      ?>
+    </div>
   </div>
   <div class="pageinfo">
     <?php WebLib::PageInfo(); ?>

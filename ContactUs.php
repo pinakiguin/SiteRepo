@@ -8,6 +8,7 @@ require_once __DIR__ . '/smsgw/smsgw.inc.php';
 session_start();
 $_SESSION['BaseDIR'] = '/';
 $_SESSION['BaseURL'] = 'https://www.paschimmedinipur.gov.in/';
+$_SESSION['AppKey'] = 'CONTACTUS';
 WebLib::InitHTML5page("Helpline");
 WebLib::IncludeCSS();
 WebLib::IncludeJS('js/contact.js');
