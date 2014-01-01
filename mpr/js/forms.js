@@ -5,4 +5,10 @@
 
 $(function() {
   $('input[type="submit"]').button();
+
+  $('.chzn-select').chosen({width: "250px",
+    no_results_text: "Oops, nothing found!"
+  });
+
+
 });

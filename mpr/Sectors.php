@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../lib.inc.php';
 
 WebLib::AuthSession();
-WebLib::Html5Header('Departments');
+WebLib::Html5Header('Sectors');
 WebLib::IncludeCSS();
 WebLib::JQueryInclude();
 WebLib::IncludeJS('mpr/js/forms.js');
@@ -22,15 +22,15 @@ WebLib::IncludeCSS('mpr/css/forms.css');
   <div class="content">
     <div class="formWrapper">
       <form method="post" action="<?php echo WebLib::GetVal($_SERVER, 'PHP_SELF'); ?>">
-        <h3>Departments</h3>
+        <h3>Sectors</h3>
         <?php
         include __DIR__ . '/DataMPR.php';
         WebLib::ShowMsg();
         ?>
-        <label for="DeptName"><strong>Name of Department</strong></label>
-        <input type="text" name ="DeptName" id="DeptName" placeholder="Name of Department"/>
+        <label for="SectorName"><strong>Name of Sector</strong></label>
+        <input type="text" id="SectorName" name="SectorName" placeholder="Name of Sector"/>
         <div class="formControl">
-          <input type="submit" name="CmdSubmit" value="Create Department">
+          <input type="submit" name="CmdSubmit" value="Create Sector">
         </div>
         <input type="hidden" name="FormToken"
                value="<?php echo WebLib::GetVal($_SESSION, 'FormToken') ?>" />
