@@ -4,9 +4,7 @@ require_once('../lib.inc.php');
 WebLib::AuthSession();
 WebLib::Html5Header("Panchayat Election 2013");
 WebLib::IncludeCSS();
-if (NeedsDB) {
-  WebLib::CreateDB("CP");
-}
+WebLib::CreateDB();
 ?>
 </head>
 <body>

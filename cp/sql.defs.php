@@ -1,5 +1,18 @@
 <?php
 
+function CreateSchemas() {
+  $ObjDB = new MySQLiDB();
+  $ObjDB->do_ins_query(SQLDefs('CP_Groups'));
+  $ObjDB->do_ins_query(SQLDefs('CP_Blocks'));
+  $ObjDB->do_ins_query(SQLDefs('CP_Personnel'));
+  $ObjDB->do_ins_query(SQLDefs('CP_CountingTables'));
+  $ObjDB->do_ins_query(SQLDefs('CP_Posting'));
+  $ObjDB->do_ins_query(SQLDefs('CP_Pool'));
+  $ObjDB->do_ins_query(SQLDefs('MenuData'));
+  $ObjDB->do_close();
+  unset($ObjDB);
+}
+
 function SQLDefs($ObjectName) {
   $SqlDB = '';
   switch ($ObjectName) {
@@ -59,6 +72,14 @@ function SQLDefs($ObjectName) {
               . ' join `' . MySQL_Pre . 'CP_Posting` `S` on((`P`.`PersSL` = `S`.`PersSL`))) '
               . ' left join `' . MySQL_Pre . 'CP_Groups` `G` on((`S`.`PersSL` = `G`.`PersSL`))) '
               . ' where ((`P`.`Deleted` = 0) and isnull(`G`.`PersSL`));';
+      break;
+    case 'MenuData':
+      $SqlDB = 'INSERT INTO `' . MySQL_Pre . 'MenuItems` '
+              . '(`AppID`,`MenuOrder`,`AuthMenu`,`Caption`,`URL`,`Activated`) VALUES'
+              . '(\'CP\', 1, 0, \'Home\', \'index.php\', 1),'
+              . '(\'CP\', 2, 1, \'Counting Personnel Randomization\', \'cp/GroupCP.php\', 1),'
+              . '(\'CP\', 3, 1, \'Reports\', \'cp/Reports.php\', 1),'
+              . '(\'CP\', 4, 1, \'Log Out!\', \'login.php?LogOut=1\', 1);';
       break;
   }
   return $SqlDB;

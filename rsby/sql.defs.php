@@ -1,5 +1,18 @@
 <?php
 
+function CreateSchemas() {
+  $ObjDB = new MySQLiDB();
+  $ObjDB->do_ins_query(SQLDefs('RSBY_MstCategory'));
+  $ObjDB->do_ins_query(SQLDefs('RSBY_MstRelation'));
+  $ObjDB->do_ins_query(SQLDefs('RSBY_MstBlock'));
+  $ObjDB->do_ins_query(SQLDefs('RSBY_MstPanchayatTown'));
+  $ObjDB->do_ins_query(SQLDefs('RSBY_MstVillage'));
+  $ObjDB->do_ins_query(SQLDefs('RSBY_TxnEnrollment'));
+  $ObjDB->do_ins_query(SQLDefs('RSBY_TxnDependents'));
+  $ObjDB->do_close();
+  unset($ObjDB);
+}
+
 function SQLDefs($ObjectName) {
   $SqlDB = '';
   switch ($ObjectName) {

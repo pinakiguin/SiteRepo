@@ -4,9 +4,7 @@ require_once('../lib.inc.php');
 WebLib::SetPATH(14);
 WebLib::Html5Header('RSBY-2013 (Round 4)');
 WebLib::IncludeCSS();
-if (NeedsDB) {
-  WebLib::CreateDB('RSBY'); // Used Suitable Data of Round 4  Suitable.mdb
-}
+WebLib::CreateDB(); // Used Suitable Data of Round 4  Suitable.mdb
 ?>
 </head>
 <body>

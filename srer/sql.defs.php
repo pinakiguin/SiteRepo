@@ -1,5 +1,22 @@
 <?php
 
+function CreateSchemas() {
+  $ObjDB = new MySQLiDB();
+  $ObjDB->do_ins_query(SQLDefs('SRER_FieldNames'));
+  $ObjDB->do_ins_query(SQLDefs('SRER_FieldNameData'));
+  $ObjDB->do_ins_query(SQLDefs('SRER_Form6'));
+  $ObjDB->do_ins_query(SQLDefs('SRER_Form6A'));
+  $ObjDB->do_ins_query(SQLDefs('SRER_Form7'));
+  $ObjDB->do_ins_query(SQLDefs('SRER_Form8'));
+  $ObjDB->do_ins_query(SQLDefs('SRER_Form8A'));
+  $ObjDB->do_ins_query(SQLDefs('SRER_Districts'));
+  $ObjDB->do_ins_query(SQLDefs('SRER_ACs'));
+  $ObjDB->do_ins_query(SQLDefs('SRER_PartMap'));
+  $ObjDB->do_ins_query(SQLDefs('MenuData'));
+  $ObjDB->do_close();
+  unset($ObjDB);
+}
+
 function SQLDefs($ObjectName) {
   $SqlDB = '';
   switch ($ObjectName) {
@@ -146,6 +163,16 @@ function SQLDefs($ObjectName) {
               . '`ACNo` varchar(3) DEFAULT NULL,'
               . ' PRIMARY KEY (`PartID`)'
               . ') ENGINE=InnoDB  DEFAULT CHARSET=utf8;';
+      break;
+    case 'MenuData':
+      $SqlDB = 'INSERT INTO `' . MySQL_Pre . 'MenuItems` '
+              . '(`AppID`,`MenuOrder`,`AuthMenu`,`Caption`,`URL`,`Activated`) VALUES'
+              . '(\'SRER\', 1, 0, \'Home\', \'index.php\', 1),'
+              . '(\'SRER\', 2, 1, \'Data Entry\', \'srer/DataEntry.php\', 1),'
+              . '(\'SRER\', 3, 1, \'Admin Page\', \'srer/Admin.php\', 1),'
+              . '(\'SRER\', 4, 1, \'Reports\', \'srer/Reports.php\', 1),'
+              . '(\'SRER\', 5, 1, \'Assign Parts\', \'srer/Users.php\', 1),'
+              . '(\'SRER\', 6, 1, \'Log Out!\', \'login.php?LogOut=1\', 1);';
       break;
   }
   return $SqlDB;

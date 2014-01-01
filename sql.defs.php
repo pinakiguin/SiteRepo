@@ -1,5 +1,23 @@
 <?php
 
+function CreateSchemas() {
+  $ObjDB = new MySQLiDB();
+  $ObjDB->do_ins_query(SQLDefs('Visits'));
+  $ObjDB->do_ins_query(SQLDefs('IntraNIC'));
+  $ObjDB->do_ins_query(SQLDefs('VisitorLogs'));
+  $ObjDB->do_ins_query(SQLDefs('Logs'));
+  $ObjDB->do_ins_query(SQLDefs('Uploads'));
+  $ObjDB->do_ins_query(SQLDefs('Users'));
+  $ObjDB->do_ins_query(SQLDefs('UsersData'));
+  $ObjDB->do_ins_query(SQLDefs('MenuItems'));
+  $ObjDB->do_ins_query(SQLDefs('MenuData'));
+  $ObjDB->do_ins_query(SQLDefs('MenuACL'));
+  $ObjDB->do_ins_query(SQLDefs('RestrictedMenus'));
+  $ObjDB->do_ins_query(SQLDefs('Helpline'));
+  $ObjDB->do_close();
+  unset($ObjDB);
+}
+
 function SQLDefs($ObjectName) {
   $SqlDB = '';
   switch ($ObjectName) {
@@ -127,32 +145,7 @@ function SQLDefs($ObjectName) {
               . '(\'USER\', 2, 1, \'User Profile\', \'users/Profile.php\', 1),'
               . '(\'USER\', 3, 1, \'Manage Menus\', \'users/MenuACL.php\', 1),'
               . '(\'USER\', 4, 1, \'User Activity\', \'users/AuditLogs.php\', 1),'
-              . '(\'USER\', 5, 1, \'Log Out!\', \'login.php?LogOut=1\', 1),'
-              . '(\'SRER\', 1, 0, \'Home\', \'index.php\', 1),'
-              . '(\'SRER\', 2, 1, \'Data Entry\', \'srer/DataEntry.php\', 1),'
-              . '(\'SRER\', 3, 1, \'Admin Page\', \'srer/Admin.php\', 1),'
-              . '(\'SRER\', 4, 1, \'Reports\', \'srer/Reports.php\', 1),'
-              . '(\'SRER\', 5, 1, \'Assign Parts\', \'srer/Users.php\', 1),'
-              . '(\'SRER\', 6, 1, \'Log Out!\', \'login.php?LogOut=1\', 1),'
-              . '(\'ATND\', 1, 0, \'Home\', \'index.php\', 1),'
-              . '(\'ATND\', 2, 1, \'Attendance Register\', \'atnd-reg/Attendance.php\', 1),'
-              . '(\'ATND\', 3, 1, \'Reports\', \'atnd-reg/Reports.php\', 1),'
-              . '(\'ATND\', 4, 1, \'User Profile\', \'atnd-reg/Profile.php\', 1),'
-              . '(\'ATND\', 5, 1, \'Log Out!\', \'login.php?LogOut=1\', 1),'
-              . '(\'PP\', 1, 0, \'Home\', \'index.php\', 1),'
-              . '(\'PP\', 2, 1, \'Office Entry - Format PP1\', \'pp/Office.php\', 1),'
-              . '(\'PP\', 3, 1, \'Personnel Entry - Format PP2\', \'pp/Personnel.php\', 1),'
-              . '(\'PP\', 4, 1, \'Randomization\', \'pp/GroupPP.php\', 1),'
-              . '(\'PP\', 5, 1, \'Reports\', \'pp/Reports.php\', 1),'
-              . '(\'PP\', 6, 1, \'Log Out!\', \'login.php?LogOut=1\', 1),'
-              . '(\'CP\', 1, 0, \'Home\', \'index.php\', 1),'
-              . '(\'CP\', 2, 1, \'Counting Personnel Randomization\', \'cp/GroupCP.php\', 1),'
-              . '(\'CP\', 3, 1, \'Reports\', \'cp/Reports.php\', 1),'
-              . '(\'CP\', 4, 1, \'Log Out!\', \'login.php?LogOut=1\', 1),'
-              . '(\'MPR\', 1, 0, \'Home\', \'index.php\', 1),'
-              . '(\'MPR\', 2, 1, \'Department\', \'mpr/Department.php\', 1),'
-              . '(\'MPR\', 3, 1, \'Sectors\', \'mpr/Sectors.php\', 1),'
-              . '(\'MPR\', 4, 1, \'Log Out!\', \'login.php?LogOut=1\', 1);';
+              . '(\'USER\', 5, 1, \'Log Out!\', \'login.php?LogOut=1\', 1);';
       break;
     case 'MenuACL':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . 'MenuACL` ('

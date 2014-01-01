@@ -363,86 +363,9 @@ class WebLib {
    *
    * @param string $ForWhat
    */
-  public static function CreateDB($ForWhat = 'WebSite') {
-    switch ($ForWhat) {
-      case 'WebSite':
-        $ObjDB = new MySQLiDB();
-        $ObjDB->do_ins_query(self::GetTableDefs('Visits'));
-        $ObjDB->do_ins_query(self::GetTableDefs('IntraNIC'));
-        $ObjDB->do_ins_query(self::GetTableDefs('VisitorLogs'));
-        $ObjDB->do_ins_query(self::GetTableDefs('Logs'));
-        $ObjDB->do_ins_query(self::GetTableDefs('Uploads'));
-        $ObjDB->do_ins_query(self::GetTableDefs('Users'));
-        $ObjDB->do_ins_query(self::GetTableDefs('UsersData'));
-        $ObjDB->do_ins_query(self::GetTableDefs('MenuItems'));
-        $ObjDB->do_ins_query(self::GetTableDefs('MenuData'));
-        $ObjDB->do_ins_query(self::GetTableDefs('MenuACL'));
-        $ObjDB->do_ins_query(self::GetTableDefs('RestrictedMenus'));
-        $ObjDB->do_ins_query(self::GetTableDefs('Helpline'));
-        $ObjDB->do_close();
-        break;
-      case 'SRER':
-        $ObjDB = new MySQLiDB();
-        $ObjDB->do_ins_query(self::GetTableDefs('SRER_FieldNames'));
-        $ObjDB->do_ins_query(self::GetTableDefs('SRER_FieldNameData'));
-        $ObjDB->do_ins_query(self::GetTableDefs('SRER_Form6'));
-        $ObjDB->do_ins_query(self::GetTableDefs('SRER_Form6A'));
-        $ObjDB->do_ins_query(self::GetTableDefs('SRER_Form7'));
-        $ObjDB->do_ins_query(self::GetTableDefs('SRER_Form8'));
-        $ObjDB->do_ins_query(self::GetTableDefs('SRER_Form8A'));
-        $ObjDB->do_ins_query(self::GetTableDefs('SRER_Districts'));
-        $ObjDB->do_ins_query(self::GetTableDefs('SRER_ACs'));
-        $ObjDB->do_ins_query(self::GetTableDefs('SRER_PartMap'));
-        $ObjDB->do_ins_query(self::GetTableDefs('MenuData'));
-        $ObjDB->do_close();
-        break;
-      case 'CP':
-        $ObjDB = new MySQLiDB();
-        $ObjDB->do_ins_query(self::GetTableDefs('CP_Groups'));
-        $ObjDB->do_ins_query(self::GetTableDefs('CP_Blocks'));
-        $ObjDB->do_ins_query(self::GetTableDefs('CP_Personnel'));
-        $ObjDB->do_ins_query(self::GetTableDefs('CP_CountingTables'));
-        $ObjDB->do_ins_query(self::GetTableDefs('CP_Posting'));
-        $ObjDB->do_ins_query(self::GetTableDefs('CP_Pool'));
-        $ObjDB->do_close();
-        break;
-      case 'PP':
-        $ObjDB = new MySQLiDB();
-        $ObjDB->do_ins_query(self::GetTableDefs('PP_UserBlockMaps'));
-        $ObjDB->do_ins_query(self::GetTableDefs('PP_Districts'));
-        $ObjDB->do_ins_query(self::GetTableDefs('PP_SubDivns'));
-        $ObjDB->do_ins_query(self::GetTableDefs('PP_Blocks'));
-        $ObjDB->do_ins_query(self::GetTableDefs('PP_DataBlocks'));
-        $ObjDB->do_ins_query(self::GetTableDefs('PP_Status'));
-        $ObjDB->do_ins_query(self::GetTableDefs('PP_DataStatus'));
-        $ObjDB->do_ins_query(self::GetTableDefs('PP_InstType'));
-        $ObjDB->do_ins_query(self::GetTableDefs('PP_DataInstType'));
-        $ObjDB->do_ins_query(self::GetTableDefs('PP_PoliceStns'));
-        $ObjDB->do_ins_query(self::GetTableDefs('PP_DataPoliceStns'));
-        $ObjDB->do_ins_query(self::GetTableDefs('PP_ACs'));
-        $ObjDB->do_ins_query(self::GetTableDefs('PP_DataACs'));
-        $ObjDB->do_ins_query(self::GetTableDefs('PP_Offices'));
-        $ObjDB->do_ins_query(self::GetTableDefs('PP_FieldNames'));
-        $ObjDB->do_ins_query(self::GetTableDefs('PP_DataFieldNames'));
-        $ObjDB->do_close();
-        break;
-      case 'ATND':
-        $ObjDB = new MySQLiDB();
-        $ObjDB->do_ins_query(self::GetTableDefs('ATND_Register'));
-        $ObjDB->do_ins_query(self::GetTableDefs('ATND_View'));
-        $ObjDB->do_close();
-        break;
-      case 'RSBY':
-        $ObjDB = new MySQLiDB();
-        $ObjDB->do_ins_query(self::GetTableDefs('RSBY_MstCategory'));
-        $ObjDB->do_ins_query(self::GetTableDefs('RSBY_MstRelation'));
-        $ObjDB->do_ins_query(self::GetTableDefs('RSBY_MstBlock'));
-        $ObjDB->do_ins_query(self::GetTableDefs('RSBY_MstPanchayatTown'));
-        $ObjDB->do_ins_query(self::GetTableDefs('RSBY_MstVillage'));
-        $ObjDB->do_ins_query(self::GetTableDefs('RSBY_TxnEnrollment'));
-        $ObjDB->do_ins_query(self::GetTableDefs('RSBY_TxnDependents'));
-        $ObjDB->do_close();
-        break;
+  public static function CreateDB() {
+    if (NeedsDB) {
+      CreateSchemas();
     }
   }
 

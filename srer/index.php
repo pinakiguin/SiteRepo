@@ -4,9 +4,7 @@ require_once(__DIR__ . '/../lib.inc.php');
 WebLib::AuthSession();
 WebLib::Html5Header("SRER-2014");
 WebLib::IncludeCSS();
-if (NeedsDB) {
-  WebLib::CreateDB("SRER");
-}
+WebLib::CreateDB();
 ?>
 </head>
 <body>

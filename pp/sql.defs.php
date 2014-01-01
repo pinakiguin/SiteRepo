@@ -1,5 +1,28 @@
 <?php
 
+function CreateSchemas() {
+  $ObjDB = new MySQLiDB();
+  $ObjDB->do_ins_query(SQLDefs('PP_UserBlockMaps'));
+  $ObjDB->do_ins_query(SQLDefs('PP_Districts'));
+  $ObjDB->do_ins_query(SQLDefs('PP_SubDivns'));
+  $ObjDB->do_ins_query(SQLDefs('PP_Blocks'));
+  $ObjDB->do_ins_query(SQLDefs('PP_DataBlocks'));
+  $ObjDB->do_ins_query(SQLDefs('PP_Status'));
+  $ObjDB->do_ins_query(SQLDefs('PP_DataStatus'));
+  $ObjDB->do_ins_query(SQLDefs('PP_InstType'));
+  $ObjDB->do_ins_query(SQLDefs('PP_DataInstType'));
+  $ObjDB->do_ins_query(SQLDefs('PP_PoliceStns'));
+  $ObjDB->do_ins_query(SQLDefs('PP_DataPoliceStns'));
+  $ObjDB->do_ins_query(SQLDefs('PP_ACs'));
+  $ObjDB->do_ins_query(SQLDefs('PP_DataACs'));
+  $ObjDB->do_ins_query(SQLDefs('PP_Offices'));
+  $ObjDB->do_ins_query(SQLDefs('PP_FieldNames'));
+  $ObjDB->do_ins_query(SQLDefs('PP_DataFieldNames'));
+  $ObjDB->do_ins_query(SQLDefs('MenuData'));
+  $ObjDB->do_close();
+  unset($ObjDB);
+}
+
 function SQLDefs($ObjectName) {
   $SqlDB = '';
   switch ($ObjectName) {
@@ -238,6 +261,16 @@ function SQLDefs($ObjectName) {
               . '(\'AddrVTM\', \'Vill/Town/Metro\'),'
               . '(\'SubDivn\', \'Sub-Division\'),'
               . '(\'EMail\', \'E-Mail Address\');';
+      break;
+    case 'MenuData':
+      $SqlDB = 'INSERT INTO `' . MySQL_Pre . 'MenuItems` '
+              . '(`AppID`,`MenuOrder`,`AuthMenu`,`Caption`,`URL`,`Activated`) VALUES'
+              . '(\'PP\', 1, 0, \'Home\', \'index.php\', 1),'
+              . '(\'PP\', 2, 1, \'Office Entry - Format PP1\', \'pp/Office.php\', 1),'
+              . '(\'PP\', 3, 1, \'Personnel Entry - Format PP2\', \'pp/Personnel.php\', 1),'
+              . '(\'PP\', 4, 1, \'Randomization\', \'pp/GroupPP.php\', 1),'
+              . '(\'PP\', 5, 1, \'Reports\', \'pp/Reports.php\', 1),'
+              . '(\'PP\', 6, 1, \'Log Out!\', \'login.php?LogOut=1\', 1);';
       break;
   }
   return $SqlDB;

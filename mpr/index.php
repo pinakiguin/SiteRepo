@@ -4,9 +4,7 @@ require_once __DIR__ . '/../lib.inc.php';
 WebLib::AuthSession();
 WebLib::Html5Header('Monthly Performance Report');
 WebLib::IncludeCSS();
-if (NeedsDB) {
-  WebLib::CreateDB('MPR');
-}
+WebLib::CreateDB();
 ?>
 </head>
 <body>

@@ -1,5 +1,17 @@
 <?php
 
+function CreateSchemas() {
+  $ObjDB = new MySQLiDB();
+  $ObjDB->do_ins_query(SQLDefs('MPR_Departments'));
+  $ObjDB->do_ins_query(SQLDefs('MPR_Sectors'));
+  $ObjDB->do_ins_query(SQLDefs('MPR_Schemes'));
+  $ObjDB->do_ins_query(SQLDefs('MPR_Projects'));
+  $ObjDB->do_ins_query(SQLDefs('MPR_Progress'));
+  $ObjDB->do_ins_query(SQLDefs('MenuData'));
+  $ObjDB->do_close();
+  unset($ObjDB);
+}
+
 function SQLDefs($ObjectName) {
   $SqlDB = '';
   switch ($ObjectName) {
@@ -22,17 +34,11 @@ function SQLDefs($ObjectName) {
     case 'MPR_Schemes':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . $ObjectName . '` ('
               . '`SchemeID` bigint(20) NOT NULL AUTO_INCREMENT,'
-              . '`schemeName` VARCHAR(100) DEFAULT NULL,'
+              . '`SchemeName` VARCHAR(100) DEFAULT NULL,'
               . '`DeptID` INT(10),'
               . '`SectorID` INT(10),'
+              . '`UserMapID` INT(10) DEFAULT 1,'
               . ' PRIMARY KEY (`SchemeID`)'
-              . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
-      break;
-    case 'MPR_Projects':
-      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . $ObjectName . '` ('
-              . '`DeptID` bigint(20) NOT NULL AUTO_INCREMENT,'
-              . '`DeptName` VARCHAR(100) DEFAULT NULL,'
-              . ' PRIMARY KEY (`DeptID`)'
               . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
       break;
     case 'MPR_Projects':
@@ -66,6 +72,18 @@ function SQLDefs($ObjectName) {
               . '`DeptName` VARCHAR(100) DEFAULT NULL,'
               . ' PRIMARY KEY (`DeptID`)'
               . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
+      break;
+    case 'MenuData':
+      $SqlDB = 'INSERT INTO `' . MySQL_Pre . 'MenuItems` '
+              . '(`AppID`,`MenuOrder`,`AuthMenu`,`Caption`,`URL`,`Activated`) VALUES'
+              . '(\'MPR\', 1, 0, \'Home\', \'index.php\', 1),'
+              . '(\'MPR\', 2, 1, \'Department\', \'mpr/Department.php\', 1),'
+              . '(\'MPR\', 3, 1, \'Sectors\', \'mpr/Sectors.php\', 1),'
+              . '(\'MPR\', 4, 1, \'Schemes\', \'mpr/Schemes.php\', 1),'
+              . '(\'MPR\', 5, 1, \'Projects\', \'mpr/Projects.php\', 1),'
+              . '(\'MPR\', 6, 1, \'Progress\', \'mpr/Progress.php\', 1),'
+              . '(\'MPR\', 7, 1, \'Reports\', \'mpr/Reports.php\', 1),'
+              . '(\'MPR\', 8, 1, \'Log Out!\', \'login.php?LogOut=1\', 1);';
       break;
   }
   return $SqlDB;

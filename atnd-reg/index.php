@@ -4,9 +4,7 @@ require_once(__DIR__ . '/../lib.inc.php');
 WebLib::AuthSession();
 WebLib::Html5Header('Attendance Management System');
 WebLib::IncludeCSS();
-if (NeedsDB) {
-  WebLib::CreateDB('ATND');
-}
+WebLib::CreateDB();
 ?>
 </head>
 <body>
