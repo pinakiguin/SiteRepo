@@ -90,7 +90,7 @@ function SQLDefs($ObjectName) {
               . '`RSBYType` varchar(2) DEFAULT NULL,'
               . '`CatCode` varchar(2) DEFAULT NULL,'
               . '`BPLCitizen` varchar(2) DEFAULT NULL,'
-              . '`Minority` varchar(1) DEFAULT NULL,'
+              . '`Minority` varchar(1) DEFAULT NULL'
               . ') ENGINE = InnoDB DEFAULT CHARSET = utf8;';
       break;
   }
