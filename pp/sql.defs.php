@@ -269,8 +269,9 @@ function SQLDefs($ObjectName) {
               . '(\'PP\', 2, 1, \'Office Entry - Format PP1\', \'pp/Office.php\', 1),'
               . '(\'PP\', 3, 1, \'Personnel Entry - Format PP2\', \'pp/Personnel.php\', 1),'
               . '(\'PP\', 4, 1, \'Randomization\', \'pp/GroupPP.php\', 1),'
-              . '(\'PP\', 5, 1, \'Reports\', \'pp/Reports.php\', 1),'
-              . '(\'PP\', 6, 1, \'Log Out!\', \'login.php?LogOut=1\', 1);';
+              . '(\'PP\', 5, 1, \'Admin Reports\', \'pp/AdminReports.php\', 1),'
+              . '(\'PP\', 6, 1, \'Reports\', \'pp/Reports.php\', 1),'
+              . '(\'PP\', 7, 1, \'Log Out!\', \'login.php?LogOut=1\', 1);';
       break;
   }
   return $SqlDB;

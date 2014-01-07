@@ -8,9 +8,6 @@ WebLib::IncludeCSS();
 WebLib::IncludeCSS('pp/css/Office.css');
 WebLib::JQueryInclude();
 WebLib::IncludeJS('pp/js/Office.js');
-if (NeedsDB) {
-  WebLib::CreateDB('PP');
-}
 ?>
 </head>
 <body>

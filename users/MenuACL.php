@@ -26,15 +26,39 @@ WebLib::IncludeCSS('users/css/MenuACL.css');
     <?php
     WebLib::ShowMsg();
     $Data = new MySQLiDBHelper();
-    $RowsUser = $Data->query('Select `UserMapID`,`UserName` '
-            . 'FROM `' . MySQL_Pre . 'Users`');
-    $RowsMenu = $Data->query('Select `MenuID`,`AppID`,`Caption` '
-            . 'FROM `' . MySQL_Pre . 'MenuItems` Order By `AppID`,`MenuOrder`');
+    if ((WebLib::GetVal($_POST, 'CmdMenuAction') === 'Filter Users') && isset($_POST['MenuID'])) {
+      $Query = 'Select `U`.`UserMapID`,CONCAT(`UserName`,\'-\',`U`.`UserMapID`) as `UserName` '
+              . ' FROM `' . MySQL_Pre . 'Users` as `U` JOIN `' . MySQL_Pre . 'MenuACL` as `A` '
+              . ' ON (`A`.`UserMapID`=`U`.`UserMapID`) Where `A`.`MenuID`=?  Order By `UserName`';
+      $RowsUser = $Data->rawQuery($Query, array('MenuID' => $_POST['MenuID'][0]));
+      $Query = 'Select `M`.`MenuID`,`AppID`,'
+              . ' CONCAT(`Caption`,\'(\',`UserMapID`,\'-\',`M`.`MenuID`,\'-\',`A`.`Activated`,\')\') as `Caption`'
+              . ' FROM `' . MySQL_Pre . 'MenuItems` as `M` JOIN `' . MySQL_Pre . 'MenuACL` as `A` '
+              . ' ON (`A`.`MenuID`=`M`.`MenuID`) Where `A`.`MenuID`=? Order By `AppID`,`MenuOrder`';
+      $RowsMenu = $Data->rawQuery($Query, array('MenuID' => $_POST['MenuID'][0]));
+    } else if ((WebLib::GetVal($_POST, 'CmdMenuAction') === 'Filter Menus') && isset($_POST['UserMapID'])) {
+
+      $Query = 'Select `M`.`MenuID`,`AppID`,'
+              . ' CONCAT(`Caption`,\'(\',`UserMapID`,\'-\',`M`.`MenuID`,\'-\',`A`.`Activated`,\')\') as `Caption`'
+              . ' FROM `' . MySQL_Pre . 'MenuItems` as `M` JOIN `' . MySQL_Pre . 'MenuACL` as `A` '
+              . ' ON (`A`.`MenuID`=`M`.`MenuID`) Where `UserMapID`=? Order By `AppID`,`MenuOrder`';
+      $RowsMenu = $Data->rawQuery($Query, array('UserMapID' => $_POST['UserMapID'][0]));
+
+      $Query = 'Select `UserMapID`,CONCAT(`UserName`,\'-\',`UserMapID`) as `UserName` '
+              . ' FROM `' . MySQL_Pre . 'Users` as `U` Where `UserMapID`=?  Order By `UserName`';
+      $RowsUser = $Data->rawQuery($Query, array('UserMapID' => $_POST['UserMapID'][0]));
+    } else {
+      $RowsUser = $Data->rawQuery('Select `UserMapID`,`UserName` '
+              . ' FROM `' . MySQL_Pre . 'Users`  Order By `UserName`');
+      $RowsMenu = $Data->rawQuery('Select `MenuID`,`AppID`,`Caption` '
+              . ' FROM `' . MySQL_Pre . 'MenuItems` Order By `AppID`,`MenuOrder`');
+    }
     ?>
     <form method="post" action="<?php echo WebLib::GetVal($_SERVER, 'PHP_SELF'); ?>">
       <div class="column">
         <ul>
           <?php
+          echo '<li class="ListItem">Total Users: ' . count($RowsUser) . '</li>';
           foreach ($RowsUser as $Index => $User) {
             echo '<li class="ListItem">'
             . '<label for="User' . $User['UserMapID'] . '" >'
@@ -49,6 +73,7 @@ WebLib::IncludeCSS('users/css/MenuACL.css');
       <div class="column">
         <ul>
           <?php
+          echo '<li class="ListItem">Total Menus: ' . count($RowsMenu) . '</li>';
           foreach ($RowsMenu as $Index => $Menu) {
             echo '<li class="ListItem">'
             . '<label for="Menu' . $Menu['MenuID'] . '" >'
@@ -72,6 +97,8 @@ WebLib::IncludeCSS('users/css/MenuACL.css');
       <input type="submit"  name="CmdMenuAction" value="Restrict" />
       <input type="submit"  name="CmdMenuAction" value="Activate" />
       <input type="submit"  name="CmdMenuAction" value="Deactivate" />
+      <input type="submit"  name="CmdMenuAction" value="Filter Menus" />
+      <input type="submit"  name="CmdMenuAction" value="Filter Users" />
       <input type="hidden" name="FormToken" value="<?php echo WebLib::GetVal($_SESSION, 'FormToken') ?>" />
     </form>
     <?php

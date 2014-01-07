@@ -105,17 +105,20 @@ class WebLib {
   /**
    * Deployment info of the server
    */
-  public static function DeployInfo() {
+  public static function DeployInfo($EnableLoging = false) {
     $_SESSION['Version'] = `git describe --tags`;
+    $_SESSION['Version'] .=date('Ymd');
     $_SESSION['AppTitle'] = AppTitle;
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-    curl_setopt($ch, CURLOPT_URL, 'https://www.paschimmedinipur.gov.in');
-    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($_SESSION));
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    $CURL_OUTPUT = curl_exec($ch);
-    curl_close($ch);
-    $_SESSION['CURL_OUTPUT'] = $CURL_OUTPUT;
+    if ($EnableLoging === true) {
+      $ch = curl_init();
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+      curl_setopt($ch, CURLOPT_URL, 'https://www.paschimmedinipur.gov.in');
+      curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($_SESSION));
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+      $CURL_OUTPUT = curl_exec($ch);
+      curl_close($ch);
+      $_SESSION['CURL_OUTPUT'] = $CURL_OUTPUT;
+    }
   }
 
   /**
@@ -407,9 +410,10 @@ class WebLib {
    *
    */
   public static function InitSess() {
-    date_default_timezone_set('Asia/Kolkata');
-    if (!isset($_SESSION))
+    if (!isset($_SESSION)) {
       session_start();
+      date_default_timezone_set('Asia/Kolkata');
+    }
     if (self::GetVal($_SESSION, 'BaseDIR') === NULL) {
       header("HTTP/1.1 404 Not Found");
       exit();
@@ -433,8 +437,11 @@ class WebLib {
    * @todo Audit Trails to be logged with submitted data
    */
   public static function AuthSession() {
-    if (!isset($_SESSION))
+    if (!isset($_SESSION)) {
       session_start();
+      date_default_timezone_set('Asia/Kolkata');
+    }
+
     self::SetURI();
     $_SESSION['ET'] = microtime(TRUE);
     $_SESSION['Debug'] = self::GetVal($_SESSION, 'Debug') . 'InSession_AUTH';
@@ -457,6 +464,7 @@ class WebLib {
         session_unset();
         session_destroy();
         session_start();
+        date_default_timezone_set('Asia/Kolkata');
         self::SetURI();
         $_SESSION = array();
         $_SESSION['Debug'] = self::GetVal($_SESSION, 'Debug') . $SessRet . 'SESSION_TOKEN-!Valid';
@@ -680,14 +688,17 @@ class WebLib {
    * Sets the paths for AppROOT, BaseDIR & BaseURL
    */
   public static function SetPATH($PageLength = 9) {
-    if (!isset($_SESSION))
+    if (!isset($_SESSION)) {
       session_start();
+      date_default_timezone_set('Asia/Kolkata');
+    }
     $_SESSION['ET'] = microtime(TRUE);
     if (self::GetVal($_SESSION, 'AppKey') !== AppKey) {
       session_unset();
       session_destroy();
       $_SESSION = array();
       session_start();
+      date_default_timezone_set('Asia/Kolkata');
       self::SetURI();
     }
     if (self::GetVal($_SESSION, 'BaseDIR') === NULL) {
@@ -696,8 +707,8 @@ class WebLib {
       $Proto = (self::GetVal($_SERVER, 'HTTPS') === 'on') ? 'https://' : 'http://';
       $_SESSION['BaseURL'] = $Proto . $_SERVER['HTTP_HOST'] . $_SESSION['BaseDIR'];
       $_SESSION['AppKey'] = AppKey;
-      //self::DeployInfo();
-      $_SESSION['Version'] = 'v1.1-52-g1a0b816 20131219';
+      self::DeployInfo();
+      //$_SESSION['Version'] = 'v1.1-79-g24e71dc 20140107';
     }
   }
 

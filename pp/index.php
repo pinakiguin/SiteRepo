@@ -3,6 +3,7 @@ require_once __DIR__ . '/../lib.inc.php';
 
 WebLib::AuthSession();
 WebLib::Html5Header('Polling Personnel 2014');
+WebLib::IncludeCSS();
 WebLib::CreateDB();
 ?>
 </head>
