@@ -16,6 +16,7 @@ function CreateSchemas() {
   $ObjDB->do_ins_query(SQLDefs('PP_ACs'));
   $ObjDB->do_ins_query(SQLDefs('PP_DataACs'));
   $ObjDB->do_ins_query(SQLDefs('PP_Offices'));
+  $ObjDB->do_ins_query(SQLDefs('PP_Personnel'));
   $ObjDB->do_ins_query(SQLDefs('PP_FieldNames'));
   $ObjDB->do_ins_query(SQLDefs('PP_DataFieldNames'));
   $ObjDB->do_ins_query(SQLDefs('MenuData'));
@@ -242,8 +243,48 @@ function SQLDefs($ObjectName) {
               . '`ACNo` varchar(3) DEFAULT NULL, '
               . '`UserMapID` varchar(5) DEFAULT NULL, '
               . ' PRIMARY KEY (`OfficeSL`)'
-              . ' ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
-    ';
+              . ' ) ENGINE = InnoDB DEFAULT CHARSET = utf8;';
+      break;
+      case 'PP_Personnel':
+      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . $ObjectName . '` ('
+  . '`PerSL` varchar(10) COLLATE utf8_bin NOT NULL,'
+  . '`PerCode` varchar(10) COLLATE utf8_bin NOT NULL,'
+  . '`EmpName` varchar(50) COLLATE utf8_bin NOT NULL,'
+  . '`Desg` varchar(50) COLLATE utf8_bin NOT NULL,'
+  . '`Dob` date NOT NULL,'
+  . '`Sex` enum("m","f") COLLATE utf8_bin NOT NULL,'
+  . '`AcNo` int(20) NOT NULL,'
+  . '`PartNo` varchar(20) COLLATE utf8_bin NOT NULL,'
+  . '`SlNo` varchar(20) COLLATE utf8_bin NOT NULL,'
+  . '`EPICNo` varchar(20) COLLATE utf8_bin NOT NULL,'
+  . '`ScaleOfPay` int(20) NOT NULL,'
+  . '`BasicPay` int(20) NOT NULL,'
+  . '`GradePay` int(20) NOT NULL,'
+  . '`Posting` enum("y","n") COLLATE utf8_bin NOT NULL,'
+  . '`PreAddr1` varchar(50) COLLATE utf8_bin NOT NULL,'
+  . '`PreAddr2` varchar(50) COLLATE utf8_bin NOT NULL,'
+  . '`PerAddr1` varchar(50) COLLATE utf8_bin NOT NULL,'
+  . '`PerAddr2` varchar(50) COLLATE utf8_bin NOT NULL,'
+  . '`AcPreRes` varchar(50) COLLATE utf8_bin NOT NULL,'
+  . '`AcPerRes` varchar(50) COLLATE utf8_bin NOT NULL,'
+  . '`AcPosting` varchar(50) COLLATE utf8_bin NOT NULL,'
+  . '`PcPreRes` varchar(50) COLLATE utf8_bin NOT NULL,'
+  . '`PcPerRes` varchar(50) COLLATE utf8_bin NOT NULL,'
+  . '`PcPosting` varchar(50) COLLATE utf8_bin NOT NULL,'
+  . '`Qualification` varchar(50) COLLATE utf8_bin NOT NULL,'
+  . '`Language` enum("Hindi","Nepali") COLLATE utf8_bin NOT NULL,'
+  . '`Phone` int(20) NOT NULL,'
+  . '`Mobile` int(10) NOT NULL,'
+  . '`EMail` varchar(50) COLLATE utf8_bin NOT NULL,'
+  . '`Remarks` varchar(50) COLLATE utf8_bin NOT NULL,'
+  . '`BankACNo` int(20) NOT NULL,'
+  . '`BankName` varchar(50) COLLATE utf8_bin NOT NULL,'
+  . '`BranchName` varchar(50) COLLATE utf8_bin NOT NULL,'
+  . '`IFSCCode` varchar(10) COLLATE utf8_bin NOT NULL,'
+  . '`EDCPBIssued` varchar(20) COLLATE utf8_bin NOT NULL,'
+  . '`PBReturn` varchar(50) COLLATE utf8_bin NOT NULL,'
+  . 'PRIMARY KEY (`PerSL`,`PerCode`)'
+  .') ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;'; 
       break;
     case 'PP_FieldNames':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . $ObjectName . '` ('
