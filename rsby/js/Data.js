@@ -42,6 +42,7 @@ $(function() {
       $('#CmbPanchayatCode').data('Panchayats', DataResp.Panchayats);
       $('#CmbVillageCode').data('Villages', DataResp.Villages);
       delete DataResp;
+      $("#Msg").hide();
     }
     catch (e) {
       $('#Msg').html('Server Error:' + e);
@@ -60,6 +61,8 @@ $(function() {
     no_results_text: "Oops, nothing found!"
   })
           .change(function() {
+    $("#Msg").hide();
+    $("#example_wrapper").hide();
     var Options = '<option value=""></option>';
     var Panchayats = $('#CmbPanchayatCode').data('Panchayats');
     var BlockCode = $(this).val();
@@ -85,6 +88,8 @@ $(function() {
     no_results_text: "Oops, nothing found!"
   })
           .change(function() {
+    $("#Msg").hide();
+    $("#example_wrapper").hide();
     var Options = '<option value=""></option>';
     var Villages = $('#CmbVillageCode').data('Villages');
     var PanchayatCode = $(this).val();
@@ -169,6 +174,8 @@ $(function() {
         dataTableRSBY.fnDraw();
 
         delete DataResp;
+        $("#Msg").show();
+        $("#example_wrapper").show();
       }
       catch (e) {
         $('#Msg').html('Server Error:' + e);

@@ -31,3 +31,6 @@ input[type=search]{
   background-color: buttonface;
   border-radius: 4px;
 }
+#example_wrapper{
+  display: none;
+}
