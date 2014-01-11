@@ -45,6 +45,7 @@ function SQLDefs($ObjectName) {
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . $ObjectName . '` ('
               . '`ProjectID` bigint(20) NOT NULL AUTO_INCREMENT,'
               . '`SchemeID` INT(10),'
+              . '`UserMapID` INT(10) DEFAULT 1,'
               . '`ProjectName` VARCHAR(100) DEFAULT NULL,'
               . '`ProjectCost` INT(10),'
               . '`StartDate` date,'
@@ -58,6 +59,7 @@ function SQLDefs($ObjectName) {
     case 'MPR_Progress':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . $ObjectName . '` ('
               . '`ReportID` bigint(20) NOT NULL AUTO_INCREMENT,'
+              . '`UserMapID` INT(10) DEFAULT 1,'
               . '`ReportDate` date,'
               . '`ProjectID` INT(10),'
               . '`PhysicalProgress` VARCHAR(100) DEFAULT NULL,'

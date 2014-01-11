@@ -44,6 +44,26 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
           $_SESSION['Msg'] = 'Scheme Name must be at least 3 characters or more.';
         }
         break;
+      case 'Create Project':
+
+        //STR_TO_DATE(1-01-2012'', '%d-%m-%Y')
+        $DataMPR['ProjectName'] = WebLib::GetVal($_POST, 'ProjectName');
+        $DataMPR['ProjectCost'] = WebLib::GetVal($_POST, 'ProjectCost');
+        $DataMPR['StartDate'] = WebLib::GetVal($_POST, 'StartDate');
+        $DataMPR['AlotmentAmount'] = WebLib::GetVal($_POST, 'AlotmentAmount');
+        $DataMPR['AlotmentDate'] = WebLib::GetVal($_POST, 'AlotmentDate');
+        $DataMPR['TenderDate'] = WebLib::GetVal($_POST, 'TenderDate');
+        $DataMPR['WorkOrderDate'] = WebLib::GetVal($_POST, 'WorkOrderDate');
+        $DataMPR['SchemeID'] = WebLib::GetVal($_POST, 'SchemeID');
+        if ((strlen($DataMPR['ProjectName']) > 2) && ($DataMPR['SchemeID'] !== null)) {
+          $DataMPR['UserMapID'] = $_SESSION['UserMapID'];
+          $Query = MySQL_Pre . 'MPR_Projects';
+          $_SESSION['Msg'] = 'Project Created Successfully!';
+        } else {
+          $Query = '';
+          $_SESSION['Msg'] = 'Project Name must be at least 3 characters or more.';
+        }
+        break;
     }
     if ($Query !== '') {
       $Inserted = $Data->insert($Query, $DataMPR);
