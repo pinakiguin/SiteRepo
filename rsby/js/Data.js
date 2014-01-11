@@ -163,7 +163,8 @@ $(function() {
         $('#AjaxToken').val(DataResp.AjaxToken);
         $('#Msg').html(DataResp.Msg);
         $('#ED').html(DataResp.RT);
-
+        $("#Msg").show();
+        $("#example_wrapper").show();
         var dataTableRSBY = $('#example').dataTable();
         oSettings = dataTableRSBY.fnSettings();
         dataTableRSBY.fnClearTable(this);
@@ -174,8 +175,6 @@ $(function() {
         dataTableRSBY.fnDraw();
 
         delete DataResp;
-        $("#Msg").show();
-        $("#example_wrapper").show();
       }
       catch (e) {
         $('#Msg').html('Server Error:' + e);
