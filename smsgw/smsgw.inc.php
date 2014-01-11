@@ -10,15 +10,40 @@ class SMSGW {
 
   public static function SendSMS($SMSData, $MobileNo) {
 
-    $uname = urlencode(SMSGW_USER);
+    $PostData['username'] = SMSGW_USER;
 
-    $pass = urlencode(SMSGW_PASS);
+    $PostData['pin'] = SMSGW_PASS;
+    $PostData['signature'] = SMSGW_SENDER;
+    $PostData['mnumber'] = $MobileNo;
+    $PostData['message'] = $SMSData;
 
-    $send = urlencode(SMSGW_SENDER);
+    /**
+     * Scheduled time to deliver this message in the format of yyyy/MM/dd/HH/mm;
+     * default is null
+     */
+    $PostData['scheTime'] = null;
 
-    $dest = urlencode($MobileNo);
+    /**
+     *
+     * PM – Plain text message;
+     * UC – Unicode Message;
+     * BM – Binary text message(ringtone, logo, picture, wap link);
+     * FL –Flash message;
+     * SP – messages to special port; $PostData['port'] = 443;
+     * default is PM
+     */
+    $PostData['msgType'] = 'PM';
 
-    $msg = urlencode($SMSData);
+    /**
+     * 0 – No need for dlr;
+     * 1 – end delivery notification success or failure;
+     * 2 – end delivery notification failure only;
+     * 4 – SMS Platform failures / reject status only;
+     * 5 - SMS Platform failures / reject status + end delivery notification success or failure;
+     * 6 - SMS Platform failures / reject status + end delivery notification failure;
+     * default is 0
+     */
+    $PostData['Dlrtype'] = 5;
 
     $ch = curl_init();
 
@@ -28,7 +53,7 @@ class SMSGW {
 
     curl_setopt($ch, CURLOPT_URL, SMSGW_URL);
 
-    curl_setopt($ch, CURLOPT_POSTFIELDS, "uname=$uname&pass=$pass&send=$send&dest=$dest&msg=$msg");
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($PostData));
 
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
