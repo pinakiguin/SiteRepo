@@ -242,14 +242,16 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
             </label>
           </div>
         </fieldset>
-        <fieldset><div class="FieldGroup">
+        <fieldset>
+          <legend>Election Duty Certificate/Postal Ballot</legend>
+          <div class="FieldGroup">
             <label for="EDCPBIssued"><strong>EDC/PB Issued</strong>
-              <input type="text" name="EDCPBIssued" id="EDCPBIssued" value="" required/>
+              <input type="text" name="EDCPBIssued" id="EDCPBIssued" value="" />
             </label>
           </div>
           <div class="FieldGroup">
-            <label for="PBReturn"><strong>PB Return</strong>
-              <input type="text" name="PBReturn" id="PBReturn" value="" required/>
+            <label for="PBReturn"><strong>PB Returned</strong>
+              <input type="text" name="PBReturn" id="PBReturn" value="" />
             </label>
           </div>
           <div class="formControl">
