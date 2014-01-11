@@ -80,7 +80,7 @@ root {
 }
 .formWrapper fieldset{
   margin: 10px;
-  padding: 10px 5px 0px 0px;
+  padding: 10px 5px 5px 0px;
   border: 1px solid #858585;
   border-radius: 10px;
   -webkit-border-radius: 10px;
