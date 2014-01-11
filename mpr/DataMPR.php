@@ -46,14 +46,17 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
         break;
       case 'Create Project':
 
-        //STR_TO_DATE(1-01-2012'', '%d-%m-%Y')  $date = date('Y-m-d', $timestamp);
+        //STR_TO_DATE(1-01-2012'', '%d-%m-%Y')  $date = date('Y-m-d', $timestamp);weblib
+        //date('Y-m-d', strtotime(WebLib::GetVal($_POST, 'StartDate')));
         $DataMPR['ProjectName'] = WebLib::GetVal($_POST, 'ProjectName');
         $DataMPR['ProjectCost'] = WebLib::GetVal($_POST, 'ProjectCost');
-        $DataMPR['StartDate'] = date('Y-m-d', WebLib::GetVal($_POST, 'StartDate'));
+        //weblib::ToDBDate($Query)
+        //$DataMPR['StartDate'] = date('Y-m-d', strtotime('Y-m-d', WebLib::GetVal($_POST, 'StartDate'));
+        $DataMPR['StartDate'] = weblib::ToDBDate('StartDate');
         $DataMPR['AlotmentAmount'] = WebLib::GetVal($_POST, 'AlotmentAmount');
-        $DataMPR['AlotmentDate'] = date('Y-m-d', WebLib::GetVal($_POST, 'AlotmentDate'));
-        $DataMPR['TenderDate'] = date('Y-m-d', WebLib::GetVal($_POST, 'TenderDate'));
-        $DataMPR['WorkOrderDate'] = date('Y-m-d', WebLib::GetVal($_POST, 'WorkOrderDate'));
+        $DataMPR['AlotmentDate'] = weblib::ToDBDate('AlotmentDate');
+        $DataMPR['TenderDate'] = weblib::ToDBDate('TenderDate');
+        $DataMPR['WorkOrderDate'] = weblib::ToDBDate('WorkOrderDate');
         $DataMPR['SchemeID'] = WebLib::GetVal($_POST, 'SchemeID');
         if ((strlen($DataMPR['ProjectName']) > 2) && ($DataMPR['SchemeID'] !== null)) {
           $DataMPR['UserMapID'] = $_SESSION['UserMapID'];
