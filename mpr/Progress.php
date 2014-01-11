@@ -25,73 +25,59 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
   </div>
   <?php
   WebLib::ShowMenuBar('MPR');
-  $Data = new MySQLiDB();
-  $Data1 = new MySQLiDBHelper();
   ?>
 
   <div class="content">
-    <form method="post" name="formname" action="<?php echo WebLib::GetVal($_SERVER, 'PHP_SELF'); ?>">
-      <div style="height: 200px;overflow-y: scroll;float: left;border:1px solid;">
-        <ul>
-          <li>
-            <label>Name of Project</label>
-            <select name="ProjectID" data-placeholder="Select Project">
-              <?php
-              $Query = 'Select `ProjectID`, `ProjectName` '
-                      . ' FROM `' . MySQL_Pre . 'MPR_Projects` '
-                      . ' Order By `ProjectID`';
-              $Data->show_sel('ProjectID', 'ProjectName', $Query, WebLib::GetVal($_POST, 'ProjectID'));
-              ?>
-            </select>
-          </li>
-
-          <li>
-            <label>Report Date</label>
-
-            <input type="text" id="ReportDate"
-                   class="ReportDate" placeholder="yyyy-mm-dd" />
-          </li>
-          <li>
-            <label>Physical Progress</label>
-            <input type="text" name ="PhysicalProgress" id="PhysicalProgress" />
-          </li>
-          <li>
-            <label>Financial Progress</label>
-            <input type="text" name ="FinancialProgress" id="FinancialProgress" />
-          </li>
-          <li>
-            <label>Remarks</label>
-            <input type="text" name ="Remarks" id="Remarks" />
-          </li>
-
-
-        </ul>
-
-
+    <div class="formWrapper">
+      <form method="post" action="<?php echo WebLib::GetVal($_SERVER, 'PHP_SELF'); ?>">
+        <h3>Process </h3>
         <?php
-        if (WebLib::GetVal($_POST, 'PhysicalProgress') == "") {
-
-          print "Blank text box detected";
-        } else {
-
-          $DataACL['UserMapID'] = $_SESSION['UserMapID'];
-          $DataACL['ProjectID'] = WebLib::GetVal($_POST, 'ProjectID');
-          $DataACL['ReportDate'] = WebLib::GetVal($_POST, 'ReportDate');
-          $DataACL['PhysicalProgress'] = WebLib::GetVal($_POST, 'PhysicalProgress');
-          $DataACL['FinancialProgress'] = WebLib::GetVal($_POST, 'FinancialProgress');
-          $DataACL['Remarks'] = WebLib::GetVal($_POST, 'Remarks');
-
-          $Data1->insert(MySQL_Pre . 'MPR_Progress', $DataACL);
-          echo'Add Successfully';
-          $_SESSION['Msg'] = 'Add Successfully!';
-        }
+        include __DIR__ . '/DataMPR.php';
+        $Data = new MySQLiDB();
+        $Data1 = new MySQLiDBHelper();
         ?>
-        <input type="submit" id="Cmdsub" name="Cmdsub">
-      </div>
+        <div class="FieldGroup">
+          <label for="ProjectName"><strong>Project Name</strong></label><br/>
+          <select name="ProjectID" data-placeholder="Select Project">
+            <?php
+            $Query = 'Select `ProjectID`, `ProjectName` '
+                    . ' FROM `' . MySQL_Pre . 'MPR_Projects` '
+                    . ' Order By `ProjectID`';
+            $Data->show_sel('ProjectID', 'ProjectName', $Query, WebLib::GetVal($_POST, 'ProjectID'));
+            ?>
+          </select>
+        </div>
 
 
-    </form>
+        <div class="FieldGroup">
+          <label for="ReportDate"><strong>Report Date</strong></label>
 
+          <input type="text" id="ReportDate"
+                 class="DatePicker" placeholder="YYYY-MM-DD" />
+        </div>
+
+        <div class="FieldGroup">
+          <label for="PhysicalProgress"><strong>Physical Progress</strong></label>
+          <input type="text" name="PhysicalProgress" id="PhysicalProgress" placeholder="Physical Progress"/>
+        </div>
+
+        <div class="FieldGroup">
+          <label for="FinancialProgress"><strong>Financial Progress</strong></label>
+          <input type="text" name="FinancialProgress" id="FinancialProgress" placeholder="Financial Progress"/>
+        </div>
+
+        <div class="FieldGroup">
+          <label for="Remarks"><strong>Remarks</strong></label>
+          <input type="text" name="Remarks" id="Remarks" placeholder="Remarks"/>
+        </div>
+        <div class="formControl">
+          <br/>
+          <input type="submit" name="CmdSubmit" value="Create Progress">
+        </div>
+        <input type="hidden" name="FormToken"
+               value="<?php echo WebLib::GetVal($_SESSION, 'FormToken') ?>" />
+      </form>
+    </div>
     <?php
     unset($Data);
     unset($Data1);

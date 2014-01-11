@@ -52,12 +52,18 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
         $DataMPR['ProjectCost'] = WebLib::GetVal($_POST, 'ProjectCost');
         //weblib::ToDBDate($Query)
         //$DataMPR['StartDate'] = date('Y-m-d', strtotime('Y-m-d', WebLib::GetVal($_POST, 'StartDate'));
-        $DataMPR['StartDate'] = date('Y-m-d', strtotime(WebLib::GetVal($_POST, 'StartDate')));
         //weblib::ToDBDate('StartDate');
         $DataMPR['AlotmentAmount'] = WebLib::GetVal($_POST, 'AlotmentAmount');
-        $DataMPR['AlotmentDate'] = date('Y-m-d', strtotime(WebLib::GetVal($_POST, 'AlotmentDate')));
-        $DataMPR['TenderDate'] = date('Y-m-d', strtotime(WebLib::GetVal($_POST, 'TenderDate')));
-        $DataMPR['WorkOrderDate'] = date('Y-m-d', strtotime(WebLib::GetVal($_POST, 'WorkOrderDate')));
+        $DataMPR['StartDate'] = WebLib::ToDBDate(WebLib::GetVal($_POST, 'StartDate'));
+        $DataMPR['AlotmentDate'] = WebLib::ToDBDate(WebLib::GetVal($_POST, 'AlotmentDate'));
+        $DataMPR['TenderDate'] = WebLib::ToDBDate(WebLib::GetVal($_POST, 'TenderDate'));
+        $DataMPR['WorkOrderDate'] = WebLib::ToDBDate(WebLib::GetVal($_POST, 'WorkOrderDate'));
+        /*
+          $DataMPR['StartDate'] = date('Y-m-d', strtotime(WebLib::GetVal($_POST, 'StartDate')));
+          $DataMPR['AlotmentDate'] = date('Y-m-d', strtotime(WebLib::GetVal($_POST, 'AlotmentDate')));
+          $DataMPR['TenderDate'] = date('Y-m-d', strtotime(WebLib::GetVal($_POST, 'TenderDate')));
+          $DataMPR['WorkOrderDate'] = date('Y-m-d', strtotime(WebLib::GetVal($_POST, 'WorkOrderDate')));
+         */
         $DataMPR['SchemeID'] = WebLib::GetVal($_POST, 'SchemeID');
         if ((strlen($DataMPR['ProjectName']) > 2) && ($DataMPR['SchemeID'] !== null)) {
           $DataMPR['UserMapID'] = $_SESSION['UserMapID'];
@@ -66,6 +72,27 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
         } else {
           $Query = '';
           $_SESSION['Msg'] = 'Project Name must be at least 3 characters or more.';
+        }
+        break;
+      case 'Create Progress':
+
+
+        $DataMPR['ProjectID'] = WebLib::GetVal($_POST, 'ProjectID');
+
+
+        $DataMPR['ReportDate'] = WebLib::ToDBDate(WebLib::GetVal($_POST, 'ReportDate'));
+        //date('Y-m-d', strtotime(WebLib::GetVal($_POST, 'ReportDate')));
+        //WebLib::ToDBDate(WebLib::GetVal($_POST, 'ReportDate'));
+        $DataMPR['PhysicalProgress'] = WebLib::GetVal($_POST, 'PhysicalProgress');
+        $DataMPR['FinancialProgress'] = WebLib::GetVal($_POST, 'FinancialProgress');
+        $DataMPR['Remarks'] = WebLib::GetVal($_POST, 'Remarks');
+        if ((strlen($DataMPR['PhysicalProgress']) > 2) && (strlen($DataMPR['FinancialProgress']) > 2) && (strlen($DataMPR['Remarks']) > 2) && ($DataMPR['ProjectID'] !== null)) {
+          $DataMPR['UserMapID'] = $_SESSION['UserMapID'];
+          $Query = MySQL_Pre . 'MPR_Progress';
+          $_SESSION['Msg'] = 'Progress Created Successfully!';
+        } else {
+          $Query = '';
+          $_SESSION['Msg'] = 'Progress must be at least 3 characters or more.';
         }
         break;
     }

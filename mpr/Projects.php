@@ -1,6 +1,6 @@
 <?php
-ini_set('display_errors', '1');
-error_reporting(E_ALL);
+//ini_set('display_errors', '1');
+//error_reporting(E_ALL);
 
 require_once __DIR__ . '/../lib.inc.php';
 
@@ -12,9 +12,6 @@ WebLib::IncludeCSS('css/chosen.css');
 WebLib::IncludeJS('mpr/js/forms.js');
 WebLib::IncludeCSS('mpr/css/forms.css');
 WebLib::IncludeJS('js/chosen.jquery.min.js');
-if (NeedsDB) {
-  WebLib::CreateDB('MPR');
-}
 ?>
 </head>
 <body>
@@ -66,7 +63,7 @@ if (NeedsDB) {
           <label for="StartDate"><strong>Project Start Date</strong></label>
 
           <input type="text" id="StartDate"
-                 class="DatePicker" placeholder="MM/DD/YYYY" />
+                 class="DatePicker" placeholder="YYYY-MM-DD" />
         </div>
 
         <div class="FieldGroup">
@@ -79,7 +76,7 @@ if (NeedsDB) {
           <label for="AlotmentDate"><strong>Project Allotment Date</strong></label>
 
           <input type="text" id="AlotmentDate"
-                 class="DatePicker" placeholder="MM/DD/YYYY" />
+                 class="DatePicker" placeholder="YYYY-MM-DD" />
         </div>
 
 
@@ -88,14 +85,14 @@ if (NeedsDB) {
           <label for="TenderDate"><strong>Project Tender Date</strong></label>
 
           <input type="text" id="TenderDate"
-                 class="DatePicker" placeholder="MM/DD/YYYY" />
+                 class="DatePicker" placeholder="YYYY-MM-DD" />
         </div>
 
         <div class="FieldGroup">
           <label for="WorkOrderDate"><strong>Project Work Order Date</strong></label>
 
           <input type="text" id="WorkOrderDate"
-                 class="DatePicker" placeholder="MM/DD/YYYY" />
+                 class="DatePicker" placeholder="YYYY-MM-DD" />
         </div>
         <div class="formControl">
           <br/>
