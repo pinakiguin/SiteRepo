@@ -75,8 +75,9 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
             </label>
           </div>
           <div class="FieldGroup">
-            <label for="EPICNo"><strong>EPIC NO.</strong>(Voter's Photo id card)
-              <input type="text" name="EPIC" id="EPIC" value="" required/>
+            <label for="EPICNo"><strong>EPIC NO.</strong>
+              <input type="text" name="EPIC" id="EPIC" value=""
+                     size="8" maxlength="16" placeholder="Voter's ID" required/>
             </label>
           </div>
         </fieldset>
@@ -100,11 +101,11 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
                      size="3" maxlength="5" required/>
             </label>
           </div>
-          <br/>
+        </fieldset>
+        <fieldset>
+          <legend>Whether working for 3 years out of 4 years</legend>
           <div class="FieldGroup">
-            <label for="Posting">
-              <span class="ui-icon ui-icon-clock" style="float:left;"></span>
-              Whether Working in the district for 3 years out of 4 years as on 30/6/2013
+            <label for="Posting"><strong>In the district as on 30/06/2013</strong>
               <select name="Posting" id="Posting">
                 <option value="YES">YES</option>
                 <option value="NO">NO</option>

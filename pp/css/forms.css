@@ -23,6 +23,8 @@ root {
 
 .formWrapper input[type=text],
 .formWrapper input[type=password],
+.formWrapper input[type="email"],
+.formWrapper input[type="number"],
 .formWrapper select{
   font-size: 15px;
   color: #858585;
@@ -53,8 +55,11 @@ root {
   padding-bottom: 5px;
   border-bottom: 3px solid #858585;
 }
-.formWrapper input[type=text]:focus,
-.formWrapper input[type=password]:focus {
+.formWrapper input[type="text"]:focus,
+.formWrapper input[type="password"]:focus,
+.formWrapper input[type="email"]:focus,
+.formWrapper input[type="number"]:focus,
+.formWrapper select{
   border: 2px solid #858585;
   border-radius: 2px;
   -webkit-border-radius: 2px;
@@ -86,6 +91,7 @@ root {
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
   float: left;
+  transition: background .25s linear,box-shadow .25s linear;
 }
 .formWrapper legend{
   margin: 0px 0px 0px 20px;
