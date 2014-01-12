@@ -8,7 +8,7 @@ if (file_exists(__DIR__ . '/config.inc.php')) {
 
 class SMSGW {
 
-  public static function SendSMS($SMSData, $MobileNo) {
+  public static function SendSMS($SMSData, $MobileNo, $MsgType = 'PM', $ScheTime = null, $DlrType = 5) {
 
     $PostData['username'] = SMSGW_USER;
 
@@ -21,7 +21,7 @@ class SMSGW {
      * Scheduled time to deliver this message in the format of yyyy/MM/dd/HH/mm;
      * default is null
      */
-    $PostData['scheTime'] = null;
+    $PostData['scheTime'] = $ScheTime;
 
     /**
      *
@@ -32,7 +32,7 @@ class SMSGW {
      * SP – messages to special port; $PostData['port'] = 443;
      * default is PM
      */
-    $PostData['msgType'] = 'PM';
+    $PostData['msgType'] = $MsgType;
 
     /**
      * 0 – No need for dlr;
@@ -43,7 +43,7 @@ class SMSGW {
      * 6 - SMS Platform failures / reject status + end delivery notification failure;
      * default is 0
      */
-    $PostData['Dlrtype'] = 5;
+    $PostData['Dlrtype'] = $DlrType;
 
     $ch = curl_init();
 
