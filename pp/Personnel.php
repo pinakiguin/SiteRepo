@@ -9,6 +9,7 @@ WebLib::IncludeCSS('css/chosen.css');
 WebLib::IncludeJS('pp/js/forms.js');
 WebLib::IncludeCSS('pp/css/forms.css');
 WebLib::IncludeJS('js/chosen.jquery.min.js');
+WebLib::IncludeJS('pp/js/Personnel.js');
 ?>
 </head>
 <body>
@@ -33,10 +34,16 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
         <fieldset>
           <legend>Employee Details</legend>
           <div class="FieldGroup">
-            <label for="OfficeID"><strong>Name of The Office</strong>
-              <input type="text" name="OfficeID" id="OfficeID"
-                     value="<?php echo WebLib::GetVal($_SESSION['PostData'], 'OfficeID') ?>"
-                     required/>
+            <label for="OfficeSL"><strong>Name of The Office</strong>
+              <select id="OfficeSL" name="OfficeSL" data-placeholder="Select Department" class="chzn-select">
+                <?php
+                $Data = new MySQLiDB();
+                $Query = 'Select `OfficeSL`, `OfficeName` '
+                  . ' FROM `' . MySQL_Pre . 'PP_Offices` '
+                  . ' Order By `OfficeName`';
+                $Data->show_sel('OfficeSL', 'OfficeName', $Query, WebLib::GetVal($_POST, 'OfficeSL'));
+                ?>
+              </select>
             </label>
             <label for="NameID"><strong>Name of Employee</strong>
               <input type="text" name="NameID" id="NameID"
@@ -44,7 +51,7 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
                      required/>
             </label>
             <label for="DesigID"><strong>Designation</strong>
-              <input type="text" name="DesigID" id="DesigID"
+              <input type="text" name="DesgID" id="DesgID"
                      value="<?php echo WebLib::GetVal($_SESSION['PostData'], 'DesigID') ?>"
                      required/>
             </label>
