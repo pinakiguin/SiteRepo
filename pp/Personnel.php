@@ -23,6 +23,9 @@ WebLib::IncludeJS('pp/js/Personnel.js');
   WebLib::ShowMenuBar('PP');
   ?>
   <div class="content">
+    <span class="Message" id="Msg" style="float: right;">
+      <b>Loading please wait...</b>
+    </span>
     <div class="formWrapper">
       <form method="post"
             action="<?php echo WebLib::GetVal($_SERVER, 'PHP_SELF'); ?>" >
@@ -35,14 +38,15 @@ WebLib::IncludeJS('pp/js/Personnel.js');
           <legend>Employee Details</legend>
           <div class="FieldGroup">
             <label for="OfficeSL"><strong>Name of The Office</strong>
-              <select id="OfficeSL" name="OfficeSL" data-placeholder="Select Department" class="chzn-select">
-                <?php
-                $Data = new MySQLiDB();
-                $Query = 'Select `OfficeSL`, `OfficeName` '
-                  . ' FROM `' . MySQL_Pre . 'PP_Offices` '
-                  . ' Order By `OfficeName`';
-                $Data->show_sel('OfficeSL', 'OfficeName', $Query, WebLib::GetVal($_POST, 'OfficeSL'));
-                ?>
+              <select id="OfficeSL" name="OfficeSL" data-placeholder="Select Department"
+                      class="chzn-select">
+                        <?php
+                        $Data = new MySQLiDB();
+                        $Query = 'Select `OfficeSL`, `OfficeName` '
+                          . ' FROM `' . MySQL_Pre . 'PP_Offices` '
+                          . ' Order By `OfficeName`';
+                        $Data->show_sel('OfficeSL', 'OfficeName', $Query, WebLib::GetVal($_POST, 'OfficeSL'));
+                        ?>
               </select>
             </label>
             <label for="NameID"><strong>Name of Employee</strong>
@@ -106,9 +110,15 @@ WebLib::IncludeJS('pp/js/Personnel.js');
           <legend>Pay Details</legend>
           <div class="FieldGroup">
             <label for="PayScale"><strong>Scale of Pay</strong>
-              <input type="text" name="PayScale" id="PayScale"
-                     value="<?php echo WebLib::GetVal($_SESSION['PostData'], 'OfficeName') ?>"
-                     size="3" maxlength="3" required/>
+              <select id="PayScale" name="PayScale" data-placeholder="Select Pay Scale">
+                <?php
+                $Data = new MySQLiDB();
+                $Query = 'Select `ScaleCode`, `Scale` '
+                  . ' FROM `' . MySQL_Pre . 'PP_Scales` '
+                  . ' Order By `Scale`';
+                $Data->show_sel('ScaleCode', 'Scale', $Query, WebLib::GetVal($_POST, 'ScaleCode'));
+                ?>
+              </select>
             </label>
           </div>
           <div class="FieldGroup">
@@ -122,7 +132,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
             <label for="GradePay"><strong>Grade Pay</strong>
               <input type="text"  name="GradePay" id="GradePay"
                      value="<?php echo WebLib::GetVal($_SESSION['PostData'], 'OfficeName') ?>"
-                     size="3" maxlength="5" required/>
+                     size="3" maxlength="5" disabled="disabled" required/>
             </label
           </div>
         </fieldset>
@@ -280,7 +290,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
           <legend>Bank Details</legend>
           <div class="FieldGroup">
             <label for="BankACNo"><strong>BankA/C No.</strong>
-              <input type="number" name="BankACNo" id="BankACNo"
+              <input type="text" name="BankACNo" id="BankACNo"
                      value="<?php echo WebLib::GetVal($_SESSION['PostData'], 'BankACNo') ?>"
                      required/>
             </label>
@@ -326,12 +336,16 @@ WebLib::IncludeJS('pp/js/Personnel.js');
           <div class="formControl">
             <input type="submit" name="CmdSubmit"  value ="Submit"/>
             <input type="reset" name="CmdSubmit"  value ="Reset"/>
+            <input type="button" name="CmdEdit"  value ="Edit"/>
+            <input type="button" name="CmdDelete"  value ="Delete"/>
             <input type="hidden" name="FormToken"
                    value="<?php echo WebLib::GetVal($_SESSION, 'FormToken') ?>" />
           </div>
         </fieldset>
       </form>
     </div>
+    <pre id="Error">
+    </pre>
   </div>
   <div class="pageinfo">
     <?php WebLib::PageInfo(); ?>
