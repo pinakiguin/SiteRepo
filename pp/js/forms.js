@@ -5,6 +5,7 @@
 
 $(function() {
   $('input[type="submit"]').button();
+  $('input[type="reset"]').button();
 
   $('.chzn-select').chosen({width: "250px",
     no_results_text: "Oops, nothing found!"
@@ -15,5 +16,8 @@ $(function() {
     buttonImage: "images/calendar.gif",
     buttonImageOnly: true
   });
+  $("#SexId").buttonset();
+  $("#Posting").buttonset();
+  $("#Language").buttonset();
 
 });
