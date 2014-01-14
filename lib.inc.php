@@ -200,9 +200,8 @@ class WebLib {
       return ($ForSQL) ? '' : NULL;
     } else {
       if ($ForSQL) {
-        $Data = new MySQLiDB();
-        $Value = $Data->SqlSafe($Array[$Index]);
-        $Data->do_close();
+        $Data = new MySQLiDBHelper();
+        $Value = $Data->escape($Array[$Index]);
         unset($Data);
         return $Value;
       } else {
@@ -567,15 +566,20 @@ class WebLib {
         'no_session' => true);
     if ($ShowImage) {
       $captchaId = Securimage::getCaptchaId(true, $options);
-      echo '<input type="hidden" id="captchaId" name="captchaId" value="' . $captchaId . '" />'
-      . '<img id="siimage" src="ShowCaptcha.php?captchaId=' . $captchaId . '" alt="captcha image" /><br/>'
-      . '<label for="captcha_code">Solve the above: </label><br/>'
-      . '<input placeholder="Solution of the math" type="text" name="captcha_code" value="" required />';
+      $Captcha = '<input type="hidden" id="captchaId" name="captchaId"'
+              . ' value="' . $captchaId . '" />'
+              . '<img id="siimage"'
+              . ' src="ShowCaptcha.php?captchaId=' . $captchaId . '"'
+              . ' alt="captcha image" />'
+              . '<input placeholder="Solution of the math above" type="text"'
+              . ' name="captcha_code" value="" required />';
+      echo $Captcha;
     } else {
       $captcha_code = self::GetVal($_POST, 'captcha_code');
       if ($captcha_code !== NULL) {
         $VerifyID = self::GetVal($_POST, 'captchaId');
-        $ValidCaptcha = Securimage::checkByCaptchaId($VerifyID, $captcha_code, $options);
+        $ValidCaptcha = Securimage::checkByCaptchaId(
+                        $VerifyID, $captcha_code, $options);
         return $ValidCaptcha;
       }
     }

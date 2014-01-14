@@ -1,0 +1,81 @@
+/*
+    Document   : Style
+    Created on : 29 Dec, 2013, 8:36:32 PM
+    Author     : abu
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root {
+  display: block;
+}
+
+.formWrapper {
+  border: 3px solid #858585;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  background-color: #ebebeb;
+  display: inline-block;
+}
+
+.formWrapper input[type=text],
+.formWrapper input[type=password]{
+  font-size: 15px;
+  color: #858585;
+  width: 179px;
+  box-shadow: 0 0 0px 2px #ebebeb;
+  -webkit-box-shadow: 0 0 0px 2px #ebebeb;
+  -moz-box-shadow: 0 0 0px 2px #ebebeb;
+  padding: 7px 27px 7px 9px;
+  border: 2px solid #d7d7d7;
+  display: block;
+  margin: 5px 5px 10px 5px;
+  clear: both;
+}
+#siimage{
+  box-shadow: 0 0 0px 2px #ebebeb;
+  -webkit-box-shadow: 0 0 0px 2px #ebebeb;
+  -moz-box-shadow: 0 0 0px 2px #ebebeb;
+  padding: 0px;
+  border: 2px solid #d7d7d7;
+  display: block;
+  margin: -20px 5px 0px 5px;
+  clear: both;
+}
+.formWrapper .chosen-container{
+  font-size: 15px;
+  color: #858585;
+  box-shadow: 0 0 0px 2px #ebebeb;
+  -webkit-box-shadow: 0 0 0px 2px #ebebeb;
+  -moz-box-shadow: 0 0 0px 2px #ebebeb;
+  display: block;
+  margin: 5px 5px 10px 5px;
+  clear: both;
+}
+.formWrapper label{
+  margin: 15px 0px 0px 5px;
+}
+.formWrapper h3{
+  margin-bottom: 10px;
+  padding-bottom: 5px;
+  border-bottom: 3px solid #858585;
+}
+.formWrapper input[type=text]:focus,
+.formWrapper input[type=password]:focus {
+  border: 2px solid #858585;
+  border-radius: 2px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+}
+.formControl{
+  margin: 5px 0px 0px 0px;
+  text-align: right;
+}
+.formWrapper .FieldGroup {
+  float: left;
+  margin-left: 5px;
+  padding-left: 0px;
+}
