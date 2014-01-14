@@ -8,6 +8,7 @@ function CreateSchemas() {
   $ObjDB->do_ins_query(SQLDefs('PP_Blocks'));
   $ObjDB->do_ins_query(SQLDefs('PP_DataBlocks'));
   $ObjDB->do_ins_query(SQLDefs('PP_Status'));
+  $ObjDB->do_ins_query(SQLDefs('PP_PayScales'));
   $ObjDB->do_ins_query(SQLDefs('PP_DataStatus'));
   $ObjDB->do_ins_query(SQLDefs('PP_InstType'));
   $ObjDB->do_ins_query(SQLDefs('PP_DataInstType'));
@@ -42,7 +43,8 @@ function SQLDefs($ObjectName) {
               . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
       break;
     case 'PP_DataDistricts':
-      $SqlDB = 'INSERT INTO `' . MySQL_Pre . 'PP_Districts` (`DistCode`, `DistrictName`) VALUES'
+      $SqlDB = 'INSERT INTO `' . MySQL_Pre . 'PP_Districts` '
+              . '(`DistCode`, `DistrictName`) VALUES'
               . '(\'15\', \'Paschim Medinipur\');';
       break;
     case 'PP_SubDivns':
@@ -54,7 +56,8 @@ function SQLDefs($ObjectName) {
               . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
       break;
     case 'PP_DataSubDivns':
-      $SqlDB = 'INSERT INTO `' . MySQL_Pre . 'PP_SubDivns` (`SubDivnCode`, `SubDivnName`,`DistCode`) VALUES'
+      $SqlDB = 'INSERT INTO `' . MySQL_Pre . 'PP_SubDivns` '
+              . '(`SubDivnCode`, `SubDivnName`,`DistCode`) VALUES'
               . '(\'1501\', \'Sadar\', \'15\'),'
               . '(\'1502\', \'Kharagpur\', \'15\'),'
               . '(\'1503\', \'Ghatal\', \'15\'),'
@@ -69,7 +72,8 @@ function SQLDefs($ObjectName) {
               . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
       break;
     case 'PP_DataBlocks':
-      $SqlDB = 'INSERT INTO `' . MySQL_Pre . 'PP_Blocks` (`BlockCode`, `BlockName`, `SubDivnCode`) VALUES'
+      $SqlDB = 'INSERT INTO `' . MySQL_Pre . 'PP_Blocks` '
+              . '(`BlockCode`, `BlockName`, `SubDivnCode`) VALUES'
               . '(\'0bm\', \'OTHERS\', NULL),'
               . '(\'B01\', \'MIDNAPORE SADAR\', \'1501\'),'
               . '(\'B02\', \'KESHPUR\', \'1501\'),'
@@ -117,7 +121,8 @@ function SQLDefs($ObjectName) {
               . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
       break;
     case 'PP_DataStatus':
-      $SqlDB = 'INSERT INTO `' . MySQL_Pre . 'PP_Status` (`StatusCode`,`StatusDesc`) VALUES'
+      $SqlDB = 'INSERT INTO `' . MySQL_Pre . 'PP_Status` '
+              . '(`StatusCode`,`StatusDesc`) VALUES'
               . '( \'01\', \'Central Government\'),'
               . '( \'02\', \'State Government\'),'
               . '( \'03\', \'Central Govt. Undertaking\'),'
@@ -135,7 +140,8 @@ function SQLDefs($ObjectName) {
               . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
       break;
     case 'PP_DataInstType':
-      $SqlDB = 'INSERT INTO `' . MySQL_Pre . 'PP_InstType` (`TypeCode`,`TypeDesc`) VALUES'
+      $SqlDB = 'INSERT INTO `' . MySQL_Pre . 'PP_InstType` '
+              . '(`TypeCode`,`TypeDesc`) VALUES'
               . '( \'01\', \'Department/Directorate/Other subordinate Government Office\'),'
               . '( \'02\', \'Railways\'),'
               . '( \'03\', \'BSNL\'),'
@@ -160,7 +166,8 @@ function SQLDefs($ObjectName) {
               . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
       break;
     case 'PP_DataPoliceStns':
-      $SqlDB = 'INSERT INTO `' . MySQL_Pre . 'PP_PoliceStns` (`PSCode`, `PSName`, `SubDivnCode`) VALUES'
+      $SqlDB = 'INSERT INTO `' . MySQL_Pre . 'PP_PoliceStns` '
+              . '(`PSCode`, `PSName`, `SubDivnCode`) VALUES'
               . '(\'01\', \'KOTWALI\', \'1501\'),'
               . '(\'02\', \'SALBONI\', \'1501\'),'
               . '(\'03\', \'KESHPUR\', \'1501\'),'
@@ -199,7 +206,8 @@ function SQLDefs($ObjectName) {
               . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
       break;
     case 'PP_DataACs':
-      $SqlDB = 'INSERT INTO `' . MySQL_Pre . 'PP_ACs` (`ACNo`, `ACName`, `DistCode`, `UserMapID`) VALUES'
+      $SqlDB = 'INSERT INTO `' . MySQL_Pre . 'PP_ACs` '
+              . '(`ACNo`, `ACName`, `DistCode`, `UserMapID`) VALUES'
               . '(\'219\', \'DANTAN\', \'15\', 1),'
               . '(\'220\', \'NAYAGRAM (ST)\', \'15\', 1),'
               . '(\'221\', \'GOPIBALLAVPUR\', \'15\', 1),'
@@ -245,58 +253,67 @@ function SQLDefs($ObjectName) {
               . ' PRIMARY KEY (`OfficeSL`)'
               . ' ) ENGINE = InnoDB DEFAULT CHARSET = utf8;';
       break;
-      case 'PP_Personnel':
+    case 'PP_Personnel':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . $ObjectName . '` ('
-  . '`PerSL` varchar(10) COLLATE utf8_bin NOT NULL,'
-  . '`PerCode` varchar(10) COLLATE utf8_bin NOT NULL,'
-  . '`EmpName` varchar(50) COLLATE utf8_bin NOT NULL,'
-  . '`Desg` varchar(50) COLLATE utf8_bin NOT NULL,'
-  . '`Dob` date NOT NULL,'
-  . '`Sex` enum("m","f") COLLATE utf8_bin NOT NULL,'
-  . '`AcNo` int(20) NOT NULL,'
-  . '`PartNo` varchar(20) COLLATE utf8_bin NOT NULL,'
-  . '`SlNo` varchar(20) COLLATE utf8_bin NOT NULL,'
-  . '`EPICNo` varchar(20) COLLATE utf8_bin NOT NULL,'
-  . '`ScaleOfPay` int(20) NOT NULL,'
-  . '`BasicPay` int(20) NOT NULL,'
-  . '`GradePay` int(20) NOT NULL,'
-  . '`Posting` enum("y","n") COLLATE utf8_bin NOT NULL,'
-  . '`PreAddr1` varchar(50) COLLATE utf8_bin NOT NULL,'
-  . '`PreAddr2` varchar(50) COLLATE utf8_bin NOT NULL,'
-  . '`PerAddr1` varchar(50) COLLATE utf8_bin NOT NULL,'
-  . '`PerAddr2` varchar(50) COLLATE utf8_bin NOT NULL,'
-  . '`AcPreRes` varchar(50) COLLATE utf8_bin NOT NULL,'
-  . '`AcPerRes` varchar(50) COLLATE utf8_bin NOT NULL,'
-  . '`AcPosting` varchar(50) COLLATE utf8_bin NOT NULL,'
-  . '`PcPreRes` varchar(50) COLLATE utf8_bin NOT NULL,'
-  . '`PcPerRes` varchar(50) COLLATE utf8_bin NOT NULL,'
-  . '`PcPosting` varchar(50) COLLATE utf8_bin NOT NULL,'
-  . '`Qualification` varchar(50) COLLATE utf8_bin NOT NULL,'
-  . '`Language` enum("Hindi","Nepali") COLLATE utf8_bin NOT NULL,'
-  . '`Phone` int(20) NOT NULL,'
-  . '`Mobile` int(10) NOT NULL,'
-  . '`EMail` varchar(50) COLLATE utf8_bin NOT NULL,'
-  . '`Remarks` varchar(50) COLLATE utf8_bin NOT NULL,'
-  . '`BankACNo` int(20) NOT NULL,'
-  . '`BankName` varchar(50) COLLATE utf8_bin NOT NULL,'
-  . '`BranchName` varchar(50) COLLATE utf8_bin NOT NULL,'
-  . '`IFSCCode` varchar(10) COLLATE utf8_bin NOT NULL,'
-  . '`EDCPBIssued` varchar(20) COLLATE utf8_bin NOT NULL,'
-  . '`PBReturn` varchar(50) COLLATE utf8_bin NOT NULL,'
-  . 'PRIMARY KEY (`PerSL`,`PerCode`)'
-  .') ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;'; 
+              . '`PerSL` bigint(20) NOT NULL AUTO_INCREMENT,'
+              . '`PerCode` int(20) DEFAULT NULL,'
+              . '`EmpName` varchar(50) NOT NULL,'
+              . '`Desg` varchar(50) NOT NULL,'
+              . '`Dob` date NOT NULL,'
+              . '`Sex` enum("M","F") NOT NULL,'
+              . '`ACNo` int(20) NOT NULL,'
+              . '`PartNo` varchar(20) NOT NULL,'
+              . '`SlNo` varchar(20)  NOT NULL,'
+              . '`EPICNo` varchar(20) NOT NULL,'
+              . '`ScaleOfPay` int(20) NOT NULL,'
+              . '`BasicPay` int(20) NOT NULL,'
+              . '`GradePay` int(20) NOT NULL,'
+              . '`Posting` enum("YES","NO") NOT NULL,'
+              . '`PreAddr1` varchar(50) NOT NULL,'
+              . '`PreAddr2` varchar(50) NOT NULL,'
+              . '`PerAddr1` varchar(50) NOT NULL,'
+              . '`PerAddr2` varchar(50) NOT NULL,'
+              . '`AcPreRes` varchar(50) NOT NULL,'
+              . '`AcPerRes` varchar(50) NOT NULL,'
+              . '`AcPosting` varchar(50) NULL,'
+              . '`PcPreRes` varchar(50) NOT NULL,'
+              . '`PcPerRes` varchar(50) NOT NULL,'
+              . '`PcPosting` varchar(50) NOT NULL,'
+              . '`Qualification` varchar(50) NOT NULL,'
+              . '`Language` enum("Hindi","Nepali") NOT NULL,'
+              . '`Phone` int(20) NOT NULL,'
+              . '`Mobile` int(10) NOT NULL,'
+              . '`EMail` varchar(50) NOT NULL,'
+              . '`Remarks` varchar(50) NOT NULL,'
+              . '`BankACNo` int(20) NOT NULL,'
+              . '`BankName` varchar(50) NOT NULL,'
+              . '`BranchName` varchar(50) NOT NULL,'
+              . '`IFSCCode` varchar(10) NOT NULL,'
+              . '`EDCPBIssued` varchar(20) NOT NULL,'
+              . '`PBReturn` varchar(50) NOT NULL,'
+              . 'PRIMARY KEY (`PerSL`)'
+              . ') ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;';
       break;
     case 'PP_FieldNames':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . $ObjectName . '` ('
               . '`FieldName` varchar(25) NOT NULL, '
               . '`Description` varchar(100) DEFAULT NULL, '
               . ' PRIMARY KEY (`FieldName`)'
-              . ' ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
-    ';
+              . ' ) ENGINE = InnoDB DEFAULT CHARSET = utf8;';
+      break;
+    case 'PP_PayScales':
+      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . $ObjectName . '` ('
+              . '`ScaleCode` varchar(3) NOT NULL,'
+              . '`ScaleType` varchar(2) DEFAULT NULL,'
+              . '`Scale` varchar(25) DEFAULT NULL,'
+              . '`GradePay` int(5) DEFAULT NULL,'
+              . ' PRIMARY KEY (`ScaleCode`)'
+              . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
       break;
     case 'PP_DataFieldNames':
-      $SqlDB = 'INSERT INTO `' . MySQL_Pre . $ObjectName . '` (`FieldName`, `Description`) VALUES'
-              . ' ( \'ACName\', \'AC Name\'),'
+      $SqlDB = 'INSERT INTO `' . MySQL_Pre . $ObjectName . '` '
+              . '(`FieldName`, `Description`) VALUES'
+              . '(\'ACName\', \'AC Name\'),'
               . '(\'DesgOC\', \'Designation of Officer-in-Charge\'),'
               . '(\'AddrPTS\', \'Para/Tola/Street\'),'
               . '(\'AddrVTM\', \'Vill/Town/Metro\'),'
