@@ -496,15 +496,21 @@ class WebLib {
       unset($LogData);
       unset($reg);
       if ($SessRet !== 'Valid') {
-        session_unset();
-        session_destroy();
-        session_start();
-        date_default_timezone_set('Asia/Kolkata');
-        self::SetURI();
-        $_SESSION = array();
-        header("HTTP/1.1 404 Not Found");
-        $_SESSION['Debug'] = self::GetVal($_SESSION, 'Debug')
-                . $SessRet . 'SESSION_TOKEN-!Valid';
+        if (self::GetVal($_SESSION, 'BaseURL') === null) {
+          header("HTTP/1.1 404 Not Found");
+        } else {
+          $HomeURL = $_SESSION['BaseURL'] . 'index.php';
+          session_unset();
+          session_destroy();
+          session_start();
+          date_default_timezone_set('Asia/Kolkata');
+          self::SetURI();
+          $_SESSION = array();
+          $_SESSION['Debug'] = self::GetVal($_SESSION, 'Debug')
+                  . $SessRet . 'SESSION_TOKEN-!Valid';
+          $_SESSION['Msg'] = $SessRet;
+          header('Location: ' . $HomeURL);
+        }
         exit();
       } else {
         $_SESSION['Debug'] = self::GetVal($_SESSION, 'Debug')
