@@ -62,7 +62,7 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
         <div class="FieldGroup">
           <label for="StartDate"><strong>Project Start Date</strong></label>
 
-          <input type="text" id="StartDate"
+          <input type="text" id="StartDate" name="StartDate"
                  class="DatePicker" placeholder="YYYY-MM-DD" />
         </div>
 
@@ -75,7 +75,7 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
         <div class="FieldGroup">
           <label for="AlotmentDate"><strong>Project Allotment Date</strong></label>
 
-          <input type="text" id="AlotmentDate"
+          <input type="text" id="AlotmentDate" name="AlotmentDate"
                  class="DatePicker" placeholder="YYYY-MM-DD" />
         </div>
 
@@ -84,14 +84,14 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
         <div class="FieldGroup">
           <label for="TenderDate"><strong>Project Tender Date</strong></label>
 
-          <input type="text" id="TenderDate"
+          <input type="text" id="TenderDate" name="TenderDate"
                  class="DatePicker" placeholder="YYYY-MM-DD" />
         </div>
 
         <div class="FieldGroup">
           <label for="WorkOrderDate"><strong>Project Work Order Date</strong></label>
 
-          <input type="text" id="WorkOrderDate"
+          <input type="text" id="WorkOrderDate" name="WorkOrderDate"
                  class="DatePicker" placeholder="YYYY-MM-DD" />
         </div>
         <div class="formControl">

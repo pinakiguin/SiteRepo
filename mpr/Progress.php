@@ -52,7 +52,7 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
         <div class="FieldGroup">
           <label for="ReportDate"><strong>Report Date</strong></label>
 
-          <input type="text" id="ReportDate"
+          <input type="text" id="ReportDate" name="ReportDate"
                  class="DatePicker" placeholder="YYYY-MM-DD" />
         </div>
 

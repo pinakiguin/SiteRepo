@@ -4,8 +4,7 @@ $Data = new MySQLiDBHelper();
 $_SESSION['action'] = 0;
 $Query = '';
 if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
-  if (WebLib::GetVal($_POST, 'FormToken') !== WebLib::GetVal($_SESSION,
-                                                             'FormToken')) {
+  if (WebLib::GetVal($_POST, 'FormToken') !== WebLib::GetVal($_SESSION, 'FormToken')) {
     $_SESSION['action'] = 1;
   } else {
     // Authenticated Inputs
@@ -55,14 +54,10 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
         //$DataMPR['StartDate'] = date('Y-m-d', strtotime('Y-m-d', WebLib::GetVal($_POST, 'StartDate'));
         //weblib::ToDBDate('StartDate');
         $DataMPR['AlotmentAmount'] = WebLib::GetVal($_POST, 'AlotmentAmount');
-        $DataMPR['StartDate'] = WebLib::ToDBDate(WebLib::GetVal($_POST,
-                                                                'StartDate'));
-        $DataMPR['AlotmentDate'] = WebLib::ToDBDate(WebLib::GetVal($_POST,
-                                                                   'AlotmentDate'));
-        $DataMPR['TenderDate'] = WebLib::ToDBDate(WebLib::GetVal($_POST,
-                                                                 'TenderDate'));
-        $DataMPR['WorkOrderDate'] = WebLib::ToDBDate(WebLib::GetVal($_POST,
-                                                                    'WorkOrderDate'));
+        $DataMPR['StartDate'] = WebLib::ToDBDate(WebLib::GetVal($_POST, 'StartDate'));
+        $DataMPR['AlotmentDate'] = WebLib::ToDBDate(WebLib::GetVal($_POST, 'AlotmentDate'));
+        $DataMPR['TenderDate'] = WebLib::ToDBDate(WebLib::GetVal($_POST, 'TenderDate'));
+        $DataMPR['WorkOrderDate'] = WebLib::ToDBDate(WebLib::GetVal($_POST, 'WorkOrderDate'));
         /*
           $DataMPR['StartDate'] = date('Y-m-d', strtotime(WebLib::GetVal($_POST, 'StartDate')));
           $DataMPR['AlotmentDate'] = date('Y-m-d', strtotime(WebLib::GetVal($_POST, 'AlotmentDate')));
@@ -86,13 +81,11 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
         $DataMPR['ProjectID'] = WebLib::GetVal($_POST, 'ProjectID');
 
 
-        $DataMPR['ReportDate'] = WebLib::ToDBDate(WebLib::GetVal($_POST,
-                                                                 'ReportDate'));
+        $DataMPR['ReportDate'] = WebLib::ToDBDate(WebLib::GetVal($_POST, 'ReportDate'));
         //date('Y-m-d', strtotime(WebLib::GetVal($_POST, 'ReportDate')));
         //WebLib::ToDBDate(WebLib::GetVal($_POST, 'ReportDate'));
         $DataMPR['PhysicalProgress'] = WebLib::GetVal($_POST, 'PhysicalProgress');
-        $DataMPR['FinancialProgress'] = WebLib::GetVal($_POST,
-                                                       'FinancialProgress');
+        $DataMPR['FinancialProgress'] = WebLib::GetVal($_POST, 'FinancialProgress');
         $DataMPR['Remarks'] = WebLib::GetVal($_POST, 'Remarks');
         if ((strlen($DataMPR['PhysicalProgress']) > 2) && (strlen($DataMPR['FinancialProgress']) > 2) && (strlen($DataMPR['Remarks']) > 2) && ($DataMPR['ProjectID'] !== null)) {
           $DataMPR['UserMapID'] = $_SESSION['UserMapID'];
