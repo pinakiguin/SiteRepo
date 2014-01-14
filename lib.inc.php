@@ -282,16 +282,15 @@ class WebLib {
   public static function InpSanitize($PostData) {
     $Fields = '';
     $_SESSION['Msg'] = "";
-    $Data = new MySQLiDB();
+    $Data = new MySQLiDBHelper();
     foreach ($PostData as $FieldName => &$Value) {
-      $Value = $Data->SqlSafe($Value);
+      $Value = $Data->escape($Value);
       $Fields = $Fields . '<br />' . $FieldName;
       if ($Value == '') {
         $_SESSION['Msg'] = '<b>Message:</b> Field '
                 . GetColHead($FieldName) . ' left unfilled.';
       }
     }
-    unset($Value);
     $PostData['Fields'] = $Fields;
     //echo 'Total Fields:'.count($PostData);
     return $PostData;
@@ -320,16 +319,23 @@ class WebLib {
       $strfile = $str;
       $str = strtok('/');
     }
-    $reg = new MySQLiDB();
-    $visitor_num = $reg->do_max_query('select VisitCount from `' . MySQL_Pre . 'Visits` '
-            . ' Where PageURL=\'' . $_SERVER['PHP_SELF'] . '\'');
-    if ($visitor_num > 0)
-      $reg->do_ins_query('Update `' . MySQL_Pre . 'Visits` '
-              . ' Set `VisitCount`=`VisitCount`+1, VisitorIP=\'' . $_SERVER['REMOTE_ADDR'] . '\''
-              . ' Where PageURL=\'' . $_SERVER['PHP_SELF'] . '\'');
-    else
-      $reg->do_ins_query('Insert into `' . MySQL_Pre . 'Visits` (`PageURL`,`VisitorIP`)'
-              . ' Values(\'' . $_SERVER['PHP_SELF'] . '\',\'' . $_SERVER['REMOTE_ADDR'] . '\');');
+    $reg = new MySQLiDBHelper();
+    $Visits = $reg->rawQuery('select VisitCount from `' . MySQL_Pre . 'Visits` '
+            . ' Where PageURL=?', array($_SERVER['PHP_SELF']));
+    $VisitorNum = 0;
+    if (count($Visits) > 0) {
+      $VisitorNum = $Visits[0]['VisitCount'];
+      $VisitData['VisitCount'] = $VisitorNum + 1;
+      $VisitData['VisitorIP'] = $_SERVER['REMOTE_ADDR'];
+
+      $reg->where('PageURL', $_SERVER['PHP_SELF'])
+              ->update(MySQL_Pre . 'Visits', $VisitData);
+      unset($VisitData);
+    } else {
+      $reg->insert(MySQL_Pre . 'Visits',
+                   array('PageURL' => $_SERVER['PHP_SELF'],
+          'VisitorIP' => $_SERVER['REMOTE_ADDR']));
+    }
     date_default_timezone_set('Asia/Kolkata');
     $_SESSION['LifeTime'] = time();
     echo '<strong > Last Updated On:</strong> &nbsp;&nbsp;'
@@ -352,18 +358,20 @@ class WebLib {
     . 'West Bengal - 721101 , India Phone : +91-3222-263506, '
     . 'Email: wbmdp(a)nic.in<br/>';
     echo $_SESSION['Version'];
-    $_SESSION['ED'] = round(microtime(TRUE) - self::GetVal($_SESSION, 'ET'), 3);
-    $reg = new MySQLiDB();
-    $reg->do_ins_query('INSERT INTO ' . MySQL_Pre . 'VisitorLogs(`SessionID`, `IP`, `Referrer`, `UserAgent`, `URL`, `Action`, `Method`, `URI`, `ED`)'
-            . ' Values(\'' . self::GetVal($_SESSION, 'ID', TRUE) . '\', \'' . $_SERVER['REMOTE_ADDR'] . '\', \''
-            . self::GetVal($_SERVER, 'HTTP_REFERER', TRUE) . '\', \''
-            . $reg->SqlSafe($_SERVER['HTTP_USER_AGENT']) . '\', \''
-            . $reg->SqlSafe($_SERVER['PHP_SELF']) . '\', \''
-            . $reg->SqlSafe($_SERVER['SCRIPT_NAME']) . '\', \''
-            . $reg->SqlSafe($_SERVER['REQUEST_METHOD']) . '\', \''
-            . $reg->SqlSafe($_SERVER['REQUEST_URI']) . '\','
-            . self::GetVal($_SESSION, 'ED') . ');');
-    $reg->do_close();
+    $_SESSION['ED'] =
+            round(microtime(TRUE) - self::GetVal($_SESSION, 'ET'), 3);
+    $reg = new MySQLiDBHelper();
+    $VisitLogData['SessionID'] = self::GetVal($_SESSION, 'ID');
+    $VisitLogData['IP'] = $_SERVER['REMOTE_ADDR'];
+    $VisitLogData['Referrer'] = self::GetVal($_SERVER, 'HTTP_REFERER');
+    $VisitLogData['UserAgent'] = $_SERVER['HTTP_USER_AGENT'];
+    $VisitLogData['URL'] = $_SERVER['PHP_SELF'];
+    $VisitLogData['Action'] = $_SERVER['SCRIPT_NAME'];
+    $VisitLogData['Method'] = $_SERVER['REQUEST_METHOD'];
+    $VisitLogData['URI'] = $_SERVER['REQUEST_URI'];
+    $VisitLogData['ED'] = self::GetVal($_SESSION, 'ED');
+    $reg->insert(MySQL_Pre . 'VisitorLogs', $VisitLogData);
+    unset($reg);
     $_SESSION['ED'] = 0;
   }
 
@@ -471,20 +479,23 @@ class WebLib {
     $_SESSION['Debug'] = self::GetVal($_SESSION, 'Debug') . 'InSession_AUTH';
     $SessRet = self::CheckAuth();
     $_SESSION['CheckAuth'] = $SessRet;
-    $reg = new MySQLiDB();
     if (self::GetVal($_REQUEST, 'NoAuth')) {
       self::InitSess();
     } else {
+      $reg = new MySQLiDBHelper();
+      $LogData['SessionID'] = self::GetVal($_SESSION, 'ID');
+      $LogData['IP'] = $_SERVER['REMOTE_ADDR'];
+      $LogData['Referrer'] = self::GetVal($_SERVER, 'HTTP_REFERER', TRUE);
+      $LogData['UserAgent'] = $_SERVER['HTTP_USER_AGENT'];
+      $LogData['UserID'] = self::GetVal($_SESSION, 'UserMapID');
+      $LogData['URL'] = $_SERVER['PHP_SELF'];
+      $LogData['Action'] = $SessRet . ' (' . $_SERVER['SCRIPT_NAME'] . ')';
+      $LogData['Method'] = $_SERVER['REQUEST_METHOD'];
+      $LogData['URI'] = $_SERVER['REQUEST_URI'];
+      $reg->insert(MySQL_Pre . 'Logs', $LogData);
+      unset($LogData);
+      unset($reg);
       if ($SessRet !== 'Valid') {
-        $reg->do_ins_query('INSERT INTO `' . MySQL_Pre . 'Logs` (`SessionID`, `IP`, `Referrer`, `UserAgent`, `UserID`, `URL`, `Action`, `Method`, `URI`)'
-                . ' Values(\'' . self::GetVal($_SESSION, 'ID', TRUE) . '\', \'' . $_SERVER['REMOTE_ADDR'] . '\', \''
-                . self::GetVal($_SERVER, 'HTTP_REFERER', TRUE) . '\', \''
-                . $reg->SqlSafe($_SERVER['HTTP_USER_AGENT']) . '\', \''
-                . self::GetVal($_SESSION, 'UserMapID', TRUE) . '\', \''
-                . $reg->SqlSafe($_SERVER['PHP_SELF']) . '\', \'' . $SessRet . ' ('
-                . $reg->SqlSafe($_SERVER['SCRIPT_NAME']) . ')\', \''
-                . $reg->SqlSafe($_SERVER['REQUEST_METHOD']) . '\', \''
-                . $reg->SqlSafe($_SERVER['REQUEST_URI']) . '\');');
         session_unset();
         session_destroy();
         session_start();
@@ -503,16 +514,6 @@ class WebLib {
                   $_SESSION['BaseDIR']);
         $_SESSION['SESSION_TOKEN'] = $sess_id;
         $_SESSION['LifeTime'] = time();
-        $LogQuery = 'INSERT INTO `' . MySQL_Pre . 'Logs` (`SessionID`, `IP`, `Referrer`, `UserAgent`, `UserID`, `URL`, `Action`, `Method`, `URI`) '
-                . ' Values(\'' . self::GetVal($_SESSION, 'ID') . '\', \'' . $_SERVER['REMOTE_ADDR'] . '\', \''
-                . self::GetVal($_SERVER, 'HTTP_REFERER', TRUE) . '\', \''
-                . self::GetVal($_SERVER, 'HTTP_USER_AGENT', TRUE) . '\', \''
-                . self::GetVal($_SESSION, 'UserMapID') . '\', \''
-                . $reg->SqlSafe($_SERVER['PHP_SELF']) . '\', \'' . $SessRet . ' ('
-                . $reg->SqlSafe($_SERVER['SCRIPT_NAME']) . ')\', \''
-                . $reg->SqlSafe($_SERVER['REQUEST_METHOD']) . '\', \''
-                . $reg->SqlSafe($_SERVER['REQUEST_URI']) . '\');';
-        $reg->do_ins_query($LogQuery);
       }
     }
     if (self::GetVal($_REQUEST, 'show_src') !== NULL) {
