@@ -30,7 +30,9 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
   ?>
 
   <div class="content">
-    <form method="post" name="formname" action="<?php echo WebLib::GetVal($_SERVER, 'PHP_SELF'); ?>">
+    <form method="post" name="formname" action="<?php echo WebLib::GetVal($_SERVER,
+                                                                                                        'PHP_SELF');
+  ?>">
       <div style="height: 200px;overflow-y: scroll;float: left;border:1px solid;">
         <ul>
           <li>
@@ -40,7 +42,8 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
               $Query = 'Select `ProjectID`, `ProjectName` '
                       . ' FROM `' . MySQL_Pre . 'MPR_Projects` '
                       . ' Order By `ProjectID`';
-              $Data->show_sel('ProjectID', 'ProjectName', $Query, WebLib::GetVal($_POST, 'ProjectID'));
+              $Data->show_sel('ProjectID', 'ProjectName', $Query,
+                              WebLib::GetVal($_POST, 'ProjectID'));
               ?>
             </select>
           </li>
@@ -74,15 +77,23 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
           print "Blank text box detected";
         } else {
 
+
+
           $DataACL['UserMapID'] = $_SESSION['UserMapID'];
           $DataACL['ProjectID'] = WebLib::GetVal($_POST, 'ProjectID');
-          $DataACL['ReportDate'] = WebLib::GetVal($_POST, 'ReportDate');
-          $DataACL['PhysicalProgress'] = WebLib::GetVal($_POST, 'PhysicalProgress');
-          $DataACL['FinancialProgress'] = WebLib::GetVal($_POST, 'FinancialProgress');
+          //$DataACL['ReportDate'] = WebLib::GetVal($_POST, 'ReportDate');
+          $DataACL['ReportDate'] = WebLib::ToDBDate(WebLib::GetVal($_POST,
+                                                                   'ReportDate'));
+
+          $DataACL['PhysicalProgress'] = WebLib::GetVal($_POST,
+                                                        'PhysicalProgress');
+          $DataACL['FinancialProgress'] = WebLib::GetVal($_POST,
+                                                         'FinancialProgress');
           $DataACL['Remarks'] = WebLib::GetVal($_POST, 'Remarks');
 
           $Data1->insert(MySQL_Pre . 'MPR_Progress', $DataACL);
-          echo'Add Successfully';
+          echo $_POST['ReportDate'];
+          echo 'Add Successfully';
           $_SESSION['Msg'] = 'Add Successfully!';
         }
         ?>
@@ -102,10 +113,10 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
 
 
   <div class="pageinfo">
-    <?php WebLib::PageInfo(); ?>
+<?php WebLib::PageInfo(); ?>
   </div>
   <div class="footer">
-    <?php WebLib::FooterInfo(); ?>
+<?php WebLib::FooterInfo(); ?>
   </div>
 </body>
 </html>

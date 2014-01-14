@@ -9,7 +9,8 @@ $(function() {
   $('.chzn-select').chosen({width: "250px",
     no_results_text: "Oops, nothing found!"
   });
-
-  $('.DatePicker').datepicker({dateFormat: 'yy-mm-dd'});
-
+  $('.DatePicker').datepicker();
+  /*
+   * {dateFormat: "YYYY-MM-DD"}
+   */
 });

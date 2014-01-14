@@ -67,3 +67,7 @@ root {
   margin-left: 5px;
   padding-left: 0px;
 }
+.StartDate, .AlotmentDate,.TenderDate,.WorkOrderDate,.ReportDate{
+  text-align: center;
+  width: 100px;
+}
