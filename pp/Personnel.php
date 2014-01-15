@@ -38,15 +38,14 @@ WebLib::IncludeJS('pp/js/Personnel.js');
           <legend>Employee Details</legend>
           <div class="FieldGroup">
             <label for="OfficeSL"><strong>Name of The Office</strong>
-              <select id="OfficeSL" name="OfficeSL" data-placeholder="Select Department"
-                      class="chzn-select">
-                        <?php
-                        $Data = new MySQLiDB();
-                        $Query = 'Select `OfficeSL`, `OfficeName` '
-                          . ' FROM `' . MySQL_Pre . 'PP_Offices` '
-                          . ' Order By `OfficeName`';
-                        $Data->show_sel('OfficeSL', 'OfficeName', $Query, WebLib::GetVal($_POST, 'OfficeSL'));
-                        ?>
+              <select id="OfficeSL" name="OfficeSL" data-placeholder="Select Office Name">
+                <?php
+                $Data = new MySQLiDB();
+                $Query = 'Select `OfficeSL`, `OfficeName` '
+                  . ' FROM `' . MySQL_Pre . 'PP_Offices` '
+                  . ' Order By `OfficeName`';
+                $Data->show_sel('OfficeSL', 'OfficeName', $Query, WebLib::GetVal($_POST, 'OfficeSL'));
+                ?>
               </select>
             </label>
             <label for="NameID"><strong>Name of Employee</strong>
