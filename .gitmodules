@@ -28,3 +28,6 @@
 [submodule "DataTables"]
 	path = DataTables
 	url = https://github.com/abusalam/DataTables.git
+[submodule "js/jQuery-MD5"]
+	path = js/jQuery-MD5
+	url = https://github.com/placemarker/jQuery-MD5.git

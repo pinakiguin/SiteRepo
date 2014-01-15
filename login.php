@@ -101,7 +101,10 @@ if ((WebLib::GetVal($_POST, 'UserID') !== NULL) && (WebLib::GetVal($_POST, 'User
 $_SESSION['Token'] = md5($_SERVER['REMOTE_ADDR'] . $ID . time());
 WebLib::Html5Header("Login");
 WebLib::IncludeCSS();
-WebLib::IncludeJS("js/md5.js");
+WebLib::IncludeCSS('css/forms.css');
+WebLib::JQueryInclude();
+WebLib::IncludeJS('js/forms.js');
+WebLib::IncludeJS('js/jQuery-MD5/jquery.md5.js');
 ?>
 </head>
 <body>
@@ -116,51 +119,58 @@ WebLib::IncludeJS("js/md5.js");
   WebLib::ShowMenuBar('WebSite');
   ?>
   <div class="content">
-    <?php
-    switch ($action) {
-      case "LogOut":
-        echo
-        "<h2 align=\"center\">Thank You! You Have Successfully Logged Out!</h2>";
-        break;
-      case "JustLoggedIn":
-        echo "<h2 align=\"center\">Welcome " . WebLib::GetVal($_SESSION, 'UserName') .
-        " You Have Successfully Logged In!</h2>";
-        break;
-      case "Valid":
-        echo "<h2 align=\"center\">You are already Logged In as " . WebLib::GetVal($_SESSION, 'UserName') . "!</h2>";
-        break;
-      case "NoAccess":
-        echo "<h2 align=\"center\">Sorry! Access Denied!</h2>";
-        $_SESSION['TryCount'] = WebLib::GetVal($_SESSION, 'TryCount') + 1;
-        //echo "Try Count:" . WebLib::GetVal($_SESSION, 'TryCount');
-        break;
-      default:
-        echo "<h2>Login - " . AppTitle . "</h2>";
-        break;
-    }
-    if (($action != "JustLoggedIn") && ($action != "Valid")) {
-      ?>
-      <form name="frmLogin" method="post" action="<?php $_SERVER['PHP_SELF'] ?>">
-        <label for="UserID">User ID:</label><br />
-        <input type="text" id="UserID" name="UserID" value="admin" autocomplete="off"/><br />
-        <label for="UserPass">Password:</label><br />
-        <input type="password" id="UserPass" name="UserPass" value="test@123" autocomplete="off"/><br />
-        <?php
-        if (WebLib::GetVal($_SESSION, 'TryCount') >= $FailedTry) {
-          WebLib::StaticCaptcha(TRUE);
-        }
-        ?>
-        <input type="hidden" name="LoginToken" value="<?php echo WebLib::GetVal($_SESSION, 'Token'); ?>" />
-        <input style="width:80px;" type="submit" value="Login"
-               onClick="document.getElementById('UserPass').value = MD5(MD5(document.getElementById('UserPass').value)
-                             + '<?php echo md5(WebLib::GetVal($_SESSION, 'Token')); ?>');"/>
-        <a href="Register.php">Register</a>
-      </form>
-
+    <div class="formWrapper">
       <?php
-      //echo WebLib::GetVal($_SESSION,'Debug');
-    }
-    ?>
+      switch ($action) {
+        case "LogOut":
+          echo
+          "<h2>Thank You! You Have Successfully Logged Out!</h2>";
+          break;
+        case "JustLoggedIn":
+          echo "<h2>Welcome {$_SESSION['UserName']}!</h2>";
+          break;
+        case "Valid":
+          echo "<h2>Already logged In as {$_SESSION['UserName']}!</h2>";
+          break;
+        case "NoAccess":
+          $_SESSION['Msg'] = "Sorry! Access Denied!";
+          $_SESSION['TryCount'] = WebLib::GetVal($_SESSION, 'TryCount') + 1;
+          //echo "Try Count:" . WebLib::GetVal($_SESSION, 'TryCount');
+          break;
+      }
+      if (($action != "JustLoggedIn") && ($action != "Valid")) {
+        echo "<h3>Login</h3>";
+        WebLib::ShowMsg();
+        ?>
+        <form name="frmLogin" method="post"
+              action="<?php $_SERVER['PHP_SELF'] ?>" >
+          <label for="UserID">
+            <strong>User ID</strong> (Registered E-Mail)
+            <input type="text" id="UserID" name="UserID"
+                   value="admin" autocomplete="off"/>
+          </label>
+          <label for="UserPass">
+            <strong>Password</strong>
+            <input type="password" id="UserPass" name="UserPass"
+                   value="test@123" autocomplete="off"/>
+          </label>
+          <?php
+          if (WebLib::GetVal($_SESSION, 'TryCount') >= $FailedTry) {
+            WebLib::StaticCaptcha(TRUE);
+          }
+          ?>
+          <div class="formControl">
+            <input type="hidden" id="LoginToken" name="LoginToken"
+                   value="<?php echo WebLib::GetVal($_SESSION, 'Token'); ?>" />
+            <input type="submit" value="Login" />
+          </div>
+        </form>
+
+        <?php
+        //echo WebLib::GetVal($_SESSION,'Debug');
+      }
+      ?>
+    </div>
   </div>
   <div class="pageinfo">
     <?php WebLib::PageInfo(); ?>

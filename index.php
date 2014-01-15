@@ -27,6 +27,9 @@ WebLib::IncludeCSS();
   WebLib::ShowMenuBar('WebSite');
   ?>
   <div class="content">
+    <?php
+    echo is_array($_POST);
+    ?>
   </div>
   <div class="pageinfo">
     <?php WebLib::PageInfo(); ?>

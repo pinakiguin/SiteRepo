@@ -35,7 +35,10 @@ class WebLib {
    * @param int $s No. of $~mb()|$
    * @return boolean
    */
-  public static function GeneratePassword($l = 8, $c = 0, $n = 0, $s = 0) {
+  public static function GeneratePassword($l = 8,
+                                          $c = 0,
+                                          $n = 0,
+                                          $s = 0) {
     // get count of all required minimum special chars
     $count = $c + $n + $s;
 
@@ -47,16 +50,20 @@ class WebLib {
       trigger_error('Argument(s) out of range', E_USER_WARNING);
       return false;
     } elseif ($c > $l) {
-      trigger_error('Number of password capitals required exceeds password length', E_USER_WARNING);
+      trigger_error('Number of password capitals required exceeds password length',
+                    E_USER_WARNING);
       return false;
     } elseif ($n > $l) {
-      trigger_error('Number of password numerals exceeds password length', E_USER_WARNING);
+      trigger_error('Number of password numerals exceeds password length',
+                    E_USER_WARNING);
       return false;
     } elseif ($s > $l) {
-      trigger_error('Number of password capitals exceeds password length', E_USER_WARNING);
+      trigger_error('Number of password capitals exceeds password length',
+                    E_USER_WARNING);
       return false;
     } elseif ($count > $l) {
-      trigger_error('Number of password special characters exceeds specified password length', E_USER_WARNING);
+      trigger_error('Number of password special characters exceeds specified password length',
+                    E_USER_WARNING);
       return false;
     }
 
@@ -195,14 +202,16 @@ class WebLib {
    * @example WebLib::GetVal($Array, $Index, TRUE) = SqlSafe | ''
    * @example WebLib::GetVal($Array, $Index, FALSE, FALSE) = raw output | NULL
    */
-  public static function GetVal($Array, $Index, $ForSQL = FALSE, $HTMLSafe = TRUE) {
+  public static function GetVal($Array,
+                                $Index,
+                                $ForSQL = FALSE,
+                                $HTMLSafe = TRUE) {
     if (!isset($Array[$Index]) || ($Array[$Index] === '')) {
       return ($ForSQL) ? '' : NULL;
     } else {
       if ($ForSQL) {
-        $Data = new MySQLiDB();
-        $Value = $Data->SqlSafe($Array[$Index]);
-        $Data->do_close();
+        $Data = new MySQLiDBHelper();
+        $Value = $Data->escape($Array[$Index]);
         unset($Data);
         return $Value;
       } else {
@@ -273,17 +282,17 @@ class WebLib {
   public static function InpSanitize($PostData) {
     $Fields = '';
     $_SESSION['Msg'] = "";
-    $Data = new MySQLiDB();
+    $Data = new MySQLiDBHelper();
     foreach ($PostData as $FieldName => &$Value) {
-      $Value = $Data->SqlSafe($Value);
+      $Value = $Data->escape($Value);
       $Fields = $Fields . '<br />' . $FieldName;
       if ($Value == '') {
-        $_SESSION['Msg'] = '<b>Message:</b> Field ' . GetColHead($FieldName) . ' left unfilled.';
+        $_SESSION['Msg'] = '<b>Message:</b> Field '
+                . GetColHead($FieldName) . ' left unfilled.';
       }
     }
-    unset($Value);
     $PostData['Fields'] = $Fields;
-//echo 'Total Fields:'.count($PostData);
+    //echo 'Total Fields:'.count($PostData);
     return $PostData;
   }
 
@@ -293,7 +302,8 @@ class WebLib {
 
   public static function ShowMsg() {
     if (self::GetVal($_SESSION, 'Msg') != '') {
-      echo '<span class="Message">' . self::GetVal($_SESSION, 'Msg', FALSE, FALSE) . '</span><br/>';
+      echo '<span class="Message">' . self::GetVal($_SESSION, 'Msg', FALSE,
+                                                   FALSE) . '</span><br/>';
       $_SESSION['Msg'] = '';
     }
   }
@@ -309,45 +319,59 @@ class WebLib {
       $strfile = $str;
       $str = strtok('/');
     }
-    $reg = new MySQLiDB();
-    $visitor_num = $reg->do_max_query('select VisitCount from `' . MySQL_Pre . 'Visits` '
-            . ' Where PageURL=\'' . $_SERVER['PHP_SELF'] . '\'');
-    if ($visitor_num > 0)
-      $reg->do_ins_query('Update `' . MySQL_Pre . 'Visits` '
-              . ' Set `VisitCount`=`VisitCount`+1, VisitorIP=\'' . $_SERVER['REMOTE_ADDR'] . '\''
-              . ' Where PageURL=\'' . $_SERVER['PHP_SELF'] . '\'');
-    else
-      $reg->do_ins_query('Insert into `' . MySQL_Pre . 'Visits` (`PageURL`,`VisitorIP`)'
-              . ' Values(\'' . $_SERVER['PHP_SELF'] . '\',\'' . $_SERVER['REMOTE_ADDR'] . '\');');
+    $reg = new MySQLiDBHelper();
+    $Visits = $reg->rawQuery('select VisitCount from `' . MySQL_Pre . 'Visits` '
+            . ' Where PageURL=?', array($_SERVER['PHP_SELF']));
+    $VisitorNum = 0;
+    if (count($Visits) > 0) {
+      $VisitorNum = $Visits[0]['VisitCount'];
+      $VisitData['VisitCount'] = $VisitorNum + 1;
+      $VisitData['VisitorIP'] = $_SERVER['REMOTE_ADDR'];
+
+      $reg->where('PageURL', $_SERVER['PHP_SELF'])
+              ->update(MySQL_Pre . 'Visits', $VisitData);
+      unset($VisitData);
+    } else {
+      $reg->insert(MySQL_Pre . 'Visits',
+                   array('PageURL' => $_SERVER['PHP_SELF'],
+          'VisitorIP' => $_SERVER['REMOTE_ADDR']));
+    }
     date_default_timezone_set('Asia/Kolkata');
     $_SESSION['LifeTime'] = time();
-    echo '<strong > Last Updated On:</strong> &nbsp;&nbsp;' . date('l d F Y g:i:s A ', filemtime($strfile))
+    echo '<strong > Last Updated On:</strong> &nbsp;&nbsp;'
+    . date('l d F Y g:i:s A ', filemtime($strfile))
     . ' IST &nbsp;&nbsp;&nbsp;<b>Your IP: </b>' . $_SERVER['REMOTE_ADDR']
-    . '&nbsp;&nbsp;&nbsp;<b>Visits:</b>&nbsp;&nbsp;' . $visitor_num
-    . '&nbsp;&nbsp;&nbsp;<span id="ED"><b>Loaded In:</b> ' . round(microtime(TRUE) - self::GetVal($_SESSION, 'ET'), 3) . ' Sec</span>';
-    $reg->do_close();
+    . '&nbsp;&nbsp;&nbsp;<b>Visits:</b>&nbsp;&nbsp;' . $VisitorNum
+    . '&nbsp;&nbsp;&nbsp;<span id="ED"><b>Loaded In:</b> '
+    . round(microtime(TRUE) - self::GetVal($_SESSION, 'ET'), 3) . ' Sec</span>';
+    unset($reg);
   }
 
   /**
    * Shows Static Footer Information and Records Execution Duration with Visitor Logs
    */
   public static function FooterInfo() {
-    echo 'Designed and Developed By <strong>National Informatics Centre</strong>, Paschim Medinipur District Centre<br/>'
+    echo 'Designed and Developed By '
+    . '<strong>National Informatics Centre</strong>, '
+    . 'Paschim Medinipur District Centre<br/>'
     . 'L. A. Building (2nd floor), Collectorate Compound, Midnapore<br/>'
-    . 'West Bengal - 721101 , India Phone : +91-3222-263506, Email: wbmdp(a)nic.in<br/>';
+    . 'West Bengal - 721101 , India Phone : +91-3222-263506, '
+    . 'Email: wbmdp(a)nic.in<br/>';
     echo $_SESSION['Version'];
-    $_SESSION['ED'] = round(microtime(TRUE) - self::GetVal($_SESSION, 'ET'), 3);
-    $reg = new MySQLiDB();
-    $reg->do_ins_query('INSERT INTO ' . MySQL_Pre . 'VisitorLogs(`SessionID`, `IP`, `Referrer`, `UserAgent`, `URL`, `Action`, `Method`, `URI`, `ED`)'
-            . ' Values(\'' . self::GetVal($_SESSION, 'ID', TRUE) . '\', \'' . $_SERVER['REMOTE_ADDR'] . '\', \''
-            . self::GetVal($_SERVER, 'HTTP_REFERER', TRUE) . '\', \''
-            . $reg->SqlSafe($_SERVER['HTTP_USER_AGENT']) . '\', \''
-            . $reg->SqlSafe($_SERVER['PHP_SELF']) . '\', \''
-            . $reg->SqlSafe($_SERVER['SCRIPT_NAME']) . '\', \''
-            . $reg->SqlSafe($_SERVER['REQUEST_METHOD']) . '\', \''
-            . $reg->SqlSafe($_SERVER['REQUEST_URI']) . '\','
-            . self::GetVal($_SESSION, 'ED') . ');');
-    $reg->do_close();
+    $_SESSION['ED'] =
+            round(microtime(TRUE) - self::GetVal($_SESSION, 'ET'), 3);
+    $reg = new MySQLiDBHelper();
+    $VisitLogData['SessionID'] = self::GetVal($_SESSION, 'ID');
+    $VisitLogData['IP'] = $_SERVER['REMOTE_ADDR'];
+    $VisitLogData['Referrer'] = self::GetVal($_SERVER, 'HTTP_REFERER');
+    $VisitLogData['UserAgent'] = $_SERVER['HTTP_USER_AGENT'];
+    $VisitLogData['URL'] = $_SERVER['PHP_SELF'];
+    $VisitLogData['Action'] = $_SERVER['SCRIPT_NAME'];
+    $VisitLogData['Method'] = $_SERVER['REQUEST_METHOD'];
+    $VisitLogData['URI'] = $_SERVER['REQUEST_URI'];
+    $VisitLogData['ED'] = self::GetVal($_SESSION, 'ED');
+    $reg->insert(MySQL_Pre . 'VisitorLogs', $VisitLogData);
+    unset($reg);
     $_SESSION['ED'] = 0;
   }
 
@@ -379,27 +403,34 @@ class WebLib {
    */
   public static function CheckAuth() {
     $_SESSION['Debug'] = self::GetVal($_SESSION, 'Debug') . 'CheckAuth';
-    $ScriptURL = str_replace(self::GetVal($_SESSION, 'BaseDIR'), '', $_SERVER['SCRIPT_NAME']);
+    $ScriptURL = str_replace(self::GetVal($_SESSION, 'BaseDIR'), '',
+                                          $_SERVER['SCRIPT_NAME']);
     if ((self::GetVal($_SESSION, 'UserMapID') === NULL)) {
       return 'Browsing';
     }
     if (self::GetVal($_REQUEST, 'LogOut')) {
       return 'LogOut';
     } else if (self::GetVal($_SESSION, 'LifeTime') < (time() - (LifeTime * 60))) {
-      return 'TimeOut(' . time() . '-' . self::GetVal($_SESSION, 'LifeTime') . '='
+      return 'TimeOut(' . time() . '-'
+              . self::GetVal($_SESSION, 'LifeTime') . '='
               . (time() - self::GetVal($_SESSION, 'LifeTime')) . ' Sec)';
-    } else if (self::GetVal($_SESSION, 'SESSION_TOKEN') != self::GetVal($_COOKIE, 'SESSION_TOKEN')) {
+    } else if (self::GetVal($_SESSION, 'SESSION_TOKEN') !=
+            self::GetVal($_COOKIE, 'SESSION_TOKEN')) {
       $_SESSION['Debug'] = '(' . self::GetVal($_SESSION, 'SESSION_TOKEN')
               . ' = ' . self::GetVal($_COOKIE, 'SESSION_TOKEN') . ')';
-      return 'INVALID SESSION TOKEN (' . self::GetVal($_SESSION, 'SESSION_TOKEN')
+      return 'INVALID SESSION TOKEN ('
+              . self::GetVal($_SESSION, 'SESSION_TOKEN')
               . ' = ' . self::GetVal($_COOKIE, 'SESSION_TOKEN') . ')';
     } elseif (self::GetVal($_SESSION, 'ID') !== session_id()) {
-      $_SESSION['Debug'] = '(' . self::GetVal($_SESSION, 'ID') . ' = ' . session_id() . ')';
-      return 'INVALID SESSION ID (' . self::GetVal($_SESSION, 'ID') . ' = ' . session_id() . ')';
+      $_SESSION['Debug'] = '(' . self::GetVal($_SESSION, 'ID')
+              . ' = ' . session_id() . ')';
+      return 'INVALID SESSION ID (' . self::GetVal($_SESSION, 'ID')
+              . ' = ' . session_id() . ')';
     } elseif (self::IsAllowed($ScriptURL) === false) {
       return 'Restricted!';
     } elseif (self::GetVal($_SESSION, 'AppKey') !== AppKey) {
-      return 'Invalid AppKey(' . self::GetVal($_SESSION, 'AppKey') . '-' . AppKey . ')!';
+      return 'Invalid AppKey(' . self::GetVal($_SESSION, 'AppKey')
+              . '-' . AppKey . ')!';
     } elseif (self::GetVal($_SESSION, 'UserMapID') !== NULL) {
       return 'Valid';
     }
@@ -424,7 +455,8 @@ class WebLib {
     $_SESSION['Debug'] = self::GetVal($_SESSION, 'Debug')
             . 'InInitPage(' . self::GetVal($_SESSION, 'SESSION_TOKEN')
             . ' = ' . self::GetVal($_COOKIE, 'SESSION_TOKEN', TRUE) . ')';
-    setcookie('SESSION_TOKEN', $sess_id, (time() + (LifeTime * 60)), $_SESSION['BaseDIR']);
+    setcookie('SESSION_TOKEN', $sess_id, (time() + (LifeTime * 60)),
+              $_SESSION['BaseDIR']);
     $_SESSION['SESSION_TOKEN'] = $sess_id;
     $_SESSION['LifeTime'] = time();
     if (self::GetVal($_REQUEST, 'show_src') === 'me') {
@@ -447,51 +479,54 @@ class WebLib {
     $_SESSION['Debug'] = self::GetVal($_SESSION, 'Debug') . 'InSession_AUTH';
     $SessRet = self::CheckAuth();
     $_SESSION['CheckAuth'] = $SessRet;
-    $reg = new MySQLiDB();
-    if (self::GetVal($_REQUEST, 'NoAuth'))
+    if (self::GetVal($_REQUEST, 'NoAuth')) {
       self::InitSess();
-    else {
+    } else {
+      $reg = new MySQLiDBHelper();
+      $LogData['SessionID'] = self::GetVal($_SESSION, 'ID');
+      $LogData['IP'] = $_SERVER['REMOTE_ADDR'];
+      $LogData['Referrer'] = self::GetVal($_SERVER, 'HTTP_REFERER', TRUE);
+      $LogData['UserAgent'] = $_SERVER['HTTP_USER_AGENT'];
+      $LogData['UserID'] = self::GetVal($_SESSION, 'UserMapID');
+      $LogData['URL'] = $_SERVER['PHP_SELF'];
+      $LogData['Action'] = $SessRet . ' (' . $_SERVER['SCRIPT_NAME'] . ')';
+      $LogData['Method'] = $_SERVER['REQUEST_METHOD'];
+      $LogData['URI'] = $_SERVER['REQUEST_URI'];
+      $reg->insert(MySQL_Pre . 'Logs', $LogData);
+      unset($LogData);
+      unset($reg);
       if ($SessRet !== 'Valid') {
-        $reg->do_ins_query('INSERT INTO `' . MySQL_Pre . 'Logs` (`SessionID`, `IP`, `Referrer`, `UserAgent`, `UserID`, `URL`, `Action`, `Method`, `URI`)'
-                . ' Values(\'' . self::GetVal($_SESSION, 'ID', TRUE) . '\', \'' . $_SERVER['REMOTE_ADDR'] . '\', \''
-                . self::GetVal($_SERVER, 'HTTP_REFERER', TRUE) . '\', \''
-                . $reg->SqlSafe($_SERVER['HTTP_USER_AGENT']) . '\', \''
-                . self::GetVal($_SESSION, 'UserMapID', TRUE) . '\', \''
-                . $reg->SqlSafe($_SERVER['PHP_SELF']) . '\', \'' . $SessRet . ' ('
-                . $reg->SqlSafe($_SERVER['SCRIPT_NAME']) . ')\', \''
-                . $reg->SqlSafe($_SERVER['REQUEST_METHOD']) . '\', \''
-                . $reg->SqlSafe($_SERVER['REQUEST_URI']) . '\');');
-        session_unset();
-        session_destroy();
-        session_start();
-        date_default_timezone_set('Asia/Kolkata');
-        self::SetURI();
-        $_SESSION = array();
-        $_SESSION['Debug'] = self::GetVal($_SESSION, 'Debug') . $SessRet . 'SESSION_TOKEN-!Valid';
-        header("HTTP/1.1 404 Not Found");
+        if (self::GetVal($_SESSION, 'BaseURL') === null) {
+          header("HTTP/1.1 404 Not Found");
+        } else {
+          $HomeURL = $_SESSION['BaseURL'] . 'index.php';
+          session_unset();
+          session_destroy();
+          session_start();
+          date_default_timezone_set('Asia/Kolkata');
+          self::SetURI();
+          $_SESSION = array();
+          $_SESSION['Debug'] = self::GetVal($_SESSION, 'Debug')
+                  . $SessRet . 'SESSION_TOKEN-!Valid';
+          $_SESSION['Msg'] = $SessRet;
+          header('Location: ' . $HomeURL);
+        }
         exit();
       } else {
-        $_SESSION['Debug'] = self::GetVal($_SESSION, 'Debug') . 'SESSION_TOKEN-Valid';
+        $_SESSION['Debug'] = self::GetVal($_SESSION, 'Debug')
+                . 'SESSION_TOKEN-Valid';
         $sess_id = md5(microtime());
-        setcookie('SESSION_TOKEN', $sess_id, (time() + (LifeTime * 60)), $_SESSION['BaseDIR']);
+        setcookie('SESSION_TOKEN', $sess_id, (time() + (LifeTime * 60)),
+                  $_SESSION['BaseDIR']);
         $_SESSION['SESSION_TOKEN'] = $sess_id;
         $_SESSION['LifeTime'] = time();
-        $LogQuery = 'INSERT INTO `' . MySQL_Pre . 'Logs` (`SessionID`, `IP`, `Referrer`, `UserAgent`, `UserID`, `URL`, `Action`, `Method`, `URI`) '
-                . ' Values(\'' . self::GetVal($_SESSION, 'ID') . '\', \'' . $_SERVER['REMOTE_ADDR'] . '\', \''
-                . self::GetVal($_SERVER, 'HTTP_REFERER', TRUE) . '\', \''
-                . self::GetVal($_SERVER, 'HTTP_USER_AGENT', TRUE) . '\', \''
-                . self::GetVal($_SESSION, 'UserMapID') . '\', \''
-                . $reg->SqlSafe($_SERVER['PHP_SELF']) . '\', \'' . $SessRet . ' ('
-                . $reg->SqlSafe($_SERVER['SCRIPT_NAME']) . ')\', \''
-                . $reg->SqlSafe($_SERVER['REQUEST_METHOD']) . '\', \''
-                . $reg->SqlSafe($_SERVER['REQUEST_URI']) . '\');';
-        $reg->do_ins_query($LogQuery);
       }
     }
     if (self::GetVal($_REQUEST, 'show_src') !== NULL) {
-      echo $LogQuery;
-      if ($_REQUEST['show_src'] == 'me')
-        show_source(substr($_SERVER['PHP_SELF'], 1, strlen($_SERVER['PHP_SELF'])));
+      if ($_REQUEST['show_src'] == 'me') {
+        $ScriptName = $_SERVER['PHP_SELF'];
+        show_source(substr($ScriptName, 1, strlen($ScriptName)));
+      }
     }
   }
 
@@ -503,7 +538,8 @@ class WebLib {
    */
   private static function IsAllowed($URL) {
     if (isset($_SESSION['RestrictedMenus'])) {
-      $Allowed = array_filter($_SESSION['RestrictedMenus'], array(new FilterSame('URL', $URL), 'IsSame'));
+      $Allowed = array_filter($_SESSION['RestrictedMenus'],
+                              array(new FilterSame('URL', $URL), 'IsSame'));
     } else {
       $Allowed = array();
     }
@@ -521,31 +557,37 @@ class WebLib {
     if (self::GetVal($_SESSION, 'CheckAuth') !== 'Valid') {
       $AppID = '';
     } else if (!isset($_SESSION['RestrictedMenus'])) {
-      $MenuData = new MySQLiDBHelper(); //HOST_Name, MySQL_User, MySQL_Pass, MySQL_DB);
+      $MenuData = new MySQLiDBHelper();
       $MenuData->where('UserMapID', self::GetVal($_SESSION, 'UserMapID'));
-      $_SESSION['RestrictedMenus'] = $MenuData->get('`' . MySQL_Pre . 'RestrictedMenus`');
+      $_SESSION['RestrictedMenus'] =
+              $MenuData->get('`' . MySQL_Pre . 'RestrictedMenus`');
       unset($MenuData);
     }
     if (!isset($_SESSION['MenuItems'])) {
-      $MenuData = new MySQLiDBHelper(); //HOST_Name, MySQL_User, MySQL_Pass, MySQL_DB);
-      $MenuQry = 'Select * from `' . MySQL_Pre . 'MenuItems` Where `Activated` Order By `MenuOrder`';
+      $MenuData = new MySQLiDBHelper();
+      $MenuQry = 'Select * from `' . MySQL_Pre . 'MenuItems` '
+              . ' Where `Activated` Order By `MenuOrder`';
       $_SESSION['MenuItems'] = $MenuData->rawQuery($MenuQry);
       unset($MenuData);
     }
-    $MenuItems = array_filter($_SESSION['MenuItems'], array(new FilterSame('AppID', $AppID), 'IsSame'));
+    $MenuItems = array_filter($_SESSION['MenuItems'],
+                              array(new FilterSame('AppID', $AppID), 'IsSame'));
     foreach ($MenuItems as $MenuItem) {
       if (self::IsAllowed($MenuItem['URL'])) {
-        self::ShowMenuitem($MenuItem['Caption'], $MenuItem['URL']);
+        echo self::ShowMenuitem($MenuItem['Caption'], $MenuItem['URL']);
       }
     }
     echo '</ul></div>';
   }
 
-  public static function ShowMenuitem($Caption, $URL) {
-    $Class = ($_SERVER['SCRIPT_NAME'] === $_SESSION['BaseDIR'] . $URL) ? 'SelMenuitems' : 'Menuitems';
-    echo '<li class = "' . $Class . '">'
-    . '<a href = "' . $_SESSION['BaseURL'] . $URL . '">' . $Caption . '</a>'
-    . '</li>';
+  public static function ShowMenuitem($Caption,
+                                      $URL) {
+    $IsSameScript = ($_SERVER['SCRIPT_NAME'] === $_SESSION['BaseDIR'] . $URL);
+    $Class = ($IsSameScript) ? 'SelMenuitems' : 'Menuitems';
+    return '<li class = "' . $Class . '">'
+            . '<a href = "' . $_SESSION['BaseURL'] . $URL . '">'
+            . $Caption . '</a>'
+            . '</li>';
   }
 
   /**
@@ -567,15 +609,20 @@ class WebLib {
         'no_session' => true);
     if ($ShowImage) {
       $captchaId = Securimage::getCaptchaId(true, $options);
-      echo '<input type="hidden" id="captchaId" name="captchaId" value="' . $captchaId . '" />'
-      . '<img id="siimage" src="ShowCaptcha.php?captchaId=' . $captchaId . '" alt="captcha image" /><br/>'
-      . '<label for="captcha_code">Solve the above: </label><br/>'
-      . '<input placeholder="Solution of the math" type="text" name="captcha_code" value="" required />';
+      $Captcha = '<input type="hidden" id="captchaId" name="captchaId"'
+              . ' value="' . $captchaId . '" />'
+              . '<img id="siimage"'
+              . ' src="ShowCaptcha.php?captchaId=' . $captchaId . '"'
+              . ' alt="captcha image" />'
+              . '<input placeholder="Solution of the math above" type="text"'
+              . ' name="captcha_code" value="" required />';
+      echo $Captcha;
     } else {
       $captcha_code = self::GetVal($_POST, 'captcha_code');
       if ($captcha_code !== NULL) {
         $VerifyID = self::GetVal($_POST, 'captchaId');
-        $ValidCaptcha = Securimage::checkByCaptchaId($VerifyID, $captcha_code, $options);
+        $ValidCaptcha = Securimage::checkByCaptchaId(
+                        $VerifyID, $captcha_code, $options);
         return $ValidCaptcha;
       }
     }
@@ -652,13 +699,16 @@ class WebLib {
   /**
    * Returns the leafnodes of a subtree from a given node
    *
-   * @todo Searches the whole tree every time, tree should be reduced to subtrees filtering by parents
+   * @todo Searches the whole tree every time,
+   * @todo tree should be reduced to subtrees filtering by parents
    *
    * @param (ref) array $Tree[](P,C);
    * @param int $Node (P)
    * @param (ref) string $LeafNodes='' will contain the leafnodes 'C,C,C,'
    */
-  public static function LeafNodes(&$Tree, $Node, &$LeafNodes) {
+  public static function LeafNodes(&$Tree,
+                                   $Node,
+                                   &$LeafNodes) {
     $Leaf = TRUE;
     for ($i = 0; $i < count($Tree); $i++) {
       if ($Node === $Tree[$i]['P']) {
@@ -703,7 +753,8 @@ class WebLib {
     }
     if (self::GetVal($_SESSION, 'BaseDIR') === NULL) {
       $_SESSION['AppROOT'] = __DIR__ . '/';
-      $_SESSION['BaseDIR'] = substr($_SERVER['SCRIPT_NAME'], 0, strlen($_SERVER['SCRIPT_NAME']) - $PageLength);
+      $_SESSION['BaseDIR'] = substr($_SERVER['SCRIPT_NAME'], 0,
+                                    strlen($_SERVER['SCRIPT_NAME']) - $PageLength);
       $Proto = (self::GetVal($_SERVER, 'HTTPS') === 'on') ? 'https://' : 'http://';
       $_SESSION['BaseURL'] = $Proto . $_SERVER['HTTP_HOST'] . $_SESSION['BaseDIR'];
       $_SESSION['AppKey'] = AppKey;
@@ -731,7 +782,8 @@ class WebLib {
 }
 
 /**
- * Class for using with array_filter() to pass more that one argument to the callback function
+ * Class for using with array_filter() to pass more that one argument
+ *       to the callback function
  *
  *  Array
  *  (
@@ -748,7 +800,8 @@ class WebLib {
  *        )
  *  ...
  *  )
- * @example array_filter(array $ToBeFiltered, array(new FilterSame('FilterKey', $FilterValue), 'IsSame'))
+ * @example array_filter(array $ToBeFiltered,
+ *                array(new FilterSame('FilterKey', $FilterValue), 'IsSame'))
  *
  */
 class FilterSame {
@@ -756,7 +809,8 @@ class FilterSame {
   private $Value;
   private $Key;
 
-  public function __construct($Key, $Value) {
+  public function __construct($Key,
+                              $Value) {
     $this->Key = $Key;
     $this->Value = $Value;
   }
