@@ -57,7 +57,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
                      required/>
             </label>
             <label for="DesigID"><strong>Designation</strong>
-              <input type="text" name="DesgID" id="DesgID"
+              <input type="text" name="DesigID" id="DesigID"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'DesigID')
                      ?>"
@@ -73,9 +73,10 @@ WebLib::IncludeJS('pp/js/Personnel.js');
             <label for="SexId">
               <strong>Sex</strong>
               <div id="SexId">
-                <input type="radio" id="MaleId" name="SexId"  checked="checked">
+                <input type="radio" id="MaleId" name="SexId" value="m"
+                       checked="checked">
                 <label for="MaleId">Male</label>
-                <input type="radio" id="FemaleId" name="SexId">
+                <input type="radio" id="FemaleId" name="SexId" value="f">
                 <label for="FemaleId">Female</label>
               </div>
             </label>
@@ -127,7 +128,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               <input type="text" name="PcPreRes" id="PcPreRes"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'PcPreRes')
-                     ?>"value size="7" maxlength="2" required/>
+                     ?>" size="7" maxlength="2" required/>
             </label>
           </div>
           <div class="FieldGroup">
@@ -135,7 +136,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               <input type="text" name="PcPerRes" id="PcPerRes"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'PcPerRes')
-                     ?>"value size="7" maxlength="2" required/>
+                     ?>" size="7" maxlength="2" required/>
             </label>
           </div>
           <div class="FieldGroup">
@@ -143,17 +144,17 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               <input type="text" name="PcPosting"  id="PcPosting"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'PcPosting')
-                     ?>"value size="7" maxlength="2"required/>
+                     ?>" size="7" maxlength="2" required/>
             </label>
           </div>
         </fieldset>
         <fieldset>
           <legend>Contacts</legend>
           <div class="FieldGroup">
-            <label for="Phone"><strong>Phone(Residence)</strong>
-              <input type="text" name="Phone" id="Phone" value size="15"
+            <label for="ResPhone"><strong>Phone(Residence)</strong>
+              <input type="text" name="ResPhone" id="ResPhone" size="15"
                      value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'Phone')
+                     echo WebLib::GetVal($_SESSION['PostData'], 'ResPhone')
                      ?>"
                      required/>
             </label>
@@ -161,8 +162,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               <input type="text"  id="Mobile" name="Mobile"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'Mobile')
-                     ?>"value size="15"
-                     required/>
+                     ?>" size="15" required/>
             </label>
           </div>
           <div class="FieldGroup">
@@ -170,14 +170,14 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               <input type="email" name="EMail" id="EMail"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'EMail')
-                     ?>" value size="19"
+                     ?>"  size="19"
                      required/>
             </label>
             <label for="Remarks"><strong>Remarks</strong>
               <input type="text" name="Remarks"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'Remarks')
-                     ?>" value size="19"
+                     ?>" size="19"
                      id="Remarks" required/>
             </label>
           </div>
@@ -188,7 +188,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               <input type="text" name="AcPreRes"  id="AcPreRes"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'AcPreRes')
-                     ?>" value size="7" maxlength="2" required/>
+                     ?>" size="7" maxlength="2" required/>
             </label>
           </div>
           <div class="FieldGroup">
@@ -196,15 +196,16 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               <input type="text"  name="AcPerRes" id="AcPerRes"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'AcPerRes')
-                     ?>"value size="7" maxlength="2" required/>
+                     ?>" size="7" maxlength="2" required/>
             </label>
           </div>
           <div class="FieldGroup">
             <label for="AcPostiong"><strong>Place of Posting </strong>
-              <input type="text" name="AcPostiong" id="AcPostiong"
+              <input type="text" name="AcPosting" id="AcPosting"
                      value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'AcPostiong')
-                     ?>"value size="7" maxlength="2" required/>
+                     echo WebLib::GetVal($_SESSION['PostData'], 'AcPosting')
+                     ?>" size="7" maxlength="2" required/>
+            </label>
           </div>
         </fieldset>
         <fieldset>
@@ -312,47 +313,41 @@ WebLib::IncludeJS('pp/js/Personnel.js');
           <legend>Pay Details</legend>
           <div class="FieldGroup">
             <label for="PayScale"><strong>Scale of Pay</strong>
-              <select id="PayScale" name="PayScale" data-placeholder="Select Pay Scale">
-                <?php
-                $Data  = new MySQLiDB();
-                $Query = 'Select `ScaleCode`, `Scale` '
-                    . ' FROM `' . MySQL_Pre . 'PP_Scales` '
-                    . ' Order By `Scale`';
-                $Data->show_sel('ScaleCode', 'Scale', $Query,
-                    WebLib::GetVal($_POST, 'ScaleCode'));
-                ?>
+              <select id="PayScale" name="PayScale"
+                      data-placeholder="Select Pay Scale">
               </select>
             </label>
             <div class="FieldGroup">
               <label for="BasicPay"><strong>Basic Pay </strong>
                 <input type="text" name="BasicPay" id="BasicPay"
                        value="<?php
-                       echo WebLib::GetVal($_SESSION['PostData'], 'OfficeName')
-                       ?>"
-                       size="3" maxlength="5" required/>
+                       echo WebLib::GetVal($_SESSION['PostData'], 'OfficeName');
+                       ?>" size="3" maxlength="5" required />
               </label>
             </div>
             <div class="FieldGroup">
               <label for="GradePay"><strong>Grade Pay</strong>
-                <input type="text"  name="GradePay" id="GradePay"
+                <input type="text" name="GradePay" id="GradePay"
                        value="<?php
-                       echo WebLib::GetVal($_SESSION['PostData'], 'OfficeName')
+                       echo WebLib::GetVal($_SESSION['PostData'], 'OfficeName');
                        ?>"
-                       size="3" maxlength="5" disabled="disabled" required/>
+                       size="3" maxlength="5" readonly="readonly" required />
               </label>
             </div>
+          </div>
         </fieldset>
         <fieldset>
           <legend>Whether working for 3 years out of 4 years</legend>
           <div class="FieldGroup">
-            <label for="Posting"><strong>In the district as on 30/06/2013</strong>
-              <div id="Posting">
-                <input type="radio" id="YesId" name="PostingId" checked="checked"/>
-                <label for="YesId">Yes</label>
-                <input type="radio" id="NoId" name="PostingId">
-                <label for="NoId">No</label>
-              </div>
-            </label>
+            <label for="Posting"></label>
+            <strong>In the district as on 30/06/2013</strong>
+            <div id="Posting">
+              <input type="radio" id="YesId" name="PostingID" value="y"
+                     checked="checked" />
+              <label for="YesId">Yes</label>
+              <input type="radio" id="NoId" name="PostingID" value="n" />
+              <label for="NoId">No</label>
+            </div>
           </div>
           <div class="FieldGroup">
             <label for="PBReturn"><strong>PB Returned</strong>
@@ -374,20 +369,25 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               </div>
             </label>
           </div>
-          <div class="formControl">
-            <input type="submit" name="CmdSubmit"  value ="Submit"/>
-            <input type="reset" name="CmdSubmit"  value ="Reset"/>
-            <input type="button" name="CmdEdit"  value ="Edit"/>
-            <input type="button" name="CmdDelete"  value ="Delete"/>
+        </fieldset>
+        <fieldset>
+          <div class="ui-widget-header ui-corner-all">
+            <input type="submit" name="CmdSubmit"  value="Save"/>
+            <input type="reset" name="CmdSubmit"  value="Reset"/>
+            <input type="submit" name="CmdDelete"  value="Delete"/>
             <input type="hidden" name="FormToken"
                    value="<?php echo WebLib::GetVal($_SESSION, 'FormToken') ?>" />
           </div>
         </fieldset>
     </div>
   </form>
-</div>
-<pre id="Error">
-</pre>
+  <pre id="Error">
+    <?php
+    print_r($_POST);
+    print_r($_SESSION['DB']);
+    ?>
+  </pre>
+  <div style="clear: both;"></div>
 </div>
 <div class="pageinfo">
   <?php WebLib::PageInfo(); ?>
