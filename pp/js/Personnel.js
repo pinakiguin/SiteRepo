@@ -16,15 +16,23 @@ $(function() {
   });
   $("#OfficeSL").chosen({width: "350px",
     no_results_text: "Oops, nothing found!"
+  }).change(function() {
+
+    alert($(this).val());
   });
   $('#DOB').datepicker({
+    dateFormat: 'yy-mm-dd',
     showOn: "both",
     buttonImage: "images/calendar.gif",
     buttonImageOnly: true
   });
   $("#SexId").buttonset();
+
+
   $("#Posting").buttonset();
   $("#Language").buttonset();
+  $("#EDCPBIssued").buttonset();
+  $("#PBReturn").buttonset();
   $("#DesgID").autocomplete(
           {source: "AjaxDesgOC.php",
             minLength: 2,
@@ -62,30 +70,8 @@ $(function() {
               $('#PayScale').html(Options)
                       .trigger("chosen:updated");
               $('#PayScale').data('Scales', DataResp.Scales);
-              delete DataResp;
-              $("#Msg").hide();
-            }
-            catch (e) {
-              $('#Msg').html('Server Error:' + e);
-              $('#Error').html(data);
-            }
-          })
-          .fail(function(msg) {
-            $('#Msg').html(msg);
-          });
-  $.ajax({
-    type: 'POST',
-    url: 'AjaxPersonnel.php',
-    dataType: 'html',
-    xhrFields: {
-      withCredentials: true
-    }
-  })
-          .done(function(data) {
-            try {
-              var DataResp = $.parseJSON(data);
-              delete data;
-              var Options = '<option value=""></option>';
+
+              Options = '<option value=""></option>';
               $.each(DataResp.OfficeSL,
                       function(index, value) {
                         Options += '<option value="' + value.OfficeSL + '">'
@@ -96,7 +82,7 @@ $(function() {
                       .trigger("chosen:updated");
               $('#OfficeSL').data('OfficeSL', DataResp.Scales);
               delete DataResp;
-              $("#Msg").hide();
+              $("#Msg").html('');
             }
             catch (e) {
               $('#Msg').html('Server Error:' + e);
@@ -107,11 +93,9 @@ $(function() {
             $('#Msg').html(msg);
           });
 
-
   $("#PayScale").bind({"change": function() {
-      var ScaleCode = Number($(this).val());
+      var ScaleCode = $(this).val();
       var Scales = $(this).data('Scales');
-      //alert($(this).val());
       $.each(Scales,
               function(index, value) {
                 if (value.ScaleCode === ScaleCode) {

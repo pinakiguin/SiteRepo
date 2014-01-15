@@ -11,11 +11,6 @@ $(function() {
     no_results_text: "Oops, nothing found!"
   });
 
-  $('#DOB').datepicker({
-    showOn: "both",
-    buttonImage: "images/calendar.gif",
-    buttonImageOnly: true
-  });
   $("#SexId").buttonset();
   $("#Posting").buttonset();
   $("#Language").buttonset();
