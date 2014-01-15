@@ -4,6 +4,7 @@
  */
 
 $(function() {
+  $(document).tooltip();
   $('input[type="submit"]').button();
   $('input[type="reset"]').button();
 
