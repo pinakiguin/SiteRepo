@@ -73,10 +73,10 @@ WebLib::IncludeJS('pp/js/Personnel.js');
             <label for="SexId">
               <strong>Sex</strong>
               <div id="SexId">
-                <input type="radio" id="MaleId" name="SexId" value="m"
+                <input type="radio" id="MaleId" name="SexId" value="male"
                        checked="checked">
                 <label for="MaleId">Male</label>
-                <input type="radio" id="FemaleId" name="SexId" value="f">
+                <input type="radio" id="FemaleId" name="SexId" value="female">
                 <label for="FemaleId">Female</label>
               </div>
             </label>
@@ -228,11 +228,12 @@ WebLib::IncludeJS('pp/js/Personnel.js');
           <div class="FieldGroup">
             <label for="Language"><strong>Language known other than Bengali</strong>
               <div id="Language">
-                <input type="radio" id="None" name="Language" checked="checked"/>
+                <input type="radio" id="None" name="Language"  value="None"
+                       checked="checked"/>
                 <label for="None">None</label>
-                <input type="radio" id="Hindi" name="Language"/>
+                <input type="radio" id="Hindi" name="Language" value="Hindi"/>
                 <label for="Hindi">Hindi</label>
-                <input type="radio" id="Nepali" name="Language"/>
+                <input type="radio" id="Nepali" name="Language" value="Nepali"/>
                 <label for="Nepali">Nepali</label>
 
               </div>
@@ -321,7 +322,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               <label for="BasicPay"><strong>Basic Pay </strong>
                 <input type="text" name="BasicPay" id="BasicPay"
                        value="<?php
-                       echo WebLib::GetVal($_SESSION['PostData'], 'OfficeName');
+                       echo WebLib::GetVal($_SESSION['PostData'], 'BasicPay');
                        ?>" size="3" maxlength="5" required />
               </label>
             </div>
@@ -342,19 +343,19 @@ WebLib::IncludeJS('pp/js/Personnel.js');
             <label for="Posting"></label>
             <strong>In the district as on 30/06/2013</strong>
             <div id="Posting">
-              <input type="radio" id="YesId" name="PostingID" value="y"
+              <input type="radio" id="YesId" name="PostingID" value="yes"
                      checked="checked" />
               <label for="YesId">Yes</label>
-              <input type="radio" id="NoId" name="PostingID" value="n" />
+              <input type="radio" id="NoId" name="PostingID" value="no" />
               <label for="NoId">No</label>
             </div>
           </div>
           <div class="FieldGroup">
             <label for="PBReturn"><strong>PB Returned</strong>
               <div id="PBReturn">
-                <input type="radio" id="YesId1" name="PBReturn" checked="checked"/>
+                <input type="radio" id="YesId1" name="PBReturn" value="yes" checked="checked"/>
                 <label for="YesId1">Yes</label>
-                <input type="radio" id="NoId1" name="PBReturn">
+                <input type="radio" id="NoId1" value="no" name="PBReturn">
                 <label for="NoId1">No</label>
               </div>
             </label>
@@ -362,9 +363,9 @@ WebLib::IncludeJS('pp/js/Personnel.js');
           <div class="FieldGroup">
             <label for="EDCPBIssued"><strong>EDC/PB Issued</strong>
               <div id="EDCPBIssued">
-                <input type="radio" id="YesId2" name="EDCPBIssued" checked="checked"/>
+                <input type="radio" id="YesId2" name="EDCPBIssued" value="yes" checked="checked"/>
                 <label for="YesId2">Yes</label>
-                <input type="radio" id="NoId2" name="EDCPBIssued">
+                <input type="radio" id="NoId2" value="no" name="EDCPBIssued">
                 <label for="NoId2">No</label>
               </div>
             </label>
@@ -379,22 +380,23 @@ WebLib::IncludeJS('pp/js/Personnel.js');
                    value="<?php echo WebLib::GetVal($_SESSION, 'FormToken') ?>" />
           </div>
         </fieldset>
+
+      </form>
     </div>
-  </form>
-  <pre id="Error">
-    <?php
-    print_r($_POST);
-    print_r($_SESSION['DB']);
-    ?>
-  </pre>
-  <div style="clear: both;"></div>
-</div>
-<div class="pageinfo">
-  <?php WebLib::PageInfo(); ?>
-</div>
-<div class="footer">
-  <?php WebLib::FooterInfo(); ?>
-</div>
+    <pre id="Error">
+      <?php
+      print_r($_POST);
+      print_r($_SESSION['DB']);
+      ?>
+    </pre>
+    <div style="clear: both;"></div>
+  </div>
+  <div class="pageinfo">
+    <?php WebLib::PageInfo(); ?>
+  </div>
+  <div class="footer">
+    <?php WebLib::FooterInfo(); ?>
+  </div>
 </body>
 </html>
 
