@@ -1,27 +1,26 @@
 <?php
 
 function CreateSchemas() {
-  $ObjDB = new MySQLiDB();
-  $ObjDB->do_ins_query(SQLDefs('PP_UserBlockMaps'));
-  $ObjDB->do_ins_query(SQLDefs('PP_Districts'));
-  $ObjDB->do_ins_query(SQLDefs('PP_SubDivns'));
-  $ObjDB->do_ins_query(SQLDefs('PP_Blocks'));
-  $ObjDB->do_ins_query(SQLDefs('PP_DataBlocks'));
-  $ObjDB->do_ins_query(SQLDefs('PP_Status'));
-  $ObjDB->do_ins_query(SQLDefs('PP_PayScales'));
-  $ObjDB->do_ins_query(SQLDefs('PP_DataStatus'));
-  $ObjDB->do_ins_query(SQLDefs('PP_InstType'));
-  $ObjDB->do_ins_query(SQLDefs('PP_DataInstType'));
-  $ObjDB->do_ins_query(SQLDefs('PP_PoliceStns'));
-  $ObjDB->do_ins_query(SQLDefs('PP_DataPoliceStns'));
-  $ObjDB->do_ins_query(SQLDefs('PP_ACs'));
-  $ObjDB->do_ins_query(SQLDefs('PP_DataACs'));
-  $ObjDB->do_ins_query(SQLDefs('PP_Offices'));
-  $ObjDB->do_ins_query(SQLDefs('PP_Personnel'));
-  $ObjDB->do_ins_query(SQLDefs('PP_FieldNames'));
-  $ObjDB->do_ins_query(SQLDefs('PP_DataFieldNames'));
-  $ObjDB->do_ins_query(SQLDefs('MenuData'));
-  $ObjDB->do_close();
+  $ObjDB = new MySQLiDBHelper();
+  $ObjDB->ddlQuery(SQLDefs('PP_UserBlockMaps'));
+  $ObjDB->ddlQuery(SQLDefs('PP_Districts'));
+  $ObjDB->ddlQuery(SQLDefs('PP_SubDivns'));
+  $ObjDB->ddlQuery(SQLDefs('PP_Blocks'));
+  $ObjDB->ddlQuery(SQLDefs('PP_DataBlocks'));
+  $ObjDB->ddlQuery(SQLDefs('PP_Status'));
+  $ObjDB->ddlQuery(SQLDefs('PP_PayScales'));
+  $ObjDB->ddlQuery(SQLDefs('PP_DataStatus'));
+  $ObjDB->ddlQuery(SQLDefs('PP_InstType'));
+  $ObjDB->ddlQuery(SQLDefs('PP_DataInstType'));
+  $ObjDB->ddlQuery(SQLDefs('PP_PoliceStns'));
+  $ObjDB->ddlQuery(SQLDefs('PP_DataPoliceStns'));
+  $ObjDB->ddlQuery(SQLDefs('PP_ACs'));
+  $ObjDB->ddlQuery(SQLDefs('PP_DataACs'));
+  $ObjDB->ddlQuery(SQLDefs('PP_Offices'));
+  $ObjDB->ddlQuery(SQLDefs('PP_Personnel'));
+  $ObjDB->ddlQuery(SQLDefs('PP_FieldNames'));
+  $ObjDB->ddlQuery(SQLDefs('PP_DataFieldNames'));
+  $ObjDB->ddlQuery(SQLDefs('MenuData'));
   unset($ObjDB);
 }
 
@@ -281,7 +280,7 @@ function SQLDefs($ObjectName) {
           . '`PcPerRes` varchar(50) NOT NULL,'
           . '`PcPosting` varchar(50) NOT NULL,'
           . '`Qualification` varchar(50) NOT NULL,'
-          . '`Language` enum("None",Hindi","Nepali") NOT NULL,'
+          . '`Language` enum("None","Hindi","Nepali") NOT NULL,'
           . '`Phone` int(20) NOT NULL,'
           . '`Mobile` int(10) NOT NULL,'
           . '`EMail` varchar(50) NOT NULL,'
@@ -292,8 +291,8 @@ function SQLDefs($ObjectName) {
           . '`IFSCCode` varchar(50) NOT NULL,'
           . '`EDCPBIssued` enum("yes","no") NOT NULL,'
           . '`PBReturn` enum("yes","no") NOT NULL,'
-          . 'PRIMARY KEY (`PerSL`)'
-          . ') ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;';
+          . ' PRIMARY KEY (`PerSL`)'
+          . ' ) ENGINE=InnoDB DEFAULT CHARSET=utf8;';
       break;
     case 'PP_FieldNames':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . $ObjectName . '` ('
@@ -312,7 +311,7 @@ function SQLDefs($ObjectName) {
           . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
       break;
     case 'PP_DataFieldNames':
-      $SqlDB = 'INSERT INTO `' . MySQL_Pre . $ObjectName . '` '
+      $SqlDB = 'INSERT INTO `' . MySQL_Pre . 'PP_FieldNames` '
           . '(`FieldName`, `Description`) VALUES'
           . '(\'ACName\', \'AC Name\'),'
           . '(\'DesgOC\', \'Designation of Officer-in-Charge\'),'
