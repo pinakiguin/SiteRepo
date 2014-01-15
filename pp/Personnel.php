@@ -121,38 +121,121 @@ WebLib::IncludeJS('pp/js/Personnel.js');
           </div>
         </fieldset>
         <fieldset>
-          <legend>Pay Details</legend>
+          <legend>Parliamentary Constituency</legend>
           <div class="FieldGroup">
-            <label for="PayScale"><strong>Scale of Pay</strong>
-              <select id="PayScale" name="PayScale" data-placeholder="Select Pay Scale">
-                <?php
-                $Data  = new MySQLiDB();
-                $Query = 'Select `ScaleCode`, `Scale` '
-                    . ' FROM `' . MySQL_Pre . 'PP_Scales` '
-                    . ' Order By `Scale`';
-                $Data->show_sel('ScaleCode', 'Scale', $Query,
-                    WebLib::GetVal($_POST, 'ScaleCode'));
-                ?>
+            <label for="PcPreRes"><strong>Present Residence</strong>
+              <input type="text" name="PcPreRes" id="PcPreRes"
+                     value="<?php
+                     echo WebLib::GetVal($_SESSION['PostData'], 'PcPreRes')
+                     ?>"value size="7" maxlength="2" required/>
+            </label>
+          </div>
+          <div class="FieldGroup">
+            <label for="PcPerRes"><strong>Present Residence</strong>
+              <input type="text" name="PcPerRes" id="PcPerRes"
+                     value="<?php
+                     echo WebLib::GetVal($_SESSION['PostData'], 'PcPerRes')
+                     ?>"value size="7" maxlength="2" required/>
+            </label>
+          </div>
+          <div class="FieldGroup">
+            <label for="PcPosting"><strong>Present Residence</strong>
+              <input type="text" name="PcPosting"  id="PcPosting"
+                     value="<?php
+                     echo WebLib::GetVal($_SESSION['PostData'], 'PcPosting')
+                     ?>"value size="7" maxlength="2"required/>
+            </label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Contacts</legend>
+          <div class="FieldGroup">
+            <label for="Phone"><strong>Phone(Residence)</strong>
+              <input type="text" name="Phone" id="Phone" value size="15"
+                     value="<?php
+                     echo WebLib::GetVal($_SESSION['PostData'], 'Phone')
+                     ?>"
+                     required/>
+            </label>
+            <label for="Mobile"><strong>Mobile</strong>
+              <input type="text"  id="Mobile" name="Mobile"
+                     value="<?php
+                     echo WebLib::GetVal($_SESSION['PostData'], 'Mobile')
+                     ?>"value size="15"
+                     required/>
+            </label>
+          </div>
+          <div class="FieldGroup">
+            <label for="EMail"><strong>EMail</strong>
+              <input type="email" name="EMail" id="EMail"
+                     value="<?php
+                     echo WebLib::GetVal($_SESSION['PostData'], 'EMail')
+                     ?>" value size="19"
+                     required/>
+            </label>
+            <label for="Remarks"><strong>Remarks</strong>
+              <input type="text" name="Remarks"
+                     value="<?php
+                     echo WebLib::GetVal($_SESSION['PostData'], 'Remarks')
+                     ?>" value size="19"
+                     id="Remarks" required/>
+            </label>
+          </div>
+        </fieldset>
+        <fieldset><legend>Assembly Constituency</legend>
+          <div class="FieldGroup">
+            <label for="AcPreRes"><strong>Present Residence</strong>
+              <input type="text" name="AcPreRes"  id="AcPreRes"
+                     value="<?php
+                     echo WebLib::GetVal($_SESSION['PostData'], 'AcPreRes')
+                     ?>" value size="7" maxlength="2" required/>
+            </label>
+          </div>
+          <div class="FieldGroup">
+            <label for="AcPerRes"><strong>Permanent Residence</strong>
+              <input type="text"  name="AcPerRes" id="AcPerRes"
+                     value="<?php
+                     echo WebLib::GetVal($_SESSION['PostData'], 'AcPerRes')
+                     ?>"value size="7" maxlength="2" required/>
+            </label>
+          </div>
+          <div class="FieldGroup">
+            <label for="AcPostiong"><strong>Place of Posting </strong>
+              <input type="text" name="AcPostiong" id="AcPostiong"
+                     value="<?php
+                     echo WebLib::GetVal($_SESSION['PostData'], 'AcPostiong')
+                     ?>"value size="7" maxlength="2" required/>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Qualifications</legend>
+          <div class="FieldGroup">
+            <label for="Qualification"><strong>Academic Qualification</strong>
+              <select name="Qualification" id="Qualification">
+                <option value="Post Graduate">Post Graduate</option>
+                <option value="Graduate">Graduate</option>
+                <option value="Matric">Matric</option>
+                <option value="Nonmatric">Non Matric</option>
+                <option value="Madhyamic">Madhyamic</option>
+                <option value="Nonmadhyamic">Non Madhyamic</option>
+                <option value="VIII">VIII</option>
+                <option value="NonVII">Below VIII</option>
+                <option value="NotKnown">Not Known</option>
               </select>
             </label>
           </div>
           <div class="FieldGroup">
-            <label for="BasicPay"><strong>Basic Pay </strong>
-              <input type="text" name="BasicPay" id="BasicPay"
-                     value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'OfficeName')
-                     ?>"
-                     size="3" maxlength="5" required/>
+            <label for="Language"><strong>Language known other than Bengali</strong>
+              <div id="Language">
+                <input type="radio" id="None" name="Language" checked="checked"/>
+                <label for="None">None</label>
+                <input type="radio" id="Hindi" name="Language"/>
+                <label for="Hindi">Hindi</label>
+                <input type="radio" id="Nepali" name="Language"/>
+                <label for="Nepali">Nepali</label>
+
+              </div>
             </label>
-          </div>
-          <div class="FieldGroup">
-            <label for="GradePay"><strong>Grade Pay</strong>
-              <input type="text"  name="GradePay" id="GradePay"
-                     value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'OfficeName')
-                     ?>"
-                     size="3" maxlength="5" disabled="disabled" required/>
-            </label
           </div>
         </fieldset>
         <fieldset>
@@ -190,146 +273,8 @@ WebLib::IncludeJS('pp/js/Personnel.js');
             </label>
           </div>
         </fieldset>
-        <fieldset><legend>Assembly Constituency in respect of</legend>
-          <div class="FieldGroup">
-            <label for="AcPreRes"><strong>Present Residence</strong>
-              <input type="text" name="AcPreRes"  id="AcPreRes"
-                     value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'AcPreRes')
-                     ?>"
-                     required/>
-            </label>
-          </div>
-          <div class="FieldGroup">
-            <label for="AcPerRes"><strong>Permanent Residence</strong>
-              <input type="text"  name="AcPerRes" id="AcPerRes"
-                     value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'AcPerRes')
-                     ?>"
-                     required/>
-            </label>
-          </div>
-          <div class="FieldGroup">
-            <label for="AcPostiong"><strong>Place of Posting </strong>
-              <input type="text" name="AcPostiong" id="AcPostiong"
-                     value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'AcPostiong')
-                     ?>"
-                     required/>
-          </div>
-        </fieldset>
-        <fieldset>
-          <legend>Parliamentary Constituency in respect of</legend>
-          <div class="FieldGroup">
-            <label for="PcPreRes"><strong>Present Residence</strong>
-              <input type="text" name="PcPreRes" id="PcPreRes"
-                     value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'PcPreRes')
-                     ?>"
-                     required/>
-            </label>
-          </div>
-          <div class="FieldGroup">
-            <label for="PcPerRes"><strong>Present Residence</strong>
-              <input type="text" name="PcPerRes" id="PcPerRes"
-                     value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'PcPerRes')
-                     ?>"
-                     required/>
-            </label>
-          </div>
-          <div class="FieldGroup">
-            <label for="PcPosting"><strong>Present Residence</strong>
-              <input type="text" name="PcPosting"  id="PcPosting"
-                     value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'PcPosting')
-                     ?>"
-                     required/>
-            </label>
-          </div>
-        </fieldset>
-        <fieldset>
-          <legend>Qualifications</legend>
-          <div class="FieldGroup">
-            <label for="Qualification"><strong>Academic Qualification</strong>
-              <select name="Qualification" id="Qualification">
-                <option value="Post Graduate">Post Graduate</option>
-                <option value="Graduate">Graduate</option>
-                <option value="Matric">Matric</option>
-                <option value="Nonmatric">Non Matric</option>
-                <option value="Madhyamic">Madhyamic</option>
-                <option value="Nonmadhyamic">Non Madhyamic</option>
-                <option value="VIII">VIII</option>
-                <option value="NonVII">Below VIII</option>
-                <option value="NotKnown">Not Known</option>
-              </select>
-            </label>
-          </div>
-          <div class="FieldGroup">
-            <label for="Language"><strong>Language known other than Bengali</strong>
-              <div id="Language">
-                <input type="radio" id="None" name="Language" checked="checked"/>
-                <label for="None">None</label>
-                <input type="radio" id="Hindi" name="Language"/>
-                <label for="Hindi">Hindi</label>
-                <input type="radio" id="Nepali" name="Language"/>
-                <label for="Nepali">Nepali</label>
-
-              </div>
-            </label>
-          </div>
-        </fieldset>
-        <fieldset>
-          <legend>Contacts</legend>
-          <div class="FieldGroup">
-            <label for="Phone"><strong>Phone(Residence)</strong>
-              <input type="text" name="Phone" id="Phone"
-                     value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'Phone')
-                     ?>"
-                     required/>
-
-            </label>
-          </div>
-          <div class="FieldGroup">
-            <label for="Mobile"><strong>Mobile</strong>
-              <input type="text"  id="Mobile" name="Mobile"
-                     value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'Mobile')
-                     ?>"
-                     required/>
-            </label>
-          </div>
-          <div class="FieldGroup">
-            <label for="EMail"><strong>EMail</strong>
-              <input type="email" name="EMail" id="EMail"
-                     value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'EMail')
-                     ?>"
-                     required/>
-            </label>
-          </div>
-          <div class="FieldGroup">
-            <label for="Remarks"><strong>Remarks</strong>
-              <input type="text" name="Remarks"
-                     value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'Remarks')
-                     ?>"
-                     id="Remarks" required/>
-            </label>
-          </div>
-        </fieldset>
         <fieldset>
           <legend>Bank Details</legend>
-          <div class="FieldGroup">
-            <label for="BankACNo"><strong>BankA/C No.</strong>
-              <input type="text" name="BankACNo" id="BankACNo"
-                     value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'BankACNo')
-                     ?>"
-                     required/>
-            </label>
-          </div>
           <div class="FieldGroup">
             <label for="BankName"><strong>Bank Name</strong>
               <input type="text" id="BankName" name="BankName"
@@ -338,8 +283,6 @@ WebLib::IncludeJS('pp/js/Personnel.js');
                      ?>"
                      required/>
             </label>
-          </div>
-          <div class="FieldGroup">
             <label for="BranchName"><strong>Branch Name</strong>
               <input type="text" name="BranchName" id="BranchName"
                      value="<?php
@@ -349,6 +292,13 @@ WebLib::IncludeJS('pp/js/Personnel.js');
             </label>
           </div>
           <div class="FieldGroup">
+            <label for="BankACNo"><strong>BankA/C No.</strong>
+              <input type="text" name="BankACNo" id="BankACNo"
+                     value="<?php
+                     echo WebLib::GetVal($_SESSION['PostData'], 'BankACNo')
+                     ?>"
+                     required/>
+            </label>
             <label for="IFSCCode"><strong>IFSC Code</strong>
               <input type="text" name="IFSCCode" id="IFSCCode"
                      value="<?php
@@ -357,6 +307,40 @@ WebLib::IncludeJS('pp/js/Personnel.js');
                      required/>
             </label>
           </div>
+        </fieldset>
+        <fieldset>
+          <legend>Pay Details</legend>
+          <div class="FieldGroup">
+            <label for="PayScale"><strong>Scale of Pay</strong>
+              <select id="PayScale" name="PayScale" data-placeholder="Select Pay Scale">
+                <?php
+                $Data  = new MySQLiDB();
+                $Query = 'Select `ScaleCode`, `Scale` '
+                    . ' FROM `' . MySQL_Pre . 'PP_Scales` '
+                    . ' Order By `Scale`';
+                $Data->show_sel('ScaleCode', 'Scale', $Query,
+                    WebLib::GetVal($_POST, 'ScaleCode'));
+                ?>
+              </select>
+            </label>
+            <div class="FieldGroup">
+              <label for="BasicPay"><strong>Basic Pay </strong>
+                <input type="text" name="BasicPay" id="BasicPay"
+                       value="<?php
+                       echo WebLib::GetVal($_SESSION['PostData'], 'OfficeName')
+                       ?>"
+                       size="3" maxlength="5" required/>
+              </label>
+            </div>
+            <div class="FieldGroup">
+              <label for="GradePay"><strong>Grade Pay</strong>
+                <input type="text"  name="GradePay" id="GradePay"
+                       value="<?php
+                       echo WebLib::GetVal($_SESSION['PostData'], 'OfficeName')
+                       ?>"
+                       size="3" maxlength="5" disabled="disabled" required/>
+              </label>
+            </div>
         </fieldset>
         <fieldset>
           <legend>Whether working for 3 years out of 4 years</legend>
@@ -399,8 +383,6 @@ WebLib::IncludeJS('pp/js/Personnel.js');
                    value="<?php echo WebLib::GetVal($_SESSION, 'FormToken') ?>" />
           </div>
         </fieldset>
-
-
     </div>
   </form>
 </div>
