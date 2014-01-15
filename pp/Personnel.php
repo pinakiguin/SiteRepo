@@ -52,21 +52,21 @@ WebLib::IncludeJS('pp/js/Personnel.js');
             <label for="NameID"><strong>Name of Employee</strong>
               <input type="text" name="NameID" id="NameID"
                      value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'NameID')
+                     echo WebLib::GetVal($_SESSION['PostData'], 'NameID');
                      ?>"
                      required/>
             </label>
             <label for="DesigID"><strong>Designation</strong>
               <input type="text" name="DesigID" id="DesigID"
                      value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'DesigID')
+                     echo WebLib::GetVal($_SESSION['PostData'], 'DesigID');
                      ?>"
                      required/>
             </label>
             <label for="DOB"><strong>Date Of Birth</strong>
               <input type="text" name="DOB" id="DOB"
                      value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'DOB')
+                     echo WebLib::GetVal($_SESSION['PostData'], 'DOB');
                      ?>"
                      required/>
             </label>
@@ -88,7 +88,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
             <label for="AcNo"><strong>AC No.</strong>
               <input type="text" name="AcNo" id="AcNo"
                      value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'AcNo')
+                     echo WebLib::GetVal($_SESSION['PostData'], 'AcNo');
                      ?>"
                      size="3" maxlength="3" required/>
             </label>
@@ -97,7 +97,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
             <label for="PartNo"><strong>Part No.</strong>
               <input type="text" name="PartNo"  id="PartNo"
                      value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'PartNo')
+                     echo WebLib::GetVal($_SESSION['PostData'], 'PartNo');
                      ?>"
                      size="3" maxlength="3" required/>
             </label>
@@ -106,7 +106,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
             <label for="SLNo"><strong>SERIAL NO</strong>
               <input type="text" name="SLNo" id="SLNo"
                      value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'SLNo')
+                     echo WebLib::GetVal($_SESSION['PostData'], 'SLNo');
                      ?>"
                      size="3" maxlength="3" required/>
             </label>
@@ -116,7 +116,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               <input type="text" name="EPIC" id="EPIC"
                      size="8" maxlength="16" placeholder="Voter's ID"
                      value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'EPIC')
+                     echo WebLib::GetVal($_SESSION['PostData'], 'EPIC');
                      ?>" required/>
             </label>
           </div>
@@ -127,7 +127,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
             <label for="PcPreRes"><strong>Present Residence</strong>
               <input type="text" name="PcPreRes" id="PcPreRes"
                      value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'PcPreRes')
+                     echo WebLib::GetVal($_SESSION['PostData'], 'PcPreRes');
                      ?>" size="7" maxlength="2" required/>
             </label>
           </div>
@@ -135,7 +135,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
             <label for="PcPerRes"><strong>Present Residence</strong>
               <input type="text" name="PcPerRes" id="PcPerRes"
                      value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'PcPerRes')
+                     echo WebLib::GetVal($_SESSION['PostData'], 'PcPerRes');
                      ?>" size="7" maxlength="2" required/>
             </label>
           </div>
@@ -143,7 +143,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
             <label for="PcPosting"><strong>Present Residence</strong>
               <input type="text" name="PcPosting"  id="PcPosting"
                      value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'PcPosting')
+                     echo WebLib::GetVal($_SESSION['PostData'], 'PcPosting');
                      ?>" size="7" maxlength="2" required/>
             </label>
           </div>
@@ -154,14 +154,14 @@ WebLib::IncludeJS('pp/js/Personnel.js');
             <label for="ResPhone"><strong>Phone(Residence)</strong>
               <input type="text" name="ResPhone" id="ResPhone" size="15"
                      value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'ResPhone')
+                     echo WebLib::GetVal($_SESSION['PostData'], 'ResPhone');
                      ?>"
                      required/>
             </label>
             <label for="Mobile"><strong>Mobile</strong>
               <input type="text"  id="Mobile" name="Mobile"
                      value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'Mobile')
+                     echo WebLib::GetVal($_SESSION['PostData'], 'Mobile');
                      ?>" size="15" required/>
             </label>
           </div>
@@ -169,14 +169,14 @@ WebLib::IncludeJS('pp/js/Personnel.js');
             <label for="EMail"><strong>EMail</strong>
               <input type="email" name="EMail" id="EMail"
                      value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'EMail')
+                     echo WebLib::GetVal($_SESSION['PostData'], 'EMail');
                      ?>"  size="19"
                      required/>
             </label>
             <label for="Remarks"><strong>Remarks</strong>
               <input type="text" name="Remarks"
                      value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'Remarks')
+                     echo WebLib::GetVal($_SESSION['PostData'], 'Remarks');
                      ?>" size="19"
                      id="Remarks" required/>
             </label>
@@ -187,7 +187,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
             <label for="AcPreRes"><strong>Present Residence</strong>
               <input type="text" name="AcPreRes"  id="AcPreRes"
                      value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'AcPreRes')
+                     echo WebLib::GetVal($_SESSION['PostData'], 'AcPreRes');
                      ?>" size="7" maxlength="2" required/>
             </label>
           </div>
@@ -195,7 +195,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
             <label for="AcPerRes"><strong>Permanent Residence</strong>
               <input type="text"  name="AcPerRes" id="AcPerRes"
                      value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'AcPerRes')
+                     echo WebLib::GetVal($_SESSION['PostData'], 'AcPerRes');
                      ?>" size="7" maxlength="2" required/>
             </label>
           </div>
@@ -203,7 +203,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
             <label for="AcPostiong"><strong>Place of Posting </strong>
               <input type="text" name="AcPosting" id="AcPosting"
                      value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'AcPosting')
+                     echo WebLib::GetVal($_SESSION['PostData'], 'AcPosting');
                      ?>" size="7" maxlength="2" required/>
             </label>
           </div>
@@ -246,14 +246,14 @@ WebLib::IncludeJS('pp/js/Personnel.js');
             <label for="PreAddr1"><strong>Present/1</strong>
               <input type="text"  id="PreAddr1" name="PreAddr1"
                      value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'PreAddr1')
+                     echo WebLib::GetVal($_SESSION['PostData'], 'PreAddr1');
                      ?>"
                      required/>
             </label>
             <label for="PreAddr2"><strong>Present/2</strong>
               <input type="text"  id="PreAddr2" name="PreAddr2"
                      value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'PreAddr2')
+                     echo WebLib::GetVal($_SESSION['PostData'], 'PreAddr2');
                      ?>"
                      required/>
             </label>
@@ -262,14 +262,14 @@ WebLib::IncludeJS('pp/js/Personnel.js');
             <label for="PerAddr1"><strong>Permanent/1</strong>
               <input type="text"  id="PerAddr1" name="PerAddr1"
                      value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'PerAddr1')
+                     echo WebLib::GetVal($_SESSION['PostData'], 'PerAddr1');
                      ?>"
                      required/>
             </label>
             <label for="PerAddr2"><strong>Permanent/2</strong>
               <input type="text"  id="PerAddr2" name="PerAddr2"
                      value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'PerAddr2')
+                     echo WebLib::GetVal($_SESSION['PostData'], 'PerAddr2');
                      ?>"
                      required/>
             </label>
@@ -281,14 +281,14 @@ WebLib::IncludeJS('pp/js/Personnel.js');
             <label for="BankName"><strong>Bank Name</strong>
               <input type="text" id="BankName" name="BankName"
                      value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'BankName')
+                     echo WebLib::GetVal($_SESSION['PostData'], 'BankName');
                      ?>"
                      required/>
             </label>
             <label for="BranchName"><strong>Branch Name</strong>
               <input type="text" name="BranchName" id="BranchName"
                      value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'BranchName')
+                     echo WebLib::GetVal($_SESSION['PostData'], 'BranchName');
                      ?>"
                      required/>
             </label>
@@ -297,14 +297,14 @@ WebLib::IncludeJS('pp/js/Personnel.js');
             <label for="BankACNo"><strong>BankA/C No.</strong>
               <input type="text" name="BankACNo" id="BankACNo"
                      value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'BankACNo')
+                     echo WebLib::GetVal($_SESSION['PostData'], 'BankACNo');
                      ?>"
                      required/>
             </label>
             <label for="IFSCCode"><strong>IFSC Code</strong>
               <input type="text" name="IFSCCode" id="IFSCCode"
                      value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'IFSCCode')
+                     echo WebLib::GetVal($_SESSION['PostData'], 'IFSCCode');
                      ?>"
                      required/>
             </label>
@@ -330,7 +330,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               <label for="GradePay"><strong>Grade Pay</strong>
                 <input type="text" name="GradePay" id="GradePay"
                        value="<?php
-                       echo WebLib::GetVal($_SESSION['PostData'], 'OfficeName');
+                       echo WebLib::GetVal($_SESSION['PostData'], 'GradePay');
                        ?>"
                        size="3" maxlength="5" readonly="readonly" required />
               </label>

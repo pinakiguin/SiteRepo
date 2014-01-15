@@ -289,9 +289,9 @@ function SQLDefs($ObjectName) {
           . '`BankACNo` int(20) NOT NULL,'
           . '`BankName` varchar(50) NOT NULL,'
           . '`BranchName` varchar(50) NOT NULL,'
-          . '`IFSCCode` enum("yes","no") NOT NULL,'
+          . '`IFSCCode` varchar(50) NOT NULL,'
           . '`EDCPBIssued` enum("yes","no") NOT NULL,'
-          . '`PBReturn` varchar(50) NOT NULL,'
+          . '`PBReturn` enum("yes","no") NOT NULL,'
           . 'PRIMARY KEY (`PerSL`)'
           . ') ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;';
       break;
