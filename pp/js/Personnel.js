@@ -25,6 +25,8 @@ $(function() {
   $("#SexId").buttonset();
   $("#Posting").buttonset();
   $("#Language").buttonset();
+  $("#EDCPBIssued").buttonset();
+  $("#PBReturn").buttonset();
   $("#DesgID").autocomplete(
           {source: "AjaxDesgOC.php",
             minLength: 2,
