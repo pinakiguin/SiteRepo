@@ -6,6 +6,10 @@ $Query              = '';
 $CmdAction          = WebLib::GetVal($_POST, 'CmdSubmit');
 $FormToken          = WebLib::GetVal($_POST, 'FormToken');
 
+if (isset($_SESSION['PostData']) === false) {
+  $_SESSION['PostData'] = array();
+}
+
 if ($FormToken !== NULL) {
   if ($FormToken !== WebLib::GetVal($_SESSION, 'FormToken')) {
     $_SESSION['action'] = 1;
@@ -90,4 +94,5 @@ function GetPostDataPP() {
   $DataPP['PBReturn']      = WebLib::GetVal($_POST, 'PBReturn');
   return $DataPP;
 }
+
 ?>
