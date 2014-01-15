@@ -21,13 +21,14 @@ root {
   display: inline-block;
 }
 
-.formWrapper input[type=text], .formWrapper input[type=password] {
+.formWrapper input[type=text],
+.formWrapper input[type=password] {
   font-size: 15px;
   color: #858585;
   box-shadow: 0 0 0px 2px #ebebeb;
   -webkit-box-shadow: 0 0 0px 2px #ebebeb;
   -moz-box-shadow: 0 0 0px 2px #ebebeb;
-  padding: 7px 27px 7px 9px;
+  padding: 7px 9px 7px 9px;
   border: 2px solid #d7d7d7;
   display: block;
   margin: 5px 5px 10px 5px;
@@ -41,7 +42,8 @@ root {
   padding-bottom: 5px;
   border-bottom: 3px solid #858585;
 }
-.formWrapper input[type=text]:focus, .formWrapper input[type=password]:focus {
+.formWrapper input[type=text]:focus,
+.formWrapper input[type=password]:focus {
   border: 2px solid #858585;
   border-radius: 2px;
   -webkit-border-radius: 2px;
