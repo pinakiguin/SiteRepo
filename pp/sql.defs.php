@@ -271,6 +271,8 @@ function SQLDefs($ObjectName) {
           . '`BasicPay` int(20) NOT NULL,'
           . '`GradePay` int(20) NOT NULL,'
           . '`Posting` enum("yes","no") NOT NULL,'
+          . '`HistPosting` varchar(50) NOT NULL,'
+          . '`DistHome` varchar(50) NOT NULL,'
           . '`PreAddr1` varchar(50) NOT NULL,'
           . '`PreAddr2` varchar(50) NOT NULL,'
           . '`PerAddr1` varchar(50) NOT NULL,'

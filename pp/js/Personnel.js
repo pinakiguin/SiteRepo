@@ -19,7 +19,7 @@ $(function() {
     no_results_text: "Oops, nothing found!"
   });
 
-  $("#BranchName").chosen({width: "350px",
+  $("#BranchName").chosen({width: "250px",
     no_results_text: "Oops, nothing found!"
   }).change(function() {
     var BranchSL = Number($(this).val());
@@ -33,7 +33,7 @@ $(function() {
             });
   });
 
-  $("#BankName").chosen({width: "350px",
+  $("#BankName").chosen({width: "250px",
     no_results_text: "Oops, nothing found!"
   }).change(function() {
     var Options = '<option value=""></option>';

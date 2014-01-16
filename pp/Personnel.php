@@ -161,6 +161,20 @@ WebLib::IncludeJS('pp/js/Personnel.js');
         <fieldset>
           <legend>Residential Address</legend>
           <div class="FieldGroup">
+            <label for="DistHome"><strong>Home District</strong>
+              <input type="text"  id="DistHome" name="DistHome"
+                     value="<?php
+                     echo WebLib::GetVal($_SESSION['PostData'], 'DistHome');
+                     ?>" maxlength="50" required/>
+            </label>
+            <label for="HistPosting"><strong>Posting History</strong>
+              <input type="text"  id="HistPosting" name="HistPosting"
+                     value="<?php
+                     echo WebLib::GetVal($_SESSION['PostData'], 'HistPosting');
+                     ?>" maxlength="50" required/>
+            </label>
+          </div>
+          <div class="FieldGroup">
             <label for="PreAddr1"><strong>Present/1</strong>
               <input type="text"  id="PreAddr1" name="PreAddr1"
                      value="<?php
@@ -190,6 +204,35 @@ WebLib::IncludeJS('pp/js/Personnel.js');
                      echo WebLib::GetVal($_SESSION['PostData'], 'PerAddr2');
                      ?>"
                      required/>
+            </label>
+          </div>
+
+        </fieldset>
+        <fieldset>
+          <legend>Bank Details</legend>
+          <div class="FieldGroup">
+            <label for="BankName"><strong>Bank Name</strong>
+              <select id="BankName" name="BankName"
+                      data-placeholder="Select Bank Name">
+              </select>
+            </label>
+            <label for="BranchName"><strong>Branch Name</strong>
+              <select id="BranchName" name="BranchName"
+                      data-placeholder="Select Branch Name">
+              </select>
+            </label>
+          </div>
+          <div class="FieldGroup">
+            <label for="BankACNo"><strong>BankA/C No.</strong>
+              <input type="text" name="BankACNo" id="BankACNo" value="<?php
+              echo WebLib::GetVal($_SESSION['PostData'], 'BankACNo');
+              ?>" required/>
+            </label>
+            <label for="IFSC"><strong>IFSC Code</strong>
+              <input type="text" name="IFSC" id="IFSC"
+                     value="<?php
+                     echo WebLib::GetVal($_SESSION['PostData'], 'IFSC');
+                     ?>"  readonly="readonly" required/>
             </label>
           </div>
         </fieldset>
@@ -287,34 +330,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
             </label>
           </div>
         </fieldset>
-        <fieldset>
-          <legend>Bank Details</legend>
-          <div class="FieldGroup">
-            <label for="BankName"><strong>Bank Name</strong>
-              <select id="BankName" name="BankName"
-                      data-placeholder="Select Bank Name">
-              </select>
-            </label>
-            <label for="BranchName"><strong>Branch Name</strong>
-              <select id="BranchName" name="BranchName"
-                      data-placeholder="Select Branch Name">
-              </select>
-            </label>
-          </div>
-          <div class="FieldGroup">
-            <label for="BankACNo"><strong>BankA/C No.</strong>
-              <input type="text" name="BankACNo" id="BankACNo" value="<?php
-              echo WebLib::GetVal($_SESSION['PostData'], 'BankACNo');
-              ?>" required/>
-            </label>
-            <label for="IFSC"><strong>IFSC Code</strong>
-              <input type="text" name="IFSC" id="IFSC"
-                     value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'IFSC');
-                     ?>"  readonly="readonly" required/>
-            </label>
-          </div>
-        </fieldset>
+
         <fieldset>
           <legend>Qualifications</legend>
           <div class="FieldGroup">
