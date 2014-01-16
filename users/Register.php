@@ -66,7 +66,7 @@ WebLib::IncludeJS("js/md5.js");
           }
 
           $MailSent = json_decode(GMailSMTP($email, $UserName[0]['UserName'],
-                  $Subject, $Body, $TxtBody));
+                                            $Subject, $Body, $TxtBody));
 
           WebLib::ShowMsg();
           if ($MailSent->Sent) {
@@ -90,10 +90,10 @@ WebLib::IncludeJS("js/md5.js");
           <select name="UserMapID">
             <?php
             $Data->show_sel("UserMapID", "UserName",
-                "Select `UserMapID`,`UserName` "
+                            "Select `UserMapID`,`UserName` "
                 . " FROM `" . MySQL_Pre . "Users` "
                 . " Where NOT `Registered` AND NOT `Activated`;",
-                WebLib::GetVal($_POST, 'UserMapID', TRUE));
+                            WebLib::GetVal($_POST, 'UserMapID', TRUE));
             ?>
           </select>
         </div>
