@@ -16,8 +16,9 @@ $(function() {
   });
   $("#OfficeSL").chosen({width: "600px",
     no_results_text: "Oops, nothing found!"
-  }).change(function() {
-    //alert($(this).val());
+  });
+  $("#BankName").chosen({width: "350px",
+    no_results_text: "Oops, nothing found!"
   });
   $('#DOB').datepicker({
     dateFormat: 'yy-mm-dd',
@@ -56,41 +57,52 @@ $(function() {
     }
   })
           .done(function(data) {
-    try {
-      var DataResp = $.parseJSON(data);
-      delete data;
-      var Options = '<option value=""></option>';
-      $.each(DataResp.Scales,
-              function(index, value) {
-                Options += '<option value="' + value.ScaleCode + '">'
-                        + value.ScaleCode + ' - ' + value.Scale
-                        + '</option>';
-              });
-      $('#PayScale').html(Options)
-              .trigger("chosen:updated");
-      $('#PayScale').data('Scales', DataResp.Scales);
+            try {
+              var DataResp = $.parseJSON(data);
+              delete data;
+              var Options = '<option value=""></option>';
+              $.each(DataResp.Scales,
+                      function(index, value) {
+                        Options += '<option value="' + value.ScaleCode + '">'
+                                + value.ScaleCode + ' - ' + value.Scale
+                                + '</option>';
+                      });
+              $('#PayScale').html(Options)
+                      .trigger("chosen:updated");
+              $('#PayScale').data('Scales', DataResp.Scales);
 
-      Options = '<option value=""></option>';
-      $.each(DataResp.OfficeSL,
-              function(index, value) {
-                Options += '<option value="' + value.OfficeSL + '">'
-                        + value.OfficeSL + ' - ' + value.OfficeName
-                        + '</option>';
-              });
-      $('#OfficeSL').html(Options)
-              .trigger("chosen:updated");
-      $('#OfficeSL').data('OfficeSL', DataResp.Scales);
-      delete DataResp;
-      $("#Msg").html('');
-    }
-    catch (e) {
-      $('#Msg').html('Server Error:' + e);
-      $('#Error').html(data);
-    }
-  })
+              Options = '<option value=""></option>';
+              $.each(DataResp.OfficeSL,
+                      function(index, value) {
+                        Options += '<option value="' + value.OfficeSL + '">'
+                                + value.OfficeSL + ' - ' + value.OfficeName
+                                + '</option>';
+                      });
+              $('#OfficeSL').html(Options)
+                      .trigger("chosen:updated");
+              $('#OfficeSL').data('OfficeSL', DataResp.Scales);
+
+              Options = '<option value=""></option>';
+              $.each(DataResp.BankName,
+                      function(index, value) {
+                        Options += '<option value="' + value.BankName + '">'
+                                + value.BankSL + ' - ' + value.BankName
+                                + '</option>';
+                      });
+              $('#BankName').html(Options)
+                      .trigger("chosen:updated");
+              $('#BankName').data('BankName', DataResp.BankName);
+              delete DataResp;
+              $("#Msg").html('');
+            }
+            catch (e) {
+              $('#Msg').html('Server Error:' + e);
+              $('#Error').html(data);
+            }
+          })
           .fail(function(msg) {
-    $('#Msg').html(msg);
-  });
+            $('#Msg').html(msg);
+          });
 
   $("#PayScale").bind({"change": function() {
       var ScaleCode = $(this).val();

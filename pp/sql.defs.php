@@ -21,6 +21,8 @@ function CreateSchemas() {
   $ObjDB->ddlQuery(SQLDefs('PP_FieldNames'));
   $ObjDB->ddlQuery(SQLDefs('PP_DataFieldNames'));
   $ObjDB->ddlQuery(SQLDefs('MenuData'));
+  $ObjDB->ddlQuery(SQLDefs('PP_Banks'));
+  $ObjDB->ddlQuery(SQLDefs('PP_Branches'));
   unset($ObjDB);
 }
 
@@ -330,6 +332,23 @@ function SQLDefs($ObjectName) {
           . '(\'PP\', 5, 1, \'Admin Reports\', \'pp/AdminReports.php\', 1),'
           . '(\'PP\', 6, 1, \'Reports\', \'pp/Reports.php\', 1),'
           . '(\'PP\', 7, 1, \'Log Out!\', \'login.php?LogOut=1\', 1);';
+      break;
+    case 'PP_Banks':
+      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . $ObjectName . '` ('
+          . '`BankSL` int(3) NOT NULL AUTO_INCREMENT,'
+          . '`BankName` varchar(30) NOT NULL,'
+          . ' PRIMARY KEY (`BankSL`)'
+          . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
+      break;
+    case 'PP_Branches':
+      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . $ObjectName . '` ('
+          . '`IFSC` varchar(11) NOT NULL,'
+          . '`BankSL` int(3) NOT NULL,'
+          . '`BankName` varchar(30) DEFAULT NULL,'
+          . '`BranchName` varchar(30) DEFAULT NULL,'
+          . '`MICR` varchar(10) DEFAULT NULL,'
+          . ' PRIMARY KEY (`IFSC`)'
+          . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
       break;
   }
   return $SqlDB;
