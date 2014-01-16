@@ -81,6 +81,16 @@ WebLib::IncludeJS('pp/js/Personnel.js');
             </div>
 
           </div>
+          <div class="FieldGroup">
+            <label for="Remarks">
+              <strong>Remarks</strong>
+              <input type="text" name="Remarks" id="Remarks"
+                     value="<?php
+                     echo WebLib::GetVal($_SESSION['PostData'], 'Remarks');
+                     ?>" size="19"
+                     required />
+            </label>
+          </div>
         </fieldset>
         <fieldset>
           <legend>Parliamentary Constituency</legend>
@@ -182,6 +192,8 @@ WebLib::IncludeJS('pp/js/Personnel.js');
                      ?>"
                      required/>
             </label>
+          </div>
+          <div class="FieldGroup">
             <label for="Mobile"><strong>Mobile</strong>
               <input type="text"  id="Mobile" name="Mobile"
                      value="<?php
@@ -194,15 +206,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               <input type="email" name="EMail" id="EMail"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'EMail');
-                     ?>"  size="19"
-                     required/>
-            </label>
-            <label for="Remarks"><strong>Remarks</strong>
-              <input type="text" name="Remarks"
-                     value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'Remarks');
-                     ?>" size="19"
-                     id="Remarks" required/>
+                     ?>"  size="19">
             </label>
           </div>
         </fieldset>
