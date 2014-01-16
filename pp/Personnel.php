@@ -56,7 +56,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
                      required />
             </label>
             <label for="DOB"><strong>Date Of Birth</strong>
-              <input type="text" name="DOB" id="DOB" placeholder="YYYY-MM-DD"
+              <input type="text" name="DOB" id="DOB" placeholder="dd-mm-yyyy"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'DOB');
                      ?>"
@@ -84,11 +84,22 @@ WebLib::IncludeJS('pp/js/Personnel.js');
           <div class="FieldGroup">
             <label for="Remarks">
               <strong>Remarks</strong>
-              <input type="text" name="Remarks" id="Remarks"
-                     value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'Remarks');
-                     ?>" size="19"
-                     required />
+              <select name="Remarks" id="Remarks" class="chzn-select"
+                      data-placeholder="Select Remarks">
+                <option value=""></option>
+                <option value="1">1-Head Of Office</option>
+                <option value="2">2-Night Guard/Armed Guard</option>
+                <option value="3">3-Sweeper</option>
+                <option value="4">4-Key Holder</option>
+                <option value="5">5-Physically handicapped*</option>
+                <option value="6">6-Peoples' Representative</option>
+                <option value="7">7-Other</option>
+              </select>
+            </label>
+            <label for="Remarks">
+              <strong>Why the employee cannot be spared </strong>
+              <input type="text" name="TxtRemarks" id="TxtRemarks"
+                     placeholder="Mention Exact Reason"/>
             </label>
           </div>
         </fieldset>

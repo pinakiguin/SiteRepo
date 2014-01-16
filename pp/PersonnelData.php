@@ -85,7 +85,7 @@ if ($FormToken !== NULL) {
     if ($QueryExecuted === false) {
       $_SESSION['Msg'] = 'Unable to ' . $CmdAction . '!';
     } else {
-      $_SESSION['Msg'] = 'Successfully ' . $CmdAction . 'd!';
+      $_SESSION['Msg']      = 'Successfully ' . $CmdAction . 'd!';
       $_SESSION['PostData'] = array();
     }
   }
@@ -98,7 +98,7 @@ function GetPostDataPP() {
   $DataPP['EmpName']       = WebLib::GetVal($_POST, 'NameID');
   $DataPP['OfficeSL']      = WebLib::GetVal($_POST, 'OfficeSL');
   $DataPP['DesgID']        = WebLib::GetVal($_POST, 'DesigID');
-  $DataPP['Dob']           = WebLib::GetVal($_POST, 'DOB');
+  $DataPP['Dob']           = WebLib::ToDBDate(WebLib::GetVal($_POST, 'DOB'));
   $DataPP['Sex']           = WebLib::GetVal($_POST, 'SexId');
   $DataPP['ACNo']          = WebLib::GetVal($_POST, 'AcNo');
   $DataPP['PartNo']        = WebLib::GetVal($_POST, 'PartNo');
@@ -127,7 +127,7 @@ function GetPostDataPP() {
   $DataPP['BankACNo']      = WebLib::GetVal($_POST, 'BankACNo');
   $DataPP['BankName']      = WebLib::GetVal($_POST, 'BankName');
   $DataPP['BranchName']    = WebLib::GetVal($_POST, 'BranchName');
-  $DataPP['IFSCCode']      = WebLib::GetVal($_POST, 'IFSCCode');
+  $DataPP['IFSCCode']      = WebLib::GetVal($_POST, 'IFSC');
   $DataPP['EDCPBIssued']   = WebLib::GetVal($_POST, 'EDCPBIssued');
   $DataPP['PBReturn']      = WebLib::GetVal($_POST, 'PBReturn');
   return $DataPP;
