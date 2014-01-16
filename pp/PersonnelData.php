@@ -61,10 +61,7 @@ if ($FormToken !== NULL) {
         $PostData = GetPostDataPP();
 
         if ($Query !== '') {
-          $Inserted = $Data->insert($Query, $PostData);
-          if ($Inserted === false) {
-            $_SESSION['Msg'] = 'Unable to ' . $CmdAction . '!';
-          }
+          $QueryExecuted = $Data->insert($Query, $PostData);
         }
         break;
       case 'Update':
@@ -72,24 +69,24 @@ if ($FormToken !== NULL) {
         $PostData = GetPostDataPP();
 
         if ($Query !== '') {
-          $Updated = $Data->where('PerSL', WebLib::GetVal($_POST, 'PerSL'))
+          $QueryExecuted = $Data->where('PerSL', WebLib::GetVal($_POST, 'PerSL'))
               ->update($Query, $PostData);
-          if ($Updated === false) {
-            $_SESSION['Msg'] = 'Unable to ' . $CmdAction . '!';
-          }
         }
         break;
       case 'Delete':
         $Query = MySQL_Pre . 'PP_Personnel';
 
         if ($Query !== '') {
-          $Deleted = $Data->where('PerSL', WebLib::GetVal($_POST, 'PerSL'))
+          $QueryExecuted = $Data->where('PerSL', WebLib::GetVal($_POST, 'PerSL'))
               ->delete($Query);
-          if ($Deleted === false) {
-            $_SESSION['Msg'] = 'Unable to ' . $CmdAction . '!';
-          }
         }
         break;
+    }
+    if ($QueryExecuted === false) {
+      $_SESSION['Msg'] = 'Unable to ' . $CmdAction . '!';
+    } else {
+      $_SESSION['Msg'] = 'Successfully ' . $CmdAction . 'd!';
+      $_SESSION['PostData'] = array();
     }
   }
 }
