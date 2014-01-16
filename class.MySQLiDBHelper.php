@@ -74,10 +74,10 @@ class MySQLiDBHelper {
 
   public function __construct(
   $host = HOST_Name, // Uses HOST_Name defined in congif.inc.php
-      $username = MySQL_User, // Uses MySQL_User defined in congif.inc.php
-      $password = MySQL_Pass, // Uses MySQL_Pass defined in congif.inc.php
-      $db = MySQL_DB, // Uses MySQL_DB defined in congif.inc.php
-      $port = NULL
+  $username = MySQL_User, // Uses MySQL_User defined in congif.inc.php
+  $password = MySQL_Pass, // Uses MySQL_Pass defined in congif.inc.php
+  $db = MySQL_DB, // Uses MySQL_DB defined in congif.inc.php
+  $port = NULL
   ) {
     if ($port == NULL)
       $port = ini_get('mysqli.default_port');
@@ -124,7 +124,7 @@ class MySQLiDBHelper {
    * @return array Contains the returned rows from the query.
    */
   public function rawQuery($query,
-      $bindParams = null) {
+                           $bindParams = null) {
     $this->_query = $query;
     $stmt         = $this->_prepareQuery();
 
@@ -152,7 +152,7 @@ class MySQLiDBHelper {
    * @return array Contains the returned rows from the query.
    */
   public function query($query,
-      $numRows = null) {
+                        $numRows = null) {
     $this->_query = $query;
     $stmt         = $this->_buildQuery($numRows);
     $stmt->execute();
@@ -170,7 +170,7 @@ class MySQLiDBHelper {
    * @return array Contains the returned rows from the select query.
    */
   public function get($tableName,
-      $numRows = null) {
+                      $numRows = null) {
     $this->_query = "SELECT * FROM $tableName";
     $stmt         = $this->_buildQuery($numRows);
     $stmt->execute();
@@ -187,7 +187,7 @@ class MySQLiDBHelper {
    * @return boolean Boolean indicating whether the insert query was completed succesfully.
    */
   public function insert($tableName,
-      $insertData) {
+                         $insertData) {
     $this->_query = "INSERT into $tableName";
     $stmt         = $this->_buildQuery(null, $insertData);
     $stmt->execute();
@@ -205,7 +205,7 @@ class MySQLiDBHelper {
    * @return boolean
    */
   public function update($tableName,
-      $tableData) {
+                         $tableData) {
     $this->_query = "UPDATE $tableName SET ";
 
     $stmt = $this->_buildQuery(null, $tableData);
@@ -224,7 +224,7 @@ class MySQLiDBHelper {
    * @return boolean Indicates success. 0 or 1.
    */
   public function delete($tableName,
-      $numRows = null) {
+                         $numRows = null) {
     $this->_query = "DELETE FROM $tableName";
 
     $stmt = $this->_buildQuery($numRows);
@@ -245,7 +245,7 @@ class MySQLiDBHelper {
    * @return MysqliDb
    */
   public function where($whereProp,
-      $whereValue) {
+                        $whereValue) {
     $this->_where[$whereProp] = $whereValue;
     return $this;
   }
@@ -313,7 +313,7 @@ class MySQLiDBHelper {
    * @return mysqli_stmt Returns the $stmt object.
    */
   protected function _buildQuery($numRows = null,
-      $tableData = null) {
+                                 $tableData = null) {
     $hasTableData   = is_array($tableData);
     $hasConditional = !empty($this->_where);
 
@@ -401,7 +401,7 @@ class MySQLiDBHelper {
     // Bind parameters to statment
     if ($hasTableData || $hasConditional) {
       call_user_func_array(array($stmt, 'bind_param'),
-          $this->refValues($this->_bindParams));
+                           $this->refValues($this->_bindParams));
     }
 
     return $stmt;
@@ -448,7 +448,7 @@ class MySQLiDBHelper {
   protected function _prepareQuery() {
     if (!$stmt = $this->_mysqli->prepare($this->_query)) {
       trigger_error("Problem preparing query ($this->_query) " . $this->_mysqli->error,
-          E_USER_ERROR);
+                    E_USER_ERROR);
     }
     return $stmt;
   }
