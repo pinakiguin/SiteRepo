@@ -28,6 +28,13 @@ if (WebLib::GetVal($_SESSION, 'CheckAuth') === 'Valid') {
 
   $DataResp['BankName'] = $Data->rawQuery($Query, array($_SESSION['UserMapID']));
 
+  $Query = 'SELECT `BranchName`, `BankName` FROM `'
+      . MySQL_Pre . 'PP_Branches` '
+      . 'Order by `BranchName`';
+
+  $DataResp['BranchName'] = $Data->rawQuery($Query,
+                                            array($_SESSION['UserMapID']));
+
 
 
   echo json_encode($DataResp);
