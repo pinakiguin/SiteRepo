@@ -23,40 +23,55 @@ WebLib::IncludeJS("js/md5.js");
   <div class="content">
     <h2>User Registration</h2>
     <?php
-    $Data = new MySQLiDB();
-    $UnregisteredUsers = $Data->do_sel_query('Select `UserMapID`,`UserName` '
-            . ' FROM `' . MySQL_Pre . 'Users` '
-            . ' Where `Registered`=0 AND `Activated`=0;');
-    if (WebLib::GetVal($_POST, 'UserID') !== NULL) {
-      $email = WebLib::GetVal($_POST, 'UserID', TRUE);
-      $MobileNo = WebLib::GetVal($_POST, 'MobileNo', TRUE);
-      //@ todo Send Email after registration Specifing UserID for verification and password.
-      $Pass = WebLib::GeneratePassword(10, 2, 2, 2);
-      $UserMapID = WebLib::GetVal($_POST, 'UserMapID', TRUE);
-      if (WebLib::StaticCaptcha()) {
-        $Qry = "Update `" . MySQL_Pre . "Users` "
-                . " SET `UserID`='{$email}',`UserPass`=MD5('{$Pass}'),`MobileNo`='{$MobileNo}',`Registered`=1"
-                . " Where Registered=0 AND Activated=0 AND UserMapID='{$UserMapID}'";
-        $Submitted = $Data->do_ins_query($Qry);
-        if ($Submitted > 0) {
+    $Data              = new MySQLiDBHelper();
+    $UnregisteredUsers = $Data->where('Registered', 0)
+        ->where('Activated', 0)
+        ->query('Select `UserMapID`,`UserName`'
+        . ' FROM `' . MySQL_Pre . 'Users`');
 
-          $UserName = $Data->do_max_query("Select `UserName` FROM `" . MySQL_Pre . "Users`"
-                  . " Where UserMapID='{$UserMapID}'");
+    if (WebLib::GetVal($_POST, 'UserID') !== NULL) {
+
+      $email     = WebLib::GetVal($_POST, 'UserID', TRUE);
+      $MobileNo  = WebLib::GetVal($_POST, 'MobileNo', TRUE);
+      $Pass      = WebLib::GeneratePassword(10, 2, 2, 2);
+      $UserMapID = WebLib::GetVal($_POST, 'UserMapID', TRUE);
+
+      if (WebLib::StaticCaptcha()) {
+
+        $RegData['UserID']     = $email;
+        $RegData['UserPass']   = md5($Pass);
+        $RegData['MobileNo']   = $MobileNo;
+        $RegData['Registered'] = 1;
+
+        $Registered = $Data->where('Registered', 0)
+            ->where('Activated', 0)
+            ->where('UserMapID', $UserMapID)
+            ->update(MySQL_Pre . "Users", $RegData);
+
+        if ($Registered === true) {
+
+          $UserName = $Data->where('UserMapID', $UserMapID)
+              ->query("Select `UserName` FROM `" . MySQL_Pre . "Users`");
+
           $Subject = "User Account Details - SRER 2014";
-          $Body = "<b>UserID: </b><span> {$email}</span><br/>"
-                  . "<b>Password: </b><span> {$Pass}</span>";
+          $Body    = "<b>UserID: </b><span> {$email}</span><br/>"
+              . "<b>Password: </b><span> {$Pass}</span>";
+
           $TxtBody = 'UserID: ' . $email . "\r\n" . 'Password: ' . $Pass;
           $SentSMS = '';
+
           if (UseSMSGW === true) {
             SMSGW::SendSMS($TxtBody, $MobileNo);
             $SentSMS = ' and ' . $MobileNo;
           }
-          $MailSent = json_decode(GMailSMTP($email, $UserName, $Subject, $Body, $TxtBody));
+
+          $MailSent = json_decode(GMailSMTP($email, $UserName[0]['UserName'],
+                                            $Subject, $Body, $TxtBody));
 
           WebLib::ShowMsg();
           if ($MailSent->Sent) {
             $_SESSION['Msg'] = "<h3>Regristration successful.</h3>"
-                    . "<b>Please Note: </b>Password is sent to: {$email}" . $SentSMS;
+                . "<b>Please Note: </b>Password is sent to: {$email}" . $SentSMS;
           }
           WebLib::ShowMsg();
         } else {
@@ -65,16 +80,20 @@ WebLib::IncludeJS("js/md5.js");
       } else {
         echo "<h3>You solution of the Math in the image is wrong.</h3>";
       }
-    } elseif ($UnregisteredUsers > 0) {
+    } elseif (count($UnregisteredUsers) > 0) {
       ?>
-      <form name="feed_frm" method="post" action="<?php echo WebLib::GetVal($_SERVER, 'PHP_SELF', FALSE); ?>" >
+      <form name="feed_frm" method="post" action="<?php
+      echo WebLib::GetVal($_SERVER, 'PHP_SELF', FALSE);
+      ?>" >
         <div class="FieldGroup">
           <h3>User:</h3>
           <select name="UserMapID">
             <?php
-            $Data->show_sel("UserMapID", "UserName", "Select `UserMapID`,`UserName` "
-                    . " FROM `" . MySQL_Pre . "Users` "
-                    . " Where NOT `Registered` AND NOT `Activated`;", WebLib::GetVal($_POST, 'UserMapID', TRUE));
+            $Data->show_sel("UserMapID", "UserName",
+                            "Select `UserMapID`,`UserName` "
+                . " FROM `" . MySQL_Pre . "Users` "
+                . " Where NOT `Registered` AND NOT `Activated`;",
+                            WebLib::GetVal($_POST, 'UserMapID', TRUE));
             ?>
           </select>
         </div>
@@ -91,7 +110,9 @@ WebLib::IncludeJS("js/md5.js");
         </div>
         <div style="clear:both;"></div>
         <div class="FieldGroup">
-          <input type="hidden" name="LoginToken" value="<?php echo WebLib::GetVal($_SESSION, 'Token'); ?>" />
+          <input type="hidden" name="LoginToken" value="<?php
+          echo WebLib::GetVal($_SESSION, 'Token');
+          ?>" />
         </div>
         <div class="FieldGroup">
           <?php WebLib::StaticCaptcha(TRUE); ?>
