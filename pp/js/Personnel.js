@@ -14,6 +14,9 @@ $(function() {
   $("#PayScale").chosen({width: "350px",
     no_results_text: "Oops, nothing found!"
   });
+  $("#BranchName").chosen({width: "350px",
+    no_results_text: "Oops, nothing found!"
+  });
   $("#OfficeSL").chosen({width: "600px",
     no_results_text: "Oops, nothing found!"
   });
@@ -92,6 +95,17 @@ $(function() {
               $('#BankName').html(Options)
                       .trigger("chosen:updated");
               $('#BankName').data('BankName', DataResp.BankName);
+
+              Options = '<option value=""></option>';
+              $.each(DataResp.BranchName,
+                      function(index, value) {
+                        Options += '<option value="' + value.BranchName + '">'
+                                + value.BranchName + '</option>';
+                      });
+              $('#BranchName').html(Options)
+                      .trigger("chosen:updated");
+              $('#BranchName').data('BranchName', DataResp.BranchName);
+
               delete DataResp;
               $("#Msg").html('');
             }

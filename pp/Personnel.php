@@ -280,11 +280,8 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               </select>
             </label>
             <label for="BranchName"><strong>Branch Name</strong>
-              <input type="text" name="BranchName" id="BranchName"
-                     value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'BranchName');
-                     ?>"
-                     required/>
+              <select id="BranchName" name="BranchName" data-placeholder="Select Branch Name">
+              </select>
             </label>
           </div>
           <div class="FieldGroup">
@@ -297,7 +294,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               <input type="text" name="IFSCCode" id="IFSCCode"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'IFSCCode');
-                     ?>" required/>
+                     ?>"  readonly="readonly" required/>
             </label>
           </div>
         </fieldset>
