@@ -307,15 +307,9 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               <select name="Qualification" id="Qualification" class="chzn-select"
                       data-placeholder="Select Qualification">
                 <option value=""></option>
-                <option value="Post Graduate">Post Graduate</option>
-                <option value="Graduate">Graduate</option>
-                <option value="Matric">Matric</option>
-                <option value="Nonmatric">Non Matric</option>
-                <option value="Madhyamic">Madhyamic</option>
-                <option value="Nonmadhyamic">Non Madhyamic</option>
-                <option value="VIII">VIII</option>
-                <option value="NonVII">Below VIII</option>
-                <option value="NotKnown">Not Known</option>
+                <option value="1">1-Non Matric/VIII Standard or below</option>
+                <option value="2">2-Matric/School Final or H.S</option>
+                <option value="3">3-Graduate & Above</option>
               </select>
             </label>
           </div>
