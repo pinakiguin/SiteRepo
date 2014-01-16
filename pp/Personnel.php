@@ -276,11 +276,13 @@ WebLib::IncludeJS('pp/js/Personnel.js');
           <legend>Bank Details</legend>
           <div class="FieldGroup">
             <label for="BankName"><strong>Bank Name</strong>
-              <select id="BankName" name="BankName" data-placeholder="Select Bank Name">
+              <select id="BankName" name="BankName"
+                      data-placeholder="Select Bank Name">
               </select>
             </label>
             <label for="BranchName"><strong>Branch Name</strong>
-              <select id="BranchName" name="BranchName" data-placeholder="Select Branch Name">
+              <select id="BranchName" name="BranchName"
+                      data-placeholder="Select Branch Name">
               </select>
             </label>
           </div>
@@ -290,10 +292,10 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               echo WebLib::GetVal($_SESSION['PostData'], 'BankACNo');
               ?>" required/>
             </label>
-            <label for="IFSCCode"><strong>IFSC Code</strong>
-              <input type="text" name="IFSCCode" id="IFSCCode"
+            <label for="IFSC"><strong>IFSC Code</strong>
+              <input type="text" name="IFSC" id="IFSC"
                      value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'IFSCCode');
+                     echo WebLib::GetVal($_SESSION['PostData'], 'IFSC');
                      ?>"  readonly="readonly" required/>
             </label>
           </div>

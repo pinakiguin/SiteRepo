@@ -342,12 +342,12 @@ function SQLDefs($ObjectName) {
       break;
     case 'PP_Branches':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . $ObjectName . '` ('
+          . '`BranchSL` int(3) NOT NULL AUTO_INCREMENT,'
           . '`IFSC` varchar(11) NOT NULL,'
           . '`BankSL` int(3) NOT NULL,'
-          . '`BankName` varchar(30) DEFAULT NULL,'
           . '`BranchName` varchar(30) DEFAULT NULL,'
           . '`MICR` varchar(10) DEFAULT NULL,'
-          . ' PRIMARY KEY (`IFSC`)'
+          . ' PRIMARY KEY (`BranchSL`)'
           . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
       break;
   }
