@@ -48,14 +48,14 @@ class MySQLiDBHelper {
    *
    * @var array
    */
-  protected $_whereTypeList;
+  protected $_whereTypeList = '';
 
   /**
    * Dynamic type list for table data values
    *
    * @var array
    */
-  protected $_paramTypeList;
+  protected $_paramTypeList = '';
 
   /**
    * Dynamic array that holds a combination of where condition/table data value types and parameter referances
@@ -108,11 +108,11 @@ class MySQLiDBHelper {
    * @return object Returns the current instance.
    */
   protected function reset() {
-    $this->_where      = array();
-    $this->_bindParams = array(''); // Create the empty 0 index
+    $this->_where         = array();
+    $this->_bindParams    = array(''); // Create the empty 0 index
+    $this->_paramTypeList = '';
+    $this->_whereTypeList = '';
     unset($this->_query);
-    unset($this->_whereTypeList);
-    unset($this->_paramTypeList);
   }
 
   /**
