@@ -53,7 +53,7 @@ $(function() {
 
 
   $('#DOB').datepicker({
-    dateFormat: 'yy-mm-dd',
+    dateFormat: 'dd-mm-yy',
     showOn: "both",
     buttonImage: "images/calendar.gif",
     buttonImageOnly: true
