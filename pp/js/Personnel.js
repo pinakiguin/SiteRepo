@@ -43,7 +43,7 @@ $(function() {
             function(index, value) {
               if (value.BankSL === BankSL) {
                 Options += '<option value="' + value.BranchSL + '">'
-                        + value.BranchName
+                        + value.IFSC + ' - ' + value.BranchName
                         + '</option>';
               }
             });
