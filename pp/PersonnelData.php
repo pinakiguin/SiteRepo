@@ -108,6 +108,8 @@ function GetPostDataPP() {
   $DataPP['BasicPay']      = WebLib::GetVal($_POST, 'BasicPay');
   $DataPP['GradePay']      = WebLib::GetVal($_POST, 'GradePay');
   $DataPP['Posting']       = WebLib::GetVal($_POST, 'PostingID');
+  $DataPP['DistHome']      = WebLib::GetVal($_POST, 'DistHome');
+  $DataPP['HistPosting']   = WebLib::GetVal($_POST, 'HistPosting');
   $DataPP['PreAddr1']      = WebLib::GetVal($_POST, 'PreAddr1');
   $DataPP['PreAddr2']      = WebLib::GetVal($_POST, 'PreAddr2');
   $DataPP['PerAddr1']      = WebLib::GetVal($_POST, 'PerAddr1');
