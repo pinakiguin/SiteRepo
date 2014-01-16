@@ -89,7 +89,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               <input type="text" name="PcPreRes" id="PcPreRes"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'PcPreRes');
-                     ?>" size="7" maxlength="2" required/>
+                     ?>" size="7" maxlength="3" required/>
             </label>
           </div>
           <div class="FieldGroup">
@@ -97,7 +97,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               <input type="text" name="PcPerRes" id="PcPerRes"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'PcPerRes');
-                     ?>" size="7" maxlength="2" required/>
+                     ?>" size="7" maxlength="3" required/>
             </label>
           </div>
           <div class="FieldGroup">
@@ -105,7 +105,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               <input type="text" name="PcPosting"  id="PcPosting"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'PcPosting');
-                     ?>" size="7" maxlength="2" required/>
+                     ?>" size="7" maxlength="3" required/>
             </label>
           </div>
         </fieldset>
@@ -116,7 +116,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               <input type="text" name="AcPreRes"  id="AcPreRes"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'AcPreRes');
-                     ?>" size="7" maxlength="2" required/>
+                     ?>" size="7" maxlength="3" required/>
             </label>
           </div>
           <div class="FieldGroup">
@@ -124,7 +124,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               <input type="text"  name="AcPerRes" id="AcPerRes"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'AcPerRes');
-                     ?>" size="7" maxlength="2" required/>
+                     ?>" size="7" maxlength="3" required/>
             </label>
           </div>
           <div class="FieldGroup">
@@ -132,7 +132,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               <input type="text" name="AcPosting" id="AcPosting"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'AcPosting');
-                     ?>" size="7" maxlength="2" required/>
+                     ?>" size="7" maxlength="3" required/>
             </label>
           </div>
         </fieldset>
@@ -276,34 +276,25 @@ WebLib::IncludeJS('pp/js/Personnel.js');
           <legend>Bank Details</legend>
           <div class="FieldGroup">
             <label for="BankName"><strong>Bank Name</strong>
-              <input type="text" id="BankName" name="BankName"
-                     value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'BankName');
-                     ?>"
-                     required/>
+              <select id="BankName" name="BankName" data-placeholder="Select Bank Name">
+              </select>
             </label>
             <label for="BranchName"><strong>Branch Name</strong>
-              <input type="text" name="BranchName" id="BranchName"
-                     value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'BranchName');
-                     ?>"
-                     required/>
+              <select id="BranchName" name="BranchName" data-placeholder="Select Branch Name">
+              </select>
             </label>
           </div>
           <div class="FieldGroup">
             <label for="BankACNo"><strong>BankA/C No.</strong>
-              <input type="text" name="BankACNo" id="BankACNo"
-                     value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'BankACNo');
-                     ?>"
-                     required/>
+              <input type="text" name="BankACNo" id="BankACNo" value="<?php
+              echo WebLib::GetVal($_SESSION['PostData'], 'BankACNo');
+              ?>" required/>
             </label>
             <label for="IFSCCode"><strong>IFSC Code</strong>
               <input type="text" name="IFSCCode" id="IFSCCode"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'IFSCCode');
-                     ?>"
-                     required/>
+                     ?>"  readonly="readonly" required/>
             </label>
           </div>
         </fieldset>
