@@ -16,12 +16,19 @@ if (WebLib::GetVal($_SESSION, 'CheckAuth') === 'Valid') {
 
   $DataResp['OfficeSL'] = $Data->rawQuery($Query, array($_SESSION['UserMapID']));
 
-
   $Query = 'SELECT `ScaleCode`, `Scale`,`GradePay` FROM `'
       . MySQL_Pre . 'PP_PayScales` '
       . 'Order by `ScaleCode`';
 
   $DataResp['Scales'] = $Data->rawQuery($Query);
+
+  $Query = 'SELECT `BankSL`, `BankName` FROM `'
+      . MySQL_Pre . 'PP_Banks` '
+      . 'Order by `BankName`';
+
+  $DataResp['BankName'] = $Data->rawQuery($Query, array($_SESSION['UserMapID']));
+
+
 
   echo json_encode($DataResp);
 
