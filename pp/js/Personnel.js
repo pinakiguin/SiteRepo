@@ -14,15 +14,44 @@ $(function() {
   $("#PayScale").chosen({width: "350px",
     no_results_text: "Oops, nothing found!"
   });
-  $("#BranchName").chosen({width: "350px",
-    no_results_text: "Oops, nothing found!"
-  });
+
   $("#OfficeSL").chosen({width: "600px",
     no_results_text: "Oops, nothing found!"
   });
+
+  $("#BranchName").chosen({width: "350px",
+    no_results_text: "Oops, nothing found!"
+  }).change(function() {
+    var BranchSL = Number($(this).val());
+    var IFSC = $('#BranchName').data('BranchName');
+    $.each(IFSC,
+            function(index, value) {
+              if (value.BranchSL === BranchSL) {
+                $("#IFSC").val(value.IFSC);
+                return false;
+              }
+            });
+  });
+
   $("#BankName").chosen({width: "350px",
     no_results_text: "Oops, nothing found!"
+  }).change(function() {
+    var Options = '<option value=""></option>';
+    var BranchName = $('#BranchName').data('BranchName');
+    var BankSL = Number($(this).val());
+    $.each(BranchName,
+            function(index, value) {
+              if (value.BankSL === BankSL) {
+                Options += '<option value="' + value.BranchSL + '">'
+                        + value.BranchName
+                        + '</option>';
+              }
+            });
+    $('#BranchName').html(Options)
+            .trigger("chosen:updated");
   });
+
+
   $('#DOB').datepicker({
     dateFormat: 'yy-mm-dd',
     showOn: "both",
@@ -88,7 +117,7 @@ $(function() {
               Options = '<option value=""></option>';
               $.each(DataResp.BankName,
                       function(index, value) {
-                        Options += '<option value="' + value.BankName + '">'
+                        Options += '<option value="' + value.BankSL + '">'
                                 + value.BankSL + ' - ' + value.BankName
                                 + '</option>';
                       });
@@ -96,14 +125,6 @@ $(function() {
                       .trigger("chosen:updated");
               $('#BankName').data('BankName', DataResp.BankName);
 
-              Options = '<option value=""></option>';
-              $.each(DataResp.BranchName,
-                      function(index, value) {
-                        Options += '<option value="' + value.BranchName + '">'
-                                + value.BranchName + '</option>';
-                      });
-              $('#BranchName').html(Options)
-                      .trigger("chosen:updated");
               $('#BranchName').data('BranchName', DataResp.BranchName);
 
               delete DataResp;
