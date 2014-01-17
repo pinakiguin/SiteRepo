@@ -6,9 +6,10 @@ if (WebLib::GetVal($_SESSION, 'CheckAuth') === 'Valid') {
 
   $Data = new MySQLiDBHelper(HOST_Name, MySQL_User, MySQL_Pass, MySQL_DB);
 
-  $Query = 'SELECT `DesgOC` as `value` FROM `' . MySQL_Pre . 'PP_Offices` '
-          . ' Where `DesgOC` like ? Group by `DesgOC`';
-  echo json_encode($Data->rawQuery($Query, array('%' . WebLib::GetVal($_REQUEST, 'term') . '%')));
+  $Query = 'SELECT `DesgID` as `value` FROM `' . MySQL_Pre . 'PP_Personnel` '
+      . ' Where `DesgID` like ? Group by `DesgID`';
+  echo json_encode($Data->rawQuery($Query,
+                                   array('%' . WebLib::GetVal($_REQUEST, 'term') . '%')));
 
   unset($Data);
 }
