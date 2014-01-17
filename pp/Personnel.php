@@ -47,11 +47,11 @@ WebLib::IncludeJS('pp/js/Personnel.js');
           </div>
           <div style="clear: both;"></div>
           <div class="FieldGroup">
-            <label for="NameID"><strong>Name of Employee</strong>
-              <input type="text" name="NameID" id="NameID"
+            <label for="EmpName"><strong>Name of Employee</strong>
+              <input type="text" name="EmpName" id="EmpName"
                      title="Type or Select from the suggesion list to edit record"
                      value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'NameID');
+                     echo WebLib::GetVal($_SESSION['PostData'], 'EmpName');
                      ?>"
                      required />
             </label>
@@ -64,13 +64,11 @@ WebLib::IncludeJS('pp/js/Personnel.js');
             </label>
           </div>
           <div class="FieldGroup">
-            <label for="DesigID"><strong>Designation</strong>
-              <input type="text" name="DesigID" id="DesigID"
-                     value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'DesigID');
-                     ?>"
-                     required/>
-            </label>
+            <label for="DesgID">Designation of Officer-in-Charge:</label>
+            <input id="DesgID" name="DesgID" type="text" maxlength="30"
+                   value="<?php echo WebLib::GetVal($_SESSION['PostData'],
+                                                     'DesgID')
+                     ?>" required/>
             <strong>Sex</strong>
             <div id="SexId">
               <input type="radio" id="MaleId" name="SexId" value="male"
@@ -225,8 +223,8 @@ WebLib::IncludeJS('pp/js/Personnel.js');
           <div class="FieldGroup">
             <label for="BankACNo"><strong>BankA/C No.</strong>
               <input type="text" name="BankACNo" id="BankACNo" value="<?php
-              echo WebLib::GetVal($_SESSION['PostData'], 'BankACNo');
-              ?>" required/>
+                     echo WebLib::GetVal($_SESSION['PostData'], 'BankACNo');
+                     ?>" required/>
             </label>
             <label for="IFSC"><strong>IFSC Code</strong>
               <input type="text" name="IFSC" id="IFSC"
@@ -413,10 +411,10 @@ WebLib::IncludeJS('pp/js/Personnel.js');
     <div style="clear: both;"></div>
   </div>
   <div class="pageinfo">
-    <?php WebLib::PageInfo(); ?>
+<?php WebLib::PageInfo(); ?>
   </div>
   <div class="footer">
-    <?php WebLib::FooterInfo(); ?>
+<?php WebLib::FooterInfo(); ?>
   </div>
 </body>
 </html>

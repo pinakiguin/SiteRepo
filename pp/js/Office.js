@@ -46,7 +46,8 @@ $(function() {
                   $('#Msg').html('Server Error:' + e);
                   $('#Error').html(data);
                 }
-              }).fail(function(msg) {
+              }
+              ).fail(function(msg) {
                 $('#Msg').html(msg);
               });
             },

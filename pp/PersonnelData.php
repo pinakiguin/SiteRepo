@@ -95,9 +95,9 @@ unset($PostData);
 unset($Data);
 
 function GetPostDataPP() {
-  $DataPP['EmpName']       = WebLib::GetVal($_POST, 'NameID');
+  $DataPP['EmpName']       = WebLib::GetVal($_POST, 'EmpName');
   $DataPP['OfficeSL']      = WebLib::GetVal($_POST, 'OfficeSL');
-  $DataPP['DesgID']        = WebLib::GetVal($_POST, 'DesigID');
+  $DataPP['DesgID']        = WebLib::GetVal($_POST, 'DesgID');
   $DataPP['Dob']           = WebLib::ToDBDate(WebLib::GetVal($_POST, 'DOB'));
   $DataPP['Sex']           = WebLib::GetVal($_POST, 'SexId');
   $DataPP['ACNo']          = WebLib::GetVal($_POST, 'AcNo');

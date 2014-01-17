@@ -19,6 +19,7 @@ $(function() {
     no_results_text: "Oops, nothing found!"
   });
 
+
   $("#BranchName").chosen({width: "250px",
     no_results_text: "Oops, nothing found!"
   }).change(function() {
@@ -66,7 +67,7 @@ $(function() {
   $("#EDCPBIssued").buttonset();
   $("#PBReturn").buttonset();
   $("#DesgID").autocomplete(
-          {source: "AjaxDesgOC.php",
+          {source: "AjaxDesgOC_1.php",
             minLength: 2,
             focus: function(event, ui) {
               event.preventDefault();
@@ -75,6 +76,20 @@ $(function() {
             select: function(event, ui) {
               event.preventDefault();
               $('#DesgID').val(ui.item.value);
+            },
+            autoFocus: true
+          }
+  );
+  $("#EmpName").autocomplete(
+          {source: "AjaxEmpName.php",
+            minLength: 2,
+            focus: function(event, ui) {
+              event.preventDefault();
+              $('#EmpName').val(ui.item.label);
+            },
+            select: function(event, ui) {
+              event.preventDefault();
+              $('#EmpName').val(ui.item.value);
             },
             autoFocus: true
           }
@@ -151,4 +166,18 @@ $(function() {
               });
     }
   });
+//  $("#EmpName").autocomplete(
+//          {source: "AjaxEmpName.php",
+//            minLength: 2,
+//            focus: function(event, ui) {
+//              event.preventDefault();
+//              $('#EmpName').val(ui.item.label);
+//            },
+//            select: function(event, ui) {
+//              event.preventDefault();
+//              $('#EmpName').val(ui.item.value);
+//            },
+//            autoFocus: true
+//          }
+//  );
 });
