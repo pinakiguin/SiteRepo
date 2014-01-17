@@ -67,15 +67,15 @@ $(function() {
   $("#EDCPBIssued").buttonset();
   $("#PBReturn").buttonset();
   $("#DesgID").autocomplete(
-          {source: "AjaxDesgOC_1.php",
+          {source: "AjaxDesgOC.php",
             minLength: 2,
             focus: function(event, ui) {
               event.preventDefault();
-              $('#DesgID').val(ui.item.label);
+              $('#DesgOC').val(ui.item.label);
             },
             select: function(event, ui) {
               event.preventDefault();
-              $('#DesgID').val(ui.item.value);
+              $('#DesgOC').val(ui.item.value);
             },
             autoFocus: true
           }
