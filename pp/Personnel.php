@@ -64,11 +64,11 @@ WebLib::IncludeJS('pp/js/Personnel.js');
             </label>
           </div>
           <div class="FieldGroup">
-            <label for="DesgID">Designation of Officer-in-Charge:</label>
+            <label for="DesgID">Designation of Employee:</label>
             <input id="DesgID" name="DesgID" type="text" maxlength="30"
-                   value="<?php echo WebLib::GetVal($_SESSION['PostData'],
-                                                     'DesgID')
-                     ?>" required/>
+                   value="<?php
+                   echo WebLib::GetVal($_SESSION['PostData'], 'DesgID')
+                   ?>" required/>
             <strong>Sex</strong>
             <div id="SexId">
               <input type="radio" id="MaleId" name="SexId" value="male"
@@ -223,8 +223,8 @@ WebLib::IncludeJS('pp/js/Personnel.js');
           <div class="FieldGroup">
             <label for="BankACNo"><strong>BankA/C No.</strong>
               <input type="text" name="BankACNo" id="BankACNo" value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'BankACNo');
-                     ?>" required/>
+              echo WebLib::GetVal($_SESSION['PostData'], 'BankACNo');
+              ?>" required/>
             </label>
             <label for="IFSC"><strong>IFSC Code</strong>
               <input type="text" name="IFSC" id="IFSC"
@@ -411,10 +411,10 @@ WebLib::IncludeJS('pp/js/Personnel.js');
     <div style="clear: both;"></div>
   </div>
   <div class="pageinfo">
-<?php WebLib::PageInfo(); ?>
+    <?php WebLib::PageInfo(); ?>
   </div>
   <div class="footer">
-<?php WebLib::FooterInfo(); ?>
+    <?php WebLib::FooterInfo(); ?>
   </div>
 </body>
 </html>

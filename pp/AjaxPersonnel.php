@@ -4,11 +4,7 @@ session_start();
 require_once __DIR__ . '/../lib.inc.php';
 if (WebLib::GetVal($_SESSION, 'CheckAuth') === 'Valid') {
 
-  $Data = new MySQLiDBHelper();
-
-//  $Query = 'SELECT `OfficeSL`, `OfficeName` FROM `' . MySQL_Pre . 'PP_Offices` '
-//    . ' Where `UserMapID`=? Order by `OfficeName`';
-//  $DataResp['Offices'] = $Data->rawQuery($Query, array($_SESSION['UserMapID']));
+  $Data  = new MySQLiDBHelper();
   $Query = 'SELECT `OfficeSL`, `OfficeName` '
       . ' FROM `' . MySQL_Pre . 'PP_Offices` '
       . ' Where `UserMapID`=?'
@@ -45,11 +41,10 @@ if (WebLib::GetVal($_SESSION, 'CheckAuth') === 'Valid') {
 //      . ' FROM `' . MySQL_Pre . 'PP_Personnel` '
 //      . ' Order by `OfficeSL`';
 //  $DataResp['EmpName'] = $Data->rawQuery($Query);
-
-  $Query = 'SELECT `DesgID` as `value` FROM `' . MySQL_Pre . 'PP_Personnel` '
-      . ' Where `DesgID` like ? Group by `DesgID`';
-  echo json_encode($Data->rawQuery($Query,
-                                   array('%' . WebLib::GetVal($_REQUEST, 'term') . '%')));
+//  $Query = 'SELECT `DesgID` as `value` FROM `' . MySQL_Pre . 'PP_Personnel` '
+//      . ' Where `DesgID` like ? Group by `DesgID`';
+//  echo json_encode($Data->rawQuery($Query,
+//                                   array('%' . WebLib::GetVal($_REQUEST, 'term') . '%')));
 
   echo json_encode($DataResp);
   unset($Data);
