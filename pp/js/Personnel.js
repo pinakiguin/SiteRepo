@@ -162,4 +162,16 @@ $(function() {
               });
     }
   });
+  $('#TxtRemarks').hide();
+  $('#Remarks').change(function() {
+    if ($(this).val() == '7')
+    {
+      $('#TxtRemarks').show();
+    }
+    else
+    {
+      $('#TxtRemarks').hide();
+    }
+
+  });
 });
