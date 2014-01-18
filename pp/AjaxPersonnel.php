@@ -29,24 +29,6 @@ if (WebLib::GetVal($_SESSION, 'CheckAuth') === 'Valid') {
       . ' Order by `BranchName`';
   $DataResp['BranchName'] = $Data->rawQuery($Query);
 
-//  $Query               = 'SELECT `EmpName`'
-//      . ' FROM `' . MySQL_Pre . 'PP_Personnel` '
-//      . ' Where `UserMapID`=?'
-//      . ' Order by `EmpName`';
-//  $DataResp['EmpName'] = $Data->rawQuery($Query, array($_SESSION['UserMapID']));
-////  $Query               = 'SELECT `PerSL`,`PerCode`,`EmpName`,`DesgID`,`Dob`,`Sex`,
-//    `ACNo`,`PartNo`,`SlNo`,`EPICNo`,`ScaleOfPay`,`BasicPay`,`GradePay`,`Posting`,`HistPosting`,
-//    `DistHome`,`PreAddr1`,`PreAddr2`,`PerAddr1`,`PerAddr2`,`AcPreRes`,`AcPerRes`,`AcPosting`,`PcPreRes`,`PcPerRes`,`PcPosting`,`Qualification`,`Language`,`Phone`,`Mobile`,`EMail`,`Remarks`,
-//    `BankACNo`,`BankName`,`BranchName`,`IFSCCode`,`EDCPBIssued`,`PBReturn`'
-//      . ' FROM `' . MySQL_Pre . 'PP_Personnel` '
-//      . ' Order by `OfficeSL`';
-//  $DataResp['EmpName'] = $Data->rawQuery($Query);
-//  $Query = 'SELECT `DesgID` as `value` FROM `' . MySQL_Pre . 'PP_Personnel` '
-//      . ' Where `DesgID` like ? Group by `DesgID`';
-//  echo json_encode($Data->rawQuery($Query,
-//                                   array('%' . WebLib::GetVal($_REQUEST, 'term') . '%')));
-
-  echo json_encode($DataResp);
   unset($Data);
 }
 ?>
