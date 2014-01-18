@@ -71,11 +71,11 @@ $(function() {
             minLength: 2,
             focus: function(event, ui) {
               event.preventDefault();
-              $('#DesgOC').val(ui.item.label);
+              $('#DesgID').val(ui.item.label);
             },
             select: function(event, ui) {
               event.preventDefault();
-              $('#DesgOC').val(ui.item.value);
+              $('#DesgID').val(ui.item.value);
             },
             autoFocus: true
           }
