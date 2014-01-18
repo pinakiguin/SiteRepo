@@ -18,8 +18,6 @@ $(function() {
   $("#OfficeSL").chosen({width: "600px",
     no_results_text: "Oops, nothing found!"
   });
-
-
   $("#BranchName").chosen({width: "250px",
     no_results_text: "Oops, nothing found!"
   }).change(function() {
@@ -60,8 +58,6 @@ $(function() {
     buttonImageOnly: true
   });
   $("#SexId").buttonset();
-
-
   $("#Posting").buttonset();
   $("#Language").buttonset();
   $("#EDCPBIssued").buttonset();
@@ -166,18 +162,4 @@ $(function() {
               });
     }
   });
-//  $("#EmpName").autocomplete(
-//          {source: "AjaxEmpName.php",
-//            minLength: 2,
-//            focus: function(event, ui) {
-//              event.preventDefault();
-//              $('#EmpName').val(ui.item.label);
-//            },
-//            select: function(event, ui) {
-//              event.preventDefault();
-//              $('#EmpName').val(ui.item.value);
-//            },
-//            autoFocus: true
-//          }
-//  );
 });

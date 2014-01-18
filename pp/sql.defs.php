@@ -256,8 +256,8 @@ function SQLDefs($ObjectName) {
       break;
     case 'PP_Personnel':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . $ObjectName . '` ('
-          . '`PerSL` bigint(20) NOT NULL AUTO_INCREMENT,'
-          . '`PerCode` int(20) DEFAULT NULL,'
+          . '`EmpSL` bigint(20) NOT NULL AUTO_INCREMENT,'
+          . '`EmpCode` int(20) DEFAULT NULL,'
           . '`OfficeSL` int(20) NOT NULL,'
           . '`EmpName` varchar(50) NOT NULL,'
           . '`DesgID` varchar(50) NOT NULL,'
@@ -295,7 +295,7 @@ function SQLDefs($ObjectName) {
           . '`IFSCCode` varchar(50) NOT NULL,'
           . '`EDCPBIssued` enum("yes","no") NOT NULL,'
           . '`PBReturn` enum("yes","no") NOT NULL,'
-          . ' PRIMARY KEY (`PerSL`)'
+          . ' PRIMARY KEY (`EmpSL`)'
           . ' ) ENGINE=InnoDB DEFAULT CHARSET=utf8;';
       break;
     case 'PP_FieldNames':
