@@ -55,6 +55,14 @@ WebLib::IncludeJS('pp/js/Personnel.js');
                      ?>"
                      required />
             </label>
+            <label for="DesgID">Designation of Employee:</label>
+            <input id="DesgID" name="DesgID" type="text" maxlength="30"
+                   value="<?php
+                   echo WebLib::GetVal($_SESSION['PostData'], 'DesgID')
+                   ?>" required/>
+
+          </div>
+          <div class="FieldGroup">
             <label for="DOB"><strong>Date Of Birth</strong>
               <input type="text" name="DOB" id="DOB" placeholder="dd-mm-yyyy"
                      value="<?php
@@ -62,13 +70,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
                      ?>"
                      required/>
             </label>
-          </div>
-          <div class="FieldGroup">
-            <label for="DesgID">Designation of Employee:</label>
-            <input id="DesgID" name="DesgID" type="text" maxlength="30"
-                   value="<?php
-                   echo WebLib::GetVal($_SESSION['PostData'], 'DesgID')
-                   ?>" required/>
+
             <strong>Sex</strong>
             <div id="SexId">
               <input type="radio" id="MaleId" name="SexId" value="male"
@@ -101,6 +103,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
             </label>
           </div>
         </fieldset>
+
         <fieldset>
           <legend>Parliamentary Constituency</legend>
           <div class="FieldGroup">
@@ -108,7 +111,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               <input type="text" name="PcPreRes" id="PcPreRes"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'PcPreRes');
-                     ?>" size="7" maxlength="3" required/>
+                     ?>" size="12" maxlength="3" required/>
             </label>
           </div>
           <div class="FieldGroup">
@@ -116,7 +119,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               <input type="text" name="PcPerRes" id="PcPerRes"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'PcPerRes');
-                     ?>" size="7" maxlength="3" required/>
+                     ?>" size="12" maxlength="3" required/>
             </label>
           </div>
           <div class="FieldGroup">
@@ -124,10 +127,11 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               <input type="text" name="PcPosting"  id="PcPosting"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'PcPosting');
-                     ?>" size="7" maxlength="3" required/>
+                     ?>" size="11" maxlength="3" required/>
             </label>
           </div>
         </fieldset>
+
         <fieldset>
           <legend>Assembly Constituency</legend>
           <div class="FieldGroup">
@@ -135,7 +139,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               <input type="text" name="AcPreRes"  id="AcPreRes"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'AcPreRes');
-                     ?>" size="7" maxlength="3" required/>
+                     ?>" size="12" maxlength="3" required/>
             </label>
           </div>
           <div class="FieldGroup">
@@ -143,7 +147,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               <input type="text"  name="AcPerRes" id="AcPerRes"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'AcPerRes');
-                     ?>" size="7" maxlength="3" required/>
+                     ?>" size="12" maxlength="3" required/>
             </label>
           </div>
           <div class="FieldGroup">
@@ -151,11 +155,10 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               <input type="text" name="AcPosting" id="AcPosting"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'AcPosting');
-                     ?>" size="7" maxlength="3" required/>
+                     ?>" size="11" maxlength="3" required/>
             </label>
           </div>
         </fieldset>
-        <div style="clear: both;"></div>
         <fieldset>
           <legend>Residential Address</legend>
           <div class="FieldGroup">
@@ -163,13 +166,13 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               <input type="text"  id="DistHome" name="DistHome"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'DistHome');
-                     ?>" maxlength="50" required/>
+                     ?>" maxlength="50" size="14" required/>
             </label>
             <label for="HistPosting"><strong>Posting History</strong>
               <input type="text"  id="HistPosting" name="HistPosting"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'HistPosting');
-                     ?>" maxlength="50" required/>
+                     ?>" maxlength="50" size="14" required/>
             </label>
           </div>
           <div class="FieldGroup">
@@ -224,16 +227,17 @@ WebLib::IncludeJS('pp/js/Personnel.js');
             <label for="BankACNo"><strong>BankA/C No.</strong>
               <input type="text" name="BankACNo" id="BankACNo" value="<?php
               echo WebLib::GetVal($_SESSION['PostData'], 'BankACNo');
-              ?>" required/>
+              ?>"  maxlength="16" size="20" required/>
             </label>
             <label for="IFSC"><strong>IFSC Code</strong>
               <input type="text" name="IFSC" id="IFSC"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'IFSC');
-                     ?>"  readonly="readonly" required/>
+                     ?>"  readonly="readonly" size="20" required/>
             </label>
           </div>
         </fieldset>
+
         <fieldset>
           <legend>Contacts</legend>
           <div class="FieldGroup">
@@ -241,7 +245,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               <input type="text" name="ResPhone" id="ResPhone" size="15"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'ResPhone');
-                     ?>"
+                     ?>" size="20"
                      required/>
             </label>
           </div>
@@ -250,7 +254,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               <input type="text"  id="Mobile" name="Mobile"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'Mobile');
-                     ?>" size="15" required/>
+                     ?>" size="19" required/>
             </label>
           </div>
           <div class="FieldGroup">
@@ -258,10 +262,50 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               <input type="email" name="EMail" id="EMail"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'EMail');
-                     ?>"  size="19">
+                     ?>"  size="20">
             </label>
           </div>
         </fieldset>
+        <fieldset>
+          <legend>Details Of Enrollment in the current Electoral Roll</legend>
+          <div class="FieldGroup">
+            <label for="AcNo"><strong>AC No.</strong>
+              <input type="text" name="AcNo" id="AcNo"
+                     value="<?php
+                     echo WebLib::GetVal($_SESSION['PostData'], 'AcNo');
+                     ?>"
+                     size="5" maxlength="3" required/>
+            </label>
+          </div>
+          <div class="FieldGroup">
+            <label for="PartNo"><strong>Part No.</strong>
+              <input type="text" name="PartNo"  id="PartNo"
+                     value="<?php
+                     echo WebLib::GetVal($_SESSION['PostData'], 'PartNo');
+                     ?>"
+                     size="5" maxlength="3" required/>
+            </label>
+          </div>
+          <div class="FieldGroup">
+            <label for="SLNo"><strong>SERIAL NO</strong>
+              <input type="text" name="SLNo" id="SLNo"
+                     value="<?php
+                     echo WebLib::GetVal($_SESSION['PostData'], 'SLNo');
+                     ?>"
+                     size="5" maxlength="3" required/>
+            </label>
+          </div>
+          <div class="FieldGroup">
+            <label for="EPICNo"><strong>EPIC NO.</strong>
+              <input type="text" name="EPIC" id="EPIC"
+                     size="13" maxlength="16" placeholder="Voter's ID"
+                     value="<?php
+                     echo WebLib::GetVal($_SESSION['PostData'], 'EPIC');
+                     ?>" required/>
+            </label>
+          </div>
+        </fieldset>
+        <div style="clear: both;"></div>
         <fieldset>
           <legend>Pay Details</legend>
           <div class="FieldGroup">
@@ -276,7 +320,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               <input type="text" name="BasicPay" id="BasicPay"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'BasicPay');
-                     ?>" size="3" maxlength="5" required />
+                     ?>" size="10" maxlength="5" required />
             </label>
           </div>
           <div class="FieldGroup">
@@ -285,56 +329,16 @@ WebLib::IncludeJS('pp/js/Personnel.js');
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'GradePay');
                      ?>"
-                     size="3" maxlength="5" readonly="readonly" required />
+                     size="10" maxlength="5" readonly="readonly" required />
             </label>
           </div>
         </fieldset>
-        <fieldset>
-          <legend>Details Of Enrollment in the current Electoral Roll</legend>
-          <div class="FieldGroup">
-            <label for="AcNo"><strong>AC No.</strong>
-              <input type="text" name="AcNo" id="AcNo"
-                     value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'AcNo');
-                     ?>"
-                     size="3" maxlength="3" required/>
-            </label>
-          </div>
-          <div class="FieldGroup">
-            <label for="PartNo"><strong>Part No.</strong>
-              <input type="text" name="PartNo"  id="PartNo"
-                     value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'PartNo');
-                     ?>"
-                     size="3" maxlength="3" required/>
-            </label>
-          </div>
-          <div class="FieldGroup">
-            <label for="SLNo"><strong>SERIAL NO</strong>
-              <input type="text" name="SLNo" id="SLNo"
-                     value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'SLNo');
-                     ?>"
-                     size="3" maxlength="3" required/>
-            </label>
-          </div>
-          <div class="FieldGroup">
-            <label for="EPICNo"><strong>EPIC NO.</strong>
-              <input type="text" name="EPIC" id="EPIC"
-                     size="8" maxlength="16" placeholder="Voter's ID"
-                     value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'EPIC');
-                     ?>" required/>
-            </label>
-          </div>
-        </fieldset>
-
         <fieldset>
           <legend>Qualifications</legend>
           <div class="FieldGroup">
             <label for="Qualification"><strong>Academic Qualification</strong>
-              <select name="Qualification" id="Qualification" class="chzn-select"
-                      data-placeholder="Select Qualification">
+              <select name="Qualification" id="Qualification" data-placeholder=
+                      "Select Qualification">
                 <option value=""></option>
                 <option value="1">1-Non Matric/VIII Standard or below</option>
                 <option value="2">2-Matric/School Final or H.S</option>
@@ -356,6 +360,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
             </label>
           </div>
         </fieldset>
+        <div style="clear: both;"></div>
         <fieldset>
           <legend>Whether working for 3 years out of 4 years</legend>
           <div class="FieldGroup">

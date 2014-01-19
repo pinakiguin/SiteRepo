@@ -7,13 +7,16 @@ $(function() {
   $('input[type="submit"]').button();
   $('input[type="reset"]').button();
   $('input[type="button"]').button();
-  $('.chzn-select').chosen({width: "250px",
-    no_results_text: "Oops, nothing found!"
-  });
   $("#PayScale").chosen({width: "350px",
     no_results_text: "Oops, nothing found!"
   });
-  $("#OfficeSL").chosen({width: "600px",
+  $("#OfficeSL").chosen({width: "650px",
+    no_results_text: "Oops, nothing found!"
+
+
+  });
+
+  $("#Qualification").chosen({width: "300px",
     no_results_text: "Oops, nothing found!"
   });
   $("#BranchName").chosen({width: "250px",
