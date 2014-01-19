@@ -28,6 +28,9 @@ if (WebLib::GetVal($_SESSION, 'CheckAuth') === 'Valid') {
       . ' FROM `' . MySQL_Pre . 'PP_Branches`'
       . ' Order by `BranchName`';
   $DataResp['BranchName'] = $Data->rawQuery($Query);
+  echo json_encode($Data->rawQuery($Query,
+                                   array('%' . WebLib::GetVal($_REQUEST, 'term') . '%', WebLib::GetVal($_SESSION,
+                                                                                                       'UserMapID'))));
 
   unset($Data);
 }
