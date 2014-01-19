@@ -87,7 +87,8 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
         $DataMPR['PhysicalProgress'] = WebLib::GetVal($_POST, 'PhysicalProgress');
         $DataMPR['FinancialProgress'] = WebLib::GetVal($_POST, 'FinancialProgress');
         $DataMPR['Remarks'] = WebLib::GetVal($_POST, 'Remarks');
-        if ((strlen($DataMPR['PhysicalProgress']) > 2) && (strlen($DataMPR['FinancialProgress']) > 2) && (strlen($DataMPR['Remarks']) > 2) && ($DataMPR['ProjectID'] !== null)) {
+        //(strlen($DataMPR['PhysicalProgress']) > 2) && (strlen($DataMPR['FinancialProgress']) > 2) &&
+        if ((strlen($DataMPR['Remarks']) > 2) && ($DataMPR['ProjectID'] !== null)) {
           $DataMPR['UserMapID'] = $_SESSION['UserMapID'];
           $Query = MySQL_Pre . 'MPR_Progress';
           $_SESSION['Msg'] = 'Progress Created Successfully!';
@@ -95,6 +96,8 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
           $Query = '';
           $_SESSION['Msg'] = 'Progress must be at least 3 characters or more.';
         }
+
+
         break;
     }
     if ($Query !== '') {

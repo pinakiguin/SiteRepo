@@ -62,8 +62,8 @@ function SQLDefs($ObjectName) {
               . '`UserMapID` INT(10) DEFAULT 1,'
               . '`ReportDate` date,'
               . '`ProjectID` INT(10),'
-              . '`PhysicalProgress` VARCHAR(100) DEFAULT NULL,'
-              . '`FinancialProgress` VARCHAR(100) DEFAULT NULL,'
+              . '`PhysicalProgress` INT(10),'
+              . '`FinancialProgress` INT(10),'
               . '`Remarks` VARCHAR(300) DEFAULT NULL,'
               . ' PRIMARY KEY (`ReportID`)'
               . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';

@@ -5,7 +5,7 @@
 require_once __DIR__ . '/../lib.inc.php';
 
 WebLib::AuthSession();
-WebLib::Html5Header('Progress');
+WebLib::Html5Header('Reports');
 WebLib::IncludeCSS();
 WebLib::JQueryInclude();
 WebLib::IncludeCSS('css/chosen.css');
@@ -13,7 +13,48 @@ WebLib::IncludeJS('mpr/js/forms.js');
 WebLib::IncludeCSS('mpr/css/forms.css');
 WebLib::IncludeJS('js/chosen.jquery.min.js');
 ?>
+
+<!--Load the AJAX API-->
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+
+  // Load the Visualization API and the piechart package.
+  google.load('visualization', '1.0', {'packages': ['corechart']});
+
+  // Set a callback to run when the Google Visualization API is loaded.
+  google.setOnLoadCallback(drawChart);
+
+
+  // Callback that creates and populates a data table,
+  // instantiates the pie chart, passes in the data and
+  // draws it.
+  function drawChart() {
+
+    // Create the data table.
+    var data = new google.visualization.DataTable();
+    data.addColumn('string', 'Topping');
+    data.addColumn('number', 'Slices');
+
+    data.addRows([
+      ['Mushrooms', 3],
+      ['Onions', 1],
+      ['Olives', 1],
+      ['Zucchini', 1],
+      ['Pepperoni', 2]
+    ]);
+
+    // Set chart options
+    var options = {'title': 'Monthly Progress Report',
+      'width': 400,
+      'height': 300, orientation: 'horizontal'};
+
+    // Instantiate and draw our chart, passing in some options.
+    var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
+    chart.draw(data, options);
+  }
+</script>
 </head>
+
 <body>
   <div class="TopPanel">
     <div class="LeftPanelSide"></div>
@@ -26,7 +67,6 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
   <?php
   WebLib::ShowMenuBar('MPR');
   ?>
-
   <div class="content">
     <div class="formWrapper">
       <form method="post" action="<?php echo WebLib::GetVal($_SERVER, 'PHP_SELF'); ?>">
@@ -47,51 +87,14 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
             ?>
           </select>
         </div>
+        <pre>
+        <pre>
+        <pre>
+        <!--Div that will hold the pie chart-->
+        <div id="chart_div" style="width:400; height:300"></div>
 
-
-        <div class="FieldGroup">
-          <label for="ReportDate"><strong>Report Date</strong></label>
-
-          <input type="text" id="ReportDate" name="ReportDate"
-                 class="DatePicker" placeholder="YYYY-MM-DD" />
-        </div>
-
-        <div class="FieldGroup">
-          <label for="PhysicalProgress"><strong>Physical Progress in %</strong></label>
-          <input type="text" name="PhysicalProgress" id="PhysicalProgress" placeholder="Physical Progress"/>
-        </div>
-
-        <div class="FieldGroup">
-          <label for="FinancialProgress"><strong>Financial Progress in %</strong></label>
-          <input type="text" name="FinancialProgress" id="FinancialProgress" placeholder="Financial Progress"/>
-        </div>
-
-        <div class="FieldGroup">
-          <label for="Remarks"><strong>Remarks</strong></label>
-          <input type="text" name="Remarks" id="Remarks" placeholder="Remarks"/>
-        </div>
-        <div class="formControl">
-          <br/>
-          <input type="submit" name="CmdSubmit" value="Create Progress">
-        </div>
-        <input type="hidden" name="FormToken"
-               value="<?php echo WebLib::GetVal($_SESSION, 'FormToken') ?>" />
       </form>
     </div>
-    <?php
-    unset($Data);
-    unset($Data1);
-    WebLib::ShowMsg();
-    ?>
-
-  </div>
-
-
-  <div class="pageinfo">
-    <?php WebLib::PageInfo(); ?>
-  </div>
-  <div class="footer">
-    <?php WebLib::FooterInfo(); ?>
   </div>
 </body>
 </html>
