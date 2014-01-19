@@ -10,11 +10,9 @@ $(function() {
   $('.chzn-select').chosen({width: "250px",
     no_results_text: "Oops, nothing found!"
   });
-
   $("#PayScale").chosen({width: "350px",
     no_results_text: "Oops, nothing found!"
   });
-
   $("#OfficeSL").chosen({width: "600px",
     no_results_text: "Oops, nothing found!"
   });
@@ -31,7 +29,6 @@ $(function() {
               }
             });
   });
-
   $("#BankName").chosen({width: "250px",
     no_results_text: "Oops, nothing found!"
   }).change(function() {
@@ -49,8 +46,6 @@ $(function() {
     $('#BranchName').html(Options)
             .trigger("chosen:updated");
   });
-
-
   $('#DOB').datepicker({
     dateFormat: 'dd-mm-yy',
     showOn: "both",
@@ -90,7 +85,6 @@ $(function() {
             autoFocus: true
           }
   );
-
   $.ajax({
     type: 'POST',
     url: 'AjaxPersonnel.php',
@@ -113,7 +107,6 @@ $(function() {
               $('#PayScale').html(Options)
                       .trigger("chosen:updated");
               $('#PayScale').data('Scales', DataResp.Scales);
-
               Options = '<option value=""></option>';
               $.each(DataResp.OfficeSL,
                       function(index, value) {
@@ -124,7 +117,6 @@ $(function() {
               $('#OfficeSL').html(Options)
                       .trigger("chosen:updated");
               $('#OfficeSL').data('OfficeSL', DataResp.Scales);
-
               Options = '<option value=""></option>';
               $.each(DataResp.BankName,
                       function(index, value) {
@@ -135,9 +127,7 @@ $(function() {
               $('#BankName').html(Options)
                       .trigger("chosen:updated");
               $('#BankName').data('BankName', DataResp.BankName);
-
               $('#BranchName').data('BranchName', DataResp.BranchName);
-
               delete DataResp;
               $("#Msg").html('');
             }
@@ -149,7 +139,6 @@ $(function() {
           .fail(function(msg) {
             $('#Msg').html(msg);
           });
-
   $("#PayScale").bind({"change": function() {
       var ScaleCode = $(this).val();
       var Scales = $(this).data('Scales');
@@ -162,16 +151,16 @@ $(function() {
               });
     }
   });
-  $('#TxtRemarks').hide();
+  $('#TxtRemarks1').hide();
   $('#Remarks').change(function() {
     if ($(this).val() == '7')
+      $('#TxtRemarks1').show();
+    else if ($(this).val() == '5')
     {
-      $('#TxtRemarks').show();
+      $('#TxtRemarks1').show();
+      $('#TxtRemarks.placeholder="Mention Ref.number"');
     }
     else
-    {
-      $('#TxtRemarks').hide();
-    }
-
+      $('#TxtRemarks1').hide();
   });
 });

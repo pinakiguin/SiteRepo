@@ -94,7 +94,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
                 <option value="7">7-Other</option>
               </select>
             </label>
-            <label for="Remarks">
+            <label for="TxtRemarks" id="TxtRemarks1">
               <strong>Why the employee cannot be spared </strong>
               <input type="text" name="Remarks" id="TxtRemarks"
                      placeholder="Mention Exact Reason"/>
