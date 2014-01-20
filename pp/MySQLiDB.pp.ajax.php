@@ -28,7 +28,7 @@ if (!isset($_SESSION))
   session_start();
 //@ todo Enable AjaxToken currently disabled
 $CSRF = (WebLib::GetVal($_POST, 'AjaxToken') === WebLib::GetVal($_SESSION,
-        'Token'));
+                                                                'Token'));
 if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
   $_SESSION['LifeTime']  = time();
   $_SESSION['RT']        = microtime(TRUE);
@@ -47,6 +47,30 @@ if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
       $Query = 'Select `PerSL`,`EmpName` FROM `' . MySQL_Pre . 'PP_Personnel`'
           . ' Where `OfficeSL`=?';
       doQuery($DataResp, $Query, WebLib::GetVal($_POST, 'Params', FALSE, FALSE));
+      break;
+    case 'DataPPs':
+      $Query = 'SELECT `PerSL`,`OfficeSL`, `EmpName`, `DesgID`,'
+          . '`Dob`, `Sex`, `ACNo`, `PartNo`, `SlNo`, `EPICNo`, `ScaleOfPay`,'
+          . '`BasicPay`, `GradePay`, `Posting`, `HistPosting`, `DistHome`,'
+          . '`PreAddr1`, `PreAddr2`, `PerAddr1`, `PerAddr2`, `AcPreRes`,'
+          . '`AcPerRes`, `AcPosting`, `PcPreRes`, `PcPerRes`, `PcPosting`,'
+          . '`Qualification`,`Language`,`Phone`,`Mobile`,`EMail`,`Remarks`,'
+          . '`BankACNo`,`BranchName`,`IFSCCode`,`EDCPBIssued`,`PBReturn`'
+          . ' FROM `' . MySQL_Pre . 'PP_Personnel`';
+      doQuery($DataResp, $Query);
+      break;
+    case 'DataOffices':
+      $Query = 'SELECT `OfficeName`,`DesgOC`,`AddrPTS`,`AddrVTM`,`PostOffice`,'
+          . '`PSCode`,`PinCode`,`Status`,`TypeCode`,`Phone`,`Fax`,`Mobile`,'
+          . '`EMail`, `Staffs`, `ACNo` '
+          . ' FROM `' . MySQL_Pre . 'PP_Offices` '
+          . ' WHERE `UserMapID`=' . $_SESSION['UserMapID'];
+      doQuery($DataResp, $Query);
+      break;
+    case 'DataPayScales':
+      $Query = 'SELECT * '
+          . ' FROM `' . MySQL_Pre . 'PP_PayScales` ';
+      doQuery($DataResp, $Query);
       break;
   }
   $_SESSION['Token']     = md5($_SERVER['REMOTE_ADDR'] . session_id() . $_SESSION['ET']);
@@ -80,8 +104,8 @@ exit();
  * @example GetData(&$DataResp, "Select a,b,c from Table Where c=? Order By b LIMIT ?,?", array('1',30,10))
  */
 function doQuery(&$DataResp,
-    $Query,
-    $Params = NULL) {
+                 $Query,
+                 $Params = NULL) {
   $Data             = new MySQLiDBHelper();
   $Result           = $Data->rawQuery($Query, $Params);
   $DataResp['Data'] = $Result;
@@ -98,9 +122,9 @@ function doQuery(&$DataResp,
  * @param array $saveData
  */
 function SaveData(&$DataResp,
-    $tableName,
-    $saveData,
-    $RowIndex = NULL) {
+                  $tableName,
+                  $saveData,
+                  $RowIndex = NULL) {
   $Data            = new MySQLiDBHelper();
   $Saved           = FALSE;
   $Result['Index'] = $saveData['Index'];

@@ -10,4 +10,7 @@ $(function() {
               + $.md5($('#LoginToken').val())));
     }
   });
+
+  $('.jQuery-ButtonSet').buttonset();
+
 });
