@@ -1,8 +1,8 @@
-///*
-// * To change this template, choose Tools | Templates
-// * and open the template in the editor.
-// */
-//
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
 $(function() {
   $('input[type="submit"]').button();
   $('input[type="reset"]').button();
@@ -76,18 +76,16 @@ $(function() {
   );
   $("#EmpName").autocomplete(
           {source: "AjaxEmpName.php",
-            minLength: 5,
-            focus: function(event, ui) {
+            minLength: 2,
+            focus: function() {
               event.preventDefault();
-              $('#EmpName').val(ui.item.label);
             },
             select: function(event, ui) {
               event.preventDefault();
               $('#EmpName').val(ui.item.value);
             },
             autoFocus: true
-          }
-  );
+          });
   $.ajax({
     type: 'POST',
     url: 'AjaxPersonnel.php',
@@ -154,16 +152,30 @@ $(function() {
               });
     }
   });
-  $('#TxtRemarks1').hide();
+  $('#TxtRemarksLabel').hide();
   $('#Remarks').change(function() {
-    if ($(this).val() == '7')
+    if ($(this).val() === '7') {
+      $('#TxtRemarksLabel').show();
+      $('#TxtRemarksSpanLabel').html("Why the employee cannot be spared");
+      $('#TxtRemarks').attr("placeholder", "Mention Exact Reason");
+      $(this).attr("name", "CmbRemarks");
+      $('#CmbRemarksLabel').attr("for", "CmbRemarks");
+      $('#TxtRemarksLabel').attr("for", "Remarks");
+      $('#TxtRemarks').attr("name", "Remarks");
+    } else if ($(this).val() === '5') {
       $('#TxtRemarks1').show();
-    else if ($(this).val() == '5')
-    {
-      $('#TxtRemarks1').show();
-      $('#TxtRemarks.placeholder="Mention Ref.number"');
+      $('#TxtRemarksSpanLabel').html("Certificate Issued by appropriate authority");
+      $('#TxtRemarks').attr("placeholder", "Mention Ref.number");
+      $(this).attr("name", "CmbRemarks");
+      $('#CmbRemarksLabel').attr("for", "CmbRemarks");
+      $('#TxtRemarksLabel').attr("for", "Remarks");
+      $('#TxtRemarks').attr("name", "Remarks");
+    } else {
+      $('#TxtRemarksLabel').hide();
+      $(this).attr("name", "Remarks");
+      $('#TxtRemarks').attr("name", "TxtRemarks");
+      $('#CmbRemarksLabel').attr("for", "Remarks");
+      $('#TxtRemarksLabel').attr("for", "TxtRemarks");
     }
-    else
-      $('#TxtRemarks1').hide();
   });
 });

@@ -82,11 +82,11 @@ WebLib::IncludeJS('pp/js/Personnel.js');
 
           </div>
           <div class="FieldGroup">
-            <label for="Remarks">
+            <label id="CmbRemarksLabel" for="Remarks">
               <strong>Remarks</strong>
               <select name="Remarks" id="Remarks" class="chzn-select"
                       data-placeholder="Select Remarks">
-                <option value=""></option>
+                <option value="0">0-Polling Personnel</option>
                 <option value="1">1-Head Of Office</option>
                 <option value="2">2-Night Guard/Armed Guard</option>
                 <option value="3">3-Sweeper</option>
@@ -96,10 +96,18 @@ WebLib::IncludeJS('pp/js/Personnel.js');
                 <option value="7">7-Other</option>
               </select>
             </label>
-            <label for="TxtRemarks" id="TxtRemarks1">
-              <strong>Why the employee cannot be spared </strong>
-              <input type="text" name="Remarks" id="TxtRemarks"
-                     placeholder="Mention Exact Reason"/>
+            <label id="TxtRemarksLabel" for="TxtRemarks" id="TxtRemarks1">
+              <strong><span id="TxtRemarksSpanLabel"></span></strong>
+              <input type="text" name="TxtRemarks" id="TxtRemarks"
+                     placeholder="" />
+            </label>
+          </div>
+          <div style="clear: both;"></div>
+          <div class="FieldGroup">
+            <label for="PostingID">
+              <input type="checkbox" id="PostingID" name="PostingID" value="yes"/>
+              <strong>working for 3 years out of 4 years
+                in the district as on 30/06/2013</strong>
             </label>
           </div>
         </fieldset>
@@ -111,7 +119,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               <input type="text" name="PcPreRes" id="PcPreRes"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'PcPreRes');
-                     ?>" size="12" maxlength="3" required/>
+                     ?>" size="12" maxlength="2" required/>
             </label>
           </div>
           <div class="FieldGroup">
@@ -119,7 +127,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               <input type="text" name="PcPerRes" id="PcPerRes"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'PcPerRes');
-                     ?>" size="12" maxlength="3" required/>
+                     ?>" size="12" maxlength="2" required/>
             </label>
           </div>
           <div class="FieldGroup">
@@ -127,7 +135,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               <input type="text" name="PcPosting"  id="PcPosting"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'PcPosting');
-                     ?>" size="11" maxlength="3" required/>
+                     ?>" size="11" maxlength="2" required/>
             </label>
           </div>
         </fieldset>
@@ -166,13 +174,13 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               <input type="text"  id="DistHome" name="DistHome"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'DistHome');
-                     ?>" maxlength="50" size="14" required/>
+                     ?>" maxlength="50" size="14" />
             </label>
             <label for="HistPosting"><strong>Posting History</strong>
               <input type="text"  id="HistPosting" name="HistPosting"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'HistPosting');
-                     ?>" maxlength="50" size="14" required/>
+                     ?>" maxlength="50" size="14" />
             </label>
           </div>
           <div class="FieldGroup">
@@ -245,8 +253,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               <input type="text" name="ResPhone" id="ResPhone" size="15"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'ResPhone');
-                     ?>" size="20"
-                     required/>
+                     ?>" size="20" />
             </label>
           </div>
           <div class="FieldGroup">
@@ -356,43 +363,6 @@ WebLib::IncludeJS('pp/js/Personnel.js');
                 <label for="Hindi">Hindi</label>
                 <input type="radio" id="Nepali" name="Language" value="Nepali"/>
                 <label for="Nepali">Nepali</label>
-              </div>
-            </label>
-          </div>
-        </fieldset>
-        <div style="clear: both;"></div>
-        <fieldset>
-          <legend>Whether working for 3 years out of 4 years</legend>
-          <div class="FieldGroup">
-            <label for="Posting"></label>
-            <strong>In the district as on 30/06/2013</strong>
-            <div id="Posting">
-              <input type="radio" id="YesId" name="PostingID" value="yes"
-                     checked="checked" />
-              <label for="YesId">Yes</label>
-              <input type="radio" id="NoId" name="PostingID" value="no" />
-              <label for="NoId">No</label>
-            </div>
-          </div>
-          <div class="FieldGroup">
-            <label for="PBReturn"><strong>PB Returned</strong>
-              <div id="PBReturn">
-                <input type="radio" id="YesId1" name="PBReturn" value="yes"
-                       checked="checked" />
-                <label for="YesId1">Yes</label>
-                <input type="radio" id="NoId1" value="no" name="PBReturn" />
-                <label for="NoId1">No</label>
-              </div>
-            </label>
-          </div>
-          <div class="FieldGroup">
-            <label for="EDCPBIssued"><strong>EDC/PB Issued</strong>
-              <div id="EDCPBIssued">
-                <input type="radio" id="YesId2" name="EDCPBIssued" value="yes"
-                       checked="checked"/>
-                <label for="YesId2">Yes</label>
-                <input type="radio" id="NoId2" value="no" name="EDCPBIssued" />
-                <label for="NoId2">No</label>
               </div>
             </label>
           </div>
