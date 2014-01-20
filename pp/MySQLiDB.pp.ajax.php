@@ -28,7 +28,7 @@ if (!isset($_SESSION))
   session_start();
 //@ todo Enable AjaxToken currently disabled
 $CSRF = (WebLib::GetVal($_POST, 'AjaxToken') === WebLib::GetVal($_SESSION,
-        'Token'));
+                                                                'Token'));
 if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
   $_SESSION['LifeTime']  = time();
   $_SESSION['RT']        = microtime(TRUE);
@@ -80,8 +80,8 @@ exit();
  * @example GetData(&$DataResp, "Select a,b,c from Table Where c=? Order By b LIMIT ?,?", array('1',30,10))
  */
 function doQuery(&$DataResp,
-    $Query,
-    $Params = NULL) {
+                 $Query,
+                 $Params = NULL) {
   $Data             = new MySQLiDBHelper();
   $Result           = $Data->rawQuery($Query, $Params);
   $DataResp['Data'] = $Result;
@@ -98,9 +98,9 @@ function doQuery(&$DataResp,
  * @param array $saveData
  */
 function SaveData(&$DataResp,
-    $tableName,
-    $saveData,
-    $RowIndex = NULL) {
+                  $tableName,
+                  $saveData,
+                  $RowIndex = NULL) {
   $Data            = new MySQLiDBHelper();
   $Saved           = FALSE;
   $Result['Index'] = $saveData['Index'];

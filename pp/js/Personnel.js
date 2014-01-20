@@ -7,59 +7,63 @@ $(function() {
   $('input[type="submit"]').button();
   $('input[type="reset"]').button();
   $('input[type="button"]').button();
+
   $("#PayScale").chosen({width: "300px",
-    no_results_text: "Oops, nothing found!"
-  });
+    no_results_text: "Oops, nothing found!"});
+
   $("#OfficeSL").chosen({width: "650px",
-    no_results_text: "Oops, nothing found!"
-
-
-  });
+    no_results_text: "Oops, nothing found!"});
 
   $("#Qualification").chosen({width: "300px",
-    no_results_text: "Oops, nothing found!"
-  });
-  $("#BranchName").chosen({width: "250px",
-    no_results_text: "Oops, nothing found!"
-  }).change(function() {
-    var BranchSL = Number($(this).val());
-    var IFSC = $('#BranchName').data('BranchName');
-    $.each(IFSC,
-            function(index, value) {
-              if (value.BranchSL === BranchSL) {
-                $("#IFSC").val(value.IFSC);
-                return false;
-              }
-            });
-  });
-  $("#BankName").chosen({width: "250px",
-    no_results_text: "Oops, nothing found!"
-  }).change(function() {
-    var Options = '<option value=""></option>';
-    var BranchName = $('#BranchName').data('BranchName');
-    var BankSL = Number($(this).val());
-    $.each(BranchName,
-            function(index, value) {
-              if (value.BankSL === BankSL) {
-                Options += '<option value="' + value.BranchSL + '">'
-                        + value.IFSC + ' - ' + value.BranchName
-                        + '</option>';
-              }
-            });
-    $('#BranchName').html(Options)
-            .trigger("chosen:updated");
-  });
+    no_results_text: "Oops, nothing found!"});
+
+  $("#BranchName")
+          .chosen({width: "250px",
+            no_results_text: "Oops, nothing found!"})
+          .change(function() {
+            var BranchSL = Number($(this).val());
+            var IFSC = $('#BranchName').data('BranchName');
+            $.each(IFSC,
+                    function(index, value) {
+                      if (value.BranchSL === BranchSL) {
+                        $("#IFSC").val(value.IFSC);
+                        return false;
+                      }
+                    });
+          });
+
+  $("#BankName")
+          .chosen({width: "250px",
+            no_results_text: "Oops, nothing found!"})
+          .change(function() {
+            var Options = '<option value=""></option>';
+            var BranchName = $('#BranchName').data('BranchName');
+            var BankSL = Number($(this).val());
+            $.each(BranchName,
+                    function(index, value) {
+                      if (value.BankSL === BankSL) {
+                        Options += '<option value="' + value.BranchSL + '">'
+                                + value.IFSC + ' - ' + value.BranchName
+                                + '</option>';
+                      }
+                    });
+            $('#BranchName').html(Options)
+                    .trigger("chosen:updated");
+          });
+
   $('#DOB').datepicker({
     dateFormat: 'dd-mm-yy',
     showOn: "both",
     buttonImage: "images/calendar.gif",
     buttonImageOnly: true
   });
+
   $("#SexId").buttonset();
   $("#Posting").buttonset();
   $("#Language").buttonset();
   $("#EDCPBIssued").buttonset();
   $("#PBReturn").buttonset();
+
   $("#DesgID").autocomplete(
           {source: "AjaxDesgOC.php",
             minLength: 3,
@@ -74,6 +78,7 @@ $(function() {
             autoFocus: true
           }
   );
+
   $("#EmpName").autocomplete(
           {source: "AjaxEmpName.php",
             minLength: 2,
@@ -86,6 +91,7 @@ $(function() {
             },
             autoFocus: true
           });
+
   $.ajax({
     type: 'POST',
     url: 'AjaxPersonnel.php',
@@ -140,6 +146,7 @@ $(function() {
           .fail(function(msg) {
             $('#Msg').html(msg);
           });
+
   $("#PayScale").bind({"change": function() {
       var ScaleCode = $(this).val();
       var Scales = $(this).data('Scales');
@@ -152,7 +159,9 @@ $(function() {
               });
     }
   });
+
   $('#TxtRemarksLabel').hide();
+
   $('#Remarks').change(function() {
     if ($(this).val() === '7') {
       $('#TxtRemarksLabel').show();
