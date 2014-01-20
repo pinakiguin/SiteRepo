@@ -138,34 +138,7 @@ $(function() {
                 try {
                   var DataResp = $.parseJSON(data);
                   delete data;
-                  $.each(DataResp.Data,
-                          function(index, value) {
-                            $.each(value, function(key, data) {
-                              var Field = $('#' + key);
-                              Field.val(data);
-                            });
-                          });
-                  $('#BankName').trigger("chosen:updated");
-                  $('#BankName').trigger("change");
-                  $('#BranchName').val(DataResp.Data[0].BranchName).trigger("chosen:updated");
-                  $('#Remarks').trigger("chosen:updated");
-                  $('#Qualification').trigger("chosen:updated");
-                  $('#PayScale').trigger("chosen:updated");
-                  if (DataResp.Data[0].SexId === 'male') {
-                    $('#MaleId').attr("checked", "checked").button("refresh");
-                  } else {
-                    $('#FemaleId').attr("checked", "checked").button("refresh");
-                  }
-                  if (DataResp.Data[0].Language === 'None') {
-                    $('#None').attr("checked", "checked").button("refresh");
-                  } else if (DataResp.Data[0].Language === 'Hindi') {
-                    $('#Hindi').attr("checked", "checked").button("refresh");
-                  } else {
-                    $('#Nepali').attr("checked", "checked").button("refresh");
-                  }
-                  if (DataResp.Data[0].PostingID === 'yes') {
-                    $('#PostingID').attr("checked", "checked");
-                  }
+                  FillData(DataResp.Data);
                   $('#CmdSaveUpdate').val('Update');
                   $('#CmdDel').show();
 
@@ -227,6 +200,7 @@ $(function() {
                       .trigger("chosen:updated");
               $('#BankName').data('BankName', DataResp.BankName);
               $('#BranchName').data('BranchName', DataResp.BranchName);
+              //FillData(DataResp.FieldData);
               delete DataResp;
               $("#Msg").html('');
             }
@@ -280,3 +254,35 @@ $(function() {
     }
   });
 });
+
+function FillData(FormData) {
+
+  $.each(FormData,
+          function(index, value) {
+            $.each(value, function(key, data) {
+              var Field = $('#' + key);
+              Field.val(data);
+            });
+          });
+  $('#BankName').trigger("chosen:updated");
+  $('#BankName').trigger("change");
+  $('#BranchName').val(FormData[0].BranchName).trigger("chosen:updated");
+  $('#Remarks').trigger("chosen:updated");
+  $('#Qualification').trigger("chosen:updated");
+  $('#PayScale').trigger("chosen:updated");
+  if (FormData[0].SexId === 'male') {
+    $('#MaleId').attr("checked", "checked").button("refresh");
+  } else {
+    $('#FemaleId').attr("checked", "checked").button("refresh");
+  }
+  if (FormData[0].Language === 'None') {
+    $('#None').attr("checked", "checked").button("refresh");
+  } else if (FormData[0].Language === 'Hindi') {
+    $('#Hindi').attr("checked", "checked").button("refresh");
+  } else {
+    $('#Nepali').attr("checked", "checked").button("refresh");
+  }
+  if (FormData[0].PostingID === 'yes') {
+    $('#PostingID').attr("checked", "checked");
+  }
+}

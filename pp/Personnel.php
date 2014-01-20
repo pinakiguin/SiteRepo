@@ -47,7 +47,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
           </div>
           <div style="clear: both;"></div>
           <div class="FieldGroup">
-            <input type="text" id="EmpSL" name="EmpSL" value="" />
+            <input type="hidden" id="EmpSL" name="EmpSL" value="" />
             <label for="EmpName"><strong>Name of Employee</strong>
               <input type="text" name="EmpName" id="EmpName"
                      title="Type or Select from the suggesion list to edit record"
@@ -72,8 +72,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
             </label>
             <strong>Sex</strong>
             <div id="SexId">
-              <input type="radio" id="MaleId" name="SexId" value="male"
-                     checked="checked">
+              <input type="radio" id="MaleId" name="SexId" value="male">
               <label for="MaleId">Male</label>
               <input type="radio" id="FemaleId" name="SexId" value="female">
               <label for="FemaleId">Female</label>
@@ -370,7 +369,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
         <div class="formControl">
           <input type="submit" name="CmdSubmit" id="CmdSaveUpdate" value="Save"/>
           <input type="reset" name="CmdSubmit"  value="Reset"/>
-          <input type="submit" name="CmdDelete" id="CmdDel" value="Delete"/>
+          <input type="submit" name="CmdSubmit" id="CmdDel" value="Delete"/>
           <input type="hidden" name="FormToken"
                  value="<?php echo WebLib::GetVal($_SESSION, 'FormToken'); ?>" />
           <input type="hidden" id="AjaxToken"
