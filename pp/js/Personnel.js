@@ -62,7 +62,7 @@ $(function() {
   $("#PBReturn").buttonset();
   $("#DesgID").autocomplete(
           {source: "AjaxDesgOC.php",
-            minLength: 2,
+            minLength: 3,
             focus: function(event, ui) {
               event.preventDefault();
               $('#DesgID').val(ui.item.label);
@@ -76,7 +76,7 @@ $(function() {
   );
   $("#EmpName").autocomplete(
           {source: "AjaxEmpName.php",
-            minLength: 2,
+            minLength: 5,
             focus: function(event, ui) {
               event.preventDefault();
               $('#EmpName').val(ui.item.label);
