@@ -7,7 +7,7 @@ $(function() {
   $('input[type="submit"]').button();
   $('input[type="reset"]').button();
   $('input[type="button"]').button();
-  $("#PayScale").chosen({width: "350px",
+  $("#PayScale").chosen({width: "300px",
     no_results_text: "Oops, nothing found!"
   });
   $("#OfficeSL").chosen({width: "650px",
