@@ -256,6 +256,8 @@ function SQLDefs($ObjectName) {
       break;
     case 'PP_Personnel':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . $ObjectName . '` ('
+          . '`LastUpdatedOn` timestamp DEFAULT CURRENT_TIMESTAMP '
+          . ' ON UPDATE CURRENT_TIMESTAMP,'
           . '`EmpSL` bigint(20) NOT NULL AUTO_INCREMENT,'
           . '`EmpCode` int(20) DEFAULT NULL,'
           . '`OfficeSL` int(20) NOT NULL,'
