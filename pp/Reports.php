@@ -31,14 +31,14 @@ WebLib::IncludeJS('pp/js/Reports.js');
     <div class="jQuery-ButtonSet-Wrapper">
       <div class="jQuery-ButtonSet-Centre">
         <div id="CmdReports" class="jQuery-ButtonSet">
-          <input type="radio" id="GetDataPPs"
+          <input type="radio" id="DataPPs"
                  name="CmdReport" value="DataPPs"
                  checked="checked"/>
           <label for="DataPPs">Polling Personnel</label>
-          <input type="radio" id="GetDataOffices"
+          <input type="radio" id="DataOffices"
                  name="CmdReport" value="DataOffices"/>
           <label for="DataOffices">Offices</label>
-          <input type="radio" id="GetDataPayScales"
+          <input type="radio" id="DataPayScales"
                  name="CmdReport" value="DataPayScales"/>
           <label for="DataPayScales">Pay Scales</label>
         </div>
