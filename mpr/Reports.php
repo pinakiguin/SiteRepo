@@ -68,33 +68,93 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
   WebLib::ShowMenuBar('MPR');
   ?>
   <div class="content">
-    <div class="formWrapper">
-      <form method="post" action="<?php echo WebLib::GetVal($_SERVER, 'PHP_SELF'); ?>">
-        <h3>Process </h3>
-        <?php
-        include __DIR__ . '/DataMPR.php';
-        $Data = new MySQLiDB();
-        $Data1 = new MySQLiDBHelper();
-        ?>
-        <div class="FieldGroup">
-          <label for="ProjectName"><strong>Project Name</strong></label><br/>
-          <select name="ProjectID" data-placeholder="Select Project">
-            <?php
-            $Query = 'Select `ProjectID`, `ProjectName` '
-                    . ' FROM `' . MySQL_Pre . 'MPR_Projects` '
-                    . ' Order By `ProjectID`';
-            $Data->show_sel('ProjectID', 'ProjectName', $Query, WebLib::GetVal($_POST, 'ProjectID'));
-            ?>
-          </select>
-        </div>
-        <pre>
-        <pre>
-        <pre>
+    <?php
+    if (WebLib::GetVal($_SESSION, 'Token') === null) {
+      $_SESSION['Token'] = md5($_SERVER['REMOTE_ADDR'] . session_id() . $_SESSION['ET']);
+    }
+    ?>
+
+    <form id="frmModify" method="post" action="<?php echo WebLib::GetVal($_SERVER, 'PHP_SELF'); ?>"
+          style="text-align:left;" autocomplete="off" >
+      <h3>Process </h3>
+      <?php
+      include __DIR__ . '/DataMPR.php';
+      $Data = new MySQLiDB();
+      $Data1 = new MySQLiDBHelper();
+      ?>
+      <div class="FieldGroup">
+        <label for="ProjectName"><strong>Project Name</strong></label><br/>
+        <select name="ProjectID" data-placeholder="Select Project">
+          <?php
+          $Query = 'Select `ProjectID`, `ProjectName` '
+                  . ' FROM `' . MySQL_Pre . 'MPR_Projects` '
+                  . ' Order By `ProjectID`';
+          $Data->show_sel('ProjectID', 'ProjectName', $Query, WebLib::GetVal($_POST, 'ProjectID'));
+          ?>
+        </select>
+      </div>
+      <pre>
+        
+
         <!--Div that will hold the pie chart-->
         <div id="chart_div" style="width:400; height:300"></div>
+ <div class="FieldGroup">
+          <label for="CmbDeptID"><strong>Department:</strong><br/>
+            <select id="CmbBlockCode" name="DeptID">
+              <option value=""></option>
+            </select>
+          </label>
+        </div>
+        <div class="FieldGroup">
+          <label for="CmbSectorID"><strong>Sector:</strong><br/>
+            <select id="CmbSectorID" name="SectorID">
+              <option value=""></option>
+            </select>
+          </label>
+        </div>
+        <div class="FieldGroup">
+          <label for="CmbSchemeID"><strong>Scheme:</strong><br/>
+            <select id="CmbSchemeID" name="SchemeID">
+              <option value=""></option>
+            </select>
+          </label>
+        </div>
+<div class="FieldGroup">
+          <label for="CmbProjectID"><strong>Project:</strong><br/>
+            <select id="CmbProjectID" name="ProjectID">
+              <option value=""></option>
+            </select>
+          </label>
+        </div>
+        <div class="FieldGroup">
+          <br/>
+          <input type="submit" id="CmdRefreshRSBY" name="CmdRefresh" value="Refresh"/>
+          <input type="hidden" id="AjaxToken"
+                 value="<?php echo WebLib::GetVal($_SESSION, 'Token'); ?>" />
+        </div>
+        <span class="Message" id="Msg" style="float: right;">
+          <b>Loading please wait...</b>
+        </span>
+     </form>
+        <div style="clear: both;"></div>
+      <br/>
+      <table id="example" class="display stripe row-border hover order-column" cellspacing="0" width="100%">
+        <thead>
+          <tr>
+            <th>URN</th>
+            <th>Name of Household</th>
+            <th>Name of Father/Husband</th>
+            <th>RSBY Type</th>
+            <th>Category Code</th>
+            <th>BPL Citizen</th>
+            <th>Minority</th>
+          </tr>
+        </thead>
+      </table>
 
-      </form>
-    </div>
+    <pre id="Error">
+    </pre>
   </div>
+
 </body>
 </html>
