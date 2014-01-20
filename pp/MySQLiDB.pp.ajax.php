@@ -24,11 +24,13 @@
 require_once ( __DIR__ . '/../lib.inc.php');
 require_once ( __DIR__ . '/../class.MySQLiDBHelper.php');
 require_once ( __DIR__ . '/../php-mailer/GMail.lib.php');
-if (!isset($_SESSION))
+if (!isset($_SESSION)) {
   session_start();
-//@ todo Enable AjaxToken currently disabled
-$CSRF = (WebLib::GetVal($_POST, 'AjaxToken') === WebLib::GetVal($_SESSION,
-                                                                'Token'));
+}
+
+$CSRF = (WebLib::GetVal($_POST, 'AjaxToken') ===
+    WebLib::GetVal($_SESSION, 'Token'));
+
 if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
   $_SESSION['LifeTime']  = time();
   $_SESSION['RT']        = microtime(TRUE);
@@ -43,10 +45,28 @@ if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
           . ' Where `OfficeSL`=?';
       doQuery($DataResp, $Query, WebLib::GetVal($_POST, 'Params', FALSE, FALSE));
       break;
+
+    //For Filling Autocomplete List on Office-Change
     case 'GetPersonnel':
-      $Query = 'Select `PerSL`,`EmpName` FROM `' . MySQL_Pre . 'PP_Personnel`'
+      $Query = 'Select `EmpSL` as `value`,`EmpName` as `label`'
+          . ' FROM `' . MySQL_Pre . 'PP_Personnel`'
           . ' Where `OfficeSL`=?';
       doQuery($DataResp, $Query, WebLib::GetVal($_POST, 'Params', FALSE, FALSE));
+      break;
+
+    //Get Data using Ajax for PP2 Update
+    case 'GetDataPP2':
+      $Query = 'Select * FROM `' . MySQL_Pre . 'PP_Personnel`'
+          . ' Where `EmpSL`=?';
+      doQuery($DataResp, $Query, WebLib::GetVal($_POST, 'Params', FALSE, FALSE));
+      break;
+
+    /**
+     * @todo For Implementation of Insert Update Delete through Ajax
+     */
+    case 'SaveDataPP2':
+      SaveData($DataResp, MySQL_Pre . 'PP_Personnel',
+               WebLib::GetVal($_POST, 'Params', FALSE, FALSE));
       break;
   }
   $_SESSION['Token']     = md5($_SERVER['REMOTE_ADDR'] . session_id() . $_SESSION['ET']);

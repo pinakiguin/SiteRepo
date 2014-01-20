@@ -47,6 +47,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
           </div>
           <div style="clear: both;"></div>
           <div class="FieldGroup">
+            <input type="text" id="EmpSL" name="EmpSL" value="" />
             <label for="EmpName"><strong>Name of Employee</strong>
               <input type="text" name="EmpName" id="EmpName"
                      title="Type or Select from the suggesion list to edit record"
@@ -60,7 +61,6 @@ WebLib::IncludeJS('pp/js/Personnel.js');
                    value="<?php
                    echo WebLib::GetVal($_SESSION['PostData'], 'DesgID')
                    ?>" required/>
-
           </div>
           <div class="FieldGroup">
             <label for="DOB"><strong>Date Of Birth</strong>
@@ -70,7 +70,6 @@ WebLib::IncludeJS('pp/js/Personnel.js');
                      ?>"
                      required/>
             </label>
-
             <strong>Sex</strong>
             <div id="SexId">
               <input type="radio" id="MaleId" name="SexId" value="male"
@@ -79,7 +78,6 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               <input type="radio" id="FemaleId" name="SexId" value="female">
               <label for="FemaleId">Female</label>
             </div>
-
           </div>
           <div class="FieldGroup">
             <label id="CmbRemarksLabel" for="Remarks">
@@ -369,15 +367,14 @@ WebLib::IncludeJS('pp/js/Personnel.js');
         </fieldset>
         <div style="clear: both;"></div>
         <hr/>
-        <div class="ui-corner-all"
-             style="display: inline-block; float: right;">
-          <input type="submit" name="CmdSubmit"  value="Save"/>
+        <div class="formControl">
+          <input type="submit" name="CmdSubmit" id="CmdSaveUpdate" value="Save"/>
           <input type="reset" name="CmdSubmit"  value="Reset"/>
-          <input type="submit" name="CmdDelete"  value="Delete"/>
+          <input type="submit" name="CmdDelete" id="CmdDel" value="Delete"/>
           <input type="hidden" name="FormToken"
-                 value="<?php
-                 echo WebLib::GetVal($_SESSION, 'FormToken');
-                 ?>" />
+                 value="<?php echo WebLib::GetVal($_SESSION, 'FormToken'); ?>" />
+          <input type="hidden" id="AjaxToken"
+                 value="<?php echo WebLib::GetVal($_SESSION, 'Token'); ?>" />
         </div>
       </form>
     </div>

@@ -12,7 +12,38 @@ $(function() {
     no_results_text: "Oops, nothing found!"});
 
   $("#OfficeSL").chosen({width: "650px",
-    no_results_text: "Oops, nothing found!"});
+    no_results_text: "Oops, nothing found!"})
+          .change(function() {
+            $.ajax({
+              type: 'POST',
+              url: 'MySQLiDB.pp.ajax.php',
+              dataType: 'html',
+              xhrFields: {
+                withCredentials: true
+              },
+              data: {
+                'AjaxToken': $('#AjaxToken').val(),
+                'CallAPI': 'GetPersonnel',
+                'Params': new Array($('#OfficeSL').val())
+              }
+            }).done(function(data) {
+              try {
+                var DataResp = $.parseJSON(data);
+                delete data;
+                $('#AjaxToken').val(DataResp.AjaxToken);
+                $("#EmpName").autocomplete("option", "source", DataResp.Data);
+                $('#ED').html(DataResp.RT);
+                delete DataResp;
+              }
+              catch (e) {
+                $('#Msg').html('Server Error:' + e);
+                $('#Error').html(data);
+              }
+            }
+            ).fail(function(msg) {
+              $('#Msg').html(msg);
+            });
+          });
 
   $("#Qualification").chosen({width: "300px",
     no_results_text: "Oops, nothing found!"});
@@ -79,15 +110,76 @@ $(function() {
           }
   );
 
+  $('#CmdDel').hide();
+
   $("#EmpName").autocomplete(
-          {source: "AjaxEmpName.php",
+          {source: [],
             minLength: 2,
-            focus: function() {
+            focus: function(event) {
               event.preventDefault();
             },
             select: function(event, ui) {
               event.preventDefault();
-              $('#EmpName').val(ui.item.value);
+              $('#EmpName').val(ui.item.label);
+              $('#EmpSL').val(ui.item.value);
+              $.ajax({
+                type: 'POST',
+                url: 'MySQLiDB.pp.ajax.php',
+                dataType: 'html',
+                xhrFields: {
+                  withCredentials: true
+                },
+                data: {
+                  'AjaxToken': $('#AjaxToken').val(),
+                  'CallAPI': 'GetDataPP2',
+                  'Params': new Array($('#EmpSL').val())
+                }
+              }).done(function(data) {
+                try {
+                  var DataResp = $.parseJSON(data);
+                  delete data;
+                  $.each(DataResp.Data,
+                          function(index, value) {
+                            $.each(value, function(key, data) {
+                              var Field = $('#' + key);
+                              Field.val(data);
+                            });
+                          });
+                  $('#BankName').trigger("chosen:updated");
+                  $('#BankName').trigger("change");
+                  $('#BranchName').val(DataResp.Data[0].BranchName).trigger("chosen:updated");
+                  $('#Remarks').trigger("chosen:updated");
+                  $('#Qualification').trigger("chosen:updated");
+                  $('#PayScale').trigger("chosen:updated");
+                  if (DataResp.Data[0].SexId === 'male') {
+                    $('#MaleId').attr("checked", "checked").button("refresh");
+                  } else {
+                    $('#FemaleId').attr("checked", "checked").button("refresh");
+                  }
+                  if (DataResp.Data[0].Language === 'None') {
+                    $('#None').attr("checked", "checked").button("refresh");
+                  } else if (DataResp.Data[0].Language === 'Hindi') {
+                    $('#Hindi').attr("checked", "checked").button("refresh");
+                  } else {
+                    $('#Nepali').attr("checked", "checked").button("refresh");
+                  }
+                  if (DataResp.Data[0].PostingID === 'yes') {
+                    $('#PostingID').attr("checked", "checked");
+                  }
+                  $('#CmdSaveUpdate').val('Update');
+                  $('#CmdDel').show();
+
+                  $('#AjaxToken').val(DataResp.AjaxToken);
+                  $('#ED').html(DataResp.RT);
+                  delete DataResp;
+                }
+                catch (e) {
+                  $('#Msg').html('Server Error:' + e);
+                  $('#Error').html(data);
+                }
+              }).fail(function(msg) {
+                $('#Msg').html(msg);
+              });
             },
             autoFocus: true
           });
