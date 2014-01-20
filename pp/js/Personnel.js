@@ -163,7 +163,7 @@ $(function() {
       $('#TxtRemarksLabel').attr("for", "Remarks");
       $('#TxtRemarks').attr("name", "Remarks");
     } else if ($(this).val() === '5') {
-      $('#TxtRemarks1').show();
+      $('#TxtRemarksLabel').show();
       $('#TxtRemarksSpanLabel').html("Certificate Issued by appropriate authority");
       $('#TxtRemarks').attr("placeholder", "Mention Ref.number");
       $(this).attr("name", "CmbRemarks");
