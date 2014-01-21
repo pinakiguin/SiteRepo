@@ -38,41 +38,39 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
         $Data1 = new MySQLiDBHelper();
         ?>
         <div class="FieldGroup">
-          <label for="ProjectName">
-            <strong>Project Name</strong>
-            <select name="ProjectID" class="chzn-select" data-placeholder="Select Project">
-              <?php
-              $Query = 'Select `ProjectID`, `ProjectName` '
-                  . ' FROM `' . MySQL_Pre . 'MPR_Projects` '
-                  . ' Order By `ProjectID`';
-              $Data->show_sel('ProjectID', 'ProjectName', $Query,
-                              WebLib::GetVal($_POST, 'ProjectID'));
-              ?>
-            </select>
-          </label>
-        </div>
-        <div class="FieldGroup">
-          <label for="ReportDate">
-            <strong>Report Date</strong>
-            <input type="text" id="ReportDate" name="ReportDate"
-                   class="DatePicker" placeholder="YYYY-MM-DD" />
-          </label>
-        </div>
-        <div class="FieldGroup">
-          <label for="PhysicalProgress">
-            <strong>"Physical Progress display here" </strong>
-            <input type="text" name="PhysicalProgress" id="PhysicalProgress"
-                   placeholder="in %"readonly="readonly"/>
-          </label>
-        </div>
-        <div class="FieldGroup">
-          <label for="FinancialProgress">
-            <strong>Financial Progress display here</strong>
-            <input type="text" name="FinancialProgress" id="FinancialProgress"
-                   placeholder="in %" readonly="readonly"/>
-          </label>
-        </div>
-        <div class="FieldGroup">
+          <div class="FieldGroup">
+            <label for="ProjectName">
+              <strong>Project Name</strong>
+              <select name="ProjectID" class="chzn-select" data-placeholder="Select Project">
+                <?php
+                $Query = 'Select `ProjectID`, `ProjectName` '
+                    . ' FROM `' . MySQL_Pre . 'MPR_Projects` '
+                    . ' Order By `ProjectID`';
+                $Data->show_sel('ProjectID', 'ProjectName', $Query,
+                                WebLib::GetVal($_POST, 'ProjectID'));
+                ?>
+              </select>
+            </label>
+          </div>
+          <div class="FieldGroup">
+            <label for="ReportDate">
+              <strong>Report Date</strong>
+              <input type="text" id="ReportDate" name="ReportDate"
+                     class="DatePicker" placeholder="YYYY-MM-DD" />
+            </label>
+          </div>
+
+          <h3 id="lblPhysicalProgress">Physical Progress</h3>
+          <input type="hidden" name="PhysicalProgress"
+                 id="PhysicalProgress" />
+          <div style="clear: both;"></div>
+          <div id="PhysicalSlider" class="jQuery-Slider"></div>
+
+          <h3 id="lblFinancialProgress">Financial Progress</h3>
+          <input type="hidden" name="FinancialProgress"
+                 id="FinancialProgress" />
+          <div id="FinancialSlider" class="jQuery-Slider"></div>
+
           <label for="Remarks">
             <strong>Remarks</strong>
             <input type="text" name="Remarks" id="Remarks"
@@ -80,10 +78,6 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
           </label>
         </div>
         <div style="clear: both;"></div>
-        <label><strong><h3>Select The Percentage of Physical Progress</h3></strong></label>
-        <div id="PhysicalSlider" style="width: 500px;"></div>
-        <label><strong><h3>Select The Percentage of Financial Progress</h3></strong></label>
-        <div id="FinancialSlider" style="width: 500px;"></div>
         <div class="formControl">
           <input type="hidden" name="FormToken"
                  value="<?php echo WebLib::GetVal($_SESSION, 'FormToken') ?>" />

@@ -175,27 +175,24 @@ $(function() {
             });
   });
 
-
   $("#PhysicalSlider").slider({
     range: "min",
     value: 0,
     min: 0,
     max: 100,
     slide: function(event, ui) {
-      $("#PhysicalProgress").val(ui.value + "%");
+      $("#lblPhysicalProgress").html("Physical Progress: " + ui.value + "%");
+      $("#PhysicalProgress").val(ui.value);
     }
   });
-
-
   $("#FinancialSlider").slider({
     range: "min",
     value: 0,
     min: 0,
     max: 100,
     slide: function(event, ui) {
-      $("#FinancialProgress").val(ui.value + "%");
+      $("#lblFinancialProgress").html("Financial Progress: " + ui.value + "%");
+      $("#FinancialProgress").val(ui.value);
     }
   });
-
-
 });
