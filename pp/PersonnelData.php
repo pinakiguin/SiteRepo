@@ -40,7 +40,7 @@ if ($FormToken !== NULL) {
         $Query = MySQL_Pre . 'PP_Personnel';
 
         if ($Query !== '') {
-          $QueryExecuted = $Data->where('PerSL', WebLib::GetVal($_POST, 'PerSL'))
+          $QueryExecuted = $Data->where('EmpSL', WebLib::GetVal($_POST, 'EmpSL'))
               ->delete($Query);
         }
         break;

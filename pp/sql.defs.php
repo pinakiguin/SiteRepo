@@ -269,7 +269,7 @@ function SQLDefs($ObjectName) {
           . '`PartNo` varchar(20) NOT NULL,'
           . '`SLNo` varchar(20)  NOT NULL,'
           . '`EPIC` varchar(20) NOT NULL,'
-          . '`PayScale` int(20) NOT NULL,'
+          . '`PayScale` varchar(3) NOT NULL,'
           . '`BasicPay` int(20) NOT NULL,'
           . '`GradePay` int(20) NOT NULL,'
           . '`PostingID` enum("yes","no") DEFAULT "no",'
