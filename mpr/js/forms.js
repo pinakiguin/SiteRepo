@@ -123,26 +123,6 @@ $(function() {
     //alert("Selected:");
   });
 
-  var dataSet = new Array();
-  $('#example').dataTable({
-    "data": dataSet,
-    "columns": [
-      {"data": "URN"},
-      {"data": "EName"},
-      {"data": "Father_HusbandName"},
-      {"data": "RSBYType"},
-      {"data": "CatCode"},
-      {"data": "BPLCitizen"},
-      {"data": "Minority"}
-    ],
-    "pagingType": "full_numbers",
-    "jQueryUI": true,
-    "lengthMenu": [[50, 250, 500, -1], [50, 250, 500, "All"]],
-    "scrollY": 600/*,
-     "paging": false,
-     "jQueryUI": true,*/
-  });
-
   $('.chzn-select').chosen({width: "250px",
     no_results_text: "Oops, nothing found!"
   });
@@ -196,6 +176,26 @@ $(function() {
   });
 
 
+  $("#PhysicalSlider").slider({
+    range: "min",
+    value: 0,
+    min: 0,
+    max: 100,
+    slide: function(event, ui) {
+      $("#PhysicalProgress").val(ui.value + "%");
+    }
+  });
+
+
+  $("#FinancialSlider").slider({
+    range: "min",
+    value: 0,
+    min: 0,
+    max: 100,
+    slide: function(event, ui) {
+      $("#FinancialProgress").val(ui.value + "%");
+    }
+  });
 
 
 });

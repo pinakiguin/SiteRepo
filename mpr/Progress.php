@@ -60,16 +60,16 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
         </div>
         <div class="FieldGroup">
           <label for="PhysicalProgress">
-            <strong>Physical Progress in %</strong>
+            <strong>"Physical Progress display here" </strong>
             <input type="text" name="PhysicalProgress" id="PhysicalProgress"
-                   placeholder="Physical Progress"/>
+                   placeholder="in %"readonly="readonly"/>
           </label>
         </div>
         <div class="FieldGroup">
           <label for="FinancialProgress">
-            <strong>Financial Progress in %</strong>
+            <strong>Financial Progress display here</strong>
             <input type="text" name="FinancialProgress" id="FinancialProgress"
-                   placeholder="Financial Progress"/>
+                   placeholder="in %" readonly="readonly"/>
           </label>
         </div>
         <div class="FieldGroup">
@@ -79,9 +79,16 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
                    placeholder="Remarks"/>
           </label>
         </div>
+        <div style="clear: both;"></div>
+        <label><strong><h3>Select The Percentage of Physical Progress</h3></strong></label>
+        <div id="PhysicalSlider" style="width: 500px;"></div>
+        <label><strong><h3>Select The Percentage of Financial Progress</h3></strong></label>
+        <div id="FinancialSlider" style="width: 500px;"></div>
         <div class="formControl">
           <input type="hidden" name="FormToken"
                  value="<?php echo WebLib::GetVal($_SESSION, 'FormToken') ?>" />
+          <input type="hidden" id="AjaxToken"
+                 value="<?php echo WebLib::GetVal($_SESSION, 'Token'); ?>" />
           <input type="submit" name="CmdSubmit" value="Create Progress">
         </div>
       </form>
