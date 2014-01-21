@@ -48,14 +48,14 @@ class MySQLiDBHelper {
    *
    * @var array
    */
-  protected $_whereTypeList;
+  protected $_whereTypeList = '';
 
   /**
    * Dynamic type list for table data values
    *
    * @var array
    */
-  protected $_paramTypeList;
+  protected $_paramTypeList = '';
 
   /**
    * Dynamic array that holds a combination of where condition/table data value types and parameter referances
@@ -108,11 +108,11 @@ class MySQLiDBHelper {
    * @return object Returns the current instance.
    */
   protected function reset() {
-    $this->_where = array();
-    $this->_bindParams = array(''); // Create the empty 0 index
+    $this->_where         = array();
+    $this->_bindParams    = array(''); // Create the empty 0 index
+    $this->_paramTypeList = '';
+    $this->_whereTypeList = '';
     unset($this->_query);
-    unset($this->_whereTypeList);
-    unset($this->_paramTypeList);
   }
 
   /**
@@ -123,9 +123,10 @@ class MySQLiDBHelper {
    *
    * @return array Contains the returned rows from the query.
    */
-  public function rawQuery($query, $bindParams = null) {
+  public function rawQuery($query,
+                           $bindParams = null) {
     $this->_query = $query;
-    $stmt = $this->_prepareQuery();
+    $stmt         = $this->_prepareQuery();
 
     if (is_array($bindParams)) {
       $params = array(''); // Create the empty 0 index
@@ -150,9 +151,10 @@ class MySQLiDBHelper {
    *
    * @return array Contains the returned rows from the query.
    */
-  public function query($query, $numRows = null) {
+  public function query($query,
+                        $numRows = null) {
     $this->_query = $query;
-    $stmt = $this->_buildQuery($numRows);
+    $stmt         = $this->_buildQuery($numRows);
     $stmt->execute();
     $this->reset();
 
@@ -167,9 +169,10 @@ class MySQLiDBHelper {
    *
    * @return array Contains the returned rows from the select query.
    */
-  public function get($tableName, $numRows = null) {
+  public function get($tableName,
+                      $numRows = null) {
     $this->_query = "SELECT * FROM $tableName";
-    $stmt = $this->_buildQuery($numRows);
+    $stmt         = $this->_buildQuery($numRows);
     $stmt->execute();
     $this->reset();
 
@@ -183,9 +186,25 @@ class MySQLiDBHelper {
    *
    * @return boolean Boolean indicating whether the insert query was completed succesfully.
    */
-  public function insert($tableName, $insertData) {
+  public function insert($tableName,
+                         $insertData) {
     $this->_query = "INSERT into $tableName";
-    $stmt = $this->_buildQuery(null, $insertData);
+    $stmt         = $this->_buildQuery(null, $insertData);
+    $stmt->execute();
+    $this->reset();
+
+    return ($stmt->affected_rows > 0 ? $stmt->insert_id : false);
+  }
+
+  /**
+   * Executes a DDL Query
+   * @param string DDL Statement.
+   *
+   * @return boolean indicating whether the query was completed succesfully.
+   */
+  public function ddlQuery($Query) {
+    $this->_query = $Query;
+    $stmt         = $this->_buildQuery(null);
     $stmt->execute();
     $this->reset();
 
@@ -200,7 +219,8 @@ class MySQLiDBHelper {
    *
    * @return boolean
    */
-  public function update($tableName, $tableData) {
+  public function update($tableName,
+                         $tableData) {
     $this->_query = "UPDATE $tableName SET ";
 
     $stmt = $this->_buildQuery(null, $tableData);
@@ -218,7 +238,8 @@ class MySQLiDBHelper {
    *
    * @return boolean Indicates success. 0 or 1.
    */
-  public function delete($tableName, $numRows = null) {
+  public function delete($tableName,
+                         $numRows = null) {
     $this->_query = "DELETE FROM $tableName";
 
     $stmt = $this->_buildQuery($numRows);
@@ -238,7 +259,8 @@ class MySQLiDBHelper {
    *
    * @return MysqliDb
    */
-  public function where($whereProp, $whereValue) {
+  public function where($whereProp,
+                        $whereValue) {
     $this->_where[$whereProp] = $whereValue;
     return $this;
   }
@@ -305,8 +327,9 @@ class MySQLiDBHelper {
    *
    * @return mysqli_stmt Returns the $stmt object.
    */
-  protected function _buildQuery($numRows = null, $tableData = null) {
-    $hasTableData = is_array($tableData);
+  protected function _buildQuery($numRows = null,
+                                 $tableData = null) {
+    $hasTableData   = is_array($tableData);
     $hasConditional = !empty($this->_where);
 
     // Did the user call the "where" method?
@@ -345,9 +368,9 @@ class MySQLiDBHelper {
 
       if ($pos !== false) {
         //is insert statement
-        $keys = array_keys($tableData);
+        $keys   = array_keys($tableData);
         $values = array_values($tableData);
-        $num = count($keys);
+        $num    = count($keys);
 
         // wrap values in quotes
         foreach ($values as $key => $val) {
@@ -392,7 +415,8 @@ class MySQLiDBHelper {
     }
     // Bind parameters to statment
     if ($hasTableData || $hasConditional) {
-      call_user_func_array(array($stmt, 'bind_param'), $this->refValues($this->_bindParams));
+      call_user_func_array(array($stmt, 'bind_param'),
+                           $this->refValues($this->_bindParams));
     }
 
     return $stmt;
@@ -408,14 +432,14 @@ class MySQLiDBHelper {
    */
   protected function _dynamicBindResults(mysqli_stmt $stmt) {
     $parameters = array();
-    $results = array();
+    $results    = array();
 
     $meta = $stmt->result_metadata();
 
-    $row = array();
+    $row   = array();
     while ($field = $meta->fetch_field()) {
       $row[$field->name] = null;
-      $parameters[] = & $row[$field->name];
+      $parameters[]      = & $row[$field->name];
     }
 
     call_user_func_array(array($stmt, 'bind_result'), $parameters);
@@ -438,7 +462,8 @@ class MySQLiDBHelper {
    */
   protected function _prepareQuery() {
     if (!$stmt = $this->_mysqli->prepare($this->_query)) {
-      trigger_error("Problem preparing query ($this->_query) " . $this->_mysqli->error, E_USER_ERROR);
+      trigger_error("Problem preparing query ($this->_query) " . $this->_mysqli->error,
+                    E_USER_ERROR);
     }
     return $stmt;
   }

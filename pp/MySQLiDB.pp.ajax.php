@@ -19,35 +19,88 @@
  *
  * @return json
  *
-
  */
 require_once ( __DIR__ . '/../lib.inc.php');
 require_once ( __DIR__ . '/../class.MySQLiDBHelper.php');
 require_once ( __DIR__ . '/../php-mailer/GMail.lib.php');
-if (!isset($_SESSION))
+if (!isset($_SESSION)) {
   session_start();
-//@ todo Enable AjaxToken currently disabled
-$CSRF = (WebLib::GetVal($_POST, 'AjaxToken') === WebLib::GetVal($_SESSION, 'Token'));
+}
+
+$CSRF = (WebLib::GetVal($_POST, 'AjaxToken') ===
+    WebLib::GetVal($_SESSION, 'Token'));
+
 if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
-  $_SESSION['LifeTime'] = time();
-  $_SESSION['RT'] = microtime(TRUE);
+  $_SESSION['LifeTime']  = time();
+  $_SESSION['RT']        = microtime(TRUE);
   $_SESSION['CheckAuth'] = 'Valid';
-  $DataResp['Data'] = array();
-  $DataResp['Mail'] = array();
-  $DataResp['Msg'] = '';
+  $DataResp['Data']      = array();
+  $DataResp['Mail']      = array();
+  $DataResp['Msg']       = '';
   switch (WebLib::GetVal($_POST, 'CallAPI')) {
 
     case 'GetOffice':
       $Query = 'Select * FROM `' . MySQL_Pre . 'PP_Offices`'
-              . ' Where `OfficeSL`=?';
+          . ' Where `OfficeSL`=?';
       doQuery($DataResp, $Query, WebLib::GetVal($_POST, 'Params', FALSE, FALSE));
       break;
+
+    //For Filling Autocomplete List on Office-Change
+    case 'GetPersonnel':
+      $Query = 'Select `EmpSL` as `value`,`EmpName` as `label`'
+          . ' FROM `' . MySQL_Pre . 'PP_Personnel`'
+          . ' Where `OfficeSL`=?';
+      doQuery($DataResp, $Query, WebLib::GetVal($_POST, 'Params', FALSE, FALSE));
+      break;
+
+    //Get Data using Ajax for PP2 Update
+    case 'GetDataPP2':
+      $Query = 'Select * FROM `' . MySQL_Pre . 'PP_Personnel`'
+          . ' Where `EmpSL`=?';
+      doQuery($DataResp, $Query, WebLib::GetVal($_POST, 'Params', FALSE, FALSE));
+      break;
+
+    /**
+     * @todo For Implementation of Insert Update Delete through Ajax
+     */
+    case 'SaveDataPP2':
+      SaveData($DataResp, MySQL_Pre . 'PP_Personnel',
+               WebLib::GetVal($_POST, 'Params', FALSE, FALSE));
+      break;
+    /**
+     * Get Data For Reports
+     */
+    case 'DataPPs':
+      $Query = 'Select * '
+          . ' FROM `' . MySQL_Pre . 'PP_Personnel`'
+          . ' Where `OfficeSL`=?';
+      doQuery($DataResp, $Query, WebLib::GetVal($_POST, 'Params', FALSE, FALSE));
+      break;
+
+    case 'DataOffices':
+      $Query = 'Select `OfficeName` as `Name of the Office`, '
+          . '`DesgOC` as `Designation of Officer-in-Charge`, '
+          . '`AddrPTS` as `Para/Tola/Street`, `AddrVTM` as `Village/Town/Street`, '
+          . '`PostOffice`, `PSCode`,`PinCode`, '
+          . '`Status` as `Nature`, `TypeCode` as `Status`, `Phone`, `Fax`, '
+          . '`Mobile`, `EMail`, `Staffs`, `ACNo`'
+          . ' FROM `' . MySQL_Pre . 'PP_Offices`'
+          . ' Where `UserMapID`=?';
+      doQuery($DataResp, $Query, array(WebLib::GetVal($_SESSION, 'UserMapID')));
+      break;
+
+    case 'DataPayScales':
+      $Query = 'Select * '
+          . ' FROM `' . MySQL_Pre . 'PP_PayScales`';
+      doQuery($DataResp, $Query);
+      break;
   }
-  $_SESSION['Token'] = md5($_SERVER['REMOTE_ADDR'] . session_id() . $_SESSION['ET']);
-  $_SESSION['LifeTime'] = time();
+  $_SESSION['Token']     = md5($_SERVER['REMOTE_ADDR']
+      . session_id() . $_SESSION['ET']);
+  $_SESSION['LifeTime']  = time();
   $DataResp['AjaxToken'] = $_SESSION['Token'];
-  $DataResp['RT'] = '<b>Response Time:</b> '
-          . round(microtime(TRUE) - WebLib::GetVal($_SESSION, 'RT'), 6) . ' Sec';
+  $DataResp['RT']        = '<b>Response Time:</b> '
+      . round(microtime(TRUE) - WebLib::GetVal($_SESSION, 'RT'), 6) . ' Sec';
   //PHP 5.4+ is required for JSON_PRETTY_PRINT
   //@todo Remove PRETTY_PRINT for Production
   if (strnatcmp(phpversion(), '5.4') >= 0) {
@@ -73,11 +126,13 @@ exit();
  * @param array   $Params
  * @example GetData(&$DataResp, "Select a,b,c from Table Where c=? Order By b LIMIT ?,?", array('1',30,10))
  */
-function doQuery(&$DataResp, $Query, $Params = NULL) {
-  $Data = new MySQLiDBHelper(HOST_Name, MySQL_User, MySQL_Pass, MySQL_DB);
-  $Result = $Data->rawQuery($Query, $Params);
+function doQuery(&$DataResp,
+                 $Query,
+                 $Params = NULL) {
+  $Data             = new MySQLiDBHelper();
+  $Result           = $Data->rawQuery($Query, $Params);
   $DataResp['Data'] = $Result;
-  $DataResp['Msg'] = 'Total Rows: ' . count($Result);
+  $DataResp['Msg']  = 'Total Rows: ' . count($Result);
   unset($Result);
   unset($Data);
 }
@@ -89,11 +144,14 @@ function doQuery(&$DataResp, $Query, $Params = NULL) {
  * @param string $tableName
  * @param array $saveData
  */
-function SaveData(&$DataResp, $tableName, $saveData, $RowIndex = NULL) {
-  $Data = new MySQLiDBHelper(HOST_Name, MySQL_User, MySQL_Pass, MySQL_DB);
-  $Saved = FALSE;
+function SaveData(&$DataResp,
+                  $tableName,
+                  $saveData,
+                  $RowIndex = NULL) {
+  $Data            = new MySQLiDBHelper();
+  $Saved           = FALSE;
   $Result['Index'] = $saveData['Index'];
-  $Action = NULL;
+  $Action          = NULL;
   unset($saveData['Index']);
   if (is_array($saveData)) {
     if ($saveData['RowID'] === "") {
@@ -104,7 +162,7 @@ function SaveData(&$DataResp, $tableName, $saveData, $RowIndex = NULL) {
       } else {
         $Result['Saved'] = FALSE;
         $Result['RowID'] = NULL;
-        $Action = 'not Added[' . $saveData['SlNo'] . ']';
+        $Action          = 'not Added[' . $saveData['SlNo'] . ']';
       }
     } else {
       if ($saveData['SlNo'] !== "") {
@@ -116,7 +174,7 @@ function SaveData(&$DataResp, $tableName, $saveData, $RowIndex = NULL) {
         } else {
           $Result['Saved'] = FALSE;
           $Result['RowID'] = $saveData['RowID'];
-          $Action = 'not Updated[' . $saveData['SlNo'] . ']';
+          $Action          = 'not Updated[' . $saveData['SlNo'] . ']';
         }
       } else {
         $Data->where('RowID', $saveData['RowID']);
@@ -127,13 +185,13 @@ function SaveData(&$DataResp, $tableName, $saveData, $RowIndex = NULL) {
         } else {
           $Result['Saved'] = FALSE;
           $Result['RowID'] = $saveData['RowID'];
-          $Action = 'not Deleted[' . $saveData['SlNo'] . ']';
+          $Action          = 'not Deleted[' . $saveData['SlNo'] . ']';
         }
       }
     }
     unset($saveData['RowID']);
     //$saveData['SlNo'] = '*' . $saveData['SlNo'];
-    $Result['Data'] = $saveData;
+    $Result['Data']              = $saveData;
     $DataResp['Data'][$RowIndex] = $Result;
     unset($Result);
     unset($saveData);
