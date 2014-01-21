@@ -12,30 +12,8 @@ WebLib::IncludeCSS('css/chosen.css');
 WebLib::IncludeJS('mpr/js/forms.js');
 WebLib::IncludeCSS('mpr/css/forms.css');
 WebLib::IncludeJS('js/chosen.jquery.min.js');
+//WebLib::IncludeJS('mpr/js/Reports.js');
 ?>
-
-<!--Load the AJAX API-->
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-<script type="text/javascript">
-
-  google.load('visualization', '1.0', {'packages': ['corechart']});
-  google.setOnLoadCallback(drawChart);
-  function drawChart() {
-    var data = new google.visualization.DataTable();
-    data.addColumn('string', 'Topping');
-    data.addColumn('number', 'Slices');
-
-    data.addRows([
-      ['Financial Progress', 3],
-      ['Work in progress', 1]
-    ]);
-    var options = {'title': 'Monthly Progress Report',
-      'width': 400,
-      'height': 300, orientation: 'horizontal'};
-    var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
-    chart.draw(data, options);
-  }
-</script>
 </head>
 <body>
   <div class="TopPanel">
@@ -43,9 +21,7 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
     <div class="RightPanelSide"></div>
     <h1><?php echo AppTitle; ?></h1>
   </div>
-  <div class="Header">
-
-  </div>
+  <div class="Header"></div>
   <?php
   WebLib::ShowMenuBar('MPR');
   ?>
@@ -56,11 +32,14 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
     }
     ?>
     <div class="formWrapper">
-      <form id="frmModify" method="post" action="<?php
-      echo WebLib::GetVal($_SERVER, 'PHP_SELF');
-      ?>"
-            style="text-align:left;" autocomplete="off" >
+      <form id="frmModify" method="post" autocomplete="off"
+            action="<?php
+            echo WebLib::GetVal($_SERVER, 'PHP_SELF');
+            ?>" >
         <h3>Process </h3>
+        <span class="Message" id="Msg" style="float: right;">
+          <b>Loading please wait...</b>
+        </span>
         <?php
         include __DIR__ . '/DataMPR.php';
         $Data  = new MySQLiDB();
@@ -120,12 +99,8 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
           <input type="hidden" id="AjaxToken"
                  value="<?php echo WebLib::GetVal($_SESSION, 'Token'); ?>" />
         </div>
-        <span class="Message" id="Msg" style="float: right;">
-          <b>Loading please wait...</b>
-        </span>
         <div style="clear: both;"></div>
-        <div id="chart_div" style="width:400; height:300"></div>
-
+        <div id="visualization" style="width:400; height:300"></div>
       </form>
     </div>
     <pre id="Error">
