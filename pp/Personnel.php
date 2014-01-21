@@ -67,8 +67,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               <input type="text" name="DOB" id="DOB" placeholder="dd-mm-yyyy"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'DOB');
-                     ?>"
-                     required/>
+                     ?>" required/>
             </label>
             <strong>Sex</strong>
             <div id="SexId">
