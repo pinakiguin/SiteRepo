@@ -4,11 +4,7 @@ session_start();
 require_once __DIR__ . '/../lib.inc.php';
 if (WebLib::GetVal($_SESSION, 'CheckAuth') === 'Valid') {
 
-  $Data = new MySQLiDBHelper();
-
-//  $Query = 'SELECT `OfficeSL`, `OfficeName` FROM `' . MySQL_Pre . 'PP_Offices` '
-//    . ' Where `UserMapID`=? Order by `OfficeName`';
-//  $DataResp['Offices'] = $Data->rawQuery($Query, array($_SESSION['UserMapID']));
+  $Data                 = new MySQLiDBHelper();
   $Query                = 'SELECT `OfficeSL`, `OfficeName` '
       . ' FROM `' . MySQL_Pre . 'PP_Offices` '
       . ' Where `UserMapID`=?'
@@ -31,7 +27,6 @@ if (WebLib::GetVal($_SESSION, 'CheckAuth') === 'Valid') {
   $DataResp['BranchName'] = $Data->rawQuery($Query);
 
   echo json_encode($DataResp);
-
   unset($Data);
 }
 ?>

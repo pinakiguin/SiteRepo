@@ -19,7 +19,7 @@ WebLib::IncludeCSS('mpr/css/forms.css');
   <?php
   WebLib::ShowMenuBar('MPR');
   ?>
-  <div class="content">
+  <div class="content"> 
     <div class="formWrapper">
       <form method="post" action="<?php echo WebLib::GetVal($_SERVER, 'PHP_SELF'); ?>">
         <h3>Sectors</h3>

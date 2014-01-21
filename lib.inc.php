@@ -358,8 +358,8 @@ class WebLib {
     . 'West Bengal - 721101 , India Phone : +91-3222-263506, '
     . 'Email: wbmdp(a)nic.in<br/>';
     echo $_SESSION['Version'];
-    $_SESSION['ED']            =
-        round(microtime(TRUE) - self::GetVal($_SESSION, 'ET'), 3);
+    $_SESSION['ED']            = round(microtime(TRUE) - self::GetVal($_SESSION,
+                                                                      'ET'), 3);
     $reg                       = new MySQLiDBHelper();
     $VisitLogData['SessionID'] = self::GetVal($_SESSION, 'ID');
     $VisitLogData['IP']        = $_SERVER['REMOTE_ADDR'];
@@ -559,8 +559,7 @@ class WebLib {
     } else if (!isset($_SESSION['RestrictedMenus'])) {
       $MenuData                    = new MySQLiDBHelper();
       $MenuData->where('UserMapID', self::GetVal($_SESSION, 'UserMapID'));
-      $_SESSION['RestrictedMenus'] =
-          $MenuData->get('`' . MySQL_Pre . 'RestrictedMenus`');
+      $_SESSION['RestrictedMenus'] = $MenuData->get('`' . MySQL_Pre . 'RestrictedMenus`');
       unset($MenuData);
     }
     if (!isset($_SESSION['MenuItems'])) {

@@ -82,6 +82,10 @@ root {
   padding-left: 0px;
 }
 
+#Msg:empty{
+  display: none;
+}
+
 .jQuery-ButtonSet{
 }
 

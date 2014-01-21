@@ -19,16 +19,17 @@
  *
  * @return json
  *
-
  */
 require_once ( __DIR__ . '/../lib.inc.php');
 require_once ( __DIR__ . '/../class.MySQLiDBHelper.php');
 require_once ( __DIR__ . '/../php-mailer/GMail.lib.php');
-if (!isset($_SESSION))
+if (!isset($_SESSION)) {
   session_start();
-//@ todo Enable AjaxToken currently disabled
-$CSRF = (WebLib::GetVal($_POST, 'AjaxToken') === WebLib::GetVal($_SESSION,
-                                                                'Token'));
+}
+
+$CSRF = (WebLib::GetVal($_POST, 'AjaxToken') ===
+    WebLib::GetVal($_SESSION, 'Token'));
+
 if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
   $_SESSION['LifeTime']  = time();
   $_SESSION['RT']        = microtime(TRUE);
@@ -43,33 +44,54 @@ if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
           . ' Where `OfficeSL`=?';
       doQuery($DataResp, $Query, WebLib::GetVal($_POST, 'Params', FALSE, FALSE));
       break;
+
+    //For Filling Autocomplete List on Office-Change
     case 'GetPersonnel':
-      $Query = 'Select `PerSL`,`EmpName` FROM `' . MySQL_Pre . 'PP_Personnel`'
+      $Query = 'Select `EmpSL` as `value`,`EmpName` as `label`'
+          . ' FROM `' . MySQL_Pre . 'PP_Personnel`'
           . ' Where `OfficeSL`=?';
       doQuery($DataResp, $Query, WebLib::GetVal($_POST, 'Params', FALSE, FALSE));
       break;
+
+    //Get Data using Ajax for PP2 Update
+    case 'GetDataPP2':
+      $Query = 'Select * FROM `' . MySQL_Pre . 'PP_Personnel`'
+          . ' Where `EmpSL`=?';
+      doQuery($DataResp, $Query, WebLib::GetVal($_POST, 'Params', FALSE, FALSE));
+      break;
+
+    /**
+     * @todo For Implementation of Insert Update Delete through Ajax
+     */
+    case 'SaveDataPP2':
+      SaveData($DataResp, MySQL_Pre . 'PP_Personnel',
+               WebLib::GetVal($_POST, 'Params', FALSE, FALSE));
+      break;
+    /**
+     * Get Data For Reports
+     */
     case 'DataPPs':
-      $Query = 'SELECT `PerSL`,`OfficeSL`, `EmpName`, `DesgID`,'
-          . '`Dob`, `Sex`, `ACNo`, `PartNo`, `SlNo`, `EPICNo`, `ScaleOfPay`,'
-          . '`BasicPay`, `GradePay`, `Posting`, `HistPosting`, `DistHome`,'
-          . '`PreAddr1`, `PreAddr2`, `PerAddr1`, `PerAddr2`, `AcPreRes`,'
-          . '`AcPerRes`, `AcPosting`, `PcPreRes`, `PcPerRes`, `PcPosting`,'
-          . '`Qualification`,`Language`,`Phone`,`Mobile`,`EMail`,`Remarks`,'
-          . '`BankACNo`,`BranchName`,`IFSCCode`,`EDCPBIssued`,`PBReturn`'
-          . ' FROM `' . MySQL_Pre . 'PP_Personnel`';
-      doQuery($DataResp, $Query);
+      $Query = 'Select * '
+          . ' FROM `' . MySQL_Pre . 'PP_Personnel`'
+          . ' Where `OfficeSL`=?';
+      doQuery($DataResp, $Query, WebLib::GetVal($_POST, 'Params', FALSE, FALSE));
       break;
+
     case 'DataOffices':
-      $Query = 'SELECT `OfficeName`,`DesgOC`,`AddrPTS`,`AddrVTM`,`PostOffice`,'
-          . '`PSCode`,`PinCode`,`Status`,`TypeCode`,`Phone`,`Fax`,`Mobile`,'
-          . '`EMail`, `Staffs`, `ACNo` '
-          . ' FROM `' . MySQL_Pre . 'PP_Offices` '
-          . ' WHERE `UserMapID`=' . $_SESSION['UserMapID'];
-      doQuery($DataResp, $Query);
+      $Query = 'Select `OfficeName` as `Name of the Office`, '
+          . '`DesgOC` as `Designation of Officer-in-Charge`, '
+          . '`AddrPTS` as `Para/Tola/Street`, `AddrVTM` as `Village/Town/Street`, '
+          . '`PostOffice`, `PSCode`,`PinCode`, '
+          . '`Status` as `Nature`, `TypeCode` as `Status`, `Phone`, `Fax`, '
+          . '`Mobile`, `EMail`, `Staffs`, `ACNo`'
+          . ' FROM `' . MySQL_Pre . 'PP_Offices`'
+          . ' Where `UserMapID`=?';
+      doQuery($DataResp, $Query, array(WebLib::GetVal($_SESSION, 'UserMapID')));
       break;
+
     case 'DataPayScales':
-      $Query = 'SELECT * '
-          . ' FROM `' . MySQL_Pre . 'PP_PayScales` ';
+      $Query = 'Select * '
+          . ' FROM `' . MySQL_Pre . 'PP_PayScales`';
       doQuery($DataResp, $Query);
       break;
   }

@@ -2,9 +2,27 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 $(function() {
+  var dataSet = new Array();
   $('#ReportDT').dataTable({
+    "data": dataSet,
+    "columns": [
+      {"data": "Name of the Office"},
+      {"data": "Designation of Officer-in-Charge"},
+      {"data": "Para\/Tola\/Street"},
+      {"data": "Village\/Town\/Street"},
+      {"data": "PostOffice"},
+      {"data": "PSCode"},
+      {"data": "PinCode"},
+      {"data": "Nature"},
+      {"data": "Status"},
+      {"data": "Phone"},
+      {"data": "Fax"},
+      {"data": "Mobile"},
+      {"data": "EMail"},
+      {"data": "Staffs"},
+      {"data": "ACNo"}
+    ],
     "pagingType": "full_numbers",
     "lengthMenu": [[50, 250, 500, -1], [50, 250, 500, "All"]],
     "scrollY": 400,
@@ -36,16 +54,16 @@ $(function() {
         $('#Msg').html(DataResp.Msg);
         $('#ED').html(DataResp.RT);
         $("#Msg").show();
-        $("#example_wrapper").show();
-        var dataTableRSBY = $('#example').dataTable();
-        oSettings = dataTableRSBY.fnSettings();
-        dataTableRSBY.fnClearTable(this);
+        $("#ReportDT").show();
+        var dataTablePP1 = $('#ReportDT').dataTable();
+        oSettings = dataTablePP1.fnSettings();
+        $('#Msg').html(oSettings);
+        dataTablePP1.fnClearTable(this);
         for (var i = 0; i < DataResp.Data.length; i++) {
-          dataTableRSBY.oApi._fnAddData(oSettings, DataResp.Data[i]);
+          dataTablePP1.oApi._fnAddData(oSettings, DataResp.Data[i]);
         }
         oSettings.aiDisplay = oSettings.aiDisplayMaster.slice();
-        dataTableRSBY.fnDraw();
-
+        dataTablePP1.fnDraw();
         delete DataResp;
       }
       catch (e) {
@@ -58,4 +76,5 @@ $(function() {
     });
   });
 
+  $('#Msg').html('');
 });
