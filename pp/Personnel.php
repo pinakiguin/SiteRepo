@@ -108,7 +108,6 @@ WebLib::IncludeJS('pp/js/Personnel.js');
             </label>
           </div>
         </fieldset>
-
         <fieldset>
           <legend>Parliamentary Constituency</legend>
           <div class="FieldGroup">
