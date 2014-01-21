@@ -19,7 +19,6 @@
  *
  * @return json
  *
-
  */
 require_once ( __DIR__ . '/../lib.inc.php');
 require_once ( __DIR__ . '/../class.MySQLiDBHelper.php');
@@ -68,8 +67,36 @@ if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
       SaveData($DataResp, MySQL_Pre . 'PP_Personnel',
                WebLib::GetVal($_POST, 'Params', FALSE, FALSE));
       break;
+    /**
+     * Get Data For Reports
+     */
+    case 'DataPPs':
+      $Query = 'Select * '
+          . ' FROM `' . MySQL_Pre . 'PP_Personnel`'
+          . ' Where `OfficeSL`=?';
+      doQuery($DataResp, $Query, WebLib::GetVal($_POST, 'Params', FALSE, FALSE));
+      break;
+
+    case 'DataOffices':
+      $Query = 'Select `OfficeName` as `Name of the Office`, '
+          . '`DesgOC` as `Designation of Officer-in-Charge`, '
+          . '`AddrPTS` as `Para/Tola/Street`, `AddrVTM` as `Village/Town/Street`, '
+          . '`PostOffice`, `PSCode`,`PinCode`, '
+          . '`Status` as `Nature`, `TypeCode` as `Status`, `Phone`, `Fax`, '
+          . '`Mobile`, `EMail`, `Staffs`, `ACNo`'
+          . ' FROM `' . MySQL_Pre . 'PP_Offices`'
+          . ' Where `UserMapID`=?';
+      doQuery($DataResp, $Query, array(WebLib::GetVal($_SESSION, 'UserMapID')));
+      break;
+
+    case 'DataPayScales':
+      $Query = 'Select * '
+          . ' FROM `' . MySQL_Pre . 'PP_PayScales`';
+      doQuery($DataResp, $Query);
+      break;
   }
-  $_SESSION['Token']     = md5($_SERVER['REMOTE_ADDR'] . session_id() . $_SESSION['ET']);
+  $_SESSION['Token']     = md5($_SERVER['REMOTE_ADDR']
+      . session_id() . $_SESSION['ET']);
   $_SESSION['LifeTime']  = time();
   $DataResp['AjaxToken'] = $_SESSION['Token'];
   $DataResp['RT']        = '<b>Response Time:</b> '
