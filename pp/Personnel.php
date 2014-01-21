@@ -41,7 +41,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
           <div class="FieldGroup">
             <label for="OfficeSL"><strong>Name of The Office</strong>
               <select id="OfficeSL" name="OfficeSL"
-                      data-placeholder="Select Office Name">
+                      data-placeholder="Select Office Name" required />
               </select>
             </label>
           </div>
@@ -72,9 +72,9 @@ WebLib::IncludeJS('pp/js/Personnel.js');
             </label>
             <strong>Sex</strong>
             <div id="SexId">
-              <input type="radio" id="MaleId" name="SexId" value="male">
+              <input type="radio" id="MaleId" name="SexId" value="male" required />
               <label for="MaleId">Male</label>
-              <input type="radio" id="FemaleId" name="SexId" value="female">
+              <input type="radio" id="FemaleId" name="SexId" value="female" required />
               <label for="FemaleId">Female</label>
             </div>
           </div>
@@ -219,12 +219,12 @@ WebLib::IncludeJS('pp/js/Personnel.js');
           <div class="FieldGroup">
             <label for="BankName"><strong>Bank Name</strong>
               <select id="BankName" name="BankName"
-                      data-placeholder="Select Bank Name">
+                      data-placeholder="Select Bank Name" required />
               </select>
             </label>
             <label for="BranchName"><strong>Branch Name</strong>
               <select id="BranchName" name="BranchName"
-                      data-placeholder="Select Branch Name">
+                      data-placeholder="Select Branch Name" required />
               </select>
             </label>
           </div>
@@ -315,7 +315,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
           <div class="FieldGroup">
             <label for="PayScale"><strong>Scale of Pay</strong>
               <select id="PayScale" name="PayScale"
-                      data-placeholder="Select Pay Scale">
+                      data-placeholder="Select Pay Scale" required />
               </select>
             </label>
           </div>
@@ -342,7 +342,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
           <div class="FieldGroup">
             <label for="Qualification"><strong>Academic Qualification</strong>
               <select name="Qualification" id="Qualification" data-placeholder=
-                      "Select Qualification">
+                      "Select Qualification" required>
                 <option value=""></option>
                 <option value="1">1-Non Matric/VIII Standard or below</option>
                 <option value="2">2-Matric/School Final or H.S</option>
