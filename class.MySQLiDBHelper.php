@@ -197,6 +197,21 @@ class MySQLiDBHelper {
   }
 
   /**
+   * Executes a DDL Query
+   * @param string DDL Statement.
+   *
+   * @return boolean indicating whether the query was completed succesfully.
+   */
+  public function ddlQuery($Query) {
+    $this->_query = $Query;
+    $stmt         = $this->_buildQuery(null);
+    $stmt->execute();
+    $this->reset();
+
+    return ($stmt->affected_rows > 0 ? $stmt->insert_id : false);
+  }
+
+  /**
    * Update query. Be sure to first call the "where" method.
    *
    * @param string $tableName The name of the database table to work with.
