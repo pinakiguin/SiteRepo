@@ -31,7 +31,7 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
         $Data = new MySQLiDB();
         $Data1 = new MySQLiDBHelper();
         ?>
-        <div class="FieldGroup">
+        <div class="FieldGroup"> 
           <label for="DeptID"><strong>Name of Department</strong></label><br/>
           <select id="DeptID" name="DeptID" data-placeholder="Select Department" class="chzn-select">
             <?php

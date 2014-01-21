@@ -212,7 +212,6 @@ WebLib::IncludeJS('pp/js/Personnel.js');
                      required/>
             </label>
           </div>
-
         </fieldset>
         <fieldset>
           <legend>Bank Details</legend>
@@ -242,7 +241,6 @@ WebLib::IncludeJS('pp/js/Personnel.js');
             </label>
           </div>
         </fieldset>
-
         <fieldset>
           <legend>Contacts</legend>
           <div class="FieldGroup">
@@ -371,9 +369,13 @@ WebLib::IncludeJS('pp/js/Personnel.js');
           <input type="reset" name="CmdSubmit"  value="Reset"/>
           <input type="submit" name="CmdSubmit" id="CmdDel" value="Delete"/>
           <input type="hidden" name="FormToken"
-                 value="<?php echo WebLib::GetVal($_SESSION, 'FormToken'); ?>" />
+                 value="<?php
+                 echo WebLib::GetVal($_SESSION, 'FormToken');
+                 ?>" />
           <input type="hidden" id="AjaxToken"
-                 value="<?php echo WebLib::GetVal($_SESSION, 'Token'); ?>" />
+                 value="<?php
+                 echo WebLib::GetVal($_SESSION, 'Token');
+                 ?>" />
         </div>
       </form>
     </div>

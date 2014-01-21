@@ -67,3 +67,22 @@ root {
   margin-left: 5px;
   padding-left: 0px;
 }
+.formSliderLabel{
+  font-size: 20px;
+}
+
+.jQuery-Slider{
+  margin: 20px 0px 20px 0px;
+  width: 500px;
+  background: white;
+}
+#FinancialSlider .ui-slider-range-min{
+  background: #dc3912;
+}
+#PhysicalSlider .ui-slider-range-min{
+  background: #3366CC;
+}
+.StartDate, .AlotmentDate,.TenderDate,.WorkOrderDate,.ReportDate{
+  text-align: center;
+  width: 100px;
+}

@@ -30,6 +30,7 @@ $(function() {
     "scrollCollapse": true,
     "jQueryUI": true
   });
+
   $('input[name="CmdReport"]').click(function(event) {
     event.preventDefault();
     $('#Msg').html('Please Wait...');
@@ -74,5 +75,6 @@ $(function() {
       $('#Msg').html(msg);
     });
   });
+
   $('#Msg').html('');
 });

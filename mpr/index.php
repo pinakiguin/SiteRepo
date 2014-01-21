@@ -17,7 +17,7 @@ WebLib::CreateDB();
   <?php
   WebLib::ShowMenuBar('MPR');
   ?>
-  <div class="content">
+  <div class="content"> 
 
   </div>
   <div class="pageinfo">

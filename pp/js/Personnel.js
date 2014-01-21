@@ -14,73 +14,73 @@ $(function() {
   $("#OfficeSL").chosen({width: "650px",
     no_results_text: "Oops, nothing found!"})
           .change(function() {
-            $.ajax({
-              type: 'POST',
-              url: 'MySQLiDB.pp.ajax.php',
-              dataType: 'html',
-              xhrFields: {
-                withCredentials: true
-              },
-              data: {
-                'AjaxToken': $('#AjaxToken').val(),
-                'CallAPI': 'GetPersonnel',
-                'Params': new Array($('#OfficeSL').val())
-              }
-            }).done(function(data) {
-              try {
-                var DataResp = $.parseJSON(data);
-                delete data;
-                $('#AjaxToken').val(DataResp.AjaxToken);
-                $("#EmpName").autocomplete("option", "source", DataResp.Data);
-                $('#ED').html(DataResp.RT);
-                delete DataResp;
-              }
-              catch (e) {
-                $('#Msg').html('Server Error:' + e);
-                $('#Error').html(data);
-              }
-            }
-            ).fail(function(msg) {
-              $('#Msg').html(msg);
-            });
-          });
+    $.ajax({
+      type: 'POST',
+      url: 'MySQLiDB.pp.ajax.php',
+      dataType: 'html',
+      xhrFields: {
+        withCredentials: true
+      },
+      data: {
+        'AjaxToken': $('#AjaxToken').val(),
+        'CallAPI': 'GetPersonnel',
+        'Params': new Array($('#OfficeSL').val())
+      }
+    }).done(function(data) {
+      try {
+        var DataResp = $.parseJSON(data);
+        delete data;
+        $('#AjaxToken').val(DataResp.AjaxToken);
+        $("#EmpName").autocomplete("option", "source", DataResp.Data);
+        $('#ED').html(DataResp.RT);
+        delete DataResp;
+      }
+      catch (e) {
+        $('#Msg').html('Server Error:' + e);
+        $('#Error').html(data);
+      }
+    }
+    ).fail(function(msg) {
+      $('#Msg').html(msg);
+    });
+  });
 
   $("#Qualification").chosen({width: "300px",
     no_results_text: "Oops, nothing found!"});
 
   $("#BranchName")
           .chosen({width: "250px",
-            no_results_text: "Oops, nothing found!"})
+    no_results_text: "Oops, nothing found!"})
           .change(function() {
-            var BranchSL = Number($(this).val());
-            var IFSC = $('#BranchName').data('BranchName');
-            $.each(IFSC,
-                    function(index, value) {
-                      if (value.BranchSL === BranchSL) {
-                        $("#IFSC").val(value.IFSC);
-                        return false;
-                      }
-                    });
-          });
+    var BranchSL = Number($(this).val());
+    var IFSC = $('#BranchName').data('BranchName');
+    $.each(IFSC,
+            function(index, value) {
+              if (value.BranchSL === BranchSL) {
+                $("#IFSC").val(value.IFSC);
+                return false;
+              }
+            });
+  });
 
   $("#BankName")
           .chosen({width: "250px",
-            no_results_text: "Oops, nothing found!"})
+    no_results_text: "Oops, nothing found!"})
           .change(function() {
-            var Options = '<option value=""></option>';
-            var BranchName = $('#BranchName').data('BranchName');
-            var BankSL = Number($(this).val());
-            $.each(BranchName,
-                    function(index, value) {
-                      if (value.BankSL === BankSL) {
-                        Options += '<option value="' + value.BranchSL + '">'
-                                + value.IFSC + ' - ' + value.BranchName
-                                + '</option>';
-                      }
-                    });
-            $('#BranchName').html(Options)
-                    .trigger("chosen:updated");
-          });
+    var Options = '<option value=""></option>';
+    var BranchName = $('#BranchName').data('BranchName');
+    var BankSL = Number($(this).val());
+    $.each(BranchName,
+            function(index, value) {
+              if (value.BankSL === BankSL) {
+                Options += '<option value="' + value.BranchSL + '">'
+                        + value.IFSC + ' - ' + value.BranchName
+                        + '</option>';
+              }
+            });
+    $('#BranchName').html(Options)
+            .trigger("chosen:updated");
+  });
 
   $('#DOB').datepicker({
     dateFormat: 'dd-mm-yy',
@@ -164,65 +164,62 @@ $(function() {
     xhrFields: {
       withCredentials: true
     }
-  })
-          .done(function(data) {
-            try {
-              var DataResp = $.parseJSON(data);
-              delete data;
-              var Options = '<option value=""></option>';
-              $.each(DataResp.Scales,
-                      function(index, value) {
-                        Options += '<option value="' + value.ScaleCode + '">'
-                                + value.ScaleCode + ' - ' + value.Scale
-                                + '</option>';
-                      });
-              $('#PayScale').html(Options)
-                      .trigger("chosen:updated");
-              $('#PayScale').data('Scales', DataResp.Scales);
-              Options = '<option value=""></option>';
-              $.each(DataResp.OfficeSL,
-                      function(index, value) {
-                        Options += '<option value="' + value.OfficeSL + '">'
-                                + value.OfficeSL + ' - ' + value.OfficeName
-                                + '</option>';
-                      });
-              $('#OfficeSL').html(Options)
-                      .trigger("chosen:updated");
-              $('#OfficeSL').data('OfficeSL', DataResp.Scales);
-              Options = '<option value=""></option>';
-              $.each(DataResp.BankName,
-                      function(index, value) {
-                        Options += '<option value="' + value.BankSL + '">'
-                                + value.BankSL + ' - ' + value.BankName
-                                + '</option>';
-                      });
-              $('#BankName').html(Options)
-                      .trigger("chosen:updated");
-              $('#BankName').data('BankName', DataResp.BankName);
-              $('#BranchName').data('BranchName', DataResp.BranchName);
-              //FillData(DataResp.FieldData);
-              delete DataResp;
-              $("#Msg").html('');
-            }
-            catch (e) {
-              $('#Msg').html('Server Error:' + e);
-              $('#Error').html(data);
-            }
-          })
-          .fail(function(msg) {
-            $('#Msg').html(msg);
-          });
+  }).done(function(data) {
+    try {
+      var DataResp = $.parseJSON(data);
+      delete data;
+      var Options = '<option value=""></option>';
+      $.each(DataResp.Scales,
+              function(index, value) {
+                Options += '<option value="' + value.ScaleCode + '">'
+                        + value.ScaleCode + ' - ' + value.Scale
+                        + '</option>';
+              });
+      $('#PayScale').html(Options)
+              .trigger("chosen:updated");
+      $('#PayScale').data('Scales', DataResp.Scales);
+      Options = '<option value=""></option>';
+      $.each(DataResp.OfficeSL,
+              function(index, value) {
+                Options += '<option value="' + value.OfficeSL + '">'
+                        + value.OfficeSL + ' - ' + value.OfficeName
+                        + '</option>';
+              });
+      $('#OfficeSL').html(Options)
+              .trigger("chosen:updated");
+      $('#OfficeSL').data('OfficeSL', DataResp.Scales);
+      Options = '<option value=""></option>';
+      $.each(DataResp.BankName,
+              function(index, value) {
+                Options += '<option value="' + value.BankSL + '">'
+                        + value.BankSL + ' - ' + value.BankName
+                        + '</option>';
+              });
+      $('#BankName').html(Options)
+              .trigger("chosen:updated");
+      $('#BankName').data('BankName', DataResp.BankName);
+      $('#BranchName').data('BranchName', DataResp.BranchName);
+      //FillData(DataResp.FieldData);
+      delete DataResp;
+      $("#Msg").html('');
+    }
+    catch (e) {
+      $('#Msg').html('Server Error:' + e);
+      $('#Error').html(data);
+    }
+  }).fail(function(msg) {
+    $('#Msg').html(msg);
+  });
 
   $("#PayScale").bind({"change": function() {
       var ScaleCode = $(this).val();
       var Scales = $(this).data('Scales');
-      $.each(Scales,
-              function(index, value) {
-                if (value.ScaleCode === ScaleCode) {
-                  $("#GradePay").val(value.GradePay);
-                  return false;
-                }
-              });
+      $.each(Scales, function(index, value) {
+        if (value.ScaleCode === ScaleCode) {
+          $("#GradePay").val(value.GradePay);
+          return false;
+        }
+      });
     }
   });
 
@@ -256,7 +253,7 @@ $(function() {
 });
 
 function FillData(FormData) {
-
+//@todo Fill data Properly for Remarks and Ajax Calls
   $.each(FormData,
           function(index, value) {
             $.each(value, function(key, data) {
