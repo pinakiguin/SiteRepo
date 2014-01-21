@@ -14,13 +14,46 @@ $(function() {
   $("#PayScale").chosen({width: "350px",
     no_results_text: "Oops, nothing found!"
   });
+
   $("#OfficeSL").chosen({width: "600px",
     no_results_text: "Oops, nothing found!"
-  }).change(function() {
-    //alert($(this).val());
   });
+
+  $("#BranchName").chosen({width: "250px",
+    no_results_text: "Oops, nothing found!"
+  }).change(function() {
+    var BranchSL = Number($(this).val());
+    var IFSC = $('#BranchName').data('BranchName');
+    $.each(IFSC,
+            function(index, value) {
+              if (value.BranchSL === BranchSL) {
+                $("#IFSC").val(value.IFSC);
+                return false;
+              }
+            });
+  });
+
+  $("#BankName").chosen({width: "250px",
+    no_results_text: "Oops, nothing found!"
+  }).change(function() {
+    var Options = '<option value=""></option>';
+    var BranchName = $('#BranchName').data('BranchName');
+    var BankSL = Number($(this).val());
+    $.each(BranchName,
+            function(index, value) {
+              if (value.BankSL === BankSL) {
+                Options += '<option value="' + value.BranchSL + '">'
+                        + value.IFSC + ' - ' + value.BranchName
+                        + '</option>';
+              }
+            });
+    $('#BranchName').html(Options)
+            .trigger("chosen:updated");
+  });
+
+
   $('#DOB').datepicker({
-    dateFormat: 'yy-mm-dd',
+    dateFormat: 'dd-mm-yy',
     showOn: "both",
     buttonImage: "images/calendar.gif",
     buttonImageOnly: true
@@ -54,8 +87,7 @@ $(function() {
     xhrFields: {
       withCredentials: true
     }
-  })
-          .done(function(data) {
+  }).done(function(data) {
     try {
       var DataResp = $.parseJSON(data);
       delete data;
@@ -80,6 +112,20 @@ $(function() {
       $('#OfficeSL').html(Options)
               .trigger("chosen:updated");
       $('#OfficeSL').data('OfficeSL', DataResp.Scales);
+
+      Options = '<option value=""></option>';
+      $.each(DataResp.BankName,
+              function(index, value) {
+                Options += '<option value="' + value.BankSL + '">'
+                        + value.BankSL + ' - ' + value.BankName
+                        + '</option>';
+              });
+      $('#BankName').html(Options)
+              .trigger("chosen:updated");
+      $('#BankName').data('BankName', DataResp.BankName);
+
+      $('#BranchName').data('BranchName', DataResp.BranchName);
+
       delete DataResp;
       $("#Msg").html('');
     }
@@ -87,21 +133,19 @@ $(function() {
       $('#Msg').html('Server Error:' + e);
       $('#Error').html(data);
     }
-  })
-          .fail(function(msg) {
+  }).fail(function(msg) {
     $('#Msg').html(msg);
   });
 
   $("#PayScale").bind({"change": function() {
       var ScaleCode = $(this).val();
       var Scales = $(this).data('Scales');
-      $.each(Scales,
-              function(index, value) {
-                if (value.ScaleCode === ScaleCode) {
-                  $("#GradePay").val(value.GradePay);
-                  return false;
-                }
-              });
+      $.each(Scales, function(index, value) {
+        if (value.ScaleCode === ScaleCode) {
+          $("#GradePay").val(value.GradePay);
+          return false;
+        }
+      });
     }
   });
 });

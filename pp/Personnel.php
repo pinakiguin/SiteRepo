@@ -56,11 +56,10 @@ WebLib::IncludeJS('pp/js/Personnel.js');
                      required />
             </label>
             <label for="DOB"><strong>Date Of Birth</strong>
-              <input type="text" name="DOB" id="DOB" placeholder="YYYY-MM-DD"
+              <input type="text" name="DOB" id="DOB" placeholder="dd-mm-yyyy"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'DOB');
-                     ?>"
-                     required/>
+                     ?>" required/>
             </label>
           </div>
           <div class="FieldGroup">
@@ -68,8 +67,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               <input type="text" name="DesigID" id="DesigID"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'DesigID');
-                     ?>"
-                     required/>
+                     ?>" required/>
             </label>
             <strong>Sex</strong>
             <div id="SexId">
@@ -80,6 +78,27 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               <label for="FemaleId">Female</label>
             </div>
 
+          </div>
+          <div class="FieldGroup">
+            <label for="Remarks">
+              <strong>Remarks</strong>
+              <select name="Remarks" id="Remarks" class="chzn-select"
+                      data-placeholder="Select Remarks">
+                <option value=""></option>
+                <option value="1">1-Head Of Office</option>
+                <option value="2">2-Night Guard/Armed Guard</option>
+                <option value="3">3-Sweeper</option>
+                <option value="4">4-Key Holder</option>
+                <option value="5">5-Physically handicapped*</option>
+                <option value="6">6-Peoples' Representative</option>
+                <option value="7">7-Other</option>
+              </select>
+            </label>
+            <label for="Remarks">
+              <strong>Why the employee cannot be spared </strong>
+              <input type="text" name="TxtRemarks" id="TxtRemarks"
+                     placeholder="Mention Exact Reason"/>
+            </label>
           </div>
         </fieldset>
         <fieldset>
@@ -140,6 +159,20 @@ WebLib::IncludeJS('pp/js/Personnel.js');
         <fieldset>
           <legend>Residential Address</legend>
           <div class="FieldGroup">
+            <label for="DistHome"><strong>Home District</strong>
+              <input type="text"  id="DistHome" name="DistHome"
+                     value="<?php
+                     echo WebLib::GetVal($_SESSION['PostData'], 'DistHome');
+                     ?>" maxlength="50" required/>
+            </label>
+            <label for="HistPosting"><strong>Posting History</strong>
+              <input type="text"  id="HistPosting" name="HistPosting"
+                     value="<?php
+                     echo WebLib::GetVal($_SESSION['PostData'], 'HistPosting');
+                     ?>" maxlength="50" required/>
+            </label>
+          </div>
+          <div class="FieldGroup">
             <label for="PreAddr1"><strong>Present/1</strong>
               <input type="text"  id="PreAddr1" name="PreAddr1"
                      value="<?php
@@ -173,6 +206,34 @@ WebLib::IncludeJS('pp/js/Personnel.js');
           </div>
         </fieldset>
         <fieldset>
+          <legend>Bank Details</legend>
+          <div class="FieldGroup">
+            <label for="BankName"><strong>Bank Name</strong>
+              <select id="BankName" name="BankName"
+                      data-placeholder="Select Bank Name">
+              </select>
+            </label>
+            <label for="BranchName"><strong>Branch Name</strong>
+              <select id="BranchName" name="BranchName"
+                      data-placeholder="Select Branch Name">
+              </select>
+            </label>
+          </div>
+          <div class="FieldGroup">
+            <label for="BankACNo"><strong>BankA/C No.</strong>
+              <input type="text" name="BankACNo" id="BankACNo" value="<?php
+              echo WebLib::GetVal($_SESSION['PostData'], 'BankACNo');
+              ?>" required/>
+            </label>
+            <label for="IFSC"><strong>IFSC Code</strong>
+              <input type="text" name="IFSC" id="IFSC"
+                     value="<?php
+                     echo WebLib::GetVal($_SESSION['PostData'], 'IFSC');
+                     ?>"  readonly="readonly" required/>
+            </label>
+          </div>
+        </fieldset>
+        <fieldset>
           <legend>Contacts</legend>
           <div class="FieldGroup">
             <label for="ResPhone"><strong>Phone(Residence)</strong>
@@ -182,6 +243,8 @@ WebLib::IncludeJS('pp/js/Personnel.js');
                      ?>"
                      required/>
             </label>
+          </div>
+          <div class="FieldGroup">
             <label for="Mobile"><strong>Mobile</strong>
               <input type="text"  id="Mobile" name="Mobile"
                      value="<?php
@@ -194,15 +257,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
               <input type="email" name="EMail" id="EMail"
                      value="<?php
                      echo WebLib::GetVal($_SESSION['PostData'], 'EMail');
-                     ?>"  size="19"
-                     required/>
-            </label>
-            <label for="Remarks"><strong>Remarks</strong>
-              <input type="text" name="Remarks"
-                     value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'Remarks');
-                     ?>" size="19"
-                     id="Remarks" required/>
+                     ?>"  size="19">
             </label>
           </div>
         </fieldset>
@@ -273,56 +328,15 @@ WebLib::IncludeJS('pp/js/Personnel.js');
           </div>
         </fieldset>
         <fieldset>
-          <legend>Bank Details</legend>
-          <div class="FieldGroup">
-            <label for="BankName"><strong>Bank Name</strong>
-              <input type="text" id="BankName" name="BankName"
-                     value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'BankName');
-                     ?>"
-                     required/>
-            </label>
-            <label for="BranchName"><strong>Branch Name</strong>
-              <input type="text" name="BranchName" id="BranchName"
-                     value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'BranchName');
-                     ?>"
-                     required/>
-            </label>
-          </div>
-          <div class="FieldGroup">
-            <label for="BankACNo"><strong>BankA/C No.</strong>
-              <input type="text" name="BankACNo" id="BankACNo"
-                     value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'BankACNo');
-                     ?>"
-                     required/>
-            </label>
-            <label for="IFSCCode"><strong>IFSC Code</strong>
-              <input type="text" name="IFSCCode" id="IFSCCode"
-                     value="<?php
-                     echo WebLib::GetVal($_SESSION['PostData'], 'IFSCCode');
-                     ?>"
-                     required/>
-            </label>
-          </div>
-        </fieldset>
-        <fieldset>
           <legend>Qualifications</legend>
           <div class="FieldGroup">
             <label for="Qualification"><strong>Academic Qualification</strong>
               <select name="Qualification" id="Qualification" class="chzn-select"
                       data-placeholder="Select Qualification">
                 <option value=""></option>
-                <option value="Post Graduate">Post Graduate</option>
-                <option value="Graduate">Graduate</option>
-                <option value="Matric">Matric</option>
-                <option value="Nonmatric">Non Matric</option>
-                <option value="Madhyamic">Madhyamic</option>
-                <option value="Nonmadhyamic">Non Madhyamic</option>
-                <option value="VIII">VIII</option>
-                <option value="NonVII">Below VIII</option>
-                <option value="NotKnown">Not Known</option>
+                <option value="1">1-Non Matric/VIII Standard or below</option>
+                <option value="2">2-Matric/School Final or H.S</option>
+                <option value="3">3-Graduate & Above</option>
               </select>
             </label>
           </div>

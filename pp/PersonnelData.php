@@ -61,10 +61,7 @@ if ($FormToken !== NULL) {
         $PostData = GetPostDataPP();
 
         if ($Query !== '') {
-          $Inserted = $Data->insert($Query, $PostData);
-          if ($Inserted === false) {
-            $_SESSION['Msg'] = 'Unable to ' . $CmdAction . '!';
-          }
+          $QueryExecuted = $Data->insert($Query, $PostData);
         }
         break;
       case 'Update':
@@ -72,24 +69,24 @@ if ($FormToken !== NULL) {
         $PostData = GetPostDataPP();
 
         if ($Query !== '') {
-          $Updated = $Data->where('PerSL', WebLib::GetVal($_POST, 'PerSL'))
+          $QueryExecuted = $Data->where('PerSL', WebLib::GetVal($_POST, 'PerSL'))
               ->update($Query, $PostData);
-          if ($Updated === false) {
-            $_SESSION['Msg'] = 'Unable to ' . $CmdAction . '!';
-          }
         }
         break;
       case 'Delete':
         $Query = MySQL_Pre . 'PP_Personnel';
 
         if ($Query !== '') {
-          $Deleted = $Data->where('PerSL', WebLib::GetVal($_POST, 'PerSL'))
+          $QueryExecuted = $Data->where('PerSL', WebLib::GetVal($_POST, 'PerSL'))
               ->delete($Query);
-          if ($Deleted === false) {
-            $_SESSION['Msg'] = 'Unable to ' . $CmdAction . '!';
-          }
         }
         break;
+    }
+    if ($QueryExecuted === false) {
+      $_SESSION['Msg'] = 'Unable to ' . $CmdAction . '!';
+    } else {
+      $_SESSION['Msg']      = 'Successfully ' . $CmdAction . 'd!';
+      $_SESSION['PostData'] = array();
     }
   }
 }
@@ -101,7 +98,7 @@ function GetPostDataPP() {
   $DataPP['EmpName']       = WebLib::GetVal($_POST, 'NameID');
   $DataPP['OfficeSL']      = WebLib::GetVal($_POST, 'OfficeSL');
   $DataPP['DesgID']        = WebLib::GetVal($_POST, 'DesigID');
-  $DataPP['Dob']           = WebLib::GetVal($_POST, 'DOB');
+  $DataPP['Dob']           = WebLib::ToDBDate(WebLib::GetVal($_POST, 'DOB'));
   $DataPP['Sex']           = WebLib::GetVal($_POST, 'SexId');
   $DataPP['ACNo']          = WebLib::GetVal($_POST, 'AcNo');
   $DataPP['PartNo']        = WebLib::GetVal($_POST, 'PartNo');
@@ -111,6 +108,8 @@ function GetPostDataPP() {
   $DataPP['BasicPay']      = WebLib::GetVal($_POST, 'BasicPay');
   $DataPP['GradePay']      = WebLib::GetVal($_POST, 'GradePay');
   $DataPP['Posting']       = WebLib::GetVal($_POST, 'PostingID');
+  $DataPP['DistHome']      = WebLib::GetVal($_POST, 'DistHome');
+  $DataPP['HistPosting']   = WebLib::GetVal($_POST, 'HistPosting');
   $DataPP['PreAddr1']      = WebLib::GetVal($_POST, 'PreAddr1');
   $DataPP['PreAddr2']      = WebLib::GetVal($_POST, 'PreAddr2');
   $DataPP['PerAddr1']      = WebLib::GetVal($_POST, 'PerAddr1');
@@ -130,7 +129,7 @@ function GetPostDataPP() {
   $DataPP['BankACNo']      = WebLib::GetVal($_POST, 'BankACNo');
   $DataPP['BankName']      = WebLib::GetVal($_POST, 'BankName');
   $DataPP['BranchName']    = WebLib::GetVal($_POST, 'BranchName');
-  $DataPP['IFSCCode']      = WebLib::GetVal($_POST, 'IFSCCode');
+  $DataPP['IFSCCode']      = WebLib::GetVal($_POST, 'IFSC');
   $DataPP['EDCPBIssued']   = WebLib::GetVal($_POST, 'EDCPBIssued');
   $DataPP['PBReturn']      = WebLib::GetVal($_POST, 'PBReturn');
   return $DataPP;

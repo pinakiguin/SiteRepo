@@ -21,6 +21,8 @@ function CreateSchemas() {
   $ObjDB->ddlQuery(SQLDefs('PP_FieldNames'));
   $ObjDB->ddlQuery(SQLDefs('PP_DataFieldNames'));
   $ObjDB->ddlQuery(SQLDefs('MenuData'));
+  $ObjDB->ddlQuery(SQLDefs('PP_Banks'));
+  $ObjDB->ddlQuery(SQLDefs('PP_Branches'));
   unset($ObjDB);
 }
 
@@ -269,6 +271,8 @@ function SQLDefs($ObjectName) {
           . '`BasicPay` int(20) NOT NULL,'
           . '`GradePay` int(20) NOT NULL,'
           . '`Posting` enum("yes","no") NOT NULL,'
+          . '`HistPosting` varchar(50) NOT NULL,'
+          . '`DistHome` varchar(50) NOT NULL,'
           . '`PreAddr1` varchar(50) NOT NULL,'
           . '`PreAddr2` varchar(50) NOT NULL,'
           . '`PerAddr1` varchar(50) NOT NULL,'
@@ -330,6 +334,23 @@ function SQLDefs($ObjectName) {
           . '(\'PP\', 5, 1, \'Admin Reports\', \'pp/AdminReports.php\', 1),'
           . '(\'PP\', 6, 1, \'Reports\', \'pp/Reports.php\', 1),'
           . '(\'PP\', 7, 1, \'Log Out!\', \'login.php?LogOut=1\', 1);';
+      break;
+    case 'PP_Banks':
+      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . $ObjectName . '` ('
+          . '`BankSL` int(3) NOT NULL AUTO_INCREMENT,'
+          . '`BankName` varchar(30) NOT NULL,'
+          . ' PRIMARY KEY (`BankSL`)'
+          . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
+      break;
+    case 'PP_Branches':
+      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . $ObjectName . '` ('
+          . '`BranchSL` int(3) NOT NULL AUTO_INCREMENT,'
+          . '`IFSC` varchar(11) NOT NULL,'
+          . '`BankSL` int(3) NOT NULL,'
+          . '`BranchName` varchar(30) DEFAULT NULL,'
+          . '`MICR` varchar(10) DEFAULT NULL,'
+          . ' PRIMARY KEY (`BranchSL`)'
+          . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
       break;
   }
   return $SqlDB;

@@ -20,6 +20,16 @@ if (WebLib::GetVal($_SESSION, 'CheckAuth') === 'Valid') {
       . 'Order by `ScaleCode`';
   $DataResp['Scales'] = $Data->rawQuery($Query);
 
+  $Query                = 'SELECT `BankSL`, `BankName` '
+      . ' FROM `' . MySQL_Pre . 'PP_Banks` '
+      . ' Order by `BankName`';
+  $DataResp['BankName'] = $Data->rawQuery($Query);
+
+  $Query                  = 'SELECT `BranchSL`,`BankSL`,`BranchName`,`IFSC`'
+      . ' FROM `' . MySQL_Pre . 'PP_Branches`'
+      . ' Order by `BranchName`';
+  $DataResp['BranchName'] = $Data->rawQuery($Query);
+
   echo json_encode($DataResp);
 
   unset($Data);

@@ -614,8 +614,8 @@ class WebLib {
           . '<img id="siimage"'
           . ' src="ShowCaptcha.php?captchaId=' . $captchaId . '"'
           . ' alt="captcha image" />'
-          . '<input placeholder="Solution of the math above" type="text"'
-          . ' name="captcha_code" value="" required />';
+          . '<input class="form-TxtInput" placeholder="Solution of the math above" '
+          . 'type="text" name="captcha_code" value="" required />';
       echo $Captcha;
     } else {
       $captcha_code = self::GetVal($_POST, 'captcha_code');
