@@ -758,7 +758,7 @@ class WebLib {
       $_SESSION['BaseURL'] = $Proto . $_SERVER['HTTP_HOST'] . $_SESSION['BaseDIR'];
       $_SESSION['AppKey']  = AppKey;
       //self::DeployInfo();
-      $_SESSION['Version'] = 'v1.1-88-g4d6d149 20140116';
+      $_SESSION['Version'] = 'v1.1-162-ge64d6a3 20140121';
     }
   }
 
