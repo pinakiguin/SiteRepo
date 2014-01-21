@@ -40,7 +40,7 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
         <div class="FieldGroup">
           <label for="ProjectName">
             <strong>Project Name</strong>
-            <select name="ProjectID" data-placeholder="Select Project">
+            <select name="ProjectID" class="chzn-select" data-placeholder="Select Project">
               <?php
               $Query = 'Select `ProjectID`, `ProjectName` '
                   . ' FROM `' . MySQL_Pre . 'MPR_Projects` '
