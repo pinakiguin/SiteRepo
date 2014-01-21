@@ -10,6 +10,7 @@ WebLib::IncludeCSS();
 WebLib::JQueryInclude();
 WebLib::IncludeCSS('css/chosen.css');
 WebLib::IncludeJS('mpr/js/forms.js');
+WebLib::IncludeJS('mpr/js/mpr.js');
 WebLib::IncludeCSS('mpr/css/forms.css');
 WebLib::IncludeJS('js/chosen.jquery.min.js');
 ?>
