@@ -165,7 +165,6 @@ $(function() {
   }).done(function(data) {
     try {
       var DataResp = $.parseJSON(data);
-      $('#Error').html(data);
       delete data;
       var Options = '<option value=""></option>';
       $.each(DataResp.Scales,

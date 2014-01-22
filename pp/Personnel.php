@@ -407,7 +407,6 @@ WebLib::IncludeJS('pp/js/Personnel.js');
     </div>
     <pre id="Error">
     </pre>
-    <div style="clear: both;"></div>
   </div>
   <div class="pageinfo">
     <?php WebLib::PageInfo(); ?>
