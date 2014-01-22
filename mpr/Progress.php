@@ -42,14 +42,7 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
           <div class="FieldGroup">
             <label for="ProjectName">
               <strong>Project Name</strong>
-              <select name="ProjectID" class="chzn-select" data-placeholder="Select Project">
-                <?php
-                $Query = 'Select `ProjectID`, `ProjectName` '
-                    . ' FROM `' . MySQL_Pre . 'MPR_Projects` '
-                    . ' Order By `ProjectID`';
-                $Data->show_sel('ProjectID', 'ProjectName', $Query,
-                                WebLib::GetVal($_POST, 'ProjectID'));
-                ?>
+              <select name="ProjectID" id="ProjectID" data-placeholder="Select Project">
               </select>
             </label>
           </div>

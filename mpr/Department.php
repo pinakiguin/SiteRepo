@@ -98,13 +98,6 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
             <label for="SchemeName"><h3>Select Scheme</h3>
               <select id="SchemeID" name="SchemeID"
                       data-placeholder="Select Scheme">
-                        <?php
-                        $Query = 'Select `SchemeID`, `SchemeName` '
-                            . ' FROM `' . MySQL_Pre . 'MPR_Schemes` '
-                            . ' Order By `SchemeID`';
-                        $Data->show_sel('SchemeID', 'SchemeName', $Query,
-                                        WebLib::GetVal($_POST, 'SchemeID'));
-                        ?>
               </select>
             </label>
           </div>
