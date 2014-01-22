@@ -83,6 +83,7 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
                        placeholder="Name of Schemes"/>
               </label>
               <div style="clear: both;"></div>
+              <hr/>
               <div class="formControl">
                 <input type="submit" name="CmdSubmit" value="Create Scheme">
                 <input type="reset" name="CmdReset" value="Reset">
