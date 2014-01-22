@@ -49,7 +49,7 @@ $(function() {
     no_results_text: "Oops, nothing found!"});
 
   $("#BranchName")
-          .chosen({width: "250px",
+          .chosen({width: "418px",
     no_results_text: "Oops, nothing found!"})
           .change(function() {
     var BranchSL = Number($(this).val());
