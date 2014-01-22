@@ -95,7 +95,8 @@ $(function() {
 
   $("SectorID").chosen({width: "250px",
     no_results_text: "Oops, nothing found!"});
-
+  $("#SchemeID").chosen({width: "250px",
+    no_results_text: "Oops, nothing found!"});
   $("#PhysicalSlider").slider({
     range: "min",
     value: 0,

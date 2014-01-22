@@ -87,72 +87,79 @@ WebLib::IncludeCSS('mpr/css/forms.css');
           </div>
         </fieldset>
         <fieldset>
-          <legend><h2>Project Details</h2>
+          <legend><h2>Create New Project </h2>
           </legend>
           <?php
           $Data  = new MySQLiDB();
           $Data1 = new MySQLiDBHelper();
-          ?>
-          <label for="ProjectName"><strong>Name of Project</strong></label>
-          <input type="text" name="ProjectName" id="ProjectName"
-                 placeholder="Name of Projects"/>
-          <div class="FieldGroup">
-            <label for="SchemeName"><strong>Name of Scheme</strong></label><br/>
-            <select id="SchemeID" name="SchemeID"
-                    data-placeholder="Select Scheme">
-                      <?php
-                      $Query = 'Select `SchemeID`, `SchemeName` '
-                          . ' FROM `' . MySQL_Pre . 'MPR_Schemes` '
-                          . ' Order By `SchemeID`';
-                      $Data->show_sel('SchemeID', 'SchemeName', $Query,
-                                      WebLib::GetVal($_POST, 'SchemeID'));
-                      ?>
-            </select>
-          </div>
-          <div class="FieldGroup">
-            <label for="ProjectCost"><strong>Project Cost</strong></label>
-            <input type="text" name="ProjectCost" id="ProjectCost" placeholder="Project Cost"/>
-          </div>
-          <div class="FieldGroup">
-            <label for="StartDate"><strong>Project Start Date</strong></label>
-            <input type="text" id="StartDate" name="StartDate"
-                   placeholder="YYYY-MM-DD" size="12" />
-          </div>
-          <div class="FieldGroup">
-            <label for="AlotmentAmount"><strong>Project Allotment Amount
-              </strong></label>
-            <input type="text" name="AlotmentAmount" id="AlotmentAmount"
-                   placeholder="Project Allotment Amount"/>
-          </div>
-          <div class="FieldGroup">
-            <label for="AlotmentDate"><strong>Project Allotment Date
-              </strong>
+          ?> <div class="FieldGroup">
+            <label for="SchemeName"><h3>Select Scheme</h3>
+              <select id="SchemeID" name="SchemeID"
+                      data-placeholder="Select Scheme">
+                        <?php
+                        $Query = 'Select `SchemeID`, `SchemeName` '
+                            . ' FROM `' . MySQL_Pre . 'MPR_Schemes` '
+                            . ' Order By `SchemeID`';
+                        $Data->show_sel('SchemeID', 'SchemeName', $Query,
+                                        WebLib::GetVal($_POST, 'SchemeID'));
+                        ?>
+              </select>
             </label>
-            <input type="text" id="AlotmentDate" name="AlotmentDate"
-                   placeholder="YYYY-MM-DD" size="12"  />
           </div>
           <div class="FieldGroup">
-            <label for="TenderDate"><strong>Project Tender Date
-              </strong>
+            <label for="ProjectName"><h3>Name of Project</h3>
+              <input type="text" name="ProjectName" id="ProjectName"
+                     placeholder="Name of Projects"/>
             </label>
-            <input type="text" id="TenderDate" name="TenderDate"
-                   placeholder="YYYY-MM-DD" size="12" />
+          </div>
+
+          <div class="FieldGroup">
+            <label for="ProjectCost"><h3>Project Cost</h3>
+              <input type="text" name="ProjectCost" id="ProjectCost"
+                     placeholder="Project Cost"/>
+            </label>
+          </div>
+
+          <div class="FieldGroup">
+            <label for="AlotmentAmount"><h3>Project Allotment Amount
+              </h3>
+              <input type="text" name="AlotmentAmount" id="AlotmentAmount"
+                     placeholder="Project Allotment Amount"/>
+            </label>
+          </div>
+
+          <div class="FieldGroup">
+            <label for="StartDate"><h3>Project Start Date</h3>
+              <input type="text" id="StartDate" name="StartDate"
+                     placeholder="YYYY-MM-DD" size="12" />
+            </label>
           </div>
           <div class="FieldGroup">
-            <label for="WorkOrderDate"><strong>Project Work Order Date
-              </strong>
+            <label for="AlotmentDate"><h3>Project Allotment Date</h3>
+              <input type="text" id="AlotmentDate" name="AlotmentDate"
+                     placeholder="YYYY-MM-DD" size="12"  />
             </label>
-            <input type="text" id="WorkOrderDate" name="WorkOrderDate"
-                   placeholder="YYYY-MM-DD"  size="12" />
           </div>
+          <div class="FieldGroup">
+            <label for="TenderDate"><h3>Project Tender Date</h3>
+              <input type="text" id="TenderDate" name="TenderDate"
+                     placeholder="YYYY-MM-DD" size="12" />
+            </label>
+          </div>
+          <div class="FieldGroup">
+            <label for="WorkOrderDate"><h3>Project Work Order Date</h3>
+              <input type="text" id="WorkOrderDate" name="WorkOrderDate"
+                     placeholder="YYYY-MM-DD"  size="12" />
+            </label>
+          </div>
+          <div style="clear: both;"></div>
           <div class="formControl">
-            <br/>
             <input type="submit" name="CmdSubmit" value="Create Project">
+            <input type="reset" name="CmdReset" value="Reset">
+            <input type="hidden" name="FormToken"
+                   value="<?php echo WebLib::GetVal($_SESSION, 'FormToken') ?>" />
           </div>
-          <input type="hidden" name="FormToken"
-                 value="<?php echo WebLib::GetVal($_SESSION, 'FormToken') ?>" />
-      </form>
-      </fieldset>
+        </fieldset>
       </form>
     </div>
   </div>
