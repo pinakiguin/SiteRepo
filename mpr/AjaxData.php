@@ -30,15 +30,6 @@ if (WebLib::GetVal($_POST, 'AjaxToken') === WebLib::GetVal($_SESSION, 'Token')) 
   $DataResp['Msg']       = '';
   switch (WebLib::GetVal($_POST, 'CallAPI')) {
 
-    case 'GetREPORTData':
-      $_SESSION['POST'] = $_POST;
-      $Query            = 'Select `ReportID`, `ReportDate`, `PhysicalProgress`,'
-          . ' `FinancialProgress`, `Remarks`'
-          . ' From `' . MySQL_Pre . 'MPR_Progress`'
-          . ' Where `ProjectID`=?';
-      doQuery($DataResp, $Query, array(WebLib::GetVal($_POST, 'ProjectID')));
-      break;
-
     case 'GetComboData':
       $Query             = 'Select `DeptID`,`DeptName`'
           . ' FROM `' . MySQL_Pre . 'MPR_Departments` ';

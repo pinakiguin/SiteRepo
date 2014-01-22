@@ -12,7 +12,10 @@ WebLib::IncludeCSS('css/chosen.css');
 WebLib::IncludeJS('mpr/js/forms.js');
 WebLib::IncludeCSS('mpr/css/forms.css');
 WebLib::IncludeJS('js/chosen.jquery.min.js');
-//WebLib::IncludeJS('mpr/js/Reports.js');
+?>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<?php
+WebLib::IncludeJS('mpr/js/Reports.js');
 ?>
 </head>
 <body>
@@ -42,60 +45,33 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
         </span>
         <?php
         include __DIR__ . '/DataMPR.php';
-        $Data  = new MySQLiDB();
-        $Data1 = new MySQLiDBHelper();
+        WebLib::ShowMsg();
         ?>
         <div class="FieldGroup">
           <label for="DeptName"><strong>Department</strong></label><br/>
           <select name="Deptname" id="DeptID" data-placeholder="Select Department">
-            <?php
-            $Query = 'Select `DeptID`, `DeptName` '
-                . ' FROM `' . MySQL_Pre . 'MPR_Departments` '
-                . ' Order By `DeptName`';
-            $Data->show_sel('DeptID', 'DeptName', $Query,
-                            WebLib::GetVal($_POST, 'DeptID'));
-            ?>
           </select>
         </div>
         <div class="FieldGroup">
           <label for="SectorName"><strong>Sector</strong></label><br/>
           <select name="SectorName" id="SectorID" data-placeholder="Select Sector">
-            <?php
-            $Query = 'Select `SectorID`, `SectorName` '
-                . ' FROM `' . MySQL_Pre . 'MPR_Sectors` '
-                . ' Order By `SectorName`';
-            $Data->show_sel('SectorID', 'SectorName', $Query,
-                            WebLib::GetVal($_POST, 'SectorID'));
-            ?>
           </select>
         </div>
         <div class="FieldGroup">
           <label for="SchemeName"><strong>Scheme</strong></label><br/>
           <select name="SchemeName" id="SchemeID" data-placeholder="Select Sector">
-            <?php
-            $Query = 'Select `SchemeID`, `SchemeName` '
-                . ' FROM `' . MySQL_Pre . 'MPR_Schemes` '
-                . ' Order By `SchemeName`';
-            $Data->show_sel('SchemeID', 'SchemeName', $Query,
-                            WebLib::GetVal($_POST, 'SchemeID'));
-            ?>
           </select>
         </div>
         <div class="FieldGroup">
           <label for="ProjectName"><strong>Project Name</strong></label><br/>
-          <select name="ProjectID" data-placeholder="Select Project">
-            <?php
-            $Query = 'Select `ProjectID`, `ProjectName` '
-                . ' FROM `' . MySQL_Pre . 'MPR_Projects` '
-                . ' Order By `ProjectID`';
-            $Data->show_sel('ProjectID', 'ProjectName', $Query,
-                            WebLib::GetVal($_POST, 'ProjectID'));
-            ?>
+          <select name="ProjectID" id="ProjectID" data-placeholder="Select Project">
           </select>
         </div>
         <div class="FieldGroup">
           <br/>
-          <input type="submit" id="CmdRefreshRSBY" name="CmdRefresh" value="Refresh"/>
+          <input type="button" id="CmdRefresh" name="CmdRefresh" value="Refresh"/>
+          <input type="hidden" id="FormToken"
+                 value="<?php echo WebLib::GetVal($_SESSION, 'FormToken') ?>" />
           <input type="hidden" id="AjaxToken"
                  value="<?php echo WebLib::GetVal($_SESSION, 'Token'); ?>" />
         </div>
