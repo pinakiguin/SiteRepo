@@ -93,7 +93,7 @@ $(function() {
   $("#DeptID").chosen({width: "250px",
     no_results_text: "Oops, nothing found!"});
 
-  $("SectorID").chosen({width: "250px",
+  $("#SectorID").chosen({width: "250px",
     no_results_text: "Oops, nothing found!"});
   $("#SchemeID").chosen({width: "250px",
     no_results_text: "Oops, nothing found!"});
