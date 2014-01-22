@@ -31,7 +31,7 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
               WebLib::ShowMsg();
               ?>
         <fieldset>
-          <legend><h2>Create New Departments,Sector & Scheme</h2></legend>
+          <legend><h2>Create New Department & Sector </h2></legend>
 
           <div class="FieldGroup">
             <label for="DeptName"><h3>Name of Department</h3>
@@ -59,6 +59,9 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
                      ?>" />
             </div>
           </div>
+        </fieldset>
+        <fieldset>
+          <legend><h2>Create New & Scheme</h2></legend>
           <div class="FieldGroup">
             <label for="DeptID"><h3>Select Name of Department</h3>
               <select id="DeptID" name="DeptID"
@@ -79,6 +82,7 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
                 <input type="text" name="SchemeName" id="SchemeName"
                        placeholder="Name of Schemes"/>
               </label>
+              <div style="clear: both;"></div>
               <div class="formControl">
                 <input type="submit" name="CmdSubmit" value="Create Scheme">
                 <input type="reset" name="CmdReset" value="Reset">
@@ -94,7 +98,8 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
           <?php
           $Data  = new MySQLiDB();
           $Data1 = new MySQLiDBHelper();
-          ?> <div class="FieldGroup">
+          ?>
+          <div class="FieldGroup">
             <label for="SchemeName"><h3>Select Scheme</h3>
               <select id="SchemeID" name="SchemeID"
                       data-placeholder="Select Scheme">
@@ -107,14 +112,12 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
                      placeholder="Name of Projects"/>
             </label>
           </div>
-
           <div class="FieldGroup">
             <label for="ProjectCost"><h3>Project Cost</h3>
               <input type="text" name="ProjectCost" id="ProjectCost"
                      placeholder="Project Cost"/>
             </label>
           </div>
-
           <div class="FieldGroup">
             <label for="AlotmentAmount"><h3>Project Allotment Amount
               </h3>
@@ -122,7 +125,6 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
                      placeholder="Project Allotment Amount"/>
             </label>
           </div>
-
           <div class="FieldGroup">
             <label for="StartDate"><h3>Project Start Date</h3>
               <input type="text" id="StartDate" name="StartDate"
@@ -148,6 +150,8 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
             </label>
           </div>
           <div style="clear: both;"></div>
+          <hr/>
+
           <div class="formControl">
             <input type="submit" name="CmdSubmit" value="Create Project">
             <input type="reset" name="CmdReset" value="Reset">

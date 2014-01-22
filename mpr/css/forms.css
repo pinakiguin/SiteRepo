@@ -20,7 +20,16 @@ root {
   background-color: #ebebeb;
   display: inline-block;
 }
-
+.formWrapper fieldset{
+  margin: 10px;
+  padding: 10px 5px 5px 0px;
+  border: 1px solid #858585;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  float: left;
+  transition: background .25s linear,box-shadow .25s linear;
+}
 .formWrapper input[type=text],
 .formWrapper input[type=password]{
   font-size: 15px;

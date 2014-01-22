@@ -42,7 +42,8 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
           <div class="FieldGroup">
             <label for="ProjectName">
               <strong>Project Name</strong>
-              <select name="ProjectID" id="ProjectID" data-placeholder="Select Project">
+              <select name="ProjectID" id="ProjectID"
+                      data-placeholder="Select Project">
               </select>
             </label>
           </div>
@@ -78,7 +79,7 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
                  value="<?php echo WebLib::GetVal($_SESSION, 'FormToken') ?>" />
           <input type="hidden" id="AjaxToken"
                  value="<?php echo WebLib::GetVal($_SESSION, 'Token'); ?>" />
-          <input type="submit" name="CmdSubmit" value="Save">
+          <input type="submit" name="CmdSubmit" value="Save Progress">
         </div>
       </form>
     </div>
