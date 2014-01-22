@@ -5,13 +5,41 @@
 
 $(function() {
   $('input[type="submit"]').button();
+  $('input[type="reset"]').button();
+//  $('.chzn-select').chosen({width: "250px",
+//    no_results_text: "Oops, nothing found!"
+//  });
 
-  $('.chzn-select').chosen({width: "250px",
-    no_results_text: "Oops, nothing found!"
+  $('#StartDate').datepicker({
+    dateFormat: 'dd-mm-yy',
+    showOn: "both",
+    buttonImage: "images/calendar.gif",
+    buttonImageOnly: true
   });
-
-  $('.DatePicker').datepicker({dateFormat: 'yy-mm-dd'});
-
+  $('#AlotmentDate').datepicker({
+    dateFormat: 'dd-mm-yy',
+    showOn: "both",
+    buttonImage: "images/calendar.gif",
+    buttonImageOnly: true
+  });
+  $('#TenderDate').datepicker({
+    dateFormat: 'dd-mm-yy',
+    showOn: "both",
+    buttonImage: "images/calendar.gif",
+    buttonImageOnly: true
+  });
+  $('#WorkOrderDate').datepicker({
+    dateFormat: 'dd-mm-yy',
+    showOn: "both",
+    buttonImage: "images/calendar.gif",
+    buttonImageOnly: true
+  });
+  $('#ReportDate').datepicker({
+    dateFormat: 'dd-mm-yy',
+    showOn: "both",
+    buttonImage: "images/calendar.gif",
+    buttonImageOnly: true
+  });
   /**
    * GetComboData API Call for Caching of MasterData
    * Options for Blocks are rendered
@@ -61,119 +89,12 @@ $(function() {
           .fail(function(msg) {
             $('#Msg').html(msg);
           });
-  /**
-   * BlockCode Change event registered
-   *
-   */
-  $('#CmbDeptID')
-          .chosen({width: "200px",
-            no_results_text: "Oops, nothing found!"
-          })
-          .change(function() {
-            $("#Msg").hide();
-            $("#example_wrapper").hide();
-            var Options = '<option value=""></option>';
-            var Sectors = $('#CmbSectorID').data('Sectors');
-            var DeptID = $(this).val();
-            $.each(Sectors.Data,
-                    function(index, value) {
-                      if (value.DeptID === DeptID) {
-                        Options += '<option value="' + value.Sector_TownCode + '">'
-                                + value.Panchayat_TownCode + ' - ' + value.Panchayat_TownName
-                                + '</option>';
-                      }
-                    });
-            $('#CmbPanchayatCode').html(Options)
-                    .trigger("chosen:updated");
-            $('#CmbVillageCode').html('<option value=""></option>')
-                    .trigger("chosen:updated");
-          });
-  /**
-   * Get the list of ACs and register change event to update Parts
-   *
-   */
-  $('#CmbPanchayatCode')
-          .chosen({width: "250px",
-            no_results_text: "Oops, nothing found!"
-          })
-          .change(function() {
-            $("#Msg").hide();
-            $("#example_wrapper").hide();
-            var Options = '<option value=""></option>';
-            var Villages = $('#CmbVillageCode').data('Villages');
-            var PanchayatCode = $(this).val();
-            $.each(Villages.Data,
-                    function(index, value) {
-                      if (value.Panchayat_TownCode === PanchayatCode) {
-                        Options += '<option value="' + value.VillageCode + '">'
-                                + value.VillageCode + ' - ' + value.VillageName
-                                + '</option>';
-                      }
-                    });
-            $('#CmbVillageCode').html(Options)
-                    .trigger("chosen:updated");
-          });
-  /**
-   * Get the list of ACs and register change event to update Parts
-   *
-   */
-  $('#CmbVillageCode').chosen({width: "250px",
-    no_results_text: "Oops, nothing found!"
-  }).change(function() {
-    //alert("Selected:");
-  });
 
-  $('.chzn-select').chosen({width: "250px",
-    no_results_text: "Oops, nothing found!"
-  });
+  $("#DeptID").chosen({width: "250px",
+    no_results_text: "Oops, nothing found!"});
 
-  $('input[type="submit"]').button();
-
-  $('#CmdRefreshRSBY').click(function(event) {
-    event.preventDefault();
-    $('#Msg').html('Please Wait...');
-    $.ajax({
-      type: 'POST',
-      url: 'AjaxData.php',
-      dataType: 'html',
-      xhrFields: {
-        withCredentials: true
-      },
-      data: {
-        'AjaxToken': $('#AjaxToken').val(),
-        'CallAPI': 'GetREPORTData',
-        'VillageCode': $('#CmbVillageCode').val()
-      }
-    })
-            .done(function(data) {
-              try {
-                var DataResp = $.parseJSON(data);
-                delete data;
-                $('#AjaxToken').val(DataResp.AjaxToken);
-                $('#Msg').html(DataResp.Msg);
-                $('#ED').html(DataResp.RT);
-                $("#Msg").show();
-                $("#example_wrapper").show();
-                var dataTableRSBY = $('#example').dataTable();
-                oSettings = dataTableRSBY.fnSettings();
-                dataTableRSBY.fnClearTable(this);
-                for (var i = 0; i < DataResp.Data.length; i++) {
-                  dataTableRSBY.oApi._fnAddData(oSettings, DataResp.Data[i]);
-                }
-                oSettings.aiDisplay = oSettings.aiDisplayMaster.slice();
-                dataTableRSBY.fnDraw();
-
-                delete DataResp;
-              }
-              catch (e) {
-                $('#Msg').html('Server Error:' + e);
-                $('#Error').html(data);
-              }
-            })
-            .fail(function(msg) {
-              $('#Msg').html(msg);
-            });
-  });
+  $("SectorID").chosen({width: "250px",
+    no_results_text: "Oops, nothing found!"});
 
   $("#PhysicalSlider").slider({
     range: "min",
@@ -195,4 +116,5 @@ $(function() {
       $("#FinancialProgress").val(ui.value);
     }
   });
+
 });

@@ -64,8 +64,8 @@ root {
 }
 .formWrapper .FieldGroup {
   float: left;
-  margin-left: 5px;
-  padding-left: 0px;
+  margin: 10px,10px,10px,10px;
+  padding: 10px,10px,10px,10px;
 }
 .formSliderLabel{
   font-size: 20px;
@@ -82,7 +82,13 @@ root {
 #PhysicalSlider .ui-slider-range-min{
   background: #3366CC;
 }
+
 .StartDate, .AlotmentDate,.TenderDate,.WorkOrderDate,.ReportDate{
   text-align: center;
   width: 100px;
+}
+.ui-datepicker-trigger{
+  margin: -35px 0px 0px 135px;
+  padding: 0px;
+  float: left;
 }
