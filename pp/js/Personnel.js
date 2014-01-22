@@ -95,20 +95,18 @@ $(function() {
   $("#EDCPBIssued").buttonset();
   $("#PBReturn").buttonset();
 
-  $("#DesgID").autocomplete(
-          {source: "AjaxDesgOC.php",
-            minLength: 3,
-            focus: function(event, ui) {
-              event.preventDefault();
-              $('#DesgID').val(ui.item.label);
-            },
-            select: function(event, ui) {
-              event.preventDefault();
-              $('#DesgID').val(ui.item.value);
-            },
-            autoFocus: true
-          }
-  );
+  $("#DesgID").autocomplete({
+    source: [],
+    minLength: 1,
+    focus: function(event, ui) {
+      event.preventDefault();
+    },
+    select: function(event, ui) {
+      event.preventDefault();
+      $(this).val(ui.item.value);
+    },
+    autoFocus: true
+  });
 
   $('#CmdDel').hide();
 
@@ -167,6 +165,7 @@ $(function() {
   }).done(function(data) {
     try {
       var DataResp = $.parseJSON(data);
+      $('#Error').html(data);
       delete data;
       var Options = '<option value=""></option>';
       $.each(DataResp.Scales,
@@ -199,6 +198,7 @@ $(function() {
               .trigger("chosen:updated");
       $('#BankName').data('BankName', DataResp.BankName);
       $('#BranchName').data('BranchName', DataResp.BranchName);
+      $("#DesgID").autocomplete("option", "source", DataResp.DesgID);
       //FillData(DataResp.FieldData);
       delete DataResp;
       $("#Msg").html('');

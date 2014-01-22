@@ -26,6 +26,11 @@ if (WebLib::GetVal($_SESSION, 'CheckAuth') === 'Valid') {
       . ' Order by `BranchName`';
   $DataResp['BranchName'] = $Data->rawQuery($Query);
 
+  $Query              = 'SELECT `DesgID` as `value`,`DesgID` as `label`'
+      . ' FROM `' . MySQL_Pre . 'PP_Personnel`'
+      . ' Group by `DesgID`';
+  $DataResp['DesgID'] = $Data->query($Query);
+
   echo json_encode($DataResp);
   unset($Data);
 }
