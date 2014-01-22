@@ -57,9 +57,10 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
             <label for="ReportDate">
               <strong>Report Date</strong>
               <input type="text" id="ReportDate" name="ReportDate"
-                     class="DatePicker" placeholder="YYYY-MM-DD" />
+                     placeholder="YYYY-MM-DD" size="12" />
             </label>
           </div>
+          <div style="clear: both;"></div>
 
           <h3 id="lblPhysicalProgress">Physical Progress</h3>
           <input type="hidden" name="PhysicalProgress"
@@ -84,7 +85,7 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
                  value="<?php echo WebLib::GetVal($_SESSION, 'FormToken') ?>" />
           <input type="hidden" id="AjaxToken"
                  value="<?php echo WebLib::GetVal($_SESSION, 'Token'); ?>" />
-          <input type="submit" name="CmdSubmit" value="Create Progress">
+          <input type="submit" name="CmdSubmit" value="Save">
         </div>
       </form>
     </div>
