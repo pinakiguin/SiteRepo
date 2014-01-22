@@ -4,6 +4,7 @@
  */
 
 $(function() {
+  $('#CmdSaveUpdate').val('Save');
   $("#OfficeName").autocomplete(
           {source: "AjaxOffice.php",
             minLength: 5,
