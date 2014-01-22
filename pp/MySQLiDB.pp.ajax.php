@@ -70,11 +70,21 @@ if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
     /**
      * Get Data For Reports
      */
+    case 'GetOffices':
+      $Query = 'SELECT `OfficeSL`, `OfficeName` '
+          . ' FROM `' . MySQL_Pre . 'PP_Offices` '
+          . ' Where `UserMapID`=?'
+          . ' Order by `OfficeSL`';
+      doQuery($DataResp, $Query, array($_SESSION['UserMapID']));
+      break;
+
     case 'DataPPs':
       $Query = 'Select * '
           . ' FROM `' . MySQL_Pre . 'PP_Personnel`'
           . ' Where `OfficeSL`=?';
       doQuery($DataResp, $Query, WebLib::GetVal($_POST, 'Params', FALSE, FALSE));
+
+      $DataResp['CallAPI'] = 'DataPPs';
       break;
 
     case 'DataOffices':
@@ -87,6 +97,8 @@ if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
           . ' FROM `' . MySQL_Pre . 'PP_Offices`'
           . ' Where `UserMapID`=?';
       doQuery($DataResp, $Query, array(WebLib::GetVal($_SESSION, 'UserMapID')));
+
+      $DataResp['CallAPI'] = 'DataOffices';
       break;
 
     case 'DataPayScales':
