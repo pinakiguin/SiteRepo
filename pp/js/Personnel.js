@@ -12,8 +12,9 @@ $(function() {
     no_results_text: "Oops, nothing found!"});
 
   $("#OfficeSL").chosen({width: "650px",
-    no_results_text: "Oops, nothing found!"})
-          .change(function() {
+    no_results_text: "Oops, nothing found!"
+  }).change(function() {
+    $('#Msg').html("Loading List of Personnel...");
     $.ajax({
       type: 'POST',
       url: 'MySQLiDB.pp.ajax.php',
@@ -33,6 +34,7 @@ $(function() {
         $('#AjaxToken').val(DataResp.AjaxToken);
         $("#EmpName").autocomplete("option", "source", DataResp.Data);
         $('#ED').html(DataResp.RT);
+        $('#Msg').html('');
         delete DataResp;
       }
       catch (e) {
@@ -48,10 +50,9 @@ $(function() {
   $("#Qualification").chosen({width: "300px",
     no_results_text: "Oops, nothing found!"});
 
-  $("#BranchName")
-          .chosen({width: "418px",
-    no_results_text: "Oops, nothing found!"})
-          .change(function() {
+  $("#BranchName").chosen({width: "418px",
+    no_results_text: "Oops, nothing found!"
+  }).change(function() {
     var BranchSL = Number($(this).val());
     var IFSC = $('#BranchName').data('BranchName');
     $.each(IFSC,
@@ -63,10 +64,9 @@ $(function() {
             });
   });
 
-  $("#BankName")
-          .chosen({width: "250px",
-    no_results_text: "Oops, nothing found!"})
-          .change(function() {
+  $("#BankName").chosen({width: "250px",
+    no_results_text: "Oops, nothing found!"
+  }).change(function() {
     var Options = '<option value=""></option>';
     var BranchName = $('#BranchName').data('BranchName');
     var BankSL = Number($(this).val());
@@ -110,51 +110,53 @@ $(function() {
 
   $('#CmdDel').hide();
 
-  $("#EmpName").autocomplete(
-          {source: [],
-            minLength: 2,
-            focus: function(event) {
-              event.preventDefault();
-            },
-            select: function(event, ui) {
-              event.preventDefault();
-              $('#EmpName').val(ui.item.label);
-              $('#EmpSL').val(ui.item.value);
-              $.ajax({
-                type: 'POST',
-                url: 'MySQLiDB.pp.ajax.php',
-                dataType: 'html',
-                xhrFields: {
-                  withCredentials: true
-                },
-                data: {
-                  'AjaxToken': $('#AjaxToken').val(),
-                  'CallAPI': 'GetDataPP2',
-                  'Params': new Array($('#EmpSL').val())
-                }
-              }).done(function(data) {
-                try {
-                  var DataResp = $.parseJSON(data);
-                  delete data;
-                  FillData(DataResp.Data);
-                  $('#CmdSaveUpdate').val('Update');
-                  $('#CmdDel').show();
+  $("#EmpName").autocomplete({
+    source: [],
+    minLength: 2,
+    focus: function(event) {
+      event.preventDefault();
+    },
+    select: function(event, ui) {
+      event.preventDefault();
+      $('#Msg').html('Loading Personnel Details...');
+      $('#EmpName').val(ui.item.label);
+      $('#EmpSL').val(ui.item.value);
+      $.ajax({
+        type: 'POST',
+        url: 'MySQLiDB.pp.ajax.php',
+        dataType: 'html',
+        xhrFields: {
+          withCredentials: true
+        },
+        data: {
+          'AjaxToken': $('#AjaxToken').val(),
+          'CallAPI': 'GetDataPP2',
+          'Params': new Array($('#EmpSL').val())
+        }
+      }).done(function(data) {
+        try {
+          var DataResp = $.parseJSON(data);
+          delete data;
+          FillData(DataResp.Data);
+          $('#CmdSaveUpdate').val('Update');
+          $('#CmdDel').show();
+          $('#AjaxToken').val(DataResp.AjaxToken);
+          $('#ED').html(DataResp.RT);
+          $('#Msg').html('');
+          delete DataResp;
+        }
+        catch (e) {
+          $('#Msg').html('Server Error:' + e);
+          $('#Error').html(data);
+        }
+      }).fail(function(msg) {
+        $('#Msg').html(msg);
+      });
+    },
+    autoFocus: true
+  });
 
-                  $('#AjaxToken').val(DataResp.AjaxToken);
-                  $('#ED').html(DataResp.RT);
-                  delete DataResp;
-                }
-                catch (e) {
-                  $('#Msg').html('Server Error:' + e);
-                  $('#Error').html(data);
-                }
-              }).fail(function(msg) {
-                $('#Msg').html(msg);
-              });
-            },
-            autoFocus: true
-          });
-
+  $('#Msg').html('Sending Request...');
   $.ajax({
     type: 'POST',
     url: 'AjaxPersonnel.php',
@@ -166,6 +168,7 @@ $(function() {
     try {
       var DataResp = $.parseJSON(data);
       delete data;
+      $('#Msg').html('Loading Pay Scales...');
       var Options = '<option value=""></option>';
       $.each(DataResp.Scales,
               function(index, value) {
@@ -176,6 +179,8 @@ $(function() {
       $('#PayScale').html(Options)
               .trigger("chosen:updated");
       $('#PayScale').data('Scales', DataResp.Scales);
+
+      $('#Msg').html('Loading Offices...');
       Options = '<option value=""></option>';
       $.each(DataResp.OfficeSL,
               function(index, value) {
@@ -185,7 +190,8 @@ $(function() {
               });
       $('#OfficeSL').html(Options)
               .trigger("chosen:updated");
-      $('#OfficeSL').data('OfficeSL', DataResp.Scales);
+
+      $('#Msg').html('Loading Banks and Branches...');
       Options = '<option value=""></option>';
       $.each(DataResp.BankName,
               function(index, value) {
@@ -197,6 +203,8 @@ $(function() {
               .trigger("chosen:updated");
       $('#BankName').data('BankName', DataResp.BankName);
       $('#BranchName').data('BranchName', DataResp.BranchName);
+
+      $('#Msg').html('Loading Designations...');
       $("#DesgID").autocomplete("option", "source", DataResp.DesgID);
       //FillData(DataResp.FieldData);
       delete DataResp;
@@ -210,7 +218,8 @@ $(function() {
     $('#Msg').html(msg);
   });
 
-  $("#PayScale").bind({"change": function() {
+  $("#PayScale").bind({
+    "change": function() {
       var ScaleCode = $(this).val();
       var Scales = $(this).data('Scales');
       $.each(Scales, function(index, value) {
