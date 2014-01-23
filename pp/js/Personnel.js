@@ -41,10 +41,49 @@ $(function() {
         $('#Msg').html('Server Error:' + e);
         $('#Error').html(data);
       }
-    }
-    ).fail(function(msg) {
+    }).fail(function(msg) {
       $('#Msg').html(msg);
     });
+  });
+
+  $('#Msg').html('Loading Offices...');
+  $.ajax({
+    type: 'POST',
+    url: 'MySQLiDB.pp.ajax.php',
+    dataType: 'html',
+    xhrFields: {
+      withCredentials: true
+    },
+    data: {
+      'AjaxToken': $('#AjaxToken').val(),
+      'CallAPI': 'GetOffices'
+    },
+    async: false
+  }).done(function(data) {
+    try {
+      var DataResp = $.parseJSON(data);
+      delete data;
+      $('#AjaxToken').val(DataResp.AjaxToken);
+      $('#ED').html(DataResp.RT);
+
+      Options = '<option value=""></option>';
+      $.each(DataResp.Data,
+              function(index, value) {
+                Options += '<option value="' + value.OfficeSL + '">'
+                        + value.OfficeSL + ' - ' + value.OfficeName
+                        + '</option>';
+              });
+      $('#OfficeSL').html(Options)
+              .trigger("chosen:updated");
+      $('#Msg').html('');
+      delete DataResp;
+    }
+    catch (e) {
+      $('#Msg').html('Server Error:' + e);
+      $('#Error').html(data);
+    }
+  }).fail(function(msg) {
+    $('#Msg').html(msg);
   });
 
   $("#Qualification").chosen({width: "300px",
@@ -163,7 +202,8 @@ $(function() {
     dataType: 'html',
     xhrFields: {
       withCredentials: true
-    }
+    },
+    async: false
   }).done(function(data) {
     try {
       var DataResp = $.parseJSON(data);
@@ -180,18 +220,7 @@ $(function() {
               .trigger("chosen:updated");
       $('#PayScale').data('Scales', DataResp.Scales);
 
-      $('#Msg').html('Loading Offices...');
-      Options = '<option value=""></option>';
-      $.each(DataResp.OfficeSL,
-              function(index, value) {
-                Options += '<option value="' + value.OfficeSL + '">'
-                        + value.OfficeSL + ' - ' + value.OfficeName
-                        + '</option>';
-              });
-      $('#OfficeSL').html(Options)
-              .trigger("chosen:updated");
-
-      $('#Msg').html('Loading Banks and Branches...');
+      $('#Msg').html('Loading Banks...');
       Options = '<option value=""></option>';
       $.each(DataResp.BankName,
               function(index, value) {
@@ -202,7 +231,6 @@ $(function() {
       $('#BankName').html(Options)
               .trigger("chosen:updated");
       $('#BankName').data('BankName', DataResp.BankName);
-      $('#BranchName').data('BranchName', DataResp.BranchName);
 
       $('#Msg').html('Loading Designations...');
       $("#DesgID").autocomplete("option", "source", DataResp.DesgID);
@@ -215,6 +243,38 @@ $(function() {
       $('#Error').html(data);
     }
   }).fail(function(msg) {
+    $('#Msg').html(msg);
+  });
+
+  $('#Msg').html('Loading Branches...');
+  $.ajax({
+    type: 'POST',
+    url: 'MySQLiDB.pp.ajax.php',
+    dataType: 'html',
+    xhrFields: {
+      withCredentials: true
+    },
+    data: {
+      'AjaxToken': $('#AjaxToken').val(),
+      'CallAPI': 'GetBranches'
+    },
+    async: false
+  }).done(function(data) {
+    try {
+      var DataResp = $.parseJSON(data);
+      delete data;
+      $('#AjaxToken').val(DataResp.AjaxToken);
+      $('#ED').html(DataResp.RT);
+      $('#BranchName').data('BranchName', DataResp.Data);
+      $('#Msg').html('');
+      delete DataResp;
+    }
+    catch (e) {
+      $('#Msg').html('Server Error:' + e);
+      $('#Error').html(data);
+    }
+  }
+  ).fail(function(msg) {
     $('#Msg').html(msg);
   });
 

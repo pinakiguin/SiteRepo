@@ -21,11 +21,6 @@ if (WebLib::GetVal($_SESSION, 'CheckAuth') === 'Valid') {
       . ' Order by `BankName`';
   $DataResp['BankName'] = $Data->rawQuery($Query);
 
-  $Query                  = 'SELECT `BranchSL`,`BankSL`,`BranchName`,`IFSC`'
-      . ' FROM `' . MySQL_Pre . 'PP_Branches`'
-      . ' Order by `BranchName`';
-  $DataResp['BranchName'] = $Data->rawQuery($Query);
-
   $Query              = 'SELECT `DesgID` as `value`,`DesgID` as `label`'
       . ' FROM `' . MySQL_Pre . 'PP_Personnel`'
       . ' Group by `DesgID`';

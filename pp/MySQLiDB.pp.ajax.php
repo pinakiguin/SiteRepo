@@ -53,6 +53,14 @@ if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
       doQuery($DataResp, $Query, WebLib::GetVal($_POST, 'Params', FALSE, FALSE));
       break;
 
+    case 'GetBranches':
+      //For Filling List of Branches for Selected Bank
+      $Query = 'SELECT `BranchSL`,`BankSL`,`BranchName`,`IFSC`'
+          . ' FROM `' . MySQL_Pre . 'PP_Branches`'
+          . ' Order by `BranchName`';
+      doQuery($DataResp, $Query);
+      break;
+
     //Get Data using Ajax for PP2 Update
     case 'GetDataPP2':
       $Query = 'Select * FROM `' . MySQL_Pre . 'PP_Personnel`'
@@ -67,6 +75,7 @@ if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
       SaveData($DataResp, MySQL_Pre . 'PP_Personnel',
                WebLib::GetVal($_POST, 'Params', FALSE, FALSE));
       break;
+
     /**
      * Get Data For Reports
      */
