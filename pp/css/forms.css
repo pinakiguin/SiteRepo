@@ -29,6 +29,7 @@ root {
 .formWrapper select{
   font-size: 15px;
   color: #858585;
+  width: 150px;
   box-shadow: 0 0 0px 2px #ebebeb;
   -webkit-box-shadow: 0 0 0px 2px #ebebeb;
   -moz-box-shadow: 0 0 0px 2px #ebebeb;
@@ -76,11 +77,11 @@ root {
   padding-left: 0px;
 }
 .hasDatepicker{
-  width: 100px;
+  width: 83px;
 }
 
 .ui-datepicker-trigger{
-  margin: -35px 0px 0px 122px;
+  margin: -35px 0px 0px 105px;
   padding: 0px;
   float: left;
 }

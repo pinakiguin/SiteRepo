@@ -11,7 +11,7 @@ $(function() {
   $("#PayScale").chosen({width: "300px",
     no_results_text: "Oops, nothing found!"});
 
-  $("#OfficeSL").chosen({width: "650px",
+  $("#OfficeSL").chosen({width: "760px",
     no_results_text: "Oops, nothing found!"
   }).change(function() {
     $('#Msg').html("Loading List of Personnel...");
@@ -44,46 +44,6 @@ $(function() {
     }).fail(function(msg) {
       $('#Msg').html(msg);
     });
-  });
-
-  $('#Msg').html('Loading Offices...');
-  $.ajax({
-    type: 'POST',
-    url: 'MySQLiDB.pp.ajax.php',
-    dataType: 'html',
-    xhrFields: {
-      withCredentials: true
-    },
-    data: {
-      'AjaxToken': $('#AjaxToken').val(),
-      'CallAPI': 'GetOffices'
-    },
-    async: false
-  }).done(function(data) {
-    try {
-      var DataResp = $.parseJSON(data);
-      delete data;
-      $('#AjaxToken').val(DataResp.AjaxToken);
-      $('#ED').html(DataResp.RT);
-
-      Options = '<option value=""></option>';
-      $.each(DataResp.Data,
-              function(index, value) {
-                Options += '<option value="' + value.OfficeSL + '">'
-                        + value.OfficeSL + ' - ' + value.OfficeName
-                        + '</option>';
-              });
-      $('#OfficeSL').html(Options)
-              .trigger("chosen:updated");
-      $('#Msg').html('');
-      delete DataResp;
-    }
-    catch (e) {
-      $('#Msg').html('Server Error:' + e);
-      $('#Error').html(data);
-    }
-  }).fail(function(msg) {
-    $('#Msg').html(msg);
   });
 
   $("#Qualification").chosen({width: "300px",
@@ -127,7 +87,8 @@ $(function() {
     buttonImage: "images/calendar.gif",
     buttonImageOnly: true
   });
-
+  $("#PayScale").chosen({width: "300px",
+    no_results_text: "Oops, nothing found!"});
   $("#SexId").buttonset();
   $("#Posting").buttonset();
   $("#Language").buttonset();
@@ -195,6 +156,93 @@ $(function() {
     autoFocus: true
   });
 
+  $("#PayScale").bind({
+    "change": function() {
+      var ScaleCode = $(this).val();
+      var Scales = $(this).data('Scales');
+      $.each(Scales, function(index, value) {
+        if (value.ScaleCode === ScaleCode) {
+          $("#GradePay").val(value.GradePay);
+          return false;
+        }
+      });
+    }
+  });
+
+  $('#TxtRemarksLabel').hide();
+
+  $('#Remarks').change(function() {
+    if ($(this).val() === '7') {
+      $('#TxtRemarksLabel').show();
+      $('#TxtRemarksSpanLabel').html("Why the employee cannot be spared");
+      $('#TxtRemarks').attr("placeholder", "Mention Exact Reason");
+      $(this).attr("name", "CmbRemarks");
+      $('#CmbRemarksLabel').attr("for", "CmbRemarks");
+      $('#TxtRemarksLabel').attr("for", "Remarks");
+      $('#TxtRemarks').attr("name", "Remarks");
+    } else if ($(this).val() === '5') {
+      $('#TxtRemarksLabel').show();
+      $('#TxtRemarksSpanLabel').html("Certificate Issued by");
+      $('#TxtRemarks').attr("placeholder", "Mention Ref. Number");
+      $(this).attr("name", "CmbRemarks");
+      $('#CmbRemarksLabel').attr("for", "CmbRemarks");
+      $('#TxtRemarksLabel').attr("for", "Remarks");
+      $('#TxtRemarks').attr("name", "Remarks");
+    } else {
+      $('#TxtRemarksLabel').hide();
+      $(this).attr("name", "Remarks");
+      $('#TxtRemarks').attr("name", "TxtRemarks");
+      $('#CmbRemarksLabel').attr("for", "Remarks");
+      $('#TxtRemarksLabel').attr("for", "TxtRemarks");
+    }
+  });
+
+  /**
+   * Loading options for Offices
+   */
+  $('#Msg').html('Loading Offices...');
+  $.ajax({
+    type: 'POST',
+    url: 'MySQLiDB.pp.ajax.php',
+    dataType: 'html',
+    xhrFields: {
+      withCredentials: true
+    },
+    data: {
+      'AjaxToken': $('#AjaxToken').val(),
+      'CallAPI': 'GetOffices'
+    },
+    async: false
+  }).done(function(data) {
+    try {
+      var DataResp = $.parseJSON(data);
+      delete data;
+      $('#AjaxToken').val(DataResp.AjaxToken);
+      $('#ED').html(DataResp.RT);
+
+      Options = '<option value=""></option>';
+      $.each(DataResp.Data,
+              function(index, value) {
+                Options += '<option value="' + value.OfficeSL + '">'
+                        + value.OfficeSL + ' - ' + value.OfficeName
+                        + '</option>';
+              });
+      $('#OfficeSL').html(Options)
+              .trigger("chosen:updated");
+      $('#Msg').html('');
+      delete DataResp;
+    }
+    catch (e) {
+      $('#Msg').html('Server Error:' + e);
+      $('#Error').html(data);
+    }
+  }).fail(function(msg) {
+    $('#Msg').html(msg);
+  });
+
+  /**
+   * Loading Options for Designation, Pay Scale and Bank
+   */
   $('#Msg').html('Sending Request...');
   $.ajax({
     type: 'POST',
@@ -246,6 +294,9 @@ $(function() {
     $('#Msg').html(msg);
   });
 
+  /**
+   * Loading Options for Branches
+   */
   $('#Msg').html('Loading Branches...');
   $.ajax({
     type: 'POST',
@@ -273,52 +324,15 @@ $(function() {
       $('#Msg').html('Server Error:' + e);
       $('#Error').html(data);
     }
-  }
-  ).fail(function(msg) {
+  }).fail(function(msg) {
     $('#Msg').html(msg);
   });
 
-  $("#PayScale").bind({
-    "change": function() {
-      var ScaleCode = $(this).val();
-      var Scales = $(this).data('Scales');
-      $.each(Scales, function(index, value) {
-        if (value.ScaleCode === ScaleCode) {
-          $("#GradePay").val(value.GradePay);
-          return false;
-        }
-      });
-    }
-  });
-
-  $('#TxtRemarksLabel').hide();
-
-  $('#Remarks').change(function() {
-    if ($(this).val() === '7') {
-      $('#TxtRemarksLabel').show();
-      $('#TxtRemarksSpanLabel').html("Why the employee cannot be spared");
-      $('#TxtRemarks').attr("placeholder", "Mention Exact Reason");
-      $(this).attr("name", "CmbRemarks");
-      $('#CmbRemarksLabel').attr("for", "CmbRemarks");
-      $('#TxtRemarksLabel').attr("for", "Remarks");
-      $('#TxtRemarks').attr("name", "Remarks");
-    } else if ($(this).val() === '5') {
-      $('#TxtRemarksLabel').show();
-      $('#TxtRemarksSpanLabel').html("Certificate Issued by appropriate authority");
-      $('#TxtRemarks').attr("placeholder", "Mention Ref.number");
-      $(this).attr("name", "CmbRemarks");
-      $('#CmbRemarksLabel').attr("for", "CmbRemarks");
-      $('#TxtRemarksLabel').attr("for", "Remarks");
-      $('#TxtRemarks').attr("name", "Remarks");
-    } else {
-      $('#TxtRemarksLabel').hide();
-      $(this).attr("name", "Remarks");
-      $('#TxtRemarks').attr("name", "TxtRemarks");
-      $('#CmbRemarksLabel').attr("for", "Remarks");
-      $('#TxtRemarksLabel').attr("for", "TxtRemarks");
-    }
-  });
 });
+
+/**
+ * Fills form data for update and delete
+ */
 
 function FillData(FormData) {
 //@todo Fill data Properly for Remarks and Ajax Calls
