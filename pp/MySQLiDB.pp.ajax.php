@@ -57,8 +57,9 @@ if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
       //For Filling List of Branches for Selected Bank
       $Query = 'SELECT `BranchSL`,`BankSL`,`BranchName`,`IFSC`'
           . ' FROM `' . MySQL_Pre . 'PP_Branches`'
+          . ' Where `BankSL`=?'
           . ' Order by `BranchName`';
-      doQuery($DataResp, $Query);
+      doQuery($DataResp, $Query, WebLib::GetVal($_POST, 'Params', FALSE, FALSE));
       break;
 
     //Get Data using Ajax for PP2 Update

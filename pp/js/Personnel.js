@@ -66,19 +66,45 @@ $(function() {
   $("#BankName").chosen({width: "250px",
     no_results_text: "Oops, nothing found!"
   }).change(function() {
-    var Options = '<option value=""></option>';
-    var BranchName = $('#BranchName').data('BranchName');
-    var BankSL = Number($(this).val());
-    $.each(BranchName,
-            function(index, value) {
-              if (value.BankSL === BankSL) {
-                Options += '<option value="' + value.BranchSL + '">'
-                        + value.IFSC + ' - ' + value.BranchName
-                        + '</option>';
-              }
-            });
-    $('#BranchName').html(Options)
-            .trigger("chosen:updated");
+    $('#Msg').html('Loading Branches...');
+    $.ajax({
+      type: 'POST',
+      url: 'MySQLiDB.pp.ajax.php',
+      dataType: 'html',
+      xhrFields: {
+        withCredentials: true
+      },
+      data: {
+        'AjaxToken': $('#AjaxToken').val(),
+        'CallAPI': 'GetBranches',
+        'Params': new Array($('#BankName').val())
+      }
+    }).done(function(data) {
+      try {
+        var DataResp = $.parseJSON(data);
+        delete data;
+        $('#AjaxToken').val(DataResp.AjaxToken);
+        $('#ED').html(DataResp.RT);
+        var Options = '<option value=""></option>';
+        $.each(DataResp.Data,
+                function(index, value) {
+                  Options += '<option value="' + value.BranchSL + '">'
+                          + value.IFSC + ' - ' + value.BranchName
+                          + '</option>';
+                });
+        $('#BranchName').html(Options)
+                .trigger("chosen:updated");
+        $('#BranchName').data('BranchName', DataResp.Data);
+        $('#Msg').html('');
+        delete DataResp;
+      }
+      catch (e) {
+        $('#Msg').html('Server Error:' + e);
+        $('#Error').html(data);
+      }
+    }).fail(function(msg) {
+      $('#Msg').html(msg);
+    });
   });
 
   $('#DOB').datepicker({
@@ -198,50 +224,7 @@ $(function() {
   });
 
   /**
-   * Loading options for Offices
-   */
-  $('#Msg').html('Loading Offices...');
-  $.ajax({
-    type: 'POST',
-    url: 'MySQLiDB.pp.ajax.php',
-    dataType: 'html',
-    xhrFields: {
-      withCredentials: true
-    },
-    data: {
-      'AjaxToken': $('#AjaxToken').val(),
-      'CallAPI': 'GetOffices'
-    },
-    async: false
-  }).done(function(data) {
-    try {
-      var DataResp = $.parseJSON(data);
-      delete data;
-      $('#AjaxToken').val(DataResp.AjaxToken);
-      $('#ED').html(DataResp.RT);
-
-      Options = '<option value=""></option>';
-      $.each(DataResp.Data,
-              function(index, value) {
-                Options += '<option value="' + value.OfficeSL + '">'
-                        + value.OfficeSL + ' - ' + value.OfficeName
-                        + '</option>';
-              });
-      $('#OfficeSL').html(Options)
-              .trigger("chosen:updated");
-      $('#Msg').html('');
-      delete DataResp;
-    }
-    catch (e) {
-      $('#Msg').html('Server Error:' + e);
-      $('#Error').html(data);
-    }
-  }).fail(function(msg) {
-    $('#Msg').html(msg);
-  });
-
-  /**
-   * Loading Options for Designation, Pay Scale and Bank
+   * Loading Options for Office, Designation, Pay Scale and Bank
    */
   $('#Msg').html('Sending Request...');
   $.ajax({
@@ -250,12 +233,26 @@ $(function() {
     dataType: 'html',
     xhrFields: {
       withCredentials: true
-    },
-    async: false
+    }
   }).done(function(data) {
     try {
       var DataResp = $.parseJSON(data);
       delete data;
+
+      $('#Msg').html('Loading Offices...');
+      var Options = '<option value=""></option>';
+      $.each(DataResp.OfficeSL,
+              function(index, value) {
+                Options += '<option value="' + value.OfficeSL + '">'
+                        + value.OfficeSL + ' - ' + value.OfficeName
+                        + '</option>';
+              });
+      $('#OfficeSL').html(Options)
+              .trigger("chosen:updated");
+
+      $('#Msg').html('Loading Designations...');
+      $("#DesgID").autocomplete("option", "source", DataResp.DesgID);
+
       $('#Msg').html('Loading Pay Scales...');
       var Options = '<option value=""></option>';
       $.each(DataResp.Scales,
@@ -280,9 +277,6 @@ $(function() {
               .trigger("chosen:updated");
       $('#BankName').data('BankName', DataResp.BankName);
 
-      $('#Msg').html('Loading Designations...');
-      $("#DesgID").autocomplete("option", "source", DataResp.DesgID);
-      //FillData(DataResp.FieldData);
       delete DataResp;
       $("#Msg").html('');
     }
@@ -294,39 +288,6 @@ $(function() {
     $('#Msg').html(msg);
   });
 
-  /**
-   * Loading Options for Branches
-   */
-  $('#Msg').html('Loading Branches...');
-  $.ajax({
-    type: 'POST',
-    url: 'MySQLiDB.pp.ajax.php',
-    dataType: 'html',
-    xhrFields: {
-      withCredentials: true
-    },
-    data: {
-      'AjaxToken': $('#AjaxToken').val(),
-      'CallAPI': 'GetBranches'
-    },
-    async: false
-  }).done(function(data) {
-    try {
-      var DataResp = $.parseJSON(data);
-      delete data;
-      $('#AjaxToken').val(DataResp.AjaxToken);
-      $('#ED').html(DataResp.RT);
-      $('#BranchName').data('BranchName', DataResp.Data);
-      $('#Msg').html('');
-      delete DataResp;
-    }
-    catch (e) {
-      $('#Msg').html('Server Error:' + e);
-      $('#Error').html(data);
-    }
-  }).fail(function(msg) {
-    $('#Msg').html(msg);
-  });
 
 });
 
