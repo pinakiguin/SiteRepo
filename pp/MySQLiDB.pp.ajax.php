@@ -79,7 +79,7 @@ if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
     /**
      * Get Data For Reports
      */
-    case 'GetOffices':
+    case 'GetOffices':  //Populate the OfficeCombo for DataPPs
       $Query = 'SELECT `OfficeSL`, `OfficeName` '
           . ' FROM `' . MySQL_Pre . 'PP_Offices` '
           . ' Where `UserMapID`=?'

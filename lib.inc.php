@@ -142,7 +142,9 @@ class WebLib {
     echo '<title>' . $PageTitle . ' - ' . $AppTitle . '</title>';
     echo '<meta name="robots" content="noarchive,noodp">';
     echo '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
-    echo '<script src="' . $_SESSION['BaseURL'] . 'js/modernizr-latest.js" type="text/javascript"></script>';
+    echo '<meta name=viewport content="width=device-width, initial-scale=1">';
+    //echo '<script src="' . $_SESSION['BaseURL'] . 'js/modernizr-latest.js"'
+    //.' type="text/javascript"></script>';
   }
 
   /**

@@ -11,6 +11,11 @@ if (WebLib::GetVal($_SESSION, 'CheckAuth') === 'Valid') {
       . ' Order by `OfficeSL`';
   $DataResp['OfficeSL'] = $Data->rawQuery($Query, array($_SESSION['UserMapID']));
 
+  $Query              = 'SELECT `DesgID` as `value`,`DesgID` as `label`'
+      . ' FROM `' . MySQL_Pre . 'PP_Personnel`'
+      . ' Group by `DesgID`';
+  $DataResp['DesgID'] = $Data->query($Query);
+
   $Query              = 'SELECT `ScaleCode`, `Scale`,`GradePay` FROM `'
       . MySQL_Pre . 'PP_PayScales` '
       . 'Order by `ScaleCode`';
@@ -21,12 +26,8 @@ if (WebLib::GetVal($_SESSION, 'CheckAuth') === 'Valid') {
       . ' Order by `BankName`';
   $DataResp['BankName'] = $Data->rawQuery($Query);
 
-  $Query              = 'SELECT `DesgID` as `value`,`DesgID` as `label`'
-      . ' FROM `' . MySQL_Pre . 'PP_Personnel`'
-      . ' Group by `DesgID`';
-  $DataResp['DesgID'] = $Data->query($Query);
+  unset($Data);
 
   echo json_encode($DataResp);
-  unset($Data);
 }
 ?>
