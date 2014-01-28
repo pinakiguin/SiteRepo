@@ -313,7 +313,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
           <input type="text" name="SLNo" id="SLNo" style="width: 50px;"
                  value="<?php
                  echo WebLib::GetVal($_SESSION['PostData'], 'SLNo');
-                 ?>" size="5" maxlength="3" required/>
+                 ?>" size="5" maxlength="4" required/>
         </div>
         <div class="FieldGroup">
           <label for="EPICNo">

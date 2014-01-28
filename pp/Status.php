@@ -3,6 +3,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
+ini_set('display_errors', '1');
+error_reporting(E_ALL);
+
 require_once ( __DIR__ . '/../lib.inc.php');
 
 WebLib::Html5Header('Data Entry Status');
@@ -10,6 +13,9 @@ WebLib::Html5Header('Data Entry Status');
 </head>
 <body>
   <?php
+  /**
+   * Depends on manually created views _NoDefs_ActiveUsers, _NoDefs_UserLogs
+   */
   $Data = new MySQLiDBHelper();
 
   $DataPP2 = $Data->query('Select LastUpdatedOn,EmpSL,EmpName,DOB,BankACNo,OfficeSL'
@@ -28,6 +34,16 @@ WebLib::Html5Header('Data Entry Status');
 
   arrayToTable($Branches);
   unset($Branches);
+  unset($Data);
+
+  $Data  = new MySQLiDB();
+  $Query = 'SELECT CONCAT(`UserID`,\'-\',`UserName`) as `User`,`Action`,'
+      . ' CONCAT(COUNT(`SessionID`),\'-\',MAX(`AccessTime`)) as `Sessions` '
+      . ' FROM `WebSite_NoDefs_UserLogs`'
+      . ' GROUP BY `UserName`,`UserID`,`Action`';
+  $Users = $Data->ShowTable($Query);
+  echo 'Total Active Users: ' . $Users;
+  unset($Data);
   exit();
 
   function arrayToTable($DataArray) {
