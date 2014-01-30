@@ -320,7 +320,6 @@ $(function() {
 
   $("form").on("submit", function(event) {
     event.preventDefault();
-    $('#Error').html($("#frmPP2").serialize());
     $('#Msg').html('Saving Please Wait...');
     $.ajax({
       type: 'POST',

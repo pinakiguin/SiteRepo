@@ -383,7 +383,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
         <input type="submit" name="CmdSubmit" id="CmdSaveUpdate" value="Save"/>
         <input type="reset" name="CmdSubmit"  value="Reset"/>
         <input type="submit" name="CmdSubmit" id="CmdDel" value="Delete"/>
-        <input type="hidden" name="CmdSubmit" id="TxtAction" />
+        <input type="hidden" name="CmdSubmit" id="TxtAction" value="Save" />
         <input type="hidden" name="FormToken" id="FormToken"
                value="<?php
                echo WebLib::GetVal($_SESSION, 'FormToken');
