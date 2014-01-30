@@ -111,7 +111,24 @@ $(function() {
     dateFormat: 'dd-mm-yy',
     showOn: "both",
     buttonImage: "images/calendar.gif",
-    buttonImageOnly: true
+    buttonImageOnly: true,
+    showOtherMonths: true,
+    selectOtherMonths: true,
+    showButtonPanel: true,
+    showAnim: "slideDown",
+    changeMonth: true,
+    changeYear: true,
+    yearRange: "1954:1996",
+    onClose: function() {
+      var curDate = $(this).datepicker("getDate");
+      $('#Msg').html('Date: ' + curDate);
+      if ((('' + curDate) === 'Invalid Date') && ($(this).val() !== '')) {
+        $(this).addClass('ui-state-error');
+      } else {
+        $(this).datepicker('setDate', curDate);
+        $(this).removeClass('ui-state-error');
+      }
+    }
   });
   $("#PayScale").chosen({width: "300px",
     no_results_text: "Oops, nothing found!"});
