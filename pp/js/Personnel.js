@@ -243,7 +243,7 @@ $(function() {
   /**
    * Loading Options for Office, Designation, Pay Scale and Bank
    */
-  $('#Msg').html('Sending Request...');
+  $('#Msg').html('Sending Request for lists...');
   $.ajax({
     type: 'POST',
     url: 'AjaxPersonnel.php',
@@ -305,12 +305,59 @@ $(function() {
     $('#Msg').html(msg);
   });
 
+  /**
+   * Save, Update and Delete using Ajax
+   */
+  $('#CmdDel').on("click", function() {
+    $("#TxtAction").val($(this).val());
+    $("form").trigger("submit");
+  });
 
+  $('#CmdSaveUpdate').on("click", function() {
+    $("#TxtAction").val($(this).val());
+    $("form").trigger("submit");
+  });
+
+  $("form").on("submit", function(event) {
+    event.preventDefault();
+    $('#Error').html($("#frmPP2").serialize());
+    $('#Msg').html('Saving Please Wait...');
+    $.ajax({
+      type: 'POST',
+      url: 'AjaxSavePP2.php',
+      dataType: 'html',
+      xhrFields: {
+        withCredentials: true
+      },
+      data: $("#frmPP2").serialize()
+    }).done(function(data) {
+      try {
+        var DataResp = $.parseJSON(data);
+        delete data;
+        if (DataResp.Done === 0) {
+          $('#frmPP2').trigger("reset");
+        }
+        $("#FormToken").val(DataResp.FormToken);
+        $("#Msg").html(DataResp.Msg);
+        delete DataResp;
+      }
+      catch (e) {
+        $('#Msg').html('Server Error:' + e);
+        $('#Error').html(data);
+      }
+    }).fail(function(msg) {
+      $('#Msg').html(msg);
+    });
+  });
 });
 
 /**
  * Fills form data for update and delete
- */
+ *
+ * @param {jsonObject} FormData
+ * @returns void
+ *
+ **/
 
 function FillData(FormData) {
 //@todo Fill data Properly for Remarks and Ajax Calls

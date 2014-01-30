@@ -26,7 +26,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
     <b>Loading please wait...</b>
   </span>
   <div class="formWrapper" style="font-size: 12px;">
-    <form method="post"
+    <form method="post" id="frmPP2"
           action="<?php
           echo WebLib::GetVal($_SERVER, 'PHP_SELF');
           ?>" >
@@ -383,7 +383,8 @@ WebLib::IncludeJS('pp/js/Personnel.js');
         <input type="submit" name="CmdSubmit" id="CmdSaveUpdate" value="Save"/>
         <input type="reset" name="CmdSubmit"  value="Reset"/>
         <input type="submit" name="CmdSubmit" id="CmdDel" value="Delete"/>
-        <input type="hidden" name="FormToken"
+        <input type="hidden" name="CmdSubmit" id="TxtAction" />
+        <input type="hidden" name="FormToken" id="FormToken"
                value="<?php
                echo WebLib::GetVal($_SESSION, 'FormToken');
                ?>" />
