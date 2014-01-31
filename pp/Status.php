@@ -18,8 +18,11 @@ WebLib::Html5Header('Data Entry Status');
    */
   $Data = new MySQLiDBHelper();
 
-  $DataPP2 = $Data->query('Select LastUpdatedOn,EmpSL,EmpName,DOB,BankACNo,OfficeSL'
-      . ' FROM `' . MySQL_Pre . 'PP_Personnel` '
+  $DataPP2 = $Data->query('Select `LastUpdatedOn`,`EmpSL`,`EmpName`,`DOB`,'
+      . '`BankACNo`,`O`.`OfficeSL`,`UserMapID`'
+      . ' FROM `' . MySQL_Pre . 'PP_Personnel` `P` '
+      . ' JOIN `' . MySQL_Pre . 'PP_Offices` `O`'
+      . ' ON(`P`.`OfficeSL`=`O`.`OfficeSL`)'
       . ' Order By LastUpdatedOn desc limit 10');
 
   $CurrTime = $Data->query('Select NOW() as `CurrTime`');
@@ -37,10 +40,10 @@ WebLib::Html5Header('Data Entry Status');
   unset($Data);
 
   $Data  = new MySQLiDB();
-  $Query = 'SELECT CONCAT(`UserID`,\'-\',`UserName`) as `User`,`Action`,'
+  $Query = 'SELECT `IP`,CONCAT(`UserID`,\'-\',`UserName`) as `User`,`Action`,'
       . ' CONCAT(COUNT(`SessionID`),\'-\',MAX(`AccessTime`)) as `Sessions` '
       . ' FROM `WebSite_NoDefs_UserLogs`'
-      . ' GROUP BY `UserName`,`UserID`,`Action`';
+      . ' GROUP BY `UserName`,`UserID`,`Action`,`IP`';
   $Users = $Data->ShowTable($Query);
   echo 'Total Active Users: ' . $Users;
   unset($Data);

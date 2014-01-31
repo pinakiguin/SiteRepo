@@ -6,11 +6,11 @@
  */
 
 require_once __DIR__ . '/../lib.inc.php';
-if (!isset($_SESSION)) {
-  session_start();
-}
+WebLib::AuthSession();
+
 if (WebLib::GetVal($_SESSION, 'CheckAuth') === 'Valid') {
   include __DIR__ . '/PersonnelData.php';
+  $_SESSION['LifeTime']  = time();
   $AjaxResp['FormToken'] = $_SESSION['FormToken'];
   $AjaxResp['Msg']       = $_SESSION['Msg'];
   $_SESSION['Msg']       = '';
