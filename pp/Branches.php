@@ -57,22 +57,20 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
           <label for="IFSC">
             <strong>IFSC Code</strong>
           </label>
-          <input type="text" name="IFSC" id="IFSC"
+          <input type="text" name="IFSC" id="IFSC" maxlength="11"
                  value="<?php
                  echo WebLib::GetVal($_SESSION['PostData'], 'IFSC');
-                 ?>"  maxlength="16" size="16"
-                 style="padding-right: 9px;width:135px;" required/>
+                 ?>" style="padding-right: 9px;width:135px;" required/>
         </div>
         <div style="clear: both;"></div>
         <div class="FieldGroup" style="padding-bottom: 10px;">
           <label for="BranchName">
             <strong>Branch Name</strong>
           </label>
-          <input type="text" name="BranchName" id="BranchName"
+          <input type="text" name="BranchName" id="BranchName" maxlength="30"
                  value="<?php
                  echo WebLib::GetVal($_SESSION['PostData'], 'BranchName');
-                 ?>"  maxlength="16" size="16"
-                 style="padding-right: 9px;width:400px;" required/>
+                 ?>" style="padding-right: 9px;width:400px;" required/>
         </div>
       </fieldset>
       <div style="clear: both;"></div>
