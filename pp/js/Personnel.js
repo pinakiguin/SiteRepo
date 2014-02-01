@@ -310,12 +310,10 @@ $(function() {
    */
   $('#CmdDel').on("click", function() {
     $("#TxtAction").val($(this).val());
-    $("form").trigger("submit");
   });
 
   $('#CmdSaveUpdate').on("click", function() {
     $("#TxtAction").val($(this).val());
-    $("form").trigger("submit");
   });
 
   $("form").on("submit", function(event) {
@@ -334,7 +332,15 @@ $(function() {
         var DataResp = $.parseJSON(data);
         delete data;
         if (DataResp.Done === 0) {
+          var OfficeSL = $("#OfficeSL").val();
           $('#frmPP2').trigger("reset");
+          $("#OfficeSL").val(OfficeSL);
+          $("#OfficeSL").trigger("chosen:updated");
+          $('#BankName').trigger("chosen:updated");
+          $("#BranchName").trigger("chosen:updated");
+          $('#Qualification').trigger("chosen:updated");
+          $('#PayScale').trigger("chosen:updated");
+          alert(DataResp.Msg);
         }
         $("#FormToken").val(DataResp.FormToken);
         $("#Msg").html(DataResp.Msg);
