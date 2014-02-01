@@ -31,3 +31,6 @@
 [submodule "js/jQuery-MD5"]
 	path = js/jQuery-MD5
 	url = https://github.com/placemarker/jQuery-MD5.git
+[submodule "PHPExcel"]
+	path = PHPExcel
+	url = https://github.com/PHPOffice/PHPExcel.git
