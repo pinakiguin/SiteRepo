@@ -4,99 +4,91 @@ define('EOL', (PHP_SAPI == 'cli') ? PHP_EOL : '<br />');
 date_default_timezone_set('UTC');
 $_SESSION['Ticks'] = microtime(true);
 
-declare (ticks = 1) {
-  //register_tick_function('TickCall');
-  if (WebLib::GetVal($_POST, 'CmdUpload') === 'Upload') {
-    include __DIR__ . '/../PHPExcel/Classes/PHPExcel.php';
-    $inputFileName = $_FILES['ExcelFile']['tmp_name'];
-    $inputFileType = WebLib::GetVal($_POST, 'FileType');
-    //$inputFileType = 'Excel5';
-    //$inputFileType = 'Excel2007';
-    //$inputFileType = 'Excel2003XML';
-    //$inputFileType = 'OOCalc';
-    //$inputFileType = 'Gnumeric';
+if (WebLib::GetVal($_POST, 'CmdUpload') === 'Upload') {
+  include __DIR__ . '/../PHPExcel/Classes/PHPExcel.php';
+  $inputFileName = $_FILES['ExcelFile']['tmp_name'];
+  $inputFileType = WebLib::GetVal($_POST, 'FileType');
+  //$inputFileType = 'Excel5';
+  //$inputFileType = 'Excel2007';
+  //$inputFileType = 'Excel2003XML';
+  //$inputFileType = 'OOCalc';
+  //$inputFileType = 'Gnumeric';
 
-    $sheetname = 'A-WEBSITE_MobileNos';
-    $LastCol   = 'B';
-    $objReader = PHPExcel_IOFactory::createReader($inputFileType);
+  $objReader = PHPExcel_IOFactory::createReader($inputFileType);
 
-    $worksheet = $objReader->listWorksheetInfo($inputFileName);
+  $worksheet = $objReader->listWorksheetInfo($inputFileName);
 
-    //echo '<h3>Worksheet Information</h3>';
-    //echo '<pre>';
-    //print_r($worksheet);
-    $LastCol   = $worksheet[0]['lastColumnLetter'];
-    $sheetname = $worksheet[0]['worksheetName'];
+  //echo '<h3>Worksheet Information</h3>';
+  //echo '<pre>';
+  //print_r($worksheet);
+  $LastCol   = $worksheet[0]['lastColumnLetter'];
+  $sheetname = $worksheet[0]['worksheetName'];
 
-    //echo '</pre>';
+  //echo '</pre>';
 
-    class FilterCells implements PHPExcel_Reader_IReadFilter {
+  class FilterCells implements PHPExcel_Reader_IReadFilter {
 
-      private $_startRow = 0;
-      private $_endRow   = 0;
-      private $_columns  = array();
+    private $_startRow = 0;
+    private $_endRow   = 0;
+    private $_columns  = array();
 
-      public function __construct($startRow,
-                                  $endRow,
-                                  $columns) {
-        $this->_startRow = $startRow;
-        $this->_endRow   = $endRow;
-        $this->_columns  = $columns;
-      }
-
-      public function readCell($column,
-                               $row,
-                               $worksheetName = '') {
-        if ($row >= $this->_startRow && $row <= $this->_endRow) {
-          if (in_array($column, $this->_columns)) {
-            return true;
-          }
-        }
-        return false;
-      }
-
+    public function __construct($startRow,
+                                $endRow,
+                                $columns) {
+      $this->_startRow = $startRow;
+      $this->_endRow   = $endRow;
+      $this->_columns  = $columns;
     }
 
-    $CellSubset = new FilterCells(1, 200, range('A', $LastCol));
-
-    $objReader->setReadDataOnly(true);
-    $objReader->setLoadSheetsOnly($sheetname);
-
-    $objReader->setReadFilter($CellSubset);
-
-    $objPHPExcel = $objReader->load($inputFileName);
-
-    //$objPHPExcel   = PHPExcel_IOFactory::load($inputFileName);
-    //$objPHPExcel->setReadDataOnly(true);
-    $sheetData             = $objPHPExcel->getActiveSheet()
-        ->toArray(null, true, true, true);
-    unset($objPHPExcel);
-    $_SESSION['ExcelData'] = $sheetData;
-
-    echo '<!--hr/><table border="1">';
-    foreach ($sheetData as $RowIndex => $RowData) {
-      echo '<tr>';
-      if ($RowIndex === 1) {
-        echo '<td></td>';
-        foreach ($RowData as $ColIndex => $Cell) {
-          echo '<td>' . $ColIndex . '</td>';
+    public function readCell($column,
+                             $row,
+                             $worksheetName = '') {
+      if ($row >= $this->_startRow && $row <= $this->_endRow) {
+        if (in_array($column, $this->_columns)) {
+          return true;
         }
-        echo '</tr><tr>';
       }
-      foreach ($RowData as $ColIndex => $Cell) {
-        if ($ColIndex === 'A') {
-          echo '<td>' . $RowIndex . '</td>';
-        }
-        echo '<td>' . $Cell . '</td>';
-      }
-      echo '</tr>';
+      return false;
     }
-    echo '</table-->';
-    unset($sheetData);
+
   }
 
-  SendJSON();
-  //unregister_tick_function('TickCall');
+  $CellSubset = new FilterCells(1, 200, range('A', $LastCol));
+
+  $objReader->setReadDataOnly(true);
+  $objReader->setLoadSheetsOnly($sheetname);
+
+  $objReader->setReadFilter($CellSubset);
+
+  $objPHPExcel = $objReader->load($inputFileName);
+
+  //$objPHPExcel   = PHPExcel_IOFactory::load($inputFileName);
+  //$objPHPExcel->setReadDataOnly(true);
+  $sheetData             = $objPHPExcel->getActiveSheet()
+      ->toArray(null, true, true, true);
+  unset($objPHPExcel);
+  $_SESSION['ExcelData'] = $sheetData;
+
+  echo '<!--hr/><table border="1">';
+  foreach ($sheetData as $RowIndex => $RowData) {
+    echo '<tr>';
+    if ($RowIndex === 1) {
+      echo '<td></td>';
+      foreach ($RowData as $ColIndex => $Cell) {
+        echo '<td>' . $ColIndex . '</td>';
+      }
+      echo '</tr><tr>';
+    }
+    foreach ($RowData as $ColIndex => $Cell) {
+      if ($ColIndex === 'A') {
+        echo '<td>' . $RowIndex . '</td>';
+      }
+      echo '<td>' . $Cell . '</td>';
+    }
+    echo '</tr>';
+  }
+  echo '</table-->';
+  unset($sheetData);
 }
 
 function TickCall() {

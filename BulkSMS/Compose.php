@@ -5,7 +5,9 @@ WebLib::AuthSession();
 WebLib::Html5Header('SMS Template');
 WebLib::IncludeCSS();
 WebLib::IncludeCSS('css/forms.css');
+WebLib::IncludeCSS('BulkSMS/css/Compose.css');
 WebLib::JQueryInclude();
+WebLib::IncludeJS('BulkSMS/js/json-template.js');
 WebLib::IncludeJS('BulkSMS/js/Compose.js');
 ?>
 </head>
@@ -20,6 +22,9 @@ WebLib::IncludeJS('BulkSMS/js/Compose.js');
   WebLib::ShowMenuBar('SMS');
   ?>
   <div class="content">
+    <span class="Message" id="Msg" style="float: right;">
+      <b>Loading please wait...</b>
+    </span>
     <div class="formWrapper">
       <form method="post" enctype="multipart/form-data"
             action="<?php
@@ -35,7 +40,7 @@ WebLib::IncludeJS('BulkSMS/js/Compose.js');
                     rows="10" cols="120" name="MsgText"></textarea>
           <div id="PreviewDIV" style="margin: 5px;display: none;">
             <h4>SMS Preview</h4>
-            <span id="PreviewSMS"></span>
+            <textarea id="PreviewSMS" disabled></textarea>
           </div>
           <div class="formControl">
             <input type="button" id="ShowPreview" name="CmdAction"
@@ -51,16 +56,25 @@ WebLib::IncludeJS('BulkSMS/js/Compose.js');
             <strong>Note:</strong>
             Only 200 rows from the first sheet will be uploaded.
           </span><br/>
-          <label for="ExcelFile">
-            <strong>Select Spreadsheet:</strong>
-          </label><br/>
-          <input id="ExcelFile" name="ExcelFile" type="file"/><br/>
-          <label for="FileType"><strong>File Type:</strong></label><br/>
-          <select id="FileType" name="FileType">
-            <option value="OOCalc">Open Document Spreadsheet (*.ods)</option>
-            <option value="Excel2007">Microsoft Excel 2007/2010 XML (*.xlsx)</option>
-            <option value="Excel5">Microsoft Excel 97/2000/XP/2003 (*.xls)</option>
-          </select><br/>
+          <div style="margin:5px;">
+            <div id="ListData"></div>
+            <pre id="ShowJSON"></pre>
+            <label for="ExcelFile">
+              <strong>Select Spreadsheet:</strong>
+            </label>
+            <input id="ExcelFile" name="ExcelFile" type="file"
+                   accept="application/vnd.ms-excel" />
+          </div>
+          <br/>
+          <div style="margin:5px;">
+            <label for="FileType"><strong>File Type:</strong></label>
+            <select id="FileType" name="FileType">
+              <option value="OOCalc">Open Document Spreadsheet (*.ods)</option>
+              <option value="Excel2007">Microsoft Excel 2007/2010 XML (*.xlsx)</option>
+              <option value="Excel5">Microsoft Excel 97/2000/XP/2003 (*.xls)</option>
+            </select>
+          </div>
+          <br/>
           <div style="margin:5px;">
             <input type="checkbox"  style="vertical-align: -20%;"
                    id="RowHeader" name="RowHeader" value="1"/>
@@ -80,6 +94,7 @@ WebLib::IncludeJS('BulkSMS/js/Compose.js');
         </div>
       </form>
     </div>
+    <pre id="Error"></pre>
   </div>
   <div class="pageinfo">
     <?php WebLib::PageInfo(); ?>
