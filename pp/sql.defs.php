@@ -231,7 +231,7 @@ function SQLDefs($ObjectName) {
       break;
     case 'PP_Offices':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . $ObjectName . '` ('
-          . '`OfficeSL` bigint(20) NOT NULL AUTO_INCREMENT, '
+          . '`OfficeSL` INT(10) ZEROFILL NOT NULL AUTO_INCREMENT, '
           . '`OfficeCode` varchar(8) DEFAULT NULL, '
           . '`OfficeName` varchar(100) DEFAULT NULL, '
           . '`DesgOC` varchar(30) DEFAULT NULL, '
@@ -260,7 +260,7 @@ function SQLDefs($ObjectName) {
           . ' ON UPDATE CURRENT_TIMESTAMP,'
           . '`EmpSL` bigint(20) NOT NULL AUTO_INCREMENT,'
           . '`EmpCode` int(20) DEFAULT NULL,'
-          . '`OfficeSL` int(20) NOT NULL,'
+          . '`OfficeSL` INT(10) ZEROFILL NOT NULL,'
           . '`EmpName` varchar(50) NOT NULL,'
           . '`DesgID` varchar(50) NOT NULL,'
           . '`DOB` date NOT NULL,'
@@ -293,8 +293,8 @@ function SQLDefs($ObjectName) {
           . '`Remarks` varchar(50) NOT NULL,'
           . '`BankACNo` varchar(20) NOT NULL,'
           . '`BankName` int(10) NOT NULL,'
-          . '`BranchName` int(10) NOT NULL,'
-          . '`IFSC` varchar(50) NOT NULL,'
+          . '`BranchName` INT(10) ZEROFILL NOT NULL,'
+          . '`IFSC` VARCHAR(11) NOT NULL,'
           . '`EDCPBIssued` enum("yes","no"),'
           . '`PBReturn` enum("yes","no"),'
           . ' PRIMARY KEY (`EmpSL`)'
@@ -302,17 +302,17 @@ function SQLDefs($ObjectName) {
       break;
     case 'PP_FieldNames':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . $ObjectName . '` ('
-          . '`FieldName` varchar(25) NOT NULL, '
-          . '`Description` varchar(100) DEFAULT NULL, '
+          . '`FieldName` VARCHAR(25) NOT NULL, '
+          . '`Description` VARCHAR(100) DEFAULT NULL, '
           . ' PRIMARY KEY (`FieldName`)'
           . ' ) ENGINE = InnoDB DEFAULT CHARSET = utf8;';
       break;
     case 'PP_PayScales':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . $ObjectName . '` ('
-          . '`ScaleCode` varchar(3) NOT NULL,'
-          . '`ScaleType` varchar(2) DEFAULT NULL,'
-          . '`Scale` varchar(30) DEFAULT NULL,'
-          . '`GradePay` int(5) DEFAULT NULL,'
+          . '`ScaleCode` VARCHAR(3) NOT NULL,'
+          . '`ScaleType` VARCHAR(2) DEFAULT NULL,'
+          . '`Scale` VARCHAR(30) DEFAULT NULL,'
+          . '`GradePay` INT(5) DEFAULT NULL,'
           . ' PRIMARY KEY (`ScaleCode`)'
           . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
       break;
@@ -340,18 +340,18 @@ function SQLDefs($ObjectName) {
       break;
     case 'PP_Banks':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . $ObjectName . '` ('
-          . '`BankSL` int(3) NOT NULL AUTO_INCREMENT,'
-          . '`BankName` varchar(30) NOT NULL,'
+          . '`BankSL` INT(3) NOT NULL AUTO_INCREMENT,'
+          . '`BankName` VARCHAR(30) NOT NULL,'
           . ' PRIMARY KEY (`BankSL`)'
           . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
       break;
     case 'PP_Branches':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . $ObjectName . '` ('
-          . '`BranchSL` int(3) NOT NULL AUTO_INCREMENT,'
-          . '`IFSC` varchar(11) NOT NULL,'
-          . '`BankSL` int(3) NOT NULL,'
-          . '`BranchName` varchar(30) DEFAULT NULL,'
-          . '`MICR` varchar(10) DEFAULT NULL,'
+          . '`BranchSL` INT(10) ZEROFILL NOT NULL AUTO_INCREMENT,'
+          . '`IFSC` VARCHAR(11) NOT NULL,'
+          . '`BankSL` INT(3) NOT NULL,'
+          . '`BranchName` VARCHAR(50) NOT NULL,'
+          . '`MICR` VARCHAR(10) NOT NULL,'
           . ' PRIMARY KEY (`BranchSL`)'
           . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
       break;

@@ -30,16 +30,23 @@ WebLib::IncludeJS('pp/js/Office.js');
   <div class="content">
     <h2>Office Information</h2>
     <?php WebLib::ShowMsg(); ?>
-    <form class="FieldGroup" method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
+    <form class="FieldGroup" method="post"
+          action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
       <div class="FieldGroup">
         <label for="OfficeName"><strong>Name of the Office:</strong></label>
-        <input id="OfficeName" name="OfficeName" type="text" maxlength="100"
-               value="<?php echo WebLib::GetVal($_SESSION['PostData'], 'OfficeName') ?>"/>
+        <input id="OfficeName" name="OfficeName" type="text" maxlength="150"
+               value="<?php
+               echo WebLib::GetVal($_SESSION['PostData'], 'OfficeName')
+               ?>" required />
         <input id="OfficeSL" name="OfficeSL" type="hidden" maxlength="5"
-               value="<?php echo WebLib::GetVal($_SESSION['PostData'], 'OfficeSL') ?>"/>
+               value="<?php
+               echo WebLib::GetVal($_SESSION['PostData'], 'OfficeSL')
+               ?>"/>
         <label for="DesgOC">Designation of Officer-in-Charge:</label>
         <input id="DesgOC" name="DesgOC" type="text" maxlength="30"
-               value="<?php echo WebLib::GetVal($_SESSION['PostData'], 'DesgOC') ?>"/>
+               value="<?php
+               echo WebLib::GetVal($_SESSION['PostData'], 'DesgOC')
+               ?>"/>
       </div>
       <div style="clear: both;"></div>
       <div class="FieldGroup">
@@ -47,19 +54,29 @@ WebLib::IncludeJS('pp/js/Office.js');
           <legend><strong>Office Address</strong></legend>
           <label for="AddrPTS">Para/Tola/Street:</label>
           <input id="AddrPTS" name="AddrPTS" type="text" maxlength="50"
-                 value="<?php echo WebLib::GetVal($_SESSION['PostData'], 'AddrPTS') ?>"/><br/>
+                 value="<?php
+                 echo WebLib::GetVal($_SESSION['PostData'], 'AddrPTS')
+                 ?>"/><br/>
           <label for="AddrVTM">Village/Town/Metro:</label>
           <input id="AddrVTM" name="AddrVTM" type="text" maxlength="50"
-                 value="<?php echo WebLib::GetVal($_SESSION['PostData'], 'AddrVTM') ?>"/><br/>
+                 value="<?php
+                 echo WebLib::GetVal($_SESSION['PostData'], 'AddrVTM')
+                 ?>"/><br/>
           <label for="PostOffice">Post Office:</label>
           <input id="PostOffice" name="PostOffice" type="text" maxlength="20"
-                 value="<?php echo WebLib::GetVal($_SESSION['PostData'], 'PostOffice') ?>"/><br/>
+                 value="<?php
+                 echo WebLib::GetVal($_SESSION['PostData'], 'PostOffice')
+                 ?>"/><br/>
           <label for="PSCode">Police Station:</label>
           <input id="PSCode" name="PSCode" type="text" maxlength="50"
-                 value="<?php echo WebLib::GetVal($_SESSION['PostData'], 'PSCode') ?>"/><br/>
+                 value="<?php
+                 echo WebLib::GetVal($_SESSION['PostData'], 'PSCode')
+                 ?>"/><br/>
           <label for="PinCode">Pin Code:</label>
           <input id="PinCode" name="PinCode" type="text" maxlength="6"
-                 value="<?php echo WebLib::GetVal($_SESSION['PostData'], 'PinCode') ?>"/><br/>
+                 value="<?php
+                 echo WebLib::GetVal($_SESSION['PostData'], 'PinCode')
+                 ?>"/><br/>
         </fieldset>
       </div>
       <div class="FieldGroup">
@@ -67,33 +84,45 @@ WebLib::IncludeJS('pp/js/Office.js');
           <legend>Category</legend>
           <label for="Status">Nature of Office:</label>
           <input id="Status" name="Status" type="text" maxlength="50"
-                 value="<?php echo WebLib::GetVal($_SESSION['PostData'], 'Status') ?>"/><br/>
+                 value="<?php
+                 echo WebLib::GetVal($_SESSION['PostData'], 'Status')
+                 ?>"/><br/>
           <label for="TypeCode">Status:</label>
           <input id="TypeCode" name="TypeCode" type="text" maxlength="50"
-                 value="<?php echo WebLib::GetVal($_SESSION['PostData'], 'TypeCode') ?>"/><br/>
+                 value="<?php
+                 echo WebLib::GetVal($_SESSION['PostData'], 'TypeCode')
+                 ?>"/><br/>
         </fieldset>
         <fieldset>
           <legend>Contact Number</legend>
           <div class="FieldGroup">
             <label for="Phone">Phone:</label>
             <input id="Phone" name="Phone" type="text" maxlength="11"
-                   value="<?php echo WebLib::GetVal($_SESSION['PostData'], 'Phone') ?>"/>
+                   value="<?php
+                   echo WebLib::GetVal($_SESSION['PostData'], 'Phone')
+                   ?>"/>
           </div>
           <div class="FieldGroup">
             <label for="Fax">Fax:</label>
             <input id="Fax" name="Fax" type="text" maxlength="11"
-                   value="<?php echo WebLib::GetVal($_SESSION['PostData'], 'Fax') ?>"/>
+                   value="<?php
+                   echo WebLib::GetVal($_SESSION['PostData'], 'Fax')
+                   ?>"/>
           </div>
           <div style="clear: both;"></div>
           <div class="FieldGroup">
             <label for="Mobile">Mobile:</label>
             <input id="Mobile" name="Mobile" type="text" maxlength="10"
-                   value="<?php echo WebLib::GetVal($_SESSION['PostData'], 'Mobile') ?>"/>
+                   value="<?php
+                   echo WebLib::GetVal($_SESSION['PostData'], 'Mobile')
+                   ?>"/>
           </div>
           <div class="FieldGroup">
             <label for="EMail Address">E-Mail Address:</label>
             <input id="EMail" name="EMail" type="text" maxlength="50"
-                   value="<?php echo WebLib::GetVal($_SESSION['PostData'], 'EMail') ?>"/>
+                   value="<?php
+                   echo WebLib::GetVal($_SESSION['PostData'], 'EMail')
+                   ?>"/>
           </div>
         </fieldset>
       </div>
@@ -101,19 +130,29 @@ WebLib::IncludeJS('pp/js/Office.js');
       <div class="FieldGroup">
         <label for="ACNo">Assembly Constituency:</label>
         <input id="ACNo" name="ACNo" type="text" maxlength="3"
-               value="<?php echo WebLib::GetVal($_SESSION['PostData'], 'ACNo') ?>"/>
+               value="<?php
+               echo WebLib::GetVal($_SESSION['PostData'], 'ACNo')
+               ?>"/>
       </div>
       <div class="FieldGroup">
         <label for="Staffs">Total no. of Staffs:</label>
         <input id="Staffs" name="Staffs" type="text" maxlength="4"
-               value="<?php echo WebLib::GetVal($_SESSION['PostData'], 'Staffs') ?>"/>
+               value="<?php
+               echo WebLib::GetVal($_SESSION['PostData'], 'Staffs')
+               ?>"/>
       </div>
       <br/>
       <input id="CmdSaveUpdate" type="submit" name="CmdAction"
-             value="<?php echo WebLib::GetVal($_SESSION['PostData'], 'CmdAction') ?>" />
+             value="<?php
+             echo WebLib::GetVal($_SESSION['PostData'], 'CmdAction')
+             ?>" />
       <input id="CmdDel" type="submit" name="CmdAction" value="Delete" />
-      <input type="hidden" name="FormToken" value="<?php echo WebLib::GetVal($_SESSION, 'FormToken') ?>" />
-      <input type="hidden" id="AjaxToken" value="<?php echo WebLib::GetVal($_SESSION, 'Token'); ?>" />
+      <input type="hidden" name="FormToken" value="<?php
+      echo WebLib::GetVal($_SESSION, 'FormToken')
+      ?>" />
+      <input type="hidden" id="AjaxToken" value="<?php
+      echo WebLib::GetVal($_SESSION, 'Token');
+      ?>" />
     </form>
     <?php if (isset($_GET['Debug'])) { ?>
       <div id="Debug" style="float: left;text-align: left; width: 400px;">
@@ -126,7 +165,9 @@ WebLib::IncludeJS('pp/js/Office.js');
         </pre>
         <?php
         $Data = new MySQLiDBHelper(HOST_Name, MySQL_User, MySQL_Pass, MySQL_DB);
-        $Rows = $Data->rawQuery('Select `ACNo` as `value`,concat(`ACNo`,\'-\',`ACName`) as `label` from `' . MySQL_Pre . "PP_ACs`");
+        $Rows = $Data->rawQuery('Select `ACNo` as `value`,'
+            . ' concat(`ACNo`,\'-\',`ACName`) as `label` '
+            . ' from `' . MySQL_Pre . "PP_ACs`");
         echo json_encode($Rows);
         ?>
         </p>
