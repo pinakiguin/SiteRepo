@@ -38,53 +38,36 @@ WebLib::IncludeJS('BulkSMS/js/Compose.js');
             <span id="PreviewSMS"></span>
           </div>
           <div class="formControl">
-            <input type="button" id="ShowPreview" name="CmdAction" value="Show Preview"/>
+            <input type="button" id="ShowPreview" name="CmdAction"
+                   value="Save Template"/>
           </div>
         </fieldset>
         <fieldset class="formWrapper-fieldset">
           <legend class="formWrapper-legend">Upload Contacts</legend>
           <?php
-          if (WebLib::GetVal($_POST, 'CmdUpload') === 'Upload') {
-            include __DIR__ . '/../PHPExcel/Classes/PHPExcel.php';
-            $inputFileName         = $_FILES['ExcelFile']['tmp_name'];
-            $objPHPExcel           = PHPExcel_IOFactory::load($inputFileName);
-            $sheetData             = $objPHPExcel->getActiveSheet()->toArray(null,
-                                                                             true,
-                                                                             true,
-                                                                             true);
-            $_SESSION['ExcelData'] = $sheetData;
-            echo '<!--hr/><table border="1">';
-            foreach ($sheetData as $RowIndex => $RowData) {
-              echo '<tr>';
-              if ($RowIndex === 1) {
-                echo '<td></td>';
-                foreach ($RowData as $ColIndex => $Cell) {
-                  echo '<td>' . $ColIndex . '</td>';
-                }
-                echo '</tr><tr>';
-              }
-              foreach ($RowData as $ColIndex => $Cell) {
-                if ($ColIndex === 'A') {
-                  echo '<td>' . $RowIndex . '</td>';
-                }
-                echo '<td>' . $Cell . '</td>';
-              }
-              echo '</tr>';
-            }
-            echo '</table-->';
-          }
-          $ExcelJSON = json_encode(WebLib::GetVal($_SESSION, 'ExcelData', false,
-                                                  false), JSON_PRETTY_PRINT);
-          if ($ExcelJSON !== 'null') {
-            echo "<br/>JSON Length:" . strlen($ExcelJSON) . '<br/>';
-            echo '<pre>' . $ExcelJSON . '</pre>';
-          }
+          include 'ParseExcel.php';
           ?>
-          <input name="ExcelFile" type="file"/><br/>
-          <label for="RowHeader">
-            <input type="checkbox" name="RowHeader" value="1"/>
-            <strong>The first line of the file contains the column names</strong>
-          </label>
+          <span class="Message">
+            <strong>Note:</strong>
+            Only 200 rows from the first sheet will be uploaded.
+          </span><br/>
+          <label for="ExcelFile">
+            <strong>Select Spreadsheet:</strong>
+          </label><br/>
+          <input id="ExcelFile" name="ExcelFile" type="file"/><br/>
+          <label for="FileType"><strong>File Type:</strong></label><br/>
+          <select id="FileType" name="FileType">
+            <option value="OOCalc">Open Document Spreadsheet (*.ods)</option>
+            <option value="Excel2007">Microsoft Excel 2007/2010 XML (*.xlsx)</option>
+            <option value="Excel5">Microsoft Excel 97/2000/XP/2003 (*.xls)</option>
+          </select><br/>
+          <div style="margin:5px;">
+            <input type="checkbox"  style="vertical-align: -20%;"
+                   id="RowHeader" name="RowHeader" value="1"/>
+            <label for="RowHeader">
+              The first line of the file contains the column names.
+            </label>
+          </div>
           <hr/>
           <div class="formControl">
             <input type="submit" name="CmdUpload" value="Upload"/>
@@ -106,4 +89,3 @@ WebLib::IncludeJS('BulkSMS/js/Compose.js');
   </div>
 </body>
 </html>
-
