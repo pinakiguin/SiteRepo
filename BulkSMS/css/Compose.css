@@ -1,0 +1,19 @@
+/*
+    Document   : Compose
+    Created on : 2 Feb, 2014, 10:38:17 PM
+    Author     : abu
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root {
+  display: block;
+}
+
+#PreviewSMS {
+  margin-top: 5px;
+  padding: 7px 27px 7px 9px;
+  width: 500px;
+  border: 2px dashed #7A7A7A;
+  background: #DDDDDD;
+}
