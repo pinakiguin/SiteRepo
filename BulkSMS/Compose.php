@@ -32,22 +32,6 @@ WebLib::IncludeJS('BulkSMS/js/Compose.js');
             ?>">
         <h3 class="formWrapper-h3">SMS Templates</h3>
         <fieldset class="formWrapper-fieldset">
-          <legend class="formWrapper-legend">SMS Message Template</legend>
-          <input type="text" class="form-TxtInput" style="width: 500px;"
-                 id="GroupName" name="GroupName"
-                 placeholder="Type The Name of The Template"/>
-          <textarea id="MsgText" class="form-TxtInput" style="width: 500px;"
-                    rows="10" cols="120" name="MsgText"></textarea>
-          <div id="PreviewDIV" style="margin: 5px;display: none;">
-            <h4>SMS Preview</h4>
-            <textarea id="PreviewSMS" disabled></textarea>
-          </div>
-          <div class="formControl">
-            <input type="button" id="ShowPreview" name="CmdAction"
-                   value="Save Template"/>
-          </div>
-        </fieldset>
-        <fieldset class="formWrapper-fieldset">
           <legend class="formWrapper-legend">Upload Contacts</legend>
           <?php
           include 'ParseExcel.php';
@@ -57,24 +41,45 @@ WebLib::IncludeJS('BulkSMS/js/Compose.js');
             Only 200 rows from the first sheet will be uploaded.
           </span><br/>
           <div style="margin:5px;">
-            <div id="ListData"></div>
-            <pre id="ShowJSON"></pre>
+            <div id="ListData">
+              <?php
+              $Contacts = WebLib::GetVal($_SESSION, 'ExcelData', false, false);
+              if (is_array($Contacts)) {
+                foreach ($Contacts as $RowIndex => $Row) {
+                  if ($RowIndex === 1) {
+                    echo '<h4>Columns:</h4>';
+                    foreach ($Row as $ColIndex => $Cell) {
+                      echo '<input type="button" class="TmplCol" '
+                      . ' value="' . $Cell . '"'
+                      . ' data-tmpl="{' . $ColIndex . '}" />';
+                    }
+                  }
+                  if ($RowIndex === 2) {
+                    echo '<h4>Sample Data:</h4>';
+                    foreach ($Row as $Col) {
+                      echo '[' . $Col . '], ';
+                    }
+                  }
+                }
+                echo '<em>Total Rows:</em> ' . count($Contacts);
+              }
+              ?>
+              <pre id="ShowJSON"></pre>
+            </div>
             <label for="ExcelFile">
-              <strong>Select Spreadsheet:</strong>
+              <h4>Select Spreadsheet:</h4>
             </label>
             <input id="ExcelFile" name="ExcelFile" type="file"
                    accept="application/vnd.ms-excel" />
           </div>
-          <br/>
           <div style="margin:5px;">
-            <label for="FileType"><strong>File Type:</strong></label>
+            <label for="FileType"><h4>File Type:</h4></label>
             <select id="FileType" name="FileType">
               <option value="OOCalc">Open Document Spreadsheet (*.ods)</option>
               <option value="Excel2007">Microsoft Excel 2007/2010 XML (*.xlsx)</option>
               <option value="Excel5">Microsoft Excel 97/2000/XP/2003 (*.xls)</option>
             </select>
           </div>
-          <br/>
           <div style="margin:5px;">
             <input type="checkbox"  style="vertical-align: -20%;"
                    id="RowHeader" name="RowHeader" value="1"/>
@@ -85,6 +90,22 @@ WebLib::IncludeJS('BulkSMS/js/Compose.js');
           <hr/>
           <div class="formControl">
             <input type="submit" name="CmdUpload" value="Upload"/>
+          </div>
+        </fieldset>
+        <fieldset class="formWrapper-fieldset">
+          <legend class="formWrapper-legend">SMS Message Template</legend>
+          <input type="text" class="form-TxtInput" style="width: 500px;"
+                 id="GroupName" name="GroupName"
+                 placeholder="Type The Name of The Template"/>
+          <textarea id="MsgText" class="form-TxtInput" style="width: 500px;"
+                    rows="10" cols="120" name="MsgText"></textarea>
+          <div id="PreviewDIV" style="margin: 5px;display: none;">
+            <h4>SMS Preview</h4>
+            <pre id="PreviewSMS"></pre>
+          </div>
+          <div class="formControl">
+            <input type="button" id="ShowPreview" name="CmdAction"
+                   value="Show Preview"/>
           </div>
         </fieldset>
         <div class="formWrapper-Clear"></div>

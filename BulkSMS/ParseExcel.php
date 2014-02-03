@@ -68,26 +68,6 @@ if (WebLib::GetVal($_POST, 'CmdUpload') === 'Upload') {
       ->toArray(null, true, true, true);
   unset($objPHPExcel);
   $_SESSION['ExcelData'] = $sheetData;
-
-  echo '<!--hr/><table border="1">';
-  foreach ($sheetData as $RowIndex => $RowData) {
-    echo '<tr>';
-    if ($RowIndex === 1) {
-      echo '<td></td>';
-      foreach ($RowData as $ColIndex => $Cell) {
-        echo '<td>' . $ColIndex . '</td>';
-      }
-      echo '</tr><tr>';
-    }
-    foreach ($RowData as $ColIndex => $Cell) {
-      if ($ColIndex === 'A') {
-        echo '<td>' . $RowIndex . '</td>';
-      }
-      echo '<td>' . $Cell . '</td>';
-    }
-    echo '</tr>';
-  }
-  echo '</table-->';
   unset($sheetData);
 }
 
