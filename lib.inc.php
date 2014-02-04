@@ -19,6 +19,7 @@
  *   die('PHP 5.3+ is required');
  * }
  */
+ini_set("zlib.output_compression", 4096);
 require_once __DIR__ . '/MySQLiDB.inc.php';
 require_once __DIR__ . '/class.MySQLiDBHelper.php';
 require_once 'sql.defs.php'; //Include the nested sql.defs.php don't use __DIR__
@@ -136,12 +137,12 @@ class WebLib {
    */
   public static function Html5Header($PageTitle = 'Paschim Medinipur') {
     $AppTitle = AppTitle;
+    header('Content-type: text/html; charset=utf-8');
     echo '<!DOCTYPE html>';
     echo '<html xmlns="http://www.w3.org/1999/xhtml">';
     echo '<head>';
     echo '<title>' . $PageTitle . ' - ' . $AppTitle . '</title>';
     echo '<meta name="robots" content="noarchive,noodp">';
-    echo '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
     echo '<meta name=viewport content="width=device-width, initial-scale=1">';
     //echo '<script src="' . $_SESSION['BaseURL'] . 'js/modernizr-latest.js"'
     //.' type="text/javascript"></script>';
@@ -151,9 +152,12 @@ class WebLib {
    * Generates call to jQuery Scripts in Head Section
    */
   public static function JQueryInclude() {
-    echo '<link type="text/css" href="' . $_SESSION['BaseURL'] . 'css/dark-hive/jquery-ui-1.10.3.custom.min.css" rel="Stylesheet" />'
-    . '<script type="text/javascript" src="' . $_SESSION['BaseURL'] . 'js/jquery-1.10.2.min.js"></script>'
-    . '<script type="text/javascript" src="' . $_SESSION['BaseURL'] . 'js/jquery-ui-1.10.3.custom.min.js"></script>';
+    echo '<link href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css"'
+    . ' type="text/css" rel="Stylesheet" />'
+    . '<script type="text/javascript" src="//code.jquery.com/jquery-1.10.2.min.js">
+      </script>'
+    . '<script type="text/javascript" src="//code.jquery.com/ui/1.10.4/jquery-ui.js">
+      </script>';
   }
 
   /**
