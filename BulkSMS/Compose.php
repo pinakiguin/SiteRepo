@@ -7,8 +7,8 @@ WebLib::IncludeCSS();
 WebLib::IncludeCSS('css/forms.css');
 WebLib::IncludeCSS('BulkSMS/css/Compose.css');
 WebLib::JQueryInclude();
-WebLib::IncludeJS('BulkSMS/js/json-template.js');
 WebLib::IncludeJS('BulkSMS/js/Compose.js');
+include 'ParseExcel.php';
 ?>
 </head>
 <body>
@@ -20,6 +20,7 @@ WebLib::IncludeJS('BulkSMS/js/Compose.js');
   <div class="Header"></div>
   <?php
   WebLib::ShowMenuBar('SMS');
+  WebLib::ShowMsg();
   ?>
   <div class="content">
     <span class="Message" id="Msg" style="float: right;">
@@ -31,15 +32,22 @@ WebLib::IncludeJS('BulkSMS/js/Compose.js');
             echo WebLib::GetVal($_SERVER, 'PHP_SELF');
             ?>">
         <h3 class="formWrapper-h3">SMS Templates</h3>
-        <fieldset class="formWrapper-fieldset">
+        <fieldset class="formWrapper-fieldset" style="width: 500px;">
           <legend class="formWrapper-legend">Upload Contacts</legend>
-          <?php
-          include 'ParseExcel.php';
-          ?>
-          <span class="Message">
-            <strong>Note:</strong>
-            Only 200 rows from the first sheet will be uploaded.
-          </span><br/>
+          <div class="ui-widget" style="padding: 5px;">
+            <div class="ui-state-highlight ui-corner-all">
+              <div style="padding: 5px;">
+                <span class="ui-icon ui-icon-info"
+                      style="float: left; margin: 2px 2px 0px 0px;">
+                </span>
+                <strong>Important: </strong>
+                The Spreadsheet should contain
+                <em>Column Headings</em> in the first row,
+                <em>Mobile Nos.</em> in the First Column and
+                should have only 200 rows.
+              </div>
+            </div>
+          </div>
           <div style="margin:5px;">
             <div id="ListData">
               <?php
@@ -50,7 +58,7 @@ WebLib::IncludeJS('BulkSMS/js/Compose.js');
                     echo '<h4>Columns:</h4>';
                     foreach ($Row as $ColIndex => $Cell) {
                       echo '<input type="button" class="TmplCol" '
-                      . ' value="' . $Cell . '"'
+                      . ' value="' . $Cell . ':{' . $ColIndex . '}"'
                       . ' data-tmpl="{' . $ColIndex . '}" />';
                     }
                   }
@@ -61,7 +69,7 @@ WebLib::IncludeJS('BulkSMS/js/Compose.js');
                     }
                   }
                 }
-                echo '<em>Total Rows:</em> ' . count($Contacts);
+                echo '<em>Total Rows:</em> ' . (count($Contacts) - 1);
               }
               ?>
               <pre id="ShowJSON"></pre>
@@ -80,14 +88,6 @@ WebLib::IncludeJS('BulkSMS/js/Compose.js');
               <option value="Excel5">Microsoft Excel 97/2000/XP/2003 (*.xls)</option>
             </select>
           </div>
-          <div style="margin:5px;">
-            <input type="checkbox"  style="vertical-align: -20%;"
-                   id="RowHeader" name="RowHeader" value="1"/>
-            <label for="RowHeader">
-              The first line of the file contains the column names.
-            </label>
-          </div>
-          <hr/>
           <div class="formControl">
             <input type="submit" name="CmdUpload" value="Upload"/>
           </div>
@@ -96,9 +96,13 @@ WebLib::IncludeJS('BulkSMS/js/Compose.js');
           <legend class="formWrapper-legend">SMS Message Template</legend>
           <input type="text" class="form-TxtInput" style="width: 500px;"
                  id="GroupName" name="GroupName"
-                 placeholder="Type The Name of The Template"/>
+                 value="<?php
+                 echo WebLib::GetVal($_SESSION, 'TmplName');
+                 ?>" placeholder="Type The Name of The Template"/>
           <textarea id="MsgText" class="form-TxtInput" style="width: 500px;"
-                    rows="10" cols="120" name="MsgText"></textarea>
+                    rows="10" cols="120" name="MsgText"><?php
+                      echo WebLib::GetVal($_SESSION, 'TxtSMS');
+                      ?></textarea>
           <div id="PreviewDIV" style="margin: 5px;display: none;">
             <h4>SMS Preview</h4>
             <pre id="PreviewSMS"></pre>

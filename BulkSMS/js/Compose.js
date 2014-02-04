@@ -4,30 +4,37 @@
  */
 $(function() {
   $("#ShowPreview").on("click", function() {
-    $.ajax({
-      type: 'POST',
-      url: 'GetPreview.php',
-      dataType: 'html',
-      xhrFields: {
-        withCredentials: true
-      },
-      data: {
-        'CallAPI': 'GetSMS',
-        'Tmpl': $("#MsgText").val()
-      }
-    }).done(function(TxtSMS) {
-      try {
-        $("#PreviewSMS").html(TxtSMS);
-        $("#PreviewSMS").parent().show();
-        $('#Msg').html('');
-      }
-      catch (e) {
-        $('#Msg').html('Server Error:' + e);
-        $('#Error').html(TxtSMS);
-      }
-    }).fail(function(msg) {
-      $('#Msg').html(msg);
-    });
+    if ($(this).val() === "Show Preview") {
+      $.ajax({
+        type: 'POST',
+        url: 'AjaxSMS.lib.php',
+        dataType: 'json',
+        xhrFields: {
+          withCredentials: true
+        },
+        data: {
+          'CallAPI': 'SaveTmpl',
+          'TmplName': $("#GroupName").val(),
+          'Tmpl': $("#MsgText").val()
+        }
+      }).done(function(DataResp) {
+        try {
+          $("#PreviewSMS").html(DataResp.TxtSMS);
+          $("#PreviewSMS").parent().show();
+          $("#ShowPreview").val("Hide Preview");
+          $('#Msg').html('');
+        }
+        catch (e) {
+          $('#Msg').html('Server Error:' + e);
+          $('#Error').html(DataResp.Msg);
+        }
+      }).fail(function(msg) {
+        $('#Msg').html(msg);
+      });
+    } else {
+      $("#PreviewSMS").parent().hide();
+      $("#ShowPreview").val("Show Preview");
+    }
   });
 
   $(".TmplCol").on("click", function() {
