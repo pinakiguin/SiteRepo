@@ -40,7 +40,7 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
   <?php
   include __DIR__ . '/UsersData.php';
   WebLib::ShowMenuBar('USER');
-  $Data = new MySQLiDB();
+  $Data   = new MySQLiDB();
   ?>
   <div class="content">
     <?php
@@ -51,33 +51,51 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
     if ($_SESSION['action'] == 0) {
       ?>
       <div class="FieldGroup" id="CreateUser-dialog-form" style="display:none">
-        <form name="frmCreateUser" id="frmCreateUser" method="post" action="<?php echo WebLib::GetVal($_SERVER, 'PHP_SELF'); ?>">
+        <form name="frmCreateUser" id="frmCreateUser" method="post"
+              action="<?php
+              echo WebLib::GetVal($_SERVER, 'PHP_SELF');
+              ?>">
           <label for="UserName">User Name: </label>
-          <input type="text" name="UserName" id="UserName" required="required" />
+          <input type="text" name="UserName" id="UserName" required />
           <br />
-          <input type="hidden" name="FormToken" value="<?php echo WebLib::GetVal($_SESSION, 'FormToken') ?>" />
+          <input type="hidden" name="FormToken"
+                 value="<?php
+                 echo WebLib::GetVal($_SESSION, 'FormToken')
+                 ?>" />
           <br />
-          <input type="submit" id="CmdCreateSubmit" name="CmdSubmit" value="Create" />
+          <input type="submit" id="CmdCreateSubmit" name="CmdSubmit"
+                 value="Create" />
         </form>
       </div>
 
-      <form name="frmEditUser" id="frmCreateUser" method="post" action="<?php echo WebLib::GetVal($_SERVER, 'PHP_SELF'); ?>">
+      <form name="frmEditUser" id="frmCreateUser" method="post"
+            action="<?php
+            echo WebLib::GetVal($_SERVER, 'PHP_SELF');
+            ?>">
         <div class="FieldGroup">
           <label for="UserName">Select User: </label><br/>
           <select name="UserMapID" data-placeholder="Select an User">
             <?php
-            $Query = 'Select `UserMapID`,CONCAT(`UserName`,\' [\',IFNULL(`UserID`,\'Un-Registered\'),\']\') as `UserName` '
-                    . ' FROM `' . MySQL_Pre . 'Users` '
-                    . ' Where `CtrlMapID`=' . WebLib::GetVal($_SESSION, 'UserMapID', TRUE)
-                    . ' Order By `UserName`';
-            $Data->show_sel('UserMapID', 'UserName', $Query, WebLib::GetVal($_POST, 'UserMapID'));
+            $Query = 'Select `UserMapID`,'
+                . ' CONCAT(`UserName`,\' [\',IFNULL(`UserID`,'
+                . '\'Un-Registered\'),\']\') as `UserName` '
+                . ' FROM `' . MySQL_Pre . 'Users` '
+                . ' Where `CtrlMapID`='
+                . WebLib::GetVal($_SESSION, 'UserMapID', TRUE)
+                . ' Order By `UserName`';
+            $Data->show_sel('UserMapID', 'UserName', $Query,
+                            WebLib::GetVal($_POST, 'UserMapID'));
             ?>
           </select>
           <hr/>
-          <input type="hidden" name="FormToken" value="<?php echo WebLib::GetVal($_SESSION, 'FormToken') ?>" />
+          <input type="hidden" name="FormToken" value="<?php
+          echo WebLib::GetVal($_SESSION, 'FormToken')
+            ?>" />
           <input type="button" id="CmdCreate" value="Create New User" />
           <input type="submit" name="CmdSubmit" value="Impersonate" />
-          <?php if (WebLib::GetVal($_SESSION, 'ImpFromUserMapID') !== NULL) { ?>
+          <?php
+          if (WebLib::GetVal($_SESSION, 'ImpFromUserMapID') !== NULL) {
+            ?>
             <input type="submit" name="CmdSubmit" value="Stop Impersonating" />
           <?php } ?>
           <input type="submit" name="CmdSubmit" value="Activate" />
@@ -92,9 +110,10 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
       <?php
     }
     //if (WebLib::GetVal($_SESSION, 'Query') === NULL) {
-    $_SESSION['Query'] = 'Select `UserID` as `E-Mail Address`,`UserName`,`MobileNo`,`LoginCount`,`LastLoginTime`,`Registered`,`Activated`'
-            . ' FROM `' . MySQL_Pre . 'Users` '
-            . ' Where `CtrlMapID`=' . WebLib::GetVal($_SESSION, 'UserMapID', TRUE);
+    $_SESSION['Query'] = 'Select `UserID` as `E-Mail Address`,`UserName`,'
+        . '`MobileNo`,`LoginCount`,`LastLoginTime`,`Registered`,`Activated`'
+        . ' FROM `' . MySQL_Pre . 'Users` '
+        . ' Where `CtrlMapID`=' . WebLib::GetVal($_SESSION, 'UserMapID', TRUE);
     //}
     $Data->ShowTable($_SESSION['Query']);
     ?>

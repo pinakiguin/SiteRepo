@@ -19,23 +19,30 @@ WebLib::IncludeCSS();
   <div class="content">
     <h2>Activity Logs</h2>
     <?php
-    $Data = new MySQLiDB();
-    $Query = 'Select `W`.`SessionID`,`W`.`UserID`,`U`.`UserName`,`W`.`Action`,`W`.`AccessTime` FROM '
-            . '(Select `UserID`,Max(`LogID`) as `LogID` FROM `' . MySQL_Pre . 'Logs`'
-            . ' Where `UserID`>0 AND (`AccessTime`+0)>(CURRENT_TIMESTAMP -(' . LifeTime . ' * 60)) '
-            . ' Group By `UserID`,`SessionID` HAVING MAX(`LogID`)) as `L`'
-            . ' JOIN `' . MySQL_Pre . 'Logs` as `W` '
-            . ' ON (`W`.`LogID`=`L`.`LogID` AND `Action` NOT LIKE \'LogOut:%\')'
-            . ' JOIN `' . MySQL_Pre . 'Users` as `U` '
-            . ' ON (`W`.`UserID`=`U`.`UserMapID`)';
+    $Data  = new MySQLiDB();
+    $Query = 'Select `W`.`SessionID`,`W`.`UserID`,`U`.`UserName`,`W`.`Action`,'
+        . '`W`.`AccessTime` FROM '
+        . '(Select `UserID`,Max(`LogID`) as `LogID` '
+        . ' FROM `' . MySQL_Pre . 'Logs`'
+        . ' Where `UserID`>0 AND (`AccessTime`+0)>'
+        . ' (CURRENT_TIMESTAMP -(' . LifeTime . ' * 60)) '
+        . ' Group By `UserID`,`SessionID` HAVING MAX(`LogID`)) as `L`'
+        . ' JOIN `' . MySQL_Pre . 'Logs` as `W` '
+        . ' ON (`W`.`LogID`=`L`.`LogID` AND `Action` NOT LIKE \'LogOut:%\')'
+        . ' JOIN `' . MySQL_Pre . 'Users` as `U` '
+        . ' ON (`W`.`UserID`=`U`.`UserMapID`)';
+
     $QueryUsers = 'Select `U`.`UserName`,`W`.`Action`,`W`.`AccessTime` FROM '
-            . '(Select `UserID`,Max(`LogID`) as `LogID` FROM `' . MySQL_Pre . 'Logs`'
-            . ' Where `UserID`>0 AND (`AccessTime`+0)>(CURRENT_TIMESTAMP -(' . LifeTime . ' * 60)) '
-            . ' Group By `UserID`,`SessionID` HAVING MAX(`LogID`)) as `L`'
-            . ' JOIN `' . MySQL_Pre . 'Logs` as `W` '
-            . ' ON (`W`.`LogID`=`L`.`LogID` AND `Action` NOT LIKE \'LogOut:%\')'
-            . ' JOIN `' . MySQL_Pre . 'Users` as `U` '
-            . ' ON (`W`.`UserID`=`U`.`UserMapID`)';
+        . '(Select `UserID`,Max(`LogID`) as `LogID` '
+        . ' FROM `' . MySQL_Pre . 'Logs`'
+        . ' Where `UserID`>0 AND (`AccessTime`+0)>(CURRENT_TIMESTAMP -('
+        . LifeTime . ' * 60)) '
+        . ' Group By `UserID`,`SessionID` HAVING MAX(`LogID`)) as `L`'
+        . ' JOIN `' . MySQL_Pre . 'Logs` as `W` '
+        . ' ON (`W`.`LogID`=`L`.`LogID` AND `Action` NOT LIKE \'LogOut:%\')'
+        . ' JOIN `' . MySQL_Pre . 'Users` as `U` '
+        . ' ON (`W`.`UserID`=`U`.`UserMapID`)';
+
     echo "<b>Currently Active Users: </b>" . $Data->do_sel_query($Query);
     if (WebLib::GetVal($_SESSION, 'CheckAuth') === 'Valid') {
       $Data->ShowTable($Query);
@@ -44,31 +51,43 @@ WebLib::IncludeCSS();
     }
     $Data->do_close();
     unset($Data);
-    $Data = new MySQLiDB();
+    $Data  = new MySQLiDB();
     $Query = "SELECT count(*) FROM " . MySQL_Pre . "Users U"
-            . " Where CtrlMapID=" . WebLib::GetVal($_SESSION, 'UserMapID', TRUE);
+        . " Where CtrlMapID=" . WebLib::GetVal($_SESSION, 'UserMapID', TRUE);
     if ($Data->do_max_query($Query) > 0) {
       ?>
-      <form name="frm_activity" method="post" action="<?php $_SERVER['PHP_SELF'] ?>">
+      <form name="frm_activity" method="post"
+            action="<?php $_SERVER['PHP_SELF'] ?>">
         <label for="User">Select User:</label>
-        <select name="User" onChange="javascript:document.frm_activity.submit();">
+        <select name="User"
+                onChange="javascript:document.frm_activity.submit();">
+
           <?php
-          if (WebLib::GetVal($_POST, 'User') == "")
+          if (WebLib::GetVal($_POST, 'User') === null) {
             $Choice = "-- Choose --";
-          else
+          } else {
             $Choice = WebLib::GetVal($_POST, 'User');
-          $Query = "SELECT `UserMapID`, concat(`UserName`,' [',IFNULL(`UserID`,''),']') as `User`"
-                  . " FROM `" . MySQL_Pre . "Users`"
-                  . " Where `CtrlMapID`=" . WebLib::GetVal($_SESSION, 'UserMapID', TRUE);
+          }
+
+          $Query = "SELECT `UserMapID`, concat(`UserName`,"
+              . " [',IFNULL(`UserID`,''),']') as `User`"
+              . " FROM `" . MySQL_Pre . "Users`"
+              . " Where `CtrlMapID`="
+              . WebLib::GetVal($_SESSION, 'UserMapID', TRUE);
+
           $Data->show_sel("UserMapID", "User", $Query, $Choice);
           ?>
+
         </select>
       </form>
       <?php
-      $Query = 'Select `W`.`UserID`,`Action`,`AccessTime` FROM '
-              . '(Select `UserID`,Max(`LogID`) as `LogID` FROM `' . MySQL_Pre . 'Logs`'
-              . ' Group By `UserID`) as `L` JOIN `' . MySQL_Pre . 'Logs` as `W` '
-              . ' ON (`W`.`LogID`=`L`.`LogID` AND `Action` NOT LIKE \'LogOut:%\')';
+      $Query = 'Select `W`.`UserID`, `Action`, `AccessTime` FROM '
+          . '(Select `UserID`, Max(`LogID`) as `LogID` '
+          . ' FROM `' . MySQL_Pre . 'Logs`'
+          . ' Group By `UserID`) as `L` JOIN `' . MySQL_Pre . 'Logs` as `W` '
+          . ' ON (`W`.`LogID` = `L`.`LogID` '
+          . ' AND `Action` NOT LIKE \'LogOut:%\')';
+
       echo "<b>Currently Active Users: </b>" . $Data->do_sel_query($Query);
     }
     if (WebLib::GetVal($_POST, 'User')) {
@@ -76,10 +95,12 @@ WebLib::IncludeCSS();
     } else {
       $UserID = WebLib::GetVal($_SESSION, 'UserMapID', TRUE);
     }
-    $Query = "SELECT `LogID`,`IP` as `IP Address`,`AccessTime`,`Action`,`SessionID`,`Method`"
-            . " FROM `" . MySQL_Pre . "Logs` "
-            . " Where UserID='" . $UserID . "'"
-            . " ORDER BY `LogID` desc limit 50;";
+    $Query = 'SELECT `LogID`,`IP` as `IP Address`,`AccessTime`,`Action`,'
+        . ' `SessionID`,`Method`'
+        . ' FROM `' . MySQL_Pre . 'Logs` '
+        . ' Where UserID=\'' . $UserID . '\''
+        . ' ORDER BY `LogID` desc limit 50;';
+
     $Data->ShowTable($Query);
     //echo "<br />" . $Query;
     ?>

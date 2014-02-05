@@ -25,12 +25,14 @@ function SQLDefs($ObjectName) {
           . '`PageID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,'
           . '`PageURL` text NOT NULL,'
           . '`VisitCount` bigint(20) NOT NULL DEFAULT \'1\','
-          . '`LastVisit` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,'
+          . '`LastVisit` timestamp NOT NULL '
+          . ' DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,'
           . '`PageTitle` text,'
           . '`VisitorIP` text NOT NULL,'
           . ' PRIMARY KEY (`PageID`)'
           . ') ENGINE = InnoDB DEFAULT CHARSET = utf8;';
       break;
+
     case 'IntraNIC':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . 'IntraNIC` ('
           . '`RemoteIP` varchar(15) NOT NULL,'
@@ -38,6 +40,7 @@ function SQLDefs($ObjectName) {
           . ' PRIMARY KEY (`RemoteIP`)'
           . ') ENGINE = InnoDB DEFAULT CHARSET = utf8;';
       break;
+
     case 'Logs':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . 'Logs` ('
           . '`LogID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,'
@@ -54,6 +57,7 @@ function SQLDefs($ObjectName) {
           . '  PRIMARY KEY (`LogID`)'
           . ') ENGINE=InnoDB  DEFAULT CHARSET=utf8;';
       break;
+
     case 'VisitorLogs':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . 'VisitorLogs` ('
           . '`LogID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,'
@@ -70,6 +74,7 @@ function SQLDefs($ObjectName) {
           . '  PRIMARY KEY (`LogID`)'
           . ') ENGINE=InnoDB  DEFAULT CHARSET=utf8;';
       break;
+
     case 'Uploads':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . 'Uploads` ('
           . '`UploadID` int(11) NOT NULL AUTO_INCREMENT,'
@@ -82,12 +87,14 @@ function SQLDefs($ObjectName) {
           . '`size` int(11) NOT NULL,'
           . '`mime` text NOT NULL,'
           . '`file` longblob,'
-          . '`UploadedOn` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,'
+          . '`UploadedOn` timestamp NOT NULL '
+          . ' DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,'
           . '`Deleted` tinyint(1) NOT NULL,'
           . '`UserMapID` int(5) NOT NULL,'
           . ' PRIMARY KEY (`UploadID`)'
           . ') ENGINE=InnoDB  DEFAULT CHARSET=utf8;';
       break;
+
     case 'Users':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . 'Users` ('
           . '`UserMapID` int(10) NOT NULL AUTO_INCREMENT,'
@@ -102,18 +109,23 @@ function SQLDefs($ObjectName) {
           . '`HODMobileNo` int(10) NOT NULL,'
           . '`WebSiteURL` varchar(64) NOT NULL,'
           . '`LoginCount` int(10) DEFAULT \'0\','
-          . '`LastLoginTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,'
+          . '`LastLoginTime` timestamp NOT NULL '
+          . ' DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,'
           . '`Registered` tinyint(1) NOT NULL,'
           . '`Activated` tinyint(1) NOT NULL,'
           . ' PRIMARY KEY (`UserMapID`)'
           . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
       break;
+
     case 'UsersData':
       // Super Admin Password 'test@123'
       $SqlDB = 'INSERT INTO `' . MySQL_Pre . 'Users`'
-          . '(`UserID`, `UserName`, `UserPass`, `UserMapID`, `CtrlMapID`,`Registered`, `Activated`) '
-          . 'VALUES (\'Admin\',\'Super Administrator\',\'ceb6c970658f31504a901b89dcd3e461\',1,0,1,1);';
+          . '(`UserID`, `UserName`, `UserPass`, `UserMapID`, `CtrlMapID`,'
+          . '`Registered`, `Activated`) '
+          . 'VALUES (\'Admin\',\'Super Administrator\','
+          . '\'ceb6c970658f31504a901b89dcd3e461\',1,0,1,1);';
       break;
+
     case 'MenuItems':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . 'MenuItems` ('
           . '`MenuID` int(11) NOT NULL AUTO_INCREMENT,'
@@ -127,6 +139,7 @@ function SQLDefs($ObjectName) {
           . ' UNIQUE (`AppID`,`URL`)'
           . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
       break;
+
     case 'MenuData':
       $SqlDB = 'INSERT INTO `' . MySQL_Pre . 'MenuItems` '
           . '(`AppID`,`MenuOrder`,`AuthMenu`,`Caption`,`URL`,`Activated`) VALUES'
@@ -142,14 +155,11 @@ function SQLDefs($ObjectName) {
           . '(\'WebSite\', 7, 1, \'Monthly Performance Report\', \'mpr\', 1),'
           . '(\'WebSite\', 8, 1, \'Website Upload\', \'uploads\', 0),'
           . '(\'WebSite\', 9, 1, \'SMS Gateway\', \'BulkSMS\', 1),'
-          . '(\'WebSite\',10, 1, \'Helpline\', \'Helpline.php\', 0),'
-          . '(\'WebSite\',11, 1, \'Log Out!\', \'login.php?LogOut=1\', 1),'
-          . '(\'USER\', 1, 0, \'Home\', \'index.php\', 1),'
-          . '(\'USER\', 2, 1, \'User Profile\', \'users/Profile.php\', 1),'
-          . '(\'USER\', 3, 1, \'Manage Menus\', \'users/MenuACL.php\', 1),'
-          . '(\'USER\', 4, 1, \'User Activity\', \'users/AuditLogs.php\', 1),'
-          . '(\'USER\', 5, 1, \'Log Out!\', \'login.php?LogOut=1\', 1);';
+          . '(\'WebSite\',10, 1, \'User Management\', \'users\', 1),'
+          . '(\'WebSite\',11, 1, \'Helpline\', \'Helpline.php\', 0),'
+          . '(\'WebSite\',12, 1, \'Log Out!\', \'login.php?LogOut=1\', 1);';
       break;
+
     case 'MenuACL':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . 'MenuACL` ('
           . '`AclID` int(11) NOT NULL AUTO_INCREMENT,'
@@ -161,12 +171,15 @@ function SQLDefs($ObjectName) {
           . ' UNIQUE KEY `UserMenu` (`MenuID`,`UserMapID`)'
           . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
       break;
+
     case 'RestrictedMenus':
       $SqlDB = 'CREATE OR REPLACE VIEW `' . MySQL_Pre . 'RestrictedMenus` AS '
           . ' SELECT `URL`,`UserMapID` FROM `' . MySQL_Pre . 'MenuItems` `M` '
           . ' JOIN `' . MySQL_Pre . 'MenuACL` `U` ON `U`.`MenuID`=`M`.`MenuID`'
-          . ' WHERE `U`.`AllowOnly`=FALSE AND `M`.`Activated`=1 AND `U`.`Activated`=1';
+          . ' WHERE `U`.`AllowOnly`=FALSE AND `M`.`Activated`=1 '
+          . ' AND `U`.`Activated`=1';
       break;
+
     case 'Helpline':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . 'Helpline` ('
           . '`HelpID` bigint(20) NOT NULL AUTO_INCREMENT,'
