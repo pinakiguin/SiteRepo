@@ -7,8 +7,8 @@ $(function() {
   $("#OfficeName").hide();
 
   $("#OfficeSL").chosen({width: "650px",
-    no_results_text: "Oops, nothing found!"})
-          .change(function() {
+    no_results_text: "Oops, nothing found!"
+  }).change(function() {
     $("#DataPPs").trigger("click");
   });
 

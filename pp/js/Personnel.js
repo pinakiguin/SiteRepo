@@ -349,7 +349,7 @@ $(function() {
       catch (e) {
         $('#Msg').html('Server Error:' + e);
         $('#Error').html(data);
-        location.reload();
+        //location.reload();
       }
     }).fail(function(msg) {
       $('#Msg').html(msg);
