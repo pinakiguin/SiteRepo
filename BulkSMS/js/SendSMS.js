@@ -13,6 +13,7 @@ $(function() {
           withCredentials: true
         },
         data: {
+          'AjaxToken': $('#AjaxToken').val(),
           'CallAPI': 'ShowOnly',
           'TmplName': $("#GroupName").val() //Currently not being used
         }

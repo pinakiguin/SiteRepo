@@ -9,22 +9,31 @@ ini_set("zlib.output_compression", 4096);
 require_once __DIR__ . '/../lib.inc.php';
 session_start();
 
-$CSRF = WebLib::CheckAuth();
-if ($CSRF === 'Valid') {
+$CSRF           = WebLib::CheckAuth();
+$ValidAjaxToken = WebLib::GetVal($_POST, 'AjaxToken') ===
+    WebLib::GetVal($_SESSION, 'AjaxToken');
+
+if (($CSRF === 'Valid') && $ValidAjaxToken) {
   switch (WebLib::GetVal($_POST, 'CallAPI')) {
+
     case 'SaveTmpl':
       $TxtSMS               = WebLib::GetVal($_POST, 'Tmpl');
       $_SESSION['TxtSMS']   = $TxtSMS;
       $_SESSION['TmplName'] = WebLib::GetVal($_POST, 'TmplName');
       ShowSMS($TxtSMS);
       break;
+
     case 'ShowOnly':
-      $TxtSMS               = WebLib::GetVal($_SESSION, 'TxtSMS');
+      $TxtSMS = WebLib::GetVal($_SESSION, 'TxtSMS');
       ShowSMS($TxtSMS);
+      break;
+
+    default :
+      $DataResp['Msg'] = 'Invalid API Call!';
       break;
   }
 } else {
-  $DataResp['Msg'] = $CSRF;
+  $DataResp['Msg'] = $CSRF . ' Invalid Token: ' . $ValidAjaxToken;
 }
 
 $DataResp['TxtSMS'] = $TxtSMS;

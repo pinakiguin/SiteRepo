@@ -8,6 +8,9 @@ WebLib::IncludeCSS('css/forms.css');
 WebLib::IncludeCSS('BulkSMS/css/Compose.css');
 WebLib::JQueryInclude();
 WebLib::IncludeJS('BulkSMS/js/Compose.js');
+$_SESSION['AjaxToken'] = md5($_SERVER['REMOTE_ADDR']
+    . session_id() . microtime());
+
 include 'ParseExcel.php';
 ?>
 </head>
@@ -97,12 +100,12 @@ include 'ParseExcel.php';
           <input type="text" class="form-TxtInput" style="width: 500px;"
                  id="GroupName" name="GroupName"
                  value="<?php
-                 echo WebLib::GetVal($_SESSION, 'TmplName');
-                 ?>" placeholder="Type The Name of The Template"/>
+              echo WebLib::GetVal($_SESSION, 'TmplName');
+              ?>" placeholder="Type The Name of The Template"/>
           <textarea id="MsgText" class="form-TxtInput" style="width: 500px;"
                     rows="10" cols="120" name="MsgText"><?php
-                      echo WebLib::GetVal($_SESSION, 'TxtSMS');
-                      ?></textarea>
+                 echo WebLib::GetVal($_SESSION, 'TxtSMS');
+              ?></textarea>
           <div id="PreviewDIV" style="margin: 5px;display: none;">
             <h4>SMS Preview</h4>
             <pre id="PreviewSMS"></pre>
@@ -116,6 +119,14 @@ include 'ParseExcel.php';
         <hr/>
         <div class="formControl">
           <input type="submit" name="CmdAction" value="Create Template"/>
+          <input type="hidden" name="FormToken" id="FormToken"
+                 value="<?php
+                      echo WebLib::GetVal($_SESSION, 'FormToken');
+              ?>" />
+          <input type="hidden" id="AjaxToken"
+                 value="<?php
+                 echo WebLib::GetVal($_SESSION, 'AjaxToken');
+              ?>" />
         </div>
       </form>
     </div>
