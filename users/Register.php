@@ -5,9 +5,10 @@ error_reporting(E_ALL);
 require_once __DIR__ . '/../lib.inc.php';
 require_once __DIR__ . '/../php-mailer/GMail.lib.php';
 require_once __DIR__ . '/../smsgw/smsgw.inc.php';
-WebLib::initHTML5page("Home");
+WebLib::initHTML5page("Register");
 WebLib::IncludeCSS();
-WebLib::IncludeJS("js/md5.js");
+WebLib::JQueryInclude();
+WebLib::IncludeJS("js/jQuery-MD5/jquery.md5.js");
 ?>
 </head>
 <body>
@@ -89,11 +90,12 @@ WebLib::IncludeJS("js/md5.js");
           <h3>User:</h3>
           <select name="UserMapID">
             <?php
-            $Data->show_sel("UserMapID", "UserName",
-                            "Select `UserMapID`,`UserName` "
+            $OldData = new MySQLiDB();
+            $OldData->show_sel("UserMapID", "UserName",
+                               "Select `UserMapID`,`UserName` "
                 . " FROM `" . MySQL_Pre . "Users` "
                 . " Where NOT `Registered` AND NOT `Activated`;",
-                            WebLib::GetVal($_POST, 'UserMapID', TRUE));
+                               WebLib::GetVal($_POST, 'UserMapID', TRUE));
             ?>
           </select>
         </div>
