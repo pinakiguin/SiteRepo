@@ -156,8 +156,9 @@ function SQLDefs($ObjectName) {
           . '(\'WebSite\', 8, 1, \'Website Upload\', \'uploads\', 0),'
           . '(\'WebSite\', 9, 1, \'SMS Gateway\', \'BulkSMS\', 1),'
           . '(\'WebSite\',10, 1, \'User Management\', \'users\', 1),'
-          . '(\'WebSite\',11, 1, \'Helpline\', \'Helpline.php\', 0),'
-          . '(\'WebSite\',12, 1, \'Log Out!\', \'login.php?LogOut=1\', 1);';
+          . '(\'WebSite\', 11, 1, \'Mid Day Meal\', \'MDM\', 1),'
+          . '(\'WebSite\',12, 1, \'Helpline\', \'Helpline.php\', 0),'
+          . '(\'WebSite\',13, 1, \'Log Out!\', \'login.php?LogOut=1\', 1);';
       break;
 
     case 'MenuACL':
