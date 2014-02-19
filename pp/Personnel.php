@@ -365,7 +365,7 @@ WebLib::IncludeJS('pp/js/Personnel.js');
           </select>
         </div>
         <div class="FieldGroup">
-          <div id="Language" style="height: 60px;width: 250px;padding-left: 90px;">
+          <div id="Language" style="height: 60px;width: 240px;padding-left: 90px;">
             <strong>Language known other than Bengali</strong>
             <input type="radio" id="None" name="Language"  value="None"
                    checked="checked"/>
