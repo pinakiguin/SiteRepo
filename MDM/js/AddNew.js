@@ -68,7 +68,7 @@ $(function() {
   }).fail(function(msg) {
     $('#Msg').html(msg);
   });
-//calling ajax for saving data.............
+///calling ajax for saving data.............
 //  $("form").on("submit", function(event) {
 //    event.preventDefault();
 //    $('#Msg').html('Saving Please Wait...');
@@ -114,4 +114,5 @@ $(function() {
 //    });
 //  });
 //  $('#Msg').html('Loaded Successfully');
+
 });

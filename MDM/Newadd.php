@@ -45,8 +45,8 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
             </select></label>
         </div>
         <div class="FieldGroup">
-          <label for="SchoolID"><span class="myfont">Name of School</span>
-            <input type="text" name ="SchoolID" id="SchoolID"
+          <label for="Schoolname"><span class="myfont">Name of School</span>
+            <input type="text" name ="Schoolname" id="Schoolname"
                    placeholder="Name of School" required/>
           </label>
         </div>

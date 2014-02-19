@@ -3,6 +3,7 @@
 function CreateSchemas() {
   $ObjDB = new MySQLiDBHelper();
   $ObjDB->ddlQuery(SQLDefs('MDM_Blocks'));
+  $ObjDB->ddlQuery(SQLDefs('MDM_Newdata'));
   $ObjDB->ddlQuery(SQLDefs('MDM_DataBlocks'));
   $ObjDB->ddlQuery(SQLDefs('MDM_SubDivision'));
   $ObjDB->ddlQuery(SQLDefs('MDM_DataSubDivision'));
@@ -20,6 +21,23 @@ function SQLDefs($ObjectName) {
           . '`SubDivnCode` varchar(4) DEFAULT NULL,'
           . ' PRIMARY KEY (`BlockID`)'
           . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
+      break;
+
+    case 'MDM_Newdata':
+      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . $ObjectName . '` ('
+          . '`SchoolID` int(10) NOT NULL AUTO_INCREMENT,'
+          . '`SubDivID` VARCHAR(5) DEFAULT NULL,'
+          . '`BlockID` VARCHAR(5) DEFAULT NULL,'
+          . '`Schoolname` VARCHAR(100) DEFAULT NULL,'
+          . '`NameID` VARCHAR(100) DEFAULT NULL,'
+          . '`Mobile` int(10) DEFAULT NULL,'
+          . '`DesigID` VARCHAR(10) DEFAULT NULL,'
+          . '`UserMapID` INT(10) DEFAULT 1,'
+          . ' PRIMARY KEY (`SchoolID`),'
+          . 'UNIQUE KEY `Schoolname` (`Schoolname`,`SubDivID`,`BlockID`),'
+          . 'UNIQUE KEY `NameID` (`NameID`,`Schoolname`,`BlockID`)'
+          . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
+
       break;
     case 'MDM_DataBlocks':
       $SqlDB = 'INSERT INTO `' . MySQL_Pre . 'MDM_Blocks` '

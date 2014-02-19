@@ -44,19 +44,8 @@ if (WebLib::GetVal($_POST, 'AjaxToken') ===
           . ' Order by `BlockID`';
       $DataResp['BlockID'] = array();
       doQuery($DataResp['BlockID'], $Query);
-
-//    case 'GetReportTable':
-//      $_SESSION['POST'] = $_POST;
-//      $Query            = 'SELECT S.SchemeID, S.SchemeName , P.ReportDate,'
-//          . ' P.PhysicalProgress, P.FinancialProgress,P.Remarks '
-//          . ' FROM ' . MySQL_Pre . 'MDM_Schemes S'
-//          . ' INNER JOIN ' . MySQL_Pre . 'MDM_Progress P'
-//          . ' ON S.SchemeID=P.SchemeID';
-//      doQuery($DataResp, $Query, array(WebLib::GetVal($_POST, 'ReportID')));
-//      break;
-
     default :
-      $DataResp['Msg'] = 'Invalid API Call';
+      $DataResp['Msg']     = 'Invalid API Call';
       break;
   }
 
