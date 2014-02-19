@@ -19,6 +19,7 @@ root {
   -moz-border-radius: 10px;
   background-color: #ebebeb;
   display: inline-block;
+  width: 90%;
 }
 .formWrapper fieldset{
   margin: 10px;
@@ -117,6 +118,20 @@ root {
   text-decoration: none;
   margin: 0px;
   padding-left: 0px;
+}
+.myHeader {
+  color: #660000;
+  font-family: Calibri, Georgia, "Book Antiqua", Verdana;
+  font-size:20px;
+  font-style: normal;
+  line-height: normal;
+  font-weight: bold;
+  font-variant: normal;
+  text-transform: none;
+  text-decoration: none;
+  margin: 0px;
+  padding-left: 0px;
+  text-underline-position:auto;
 }
 
 .formWrapper legend{

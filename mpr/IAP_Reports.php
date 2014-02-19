@@ -5,7 +5,6 @@ WebLib::AuthSession();
 WebLib::Html5Header('Departments');
 WebLib::IncludeCSS();
 WebLib::JQueryInclude();
-//WebLib::IncludeJS('mpr/js/forms.js');
 WebLib::IncludeJS('mpr/js/IAP.js');
 WebLib::IncludeJS('mpr/js/neumeric.js');
 WebLib::IncludeCSS('mpr/css/forms.css');
@@ -35,31 +34,10 @@ WebLib::IncludeJS('DataTables/media/js/jquery.dataTables.js');
       ?>" id="frmIAP" ><?php
             include __DIR__ . '/DataMPR.php';
             ?>
-        <h3>Sector wise complied report of IAP</h3>
-        <div class="FieldGroup">
-          <label for="SectorID"><span class="myfont">Select Name of Sector</span>
-            <select id="SectorID" name="SectorID"
-                    data-placeholder="Select Sector">
-            </select></label>
-        </div>
-        <div class="FieldGroup">
-          <label for="StartDate"><span class="myfont">Select the Starting Date</span>
-            <input type="text" id="StartDate" name="StartDate"
-                   placeholder="YYYY-MM-DD" size="12" />
-          </label>
-        </div>
-        <div class="FieldGroup">
-          <label for="EndDate"><span class="myfont">Select the Ending Date</span>
-            <input type="text" id="EndDate" name="EndDate"
-                   placeholder="YYYY-MM-DD" size="12" />
-          </label>
-        </div>
-
-
-        <div style="clear: both;"></div>
+        <span class="myHeader">Sector wise complied report of IAP</span>
         <div class="formControl">
-          <input type="submit" name="CreateReport" value="Create Report" id="CreateReport">
-          <input type="reset" name="CmdReset" value="Reset">
+          <input type="submit" name="CreateReport" value="Vew Report" id="CreateReport">
+          <input type="button" name="reset" id="reset" value="Reset">
         </div>
         <label for="ReportID">
           <input type="hidden" name="ReportID" id="ReportID"
@@ -76,7 +54,9 @@ WebLib::IncludeJS('DataTables/media/js/jquery.dataTables.js');
       <div style="clear: both;"></div>
       <br/>
       <table id="example" class="display stripe row-border hover order-column"
-             cellspacing="0" width="100%">
+             cellspacing="0" width="100%" style="
+             font-weight:bold;font-family:Calibri;font-size:15px">
+
         <thead>
           <tr>
             <th>Scheme ID</th>
