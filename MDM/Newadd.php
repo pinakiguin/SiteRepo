@@ -32,17 +32,17 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
       ?>" id="frmNewAdd" >
         <h3>Create New Member</h3>
         <div class="FieldGroup">
-          <label for="BlockID"><span class="myfont">Select Name of Block</span>
-            <select id="BlockID" name="BlockID"
-                    data-placeholder="Select Block"required>
-            </select></label>
-        </div>
-        <div class="FieldGroup">
           <label for="SubDivID"><span class="myfont">Select Name of Subdivition</span>
             <select id="SubDivID" name="SubDivID"
                     data-placeholder="Select Subdivition"required>
             </select>
           </label>
+        </div>
+        <div class="FieldGroup">
+          <label for="BlockID"><span class="myfont">Select Name of Block</span>
+            <select id="BlockID" name="BlockID"
+                    data-placeholder="Select Block"required>
+            </select></label>
         </div>
         <div class="FieldGroup">
           <label for="SchoolID"><span class="myfont">Name of School</span>
@@ -65,6 +65,10 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
           <label for="DesigID"><span class="myfont">Select Designation Of teacher</span>
             <select id="DesigID" name="DesigID"
                     data-placeholder="Select Designation"required>
+              <option value=""></option>
+              <option value="HM">Head Teacher</option>
+              <option value="TIC">Teacher In Charge</option>
+              <option value="Other">Other</option>
             </select>
           </label>
         </div>

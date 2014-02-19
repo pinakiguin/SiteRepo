@@ -32,9 +32,8 @@ $(function() {
   }).done(function(data) {
     try {
       var DataResp = $.parseJSON(data);
-      $('#Error').html(data);
+      //$('#Error').html(data);
       delete data;
-      // $('#AjaxToken').val(DataResp.AjaxToken);
       $('#Msg').html(DataResp.Msg);
       $('#ED').html(DataResp.RT);
       var Options = '<option value=""></option>';
