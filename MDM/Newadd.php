@@ -72,11 +72,18 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
             </select>
           </label>
         </div>
+        <div class="FieldGroup">
+          <label for="RegDate">
+            <span class="myfont">Report Date</span>
+            <input type="text" id="RegDate" name="RegDate"
+                   placeholder="YYYY-MM-DD" size="12" required />
+          </label>
+        </div>
         <div style="clear: both;"></div>
         <div class="formControl">
-          <input type="submit" name="CmdSubmit" value="Create Department" id="CmdSaveUpdate">
+          <input type="submit" name="CmdSubmit" value="Add Data" id="CmdSaveUpdate">
           <input type="hidden" id="TxtAction" name="CmdSubmit" value="" />
-          <input type="reset" name="CmdReset" value="Reset">
+          <input type="button" name="Refresh" value="Refresh" id="Refresh">
         </div>
         <input type="hidden" name="FormToken" id="FormToken"
                value="<?php echo WebLib::GetVal($_SESSION, 'FormToken') ?>" />

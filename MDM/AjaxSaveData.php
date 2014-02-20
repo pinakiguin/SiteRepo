@@ -9,7 +9,7 @@ require_once __DIR__ . '/../lib.inc.php';
 WebLib::AuthSession();
 
 if (WebLib::GetVal($_SESSION, 'CheckAuth') === 'Valid') {
-  include __DIR__ . '/DataMPR.php';
+  include __DIR__ . '/DataMDM.php';
   $_SESSION['LifeTime']  = time();
   //$AjaxResp['OldFormToken'] = $_SESSION['OldFormToken'];
   $AjaxResp['FormToken'] = $_SESSION['FormToken'];

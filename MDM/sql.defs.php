@@ -32,6 +32,7 @@ function SQLDefs($ObjectName) {
           . '`NameID` VARCHAR(100) DEFAULT NULL,'
           . '`Mobile` int(10) DEFAULT NULL,'
           . '`DesigID` VARCHAR(10) DEFAULT NULL,'
+          . '`RegDate` date,'
           . '`UserMapID` INT(10) DEFAULT 1,'
           . ' PRIMARY KEY (`SchoolID`),'
           . 'UNIQUE KEY `Schoolname` (`Schoolname`,`SubDivID`,`BlockID`),'

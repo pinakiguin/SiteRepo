@@ -17,6 +17,19 @@ $(function() {
   $("#DesigID").chosen({width: "250px",
     no_results_text: "Oops, nothing found!"
   });
+  $('#RegDate').datepicker({
+    dateFormat: 'dd-mm-yy',
+    showOn: "both",
+    buttonImage: "images/calendar.gif",
+    buttonImageOnly: true
+  });
+  $('#Refresh').click(function() {
+
+    $('#frmNewAdd').trigger("reset");
+    $("#SubDivID").trigger("chosen:updated");
+    $("#BlockID").trigger("chosen:updated");
+    $("#DesigID").trigger("chosen:updated");
+  });
   //call ajax for fetch data......
   $.ajax({
     type: 'POST',
@@ -68,51 +81,53 @@ $(function() {
   }).fail(function(msg) {
     $('#Msg').html(msg);
   });
-///calling ajax for saving data.............
-//  $("form").on("submit", function(event) {
-//    event.preventDefault();
-//    $('#Msg').html('Saving Please Wait...');
-//    $.ajax({
-//      type: 'POST',
-//      url: 'AjaxSaveData.php',
-//      dataType: 'html',
-//      xhrFields: {
-//        withCredentials: true
-//      },
-//      //data: $("#frmDepartment").serialize(),
-//      data: {
-//        'FormToken': $('#FormToken').val(),
-//        'AjaxToken': $('#AjaxToken').val(),
-//        'CmdSubmit': 'Create Department',
-//        'DeptName': $("#DeptName").val(),
-//        'HODName': $("#HODName").val(),
-//        'HODMobile': $("#HODMobile").val(),
-//        'HODEmail': $("#HODEmail").val(),
-//        'DeptNumber': $("#DeptNumber").val(),
-//        'Strength': $("#Strength").val(),
-//        'DeptAddress': $("#DeptAddress").val()
-//      }
-//    }).done(function(data) {
-//      try {
-//        var DataResp = $.parseJSON(data);
-//        delete data;
-//        $("#FormToken").val(DataResp.FormToken);
-//        $("#Ajax").val(DataResp.FormToken);
-//        $("#Msg").html(DataResp.Msg + DataResp.CheckVal);
-//        if (DataResp.CheckVal === null)
-//        {
-//          $('#frmDepartment').trigger("reset");
-//        }
-//        delete DataResp;
-//      }
-//      catch (e) {
-//        $('#Msg').html('Server Error:' + e);
-//        $('#Error').html(data);
-//      }
-//    }).fail(function(msg) {
-//      $('#Msg').html(msg);
-//    });
-//  });
-//  $('#Msg').html('Loaded Successfully');
+//calling ajax for saving data.............
+  $("form").on("submit", function(event) {
+    event.preventDefault();
+    $('#Msg').html('Saving Please Wait...');
+    $.ajax({
+      type: 'POST',
+      url: 'AjaxSaveData.php',
+      dataType: 'html',
+      xhrFields: {
+        withCredentials: true
+      },
+      //data: $("#frmDepartment").serialize(),
+      data: {
+        'FormToken': $('#FormToken').val(),
+        'AjaxToken': $('#AjaxToken').val(),
+        'CmdSubmit': 'Add Data',
+        'SubDivID': $("#SubDivID").val(),
+        'BlockID': $("#BlockID").val(),
+        'Schoolname': $("#Schoolname").val(),
+        'NameID': $("#NameID").val(),
+        'Mobile': $("#Mobile").val(),
+        'DesigID': $("#DesigID").val(),
+      }
+    }).done(function(data) {
+      try {
+        var DataResp = $.parseJSON(data);
+        delete data;
+        $("#FormToken").val(DataResp.FormToken);
+        $("#Ajax").val(DataResp.FormToken);
+        $("#Msg").html(DataResp.Msg);
+        if (DataResp.CheckVal === null)
+        {
+          $('#frmNewAdd').trigger("reset");
+          $("#SubDivID").trigger("chosen:updated");
+          $("#BlockID").trigger("chosen:updated");
+          $("#DesigID").trigger("chosen:updated");
+        }
+        delete DataResp;
+      }
+      catch (e) {
+        $('#Msg').html('Server Error:' + e);
+        $('#Error').html(data);
+      }
+    }).fail(function(msg) {
+      $('#Msg').html(msg);
+    });
+  });
+  $('#Msg').html('Loaded Successfully');
 
 });

@@ -16,22 +16,22 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
 
 // Authenticated Inputs
     switch (WebLib::GetVal($_POST, 'CmdSubmit')) {
-      case 'Create Department':
-        $DataMDM['DeptName']    = WebLib::GetVal($_POST, 'DeptName');
-        $DataMDM['HODName']     = WebLib::GetVal($_POST, 'HODName');
-        $DataMDM['HODMobile']   = WebLib::GetVal($_POST, 'HODMobile');
-        $DataMDM['HODEmail']    = WebLib::GetVal($_POST, 'HODEmail');
-        $DataMDM['DeptNumber']  = WebLib::GetVal($_POST, 'DeptNumber');
-        $DataMDM['Strength']    = WebLib::GetVal($_POST, 'Strength');
-        $DataMDM['DeptAddress'] = WebLib::GetVal($_POST, 'DeptAddress');
+      case 'Add Data':
+        $DataMDM['SubDivID']   = WebLib::GetVal($_POST, 'SubDivID');
+        $DataMDM['BlockID']    = WebLib::GetVal($_POST, 'BlockID');
+        $DataMDM['Schoolname'] = WebLib::GetVal($_POST, 'Schoolname');
+        $DataMDM['NameID']     = WebLib::GetVal($_POST, 'NameID');
+        $DataMDM['Mobile']     = WebLib::GetVal($_POST, 'Mobile');
+        $DataMDM['DesigID']    = WebLib::GetVal($_POST, 'DesigID');
+        $DataMDM['RegDate']    = WebLib::GetVal($_POST, 'RegDate');
 
-        if (strlen($DataMDM['DeptName']) > 2) {
+        if (strlen($DataMDM['Schoolname']) > 2) {
           $DataMDM['UserMapID'] = $_SESSION['UserMapID'];
           $Query                = MySQL_Pre . 'MDM_AddNew';
-          $_SESSION['Msg']      = 'Department Created Successfully!';
+          $_SESSION['Msg']      = 'Registered Successfully!';
         } else {
           $Query           = '';
-          $_SESSION['Msg'] = 'Department Name must be at least 3 characters or more.';
+          $_SESSION['Msg'] = 'Schoolname Name must be at least 3 characters or more.';
         }
     }
   }
