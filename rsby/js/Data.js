@@ -22,8 +22,7 @@ $(function() {
       'AjaxToken': $('#AjaxToken').val(),
       'CallAPI': 'GetComboData'
     }
-  })
-          .done(function(data) {
+  }).done(function(data) {
     try {
       var DataResp = $.parseJSON(data);
       delete data;
@@ -48,19 +47,16 @@ $(function() {
       $('#Msg').html('Server Error:' + e);
       $('#Error').html(data);
     }
-  })
-          .fail(function(msg) {
+  }).fail(function(msg) {
     $('#Msg').html(msg);
   });
   /**
    * BlockCode Change event registered
    *
    */
-  $('#CmbBlockCode')
-          .chosen({width: "200px",
+  $('#CmbBlockCode').chosen({width: "200px",
     no_results_text: "Oops, nothing found!"
-  })
-          .change(function() {
+  }).change(function() {
     $("#Msg").hide();
     $("#example_wrapper").hide();
     var Options = '<option value=""></option>';
@@ -83,11 +79,9 @@ $(function() {
    * Get the list of ACs and register change event to update Parts
    *
    */
-  $('#CmbPanchayatCode')
-          .chosen({width: "250px",
+  $('#CmbPanchayatCode').chosen({width: "250px",
     no_results_text: "Oops, nothing found!"
-  })
-          .change(function() {
+  }).change(function() {
     $("#Msg").hide();
     $("#example_wrapper").hide();
     var Options = '<option value=""></option>';
@@ -155,8 +149,7 @@ $(function() {
         'CallAPI': 'GetRSBYData',
         'VillageCode': $('#CmbVillageCode').val()
       }
-    })
-            .done(function(data) {
+    }).done(function(data) {
       try {
         var DataResp = $.parseJSON(data);
         delete data;
@@ -180,8 +173,7 @@ $(function() {
         $('#Msg').html('Server Error:' + e);
         $('#Error').html(data);
       }
-    })
-            .fail(function(msg) {
+    }).fail(function(msg) {
       $('#Msg').html(msg);
     });
   });

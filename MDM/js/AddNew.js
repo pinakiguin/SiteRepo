@@ -1,19 +1,21 @@
 $(function() {
   $('input[type="submit"]').button();
+  $('input[type="button"]').button();
   $('input[type="reset"]').button();
   $("#Mobile").numericInput();
+  $("#TotalStudent").numericInput();
   $('#ReportDate').datepicker({
     dateFormat: 'dd-mm-yy',
     showOn: "both",
     buttonImage: "images/calendar.gif",
     buttonImageOnly: true
   });
-  $("#BlockID").chosen({width: "250px",
+  $("#BlockID").chosen({width: "350px",
     no_results_text: "Oops, nothing found!"
   });
-  $("#SubDivID").chosen({width: "250px",
-    no_results_text: "Oops, nothing found!"
-  });
+//  $("#SubDivID").chosen({width: "250px",
+//    no_results_text: "Oops, nothing found!"
+//  });
   $("#DesigID").chosen({width: "250px",
     no_results_text: "Oops, nothing found!"
   });
@@ -60,18 +62,25 @@ $(function() {
       $('#SubDivID').html(Options)
               .trigger("chosen:updated");
       $('#SubDivID').data('SubDivID', DataResp.SubDivID);
-      //option for BlockID...
-      Options = '<option value=""></option>';
-      $.each(DataResp.BlockID.Data,
-              function(index, value) {
-                Options += '<option value="' + value.BlockID + '">'
-                        + value.BlockID + ' - ' + value.BlockName
-                        + '</option>';
-              });
-      $('#BlockID').html(Options)
-              .trigger("chosen:updated");
-      $('#BlockID').data('BlockID', DataResp.BlockID);
+      $('#BlockID').data('Blocks', DataResp.Blocks);
       delete DataResp;
+      $("#SubDivID").chosen({width: "300px",
+        no_results_text: "Oops, nothing found!"})
+              .change(function() {
+                var SubDivID = ($(this).val());
+                var Options = '<option value=""></option>';
+                var Blocks = $('#BlockID').data('Blocks');
+                $.each(Blocks.Data,
+                        function(index, value) {
+                          if (value.SubDivID === SubDivID) {
+                            Options += '<option value="' + value.BlockID + '">'
+                                    + value.BlockID + ' - ' + value.BlockName
+                                    + '</option>';
+                          }
+                        });
+                $('#BlockID').html(Options)
+                        .trigger("chosen:updated");
+              });
       $("#Msg").html('');
     }
     catch (e) {
@@ -103,13 +112,15 @@ $(function() {
         'NameID': $("#NameID").val(),
         'Mobile': $("#Mobile").val(),
         'DesigID': $("#DesigID").val(),
+        'RegDate': $("#RegDate").val(),
+        'TotalStudent': $("#TotalStudent").val()
       }
     }).done(function(data) {
       try {
         var DataResp = $.parseJSON(data);
         delete data;
         $("#FormToken").val(DataResp.FormToken);
-        $("#Ajax").val(DataResp.FormToken);
+        $("#Ajax").val(DataResp.AjaxToken);
         $("#Msg").html(DataResp.Msg);
         if (DataResp.CheckVal === null)
         {

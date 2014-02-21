@@ -39,7 +39,8 @@ WebLib::IncludeCSS('rsby/css/forms.css');
     ?>
     <div class="formWrapper">
       <h3>Search Approved Beneficiary Data (Round-4)</h3>
-      <form id="frmModify" method="post" action="<?php echo WebLib::GetVal($_SERVER, 'PHP_SELF'); ?>"
+      <form id="frmModify" method="post" action="<?php echo WebLib::GetVal($_SERVER,
+                                                                            'PHP_SELF'); ?>"
             style="text-align:left;" autocomplete="off" >
         <div class="FieldGroup">
           <label for="CmbBlockCode"><strong>Block/Municipality:</strong><br/>
@@ -74,7 +75,8 @@ WebLib::IncludeCSS('rsby/css/forms.css');
       </form>
       <div style="clear: both;"></div>
       <br/>
-      <table id="example" class="display stripe row-border hover order-column" cellspacing="0" width="100%">
+      <table id="example" class="display stripe row-border hover order-column"
+             cellspacing="0" width="100%">
         <thead>
           <tr>
             <th>URN</th>
@@ -92,10 +94,10 @@ WebLib::IncludeCSS('rsby/css/forms.css');
     </pre>
   </div>
   <div class="pageinfo">
-    <?php WebLib::PageInfo(); ?>
+<?php WebLib::PageInfo(); ?>
   </div>
   <div class="footer">
-    <?php WebLib::FooterInfo(); ?>
+<?php WebLib::FooterInfo(); ?>
   </div>
 </body>
 </html>

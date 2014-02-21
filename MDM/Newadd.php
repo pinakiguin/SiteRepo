@@ -47,15 +47,22 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
         <div class="FieldGroup">
           <label for="Schoolname"><span class="myfont">Name of School</span>
             <input type="text" name ="Schoolname" id="Schoolname"
-                   placeholder="Name of School" required/>
+                   placeholder="Name of School"  size="40"required/>
+          </label>
+        </div>
+        <div class="FieldGroup">
+          <label for="TotalStudent"><span class="myfont">Total Number Student</span>
+            <input type=text name="TotalStudent" id="TotalStudent" value=""
+                   placeholder="Total" size="3" maxlength="4" required/>
           </label>
         </div>
         <div class="FieldGroup">
           <label for="NameID"><span class="myfont">Name of Teacher</span>
-            <input type="text" name ="NameID" id="DeptName"
+            <input type="text" name ="NameID" id="NameID"
                    placeholder="NameID" required/>
           </label>
-        </div><div class="FieldGroup">
+        </div>
+        <div class="FieldGroup">
           <label for="Mobile"><span class="myfont">Mobile Number Of HOD</span>
             <input type=text name="Mobile" id="Mobile" value=""
                    placeholder="Mobile Number" maxlength="10" required/>
@@ -81,13 +88,12 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
         </div>
         <div style="clear: both;"></div>
         <div class="formControl">
-          <input type="submit" name="CmdSubmit" value="Add Data" id="CmdSaveUpdate">
-          <input type="hidden" id="TxtAction" name="CmdSubmit" value="" />
+          <input type="submit" name="CmdSubmit" value="Add Data" id="CmdSubmit">
           <input type="button" name="Refresh" value="Refresh" id="Refresh">
         </div>
         <input type="hidden" name="FormToken" id="FormToken"
                value="<?php echo WebLib::GetVal($_SESSION, 'FormToken') ?>" />
-        <input type="hidden" name="AjaxToken" id="AjaxToken"
+        <input type="hidden" id="AjaxToken"
                value="<?php echo WebLib::GetVal($_SESSION, 'Token'); ?>" />
       </form>
       <pre id="Error">

@@ -18,7 +18,7 @@ function SQLDefs($ObjectName) {
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . $ObjectName . '` ('
           . '`BlockID` varchar(3) NOT NULL,'
           . '`BlockName` varchar(25) DEFAULT NULL,'
-          . '`SubDivnCode` varchar(4) DEFAULT NULL,'
+          . '`SubDivID` varchar(4) DEFAULT NULL,'
           . ' PRIMARY KEY (`BlockID`)'
           . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
       break;
@@ -32,6 +32,7 @@ function SQLDefs($ObjectName) {
           . '`NameID` VARCHAR(100) DEFAULT NULL,'
           . '`Mobile` int(10) DEFAULT NULL,'
           . '`DesigID` VARCHAR(10) DEFAULT NULL,'
+          . '`TotalStudent` int(10) DEFAULT NULL,'
           . '`RegDate` date,'
           . '`UserMapID` INT(10) DEFAULT 1,'
           . ' PRIMARY KEY (`SchoolID`),'
@@ -42,7 +43,7 @@ function SQLDefs($ObjectName) {
       break;
     case 'MDM_DataBlocks':
       $SqlDB = 'INSERT INTO `' . MySQL_Pre . 'MDM_Blocks` '
-          . '(`BlockID`, `BlockName`, `SubDivnCode`) VALUES'
+          . '(`BlockID`, `BlockName`, `SubDivID`) VALUES'
           . '(\'0bm\', \'OTHERS\', NULL),'
           . '(\'B01\', \'MIDNAPORE SADAR\', \'1501\'),'
           . '(\'B02\', \'KESHPUR\', \'1501\'),'
@@ -92,7 +93,6 @@ function SQLDefs($ObjectName) {
     case 'MDM_DataSubDivision':
       $SqlDB = 'INSERT INTO `' . MySQL_Pre . 'MDM_SubDivision` '
           . '(`SubDivID`, `SubDivName`) VALUES'
-          . '(\'0bm\', \'OTHERS\'),'
           . '(\'1501\', \'MIDNAPORE SADAR\'),'
           . '(\'1502\', \'KHARAGPUR\'),'
           . '(\'1503\', \'GHATAL\'),'

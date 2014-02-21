@@ -39,11 +39,11 @@ if (WebLib::GetVal($_POST, 'AjaxToken') ===
       $DataResp['SubDivID'] = array();
       doQuery($DataResp['SubDivID'], $Query);
 
-      $Query               = 'Select `BlockID`,`BlockName`'
+      $Query               = 'Select `BlockID`,`BlockName`,`SubDivID`'
           . ' FROM `' . MySQL_Pre . 'MDM_Blocks`'
           . ' Order by `BlockID`';
       $DataResp['BlockID'] = array();
-      doQuery($DataResp['BlockID'], $Query);
+      doQuery($DataResp['Blocks'], $Query);
     default :
       $DataResp['Msg']     = 'Invalid API Call';
       break;

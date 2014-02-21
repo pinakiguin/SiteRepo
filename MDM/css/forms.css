@@ -18,8 +18,9 @@ root {
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
   background-color: #ebebeb;
-  display: inline-block;
+  /*  display: inline-block;*/
 }
+
 .formWrapper fieldset{
   margin: 10px;
   padding: 10px 5px 5px 0px;
