@@ -47,6 +47,17 @@ if (WebLib::GetVal($_POST, 'AjaxToken') ===
     default :
       $DataResp['Msg']     = 'Invalid API Call';
       break;
+    case 'GetSchoolData':
+
+      $Query               = 'Select `SchoolID`,`Schoolname`,`Mobile`,'
+          . '`DesigID`,`TotalStudent`,`NameID`,`RegDate`'
+          . ' FROM `' . MySQL_Pre . 'MDM_Newdata`'
+          . ' Order by `Schoolname`';
+      $DataResp['Schools'] = array();
+      doQuery($DataResp['Schools'], $Query);
+    default :
+      $DataResp['Msg']     = 'Invalid API Call';
+      break;
   }
 
   $_SESSION['LifeTime'] = time();

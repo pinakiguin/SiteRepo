@@ -70,19 +70,13 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
         <div class="FieldGroup">
           <label for="TotalStudent"><span class="myfont">Total Number Student</span>
             <input type=text name="TotalStudent" id="TotalStudent" value=""
-                   placeholder="Total" size="3" maxlength="4" required/>
+                   placeholder="Total" size="20" maxlength="4" required/>
           </label>
         </div>
         <div class="FieldGroup">
           <label for="NameID"><span class="myfont">Name of Teacher</span>
             <input type="text" name ="NameID" id="NameID"
-                   placeholder="NameID" required/>
-          </label>
-        </div>
-        <div class="FieldGroup">
-          <label for="Mobile"><span class="myfont">Mobile Number Of HOD</span>
-            <input type=text name="Mobile" id="Mobile" value=""
-                   placeholder="Mobile Number" maxlength="10" required/>
+                   placeholder="NameID" size="25"required/>
           </label>
         </div>
         <div class="FieldGroup">
@@ -94,6 +88,13 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
               <option value="TIC">Teacher In Charge</option>
               <option value="Other">Other</option>
             </select>
+          </label>
+        </div>
+
+        <div class="FieldGroup">
+          <label for="Mobile"><span class="myfont">Mobile Number Of HOD</span>
+            <input type=text name="Mobile" id="Mobile" value=""
+                   placeholder="Mobile Number" maxlength="10" required/>
           </label>
         </div>
 
