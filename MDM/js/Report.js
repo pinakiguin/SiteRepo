@@ -16,16 +16,18 @@ $(function() {
 //********************************
   //***********make data table..
   var dataSet = new Array();
-  $('#example').dataTable({
+  $('#Mdmreport').dataTable({
     "data": dataSet,
     "columns": [
       {"data": "SubDivision"},
-      {"data": "Block Name"},
+      {"data": "Block"},
       {"data": "School Name"},
+      {"data": "Type of School"},
       {"data": "Date"},
       {"data": "Mobile Number"},
       {"data": "Number Of Present"},
-      {"data": "Total Number Of Student"},
+      {"data": "Remarks"},
+      {"data": "Total Number Of Student"}
     ],
     "pagingType": "full_numbers",
     "jQueryUI": true,
@@ -57,7 +59,7 @@ $(function() {
                 $('#Msg').html(DataResp.Msg);
                 $('#ED').html(DataResp.RT);
                 $("#Msg").show();
-                var dataTableReport = $('#example').dataTable();
+                var dataTableReport = $('#Mdmreport').dataTable();
                 oSettings = dataTableReport.fnSettings();
                 dataTableReport.fnClearTable();
                 for (var i = 0; i < DataResp.Data.length; i++) {

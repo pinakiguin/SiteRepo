@@ -32,7 +32,7 @@ WebLib::IncludeJS('MDM/js/Report.js');
       echo WebLib::GetVal($_SERVER, 'PHP_SELF');
       ?>" id="frmNewAdd" >
         <h3>Create New Member</h3>
-        <table id="example" class="display stripe row-border hover order-column"
+        <table id="Mdmreport" class="display stripe row-border hover order-column"
                cellspacing="0" width="100%" style="
                font-weight:bold;font-family:Calibri;font-size:15px">
           <thead>
@@ -40,6 +40,7 @@ WebLib::IncludeJS('MDM/js/Report.js');
               <th>SubDivision</th>
               <th>Block Name</th>
               <th>School Name</th>
+              <th>Type of School</th>
               <th>Date</th>
               <th>Mobile Number</th>
               <th>Number Of Present</th>
@@ -49,7 +50,7 @@ WebLib::IncludeJS('MDM/js/Report.js');
         </table>
         <div style="clear: both;"></div>
         <div class="formControl">
-          <input type="submit" name="CmdSubmit" value="Add Data" id="CmdSaveUpdate">
+          <input type="submit" name="CmdSubmit" value="Show Data" id="CmdSaveUpdate">
           <input type="hidden" id="TxtAction" name="CmdSubmit" value="" />
           <input type="button" name="Refresh" value="Refresh" id="Refresh">
         </div>

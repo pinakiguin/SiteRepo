@@ -20,6 +20,7 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
         $DataMDM['SubDivID']     = WebLib::GetVal($_POST, 'SubDivID');
         $DataMDM['BlockID']      = WebLib::GetVal($_POST, 'BlockID');
         $DataMDM['Schoolname']   = WebLib::GetVal($_POST, 'Schoolname');
+        $DataMDM['TypeID']       = WebLib::GetVal($_POST, 'TypeID');
         $DataMDM['NameID']       = WebLib::GetVal($_POST, 'NameID');
         $DataMDM['Mobile']       = WebLib::GetVal($_POST, 'Mobile');
         $DataMDM['DesigID']      = WebLib::GetVal($_POST, 'DesigID');
@@ -70,4 +71,5 @@ function doQuery(&$DataResp,
   unset($Result);
   unset($Data);
 }
+
 ?>

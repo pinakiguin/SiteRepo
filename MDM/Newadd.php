@@ -51,6 +51,23 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
           </label>
         </div>
         <div class="FieldGroup">
+          <label for="RegDate">
+            <span class="myfont">Registration Date</span>
+            <input type="text" id="RegDate" name="RegDate"
+                   size="12" required />
+          </label>
+        </div>
+        <div class="FieldGroup">
+          <label for="TypeID"><span class="myfont">Select Type Of School</span>
+            <select id="TypeID" name="TypeID"
+                    data-placeholder="Select Designation"required>
+              <option value=""></option>
+              <option value="Upper Primary">Upper Primary</option>
+              <option value="Primary">Primary</option>
+            </select>
+          </label>
+        </div>
+        <div class="FieldGroup">
           <label for="TotalStudent"><span class="myfont">Total Number Student</span>
             <input type=text name="TotalStudent" id="TotalStudent" value=""
                    placeholder="Total" size="3" maxlength="4" required/>
@@ -79,13 +96,7 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
             </select>
           </label>
         </div>
-        <div class="FieldGroup">
-          <label for="RegDate">
-            <span class="myfont">Report Date</span>
-            <input type="text" id="RegDate" name="RegDate"
-                   placeholder="YYYY-MM-DD" size="12" required />
-          </label>
-        </div>
+
         <div style="clear: both;"></div>
         <div class="formControl">
           <input type="submit" name="CmdSubmit" value="Add Data" id="CmdSubmit">

@@ -13,24 +13,31 @@ $(function() {
   $("#BlockID").chosen({width: "350px",
     no_results_text: "Oops, nothing found!"
   });
+  $("#TypeID").chosen({width: "200px",
+    no_results_text: "Oops, nothing found!"
+  });
 //  $("#SubDivID").chosen({width: "250px",
 //    no_results_text: "Oops, nothing found!"
 //  });
   $("#DesigID").chosen({width: "250px",
     no_results_text: "Oops, nothing found!"
   });
+  //for date field
   $('#RegDate').datepicker({
     dateFormat: 'dd-mm-yy',
     showOn: "both",
     buttonImage: "images/calendar.gif",
     buttonImageOnly: true
   });
+  //fetch current date...
+  $("#RegDate").val($.datepicker.formatDate("dd-mm-yy", new Date()));
   $('#Refresh').click(function() {
-
     $('#frmNewAdd').trigger("reset");
     $("#SubDivID").trigger("chosen:updated");
     $("#BlockID").trigger("chosen:updated");
     $("#DesigID").trigger("chosen:updated");
+    $("#TypeID").trigger("chosen:updated");
+    $("#RegDate").val($.datepicker.formatDate("dd-mm-yy", new Date()));
   });
   //call ajax for fetch data......
   $.ajax({
@@ -109,6 +116,7 @@ $(function() {
         'SubDivID': $("#SubDivID").val(),
         'BlockID': $("#BlockID").val(),
         'Schoolname': $("#Schoolname").val(),
+        'TypeID': $("#TypeID").val(),
         'NameID': $("#NameID").val(),
         'Mobile': $("#Mobile").val(),
         'DesigID': $("#DesigID").val(),
@@ -128,6 +136,8 @@ $(function() {
           $("#SubDivID").trigger("chosen:updated");
           $("#BlockID").trigger("chosen:updated");
           $("#DesigID").trigger("chosen:updated");
+          $("#TypeID").trigger("chosen:updated");
+          $("#RegDate").val($.datepicker.formatDate("dd-mm-yy", new Date()));
         }
         delete DataResp;
       }

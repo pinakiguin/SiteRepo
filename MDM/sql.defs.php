@@ -29,6 +29,7 @@ function SQLDefs($ObjectName) {
           . '`SubDivID` VARCHAR(5) DEFAULT NULL,'
           . '`BlockID` VARCHAR(5) DEFAULT NULL,'
           . '`Schoolname` VARCHAR(100) DEFAULT NULL,'
+          . '`TypeID` VARCHAR(100) DEFAULT NULL,'
           . '`NameID` VARCHAR(100) DEFAULT NULL,'
           . '`Mobile` int(10) DEFAULT NULL,'
           . '`DesigID` VARCHAR(10) DEFAULT NULL,'
@@ -104,7 +105,9 @@ function SQLDefs($ObjectName) {
           . '(\'MDM\', 1, 0, \'Home\', \'index.php\', 1),'
           . '(\'MDM\', 2, 1, \'NewAdd\', \'MDM/Newadd.php\', 1),'
           . '(\'MDM\', 3, 1, \'Report\', \'MDM/Report.php\', 1),'
-          . '(\'MDM\', 4, 1, \'Log Out!\', \'login.php?LogOut=1\', 1);';
+          . '(\'MDM\', 4, 1, \'Edit Number\', \'MDM/Number.php\', 1),'
+          . '(\'MDM\', 5, 1, \'Total\', \'MDM/Total.php\', 1),'
+          . '(\'MDM\', 6, 1, \'Log Out!\', \'login.php?LogOut=1\', 1);';
       break;
   }
   return $SqlDB;
