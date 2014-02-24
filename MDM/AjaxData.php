@@ -44,19 +44,34 @@ if (WebLib::GetVal($_POST, 'AjaxToken') ===
           . ' Order by `BlockID`';
       $DataResp['BlockID'] = array();
       doQuery($DataResp['Blocks'], $Query);
-    default :
-      $DataResp['Msg']     = 'Invalid API Call';
       break;
     case 'GetSchoolData':
+      $Query               = 'Select S.SchoolID,S.Schoolname,S.Mobile,'
+          . 'S.DesigID,S.TotalStudent,S.NameID,'
+          . 'S.RegDate,B.BlockName,'
+          . 'D.SubdivName FROM ' . MySQL_Pre . 'MDM_Newdata S '
+          . 'INNER JOIN ' . MySQL_Pre . 'MDM_Blocks B '
+          . 'ON S.BlockID=B.BlockID '
+          . 'INNER JOIN ' . MySQL_Pre . 'MDM_SubDivision D '
+          . 'ON B.SubDivID=D.SubDivID '
+          . 'Order by S.Schoolname';
 
-      $Query               = 'Select `SchoolID`,`Schoolname`,`Mobile`,'
-          . '`DesigID`,`TotalStudent`,`NameID`,`RegDate`'
-          . ' FROM `' . MySQL_Pre . 'MDM_Newdata`'
-          . ' Order by `Schoolname`';
-      $DataResp['Schools'] = array();
-      doQuery($DataResp['Schools'], $Query);
+      doQuery($DataResp, $Query, array(WebLib::GetVal($_POST, 'Schools')));
+      break;
+
     default :
-      $DataResp['Msg']     = 'Invalid API Call';
+      $DataResp['Msg'] = 'Invalid API Call';
+    /*
+     * Select S.SchoolID,S.Schoolname,S.Mobile,S.DesigID,S.TotalStudent,S.NameID,S.RegDate,B.BlockName,D.SubdivName FROM WebSite_MDM_Newdata S INNER JOIN WebSite_MDM_Blocks B ON S.BlockID=B.BlockID INNER JOIN WebSite_MDM_SubDivision D ON B.SubDivID=D.SubDivID
+
+     *
+     * ' . MySQL_Pre . ' */
+
+
+
+
+    default :
+      $DataResp['Msg'] = 'Invalid API Call';
       break;
   }
 

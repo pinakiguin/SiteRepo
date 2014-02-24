@@ -10,6 +10,8 @@ WebLib::IncludeJS('MDM/js/neumeric.js');
 WebLib::IncludeCSS('MDM/css/forms.css');
 WebLib::IncludeCSS('css/chosen.css');
 WebLib::IncludeJS('js/chosen.jquery.min.js');
+$_SESSION['FormToken'] = md5($_SERVER['REMOTE_ADDR']
+    . session_id() . microtime());
 ?>
 </head>
 <body>
@@ -92,7 +94,7 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
         </div>
 
         <div class="FieldGroup">
-          <label for="Mobile"><span class="myfont">Mobile Number Of HOD</span>
+          <label for="Mobile"><span class="myfont">Mobile Number Of Teacher</span>
             <input type=text name="Mobile" id="Mobile" value=""
                    placeholder="Mobile Number" maxlength="10" required/>
           </label>
@@ -103,8 +105,9 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
           <input type="submit" name="CmdSubmit" value="Add Data" id="CmdSubmit">
           <input type="button" name="Refresh" value="Refresh" id="Refresh">
         </div>
-        <input type="hidden" name="FormToken" id="FormToken"
-               value="<?php echo WebLib::GetVal($_SESSION, 'FormToken') ?>" />
+        <input type="hidden" name="FormToken"  id="FormToken" value="<?php
+        echo WebLib::GetVal($_SESSION, 'FormToken')
+        ?>" />
         <input type="hidden" id="AjaxToken"
                value="<?php echo WebLib::GetVal($_SESSION, 'Token'); ?>" />
       </form>

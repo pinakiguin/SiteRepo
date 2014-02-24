@@ -42,7 +42,7 @@ $(function() {
       $('#Msg').html(DataResp.Msg);
       $('#ED').html(DataResp.RT);
       var Options = '<option value=""></option>';
-      $.each(DataResp.Schools.Data,
+      $.each(DataResp.Data,
               function(index, value) {
                 //option for Schools...
                 Options += '<option value="' + value.SchoolID + '">'
@@ -51,7 +51,8 @@ $(function() {
               });
       $('#SchoolID').html(Options)
               .trigger("chosen:updated");
-      $('#SchoolID').data('Schools', DataResp.Schools);
+      var DataResp = $.parseJSON(data);
+      // $('#SchoolID').data(DataResp.Data);
       delete DataResp;
       $("#Msg").html('');
     }
@@ -63,12 +64,12 @@ $(function() {
     $('#Msg').html(msg);
   });
   // set the slider min value depand on the Scheme name.......
-  $("#SchoolID").chosen({width: "250px",
+  $("#SchoolID").chosen({width: "450px",
     no_results_text: "Oops, nothing found!"
   }).change(function() {
     var SchoolID = Number($(this).val());
-    var Schools = $('#SchoolID').data('Schools');
-    $.each(Schools.Data,
+    // var Schools = $('#SchoolID').data;
+    $.each(DataResp.Data,
             function(index, value) {
               if (value.SchoolID === SchoolID)
               {
@@ -78,12 +79,9 @@ $(function() {
                 $("#TotalStudent").val(value.TotalStudent);
                 $("#NameID").val(value.NameID);
                 $("#TotalStudent").val(value.TotalStudent);
+                $("#SubDivID").val(value.SubDivName);
+                $("#BlockID").val(value.BlockName);
                 $("#DesigID").val(value.DesigID).trigger("chosen:updated");
-
-                //$('#DesigID').attr("selected", "value.DesigID");
-
-
-
                 return false;
               }
             });
