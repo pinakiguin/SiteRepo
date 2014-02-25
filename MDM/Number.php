@@ -10,6 +10,8 @@ WebLib::IncludeJS('MDM/js/neumeric.js');
 WebLib::IncludeCSS('MDM/css/forms.css');
 WebLib::IncludeCSS('css/chosen.css');
 WebLib::IncludeJS('js/chosen.jquery.min.js');
+$_SESSION['FormToken'] = md5($_SERVER['REMOTE_ADDR']
+    . session_id() . microtime());
 ?>
 </head>
 <body>
@@ -40,12 +42,14 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
           </div>
           <div class="FieldGroup">
             <label for="SubDivID"><span class="myfont">Name Of Subdivision</span>
-              <input type="text" name="SubDivID" id="SubDivID" size="25px" readonly="readonly" />
+              <input type="text" name="SubDivID" id="SubDivID" style="width: 300px"
+                     readonly="readonly" />
             </label>
           </div>
           <div class="FieldGroup">
             <label for="BlockID"><span class="myfont">Name Of Block</span>
-              <input type="text" name="BlockID" id="BlockID" size="30px" readonly="readonly" />
+              <input type="text" name="BlockID" id="BlockID"style="width: 300px"
+                     readonly="readonly" />
             </label>
           </div>
         </fieldset>
@@ -55,19 +59,19 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
             <label for="RegDate">
               <span class="myfont">Registration Date</span>
               <input type="text" id="RegDate" name="RegDate"
-                     placeholder="Registration Date"size="12" required />
+                     placeholder="Date" style="width: 100px" required />
             </label>
           </div>
           <div class="FieldGroup">
-            <label for="TotalStudent"><span class="myfont">Total Number Student</span>
+            <label for="TotalStudent"><span class="myfont">Number Student</span>
               <input type=text name="TotalStudent" id="TotalStudent" value=""
-                     placeholder="Total" size="5" maxlength="4" required/>
+                     placeholder="Total" style="width: 50px" maxlength="4" required/>
             </label>
           </div>
           <div class="FieldGroup">
             <label for="NameID"><span class="myfont">Name of Teacher</span>
               <input type="text" name ="NameID" id="NameID"
-                     placeholder="NameID" size="25"required/>
+                     placeholder="NameID" style="width: 300px" required/>
             </label>
           </div>
           <div class="FieldGroup">

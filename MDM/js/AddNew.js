@@ -72,22 +72,22 @@ $(function() {
       $('#BlockID').data('Blocks', DataResp.Blocks);
       delete DataResp;
       $("#SubDivID").chosen({width: "300px",
-        no_results_text: "Oops, nothing found!"})
-              .change(function() {
-                var SubDivID = ($(this).val());
-                var Options = '<option value=""></option>';
-                var Blocks = $('#BlockID').data('Blocks');
-                $.each(Blocks.Data,
-                        function(index, value) {
-                          if (value.SubDivID === SubDivID) {
-                            Options += '<option value="' + value.BlockID + '">'
-                                    + value.BlockID + ' - ' + value.BlockName
-                                    + '</option>';
-                          }
-                        });
-                $('#BlockID').html(Options)
-                        .trigger("chosen:updated");
-              });
+        no_results_text: "Oops, nothing found!"
+      }).change(function() {
+        var SubDivID = ($(this).val());
+        var Options = '<option value=""></option>';
+        var Blocks = $('#BlockID').data('Blocks');
+        $.each(Blocks.Data,
+                function(index, value) {
+                  if (value.SubDivID === SubDivID) {
+                    Options += '<option value="' + value.BlockID + '">'
+                            + value.BlockID + ' - ' + value.BlockName
+                            + '</option>';
+                  }
+                });
+        $('#BlockID').html(Options)
+                .trigger("chosen:updated");
+      });
       $("#Msg").html('');
     }
     catch (e) {

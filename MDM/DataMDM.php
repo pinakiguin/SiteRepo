@@ -35,16 +35,44 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
           $Query           = '';
           $_SESSION['Msg'] = 'School Name must be at least 3 characters or more.';
         }
+        if ($Query !== '') {
+          $Inserted = $Data->insert($Query, $DataMDM);
+          if ($Inserted === false) {
+            $_SESSION['CheckVal'] = 'false';
+            $_SESSION['Msg']      = 'Unable to '
+                . WebLib::GetVal($_POST, 'CmdSubmit')
+                . '! Inserted data already present';
+          }
+        }
+
         break;
-    }
-    if ($Query !== '') {
-      $Inserted = $Data->insert($Query, $DataMDM);
-      if ($Inserted === false) {
-        $_SESSION['CheckVal'] = 'false';
-        $_SESSION['Msg']      = 'Unable to '
-            . WebLib::GetVal($_POST, 'CmdSubmit')
-            . '! Inserted data already present';
-      }
+
+      case 'Save Data':
+        $DataMDM['NameID']       = WebLib::GetVal($_POST, 'NameID');
+        $DataMDM['Mobile']       = WebLib::GetVal($_POST, 'Mobile');
+        $DataMDM['DesigID']      = WebLib::GetVal($_POST, 'DesigID');
+        $DataMDM['TotalStudent'] = WebLib::GetVal($_POST, 'TotalStudent');
+        $DataMDM['RegDate']      = WebLib::GetVal($_POST, 'RegDate');
+
+        if (strlen($DataMDM['NameID']) > 2) {
+          $DataMDM['UserMapID'] = $_SESSION['UserMapID'];
+          $Query                = MySQL_Pre . 'MDM_Newdata';
+          $_SESSION['Msg']      = 'Updated Successfully!';
+        } else {
+          $Query           = '';
+          $_SESSION['Msg'] = 'Teacher Name must be at least 3 characters or more.';
+        }
+        if ($Query !== '') {
+          $Updated = $Data
+              ->where('SchoolID', WebLib::GetVal($_POST, 'SchoolID'))
+              ->update($Query, $DataMDM);
+          if ($Updated === false) {
+            $_SESSION['Msg'] = 'Unable to '
+                . WebLib::GetVal($_POST, 'CmdSubmit')
+                . '! updated data already present';
+          }
+        }
+        break;
     }
   }
 }
