@@ -54,7 +54,7 @@ $_SESSION['FormToken'] = md5($_SERVER['REMOTE_ADDR']
           </div>
         </fieldset>
         <fieldset>
-          <legend>Old Record Of the School Teacher</legend>
+          <legend>Update Record Of the School Teacher</legend>
           <div class="FieldGroup">
             <label for="RegDate">
               <span class="myfont">Registration Date</span>
