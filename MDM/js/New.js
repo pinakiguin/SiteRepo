@@ -211,7 +211,8 @@ $(function() {
           $('#frmedit').trigger("reset");
           $("#DesigID").trigger("chosen:updated");
           $("#SchoolID").trigger("chosen:updated");
-          $("#RegDate").val($.datepicker.formatDate("dd-mm-yy", new Date()));
+
+
         }
         delete DataResp;
       }
