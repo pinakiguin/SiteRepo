@@ -54,7 +54,7 @@ if (WebLib::GetVal($_POST, 'AjaxToken') ===
           . 'ON S.BlockID=B.BlockID '
           . 'INNER JOIN ' . MySQL_Pre . 'MDM_SubDivision D '
           . 'ON B.SubDivID=D.SubDivID '
-          . 'Order by S.Schoolname';
+          . 'Order by S.SchoolID';
 
       doQuery($DataResp, $Query, array(WebLib::GetVal($_POST, 'Schools')));
       break;

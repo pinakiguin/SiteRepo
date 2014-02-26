@@ -17,16 +17,10 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
 // Authenticated Inputs
     switch (WebLib::GetVal($_POST, 'CmdSubmit')) {
       case 'Add Data':
-        $DataMDM['SubDivID']     = WebLib::GetVal($_POST, 'SubDivID');
-        $DataMDM['BlockID']      = WebLib::GetVal($_POST, 'BlockID');
-        $DataMDM['Schoolname']   = WebLib::GetVal($_POST, 'Schoolname');
-        $DataMDM['TypeID']       = WebLib::GetVal($_POST, 'TypeID');
-        $DataMDM['NameID']       = WebLib::GetVal($_POST, 'NameID');
-        $DataMDM['Mobile']       = WebLib::GetVal($_POST, 'Mobile');
-        $DataMDM['DesigID']      = WebLib::GetVal($_POST, 'DesigID');
-        $DataMDM['TotalStudent'] = WebLib::GetVal($_POST, 'TotalStudent');
-        $DataMDM['RegDate']      = WebLib::GetVal($_POST, 'RegDate');
-
+        $DataMDM['SubDivID']   = WebLib::GetVal($_POST, 'SubDivID');
+        $DataMDM['BlockID']    = WebLib::GetVal($_POST, 'BlockID');
+        $DataMDM['Schoolname'] = WebLib::GetVal($_POST, 'Schoolname');
+        $DataMDM['TypeID']     = WebLib::GetVal($_POST, 'TypeID');
         if (strlen($DataMDM['Schoolname']) > 2) {
           $DataMDM['UserMapID'] = $_SESSION['UserMapID'];
           $Query                = MySQL_Pre . 'MDM_Newdata';
