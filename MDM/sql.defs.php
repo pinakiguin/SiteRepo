@@ -7,6 +7,7 @@ function CreateSchemas() {
   $ObjDB->ddlQuery(SQLDefs('MDM_DataBlocks'));
   $ObjDB->ddlQuery(SQLDefs('MDM_SubDivision'));
   $ObjDB->ddlQuery(SQLDefs('MDM_DataSubDivision'));
+  $ObjDB->ddlQuery(SQLDefs('MDM_MealData'));
   $ObjDB->ddlQuery(SQLDefs('MenuData'));
   unset($ObjDB);
 }
@@ -39,6 +40,18 @@ function SQLDefs($ObjectName) {
           . ' PRIMARY KEY (`SchoolID`),'
           . 'UNIQUE KEY `Schoolname` (`Schoolname`,`SubDivID`,`BlockID`),'
           . 'UNIQUE KEY `NameID` (`NameID`,`Schoolname`,`BlockID`)'
+          . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
+
+      break;
+
+    case 'MDM_MealData':
+      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . $ObjectName . '` ('
+          . '`SchoolID` int(10) DEFAULT NULL,'
+          . '`TotalStudent` int(10) DEFAULT NULL,'
+          . '`Meal` int(10) DEFAULT NULL,'
+          . '`ReportDate` varchar(10) DEFAULT NULL,'
+          . '`UserMapID` INT(10) DEFAULT 1,'
+          . 'UNIQUE KEY `Report` (`SchoolID`,`ReportDate`)'
           . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
 
       break;

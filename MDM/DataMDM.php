@@ -41,6 +41,32 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
 
         break;
 
+      case 'Insert Data':
+        $DataMDM['SchoolID']     = WebLib::GetVal($_POST, 'SchoolID');
+        $DataMDM['TotalStudent'] = WebLib::GetVal($_POST, 'TotalStudent');
+        $DataMDM['Meal']         = WebLib::GetVal($_POST, 'Meal');
+        $DataMDM['ReportDate']   = WebLib::GetVal($_POST, 'ReportDate');
+
+        if (($DataMDM['SchoolID']) > 0) {
+          $DataMDM['UserMapID'] = $_SESSION['UserMapID'];
+          $Query                = MySQL_Pre . 'MDM_MealData';
+          $_SESSION['Msg']      = 'Inserted Successfully!';
+        } else {
+          $Query           = '';
+          $_SESSION['Msg'] = 'Select School Name First.';
+        }
+        if ($Query !== '') {
+          $Inserted = $Data->insert($Query, $DataMDM);
+          if ($Inserted === false) {
+            $_SESSION['CheckVal'] = 'false';
+            $_SESSION['Msg']      = 'Unable to '
+                . WebLib::GetVal($_POST, 'CmdSubmit')
+                . '! Inserted data already present';
+          }
+        }
+
+        break;
+
       case 'Save Data':
         $DataMDM['NameID']       = WebLib::GetVal($_POST, 'NameID');
         $DataMDM['Mobile']       = WebLib::GetVal($_POST, 'Mobile');
@@ -93,5 +119,4 @@ function doQuery(&$DataResp,
   unset($Result);
   unset($Data);
 }
-
 ?>
