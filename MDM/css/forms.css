@@ -97,7 +97,7 @@ root {
   background: #3366CC;
 }
 
-.StartDate, .AlotmentDate,.TenderDate,.WorkOrderDate,.ReportDate{
+.ReportDate{
   text-align: center;
   width: 100px;
 }

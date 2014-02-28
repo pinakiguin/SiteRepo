@@ -31,18 +31,27 @@ WebLib::IncludeJS('MDM/js/Report.js');
       <form method="post" action="<?php
       echo WebLib::GetVal($_SERVER, 'PHP_SELF');
       ?>" id="frmNewAdd" >
-        <h3>Create New Member</h3>
+        <h3>Report School Data</h3>
+        <div class="FieldGroup">
+          <label for="SchoolName"><span class="myfont">Select Name of School Name</span>
+            <select id="SchoolName" name="SchoolName"
+                    data-placeholder="Select SchoolName">
+            </select>
+          </label>
+          <label for="TotalStudent" class="myfont">Total Student
+          </label>
+          <input type="text" name="TotalStudent" id="TotalStudent" value=""
+                 placeholder="Total Student" disabled/>
+        </div>
+
         <table id="Mdmreport" class="display stripe row-border hover order-column"
                cellspacing="0" width="100%" style="
                font-weight:bold;font-family:Calibri;font-size:15px">
           <thead>
             <tr class="myfont">
-              <th>SubDivision</th>
-              <th>Block Name</th>
               <th>School Name</th>
               <th>Type of School</th>
-              <th>Date</th>
-              <th>Mobile Number</th>
+              <th>Report Date</th>
               <th>Number Of Present</th>
               <th>Total Number Of Student</th>
             </tr>

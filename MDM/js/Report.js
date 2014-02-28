@@ -12,6 +12,58 @@ $(function() {
   $('#reset').click(function() {
     location.reload();
   });
+  //fetch data....
+  $.ajax({
+    type: 'POST',
+    url: 'AjaxData.php',
+    dataType: 'html',
+    xhrFields: {
+      withCredentials: true
+    },
+    data: {
+      'AjaxToken': $('#AjaxToken').val(),
+      'CallAPI': 'GetMealData'
+    }
+  }).done(function(data) {
+    try {
+      var DataResp = $.parseJSON(data);
+      delete data;
+      $('#Msg').html(DataResp.Msg);
+      $('#ED').html(DataResp.RT);
+      var Options = '<option value=""></option>';
+      $.each(DataResp.Data,
+              function(index, value) {
+                //option for Schools...
+                Options += '<option value="' + value.SchoolID + '">'
+                        + value.SchoolID + ' - ' + value.Schoolname
+                        + '</option>';
+              });
+      $('#SchoolName').html(Options)
+              .trigger("chosen:updated");
+      $('#SchoolName').data('SchoolData', DataResp.Data);
+      $("#Msg").html('');
+    }
+    catch (e) {
+      $('#Msg').html('Server Error:' + e);
+    }
+  }).fail(function(msg) {
+    $('#Msg').html(msg);
+  });
+  // set the schoolvalue depand on the School name.......
+  $("#SchoolName").chosen({width: "450px",
+    no_results_text: "Oops, nothing found!"
+  }).change(function() {
+    var School = Number($(this).val());
+    var SchoolData = $('#SchoolName').data('SchoolData');
+    $.each(SchoolData,
+            function(index, value) {
+              if (value.SchoolID === School)
+              {
+                $("#TotalStudent").val(value.TotalStudent);
+                return false;
+              }
+            });
+  });
 
 //********************************
   //***********make data table..
@@ -19,15 +71,11 @@ $(function() {
   $('#Mdmreport').dataTable({
     "data": dataSet,
     "columns": [
-      {"data": "SubDivision"},
-      {"data": "Block"},
       {"data": "School Name"},
       {"data": "Type of School"},
-      {"data": "Date"},
-      {"data": "Mobile Number"},
-      {"data": "Number Of Present"},
-      {"data": "Remarks"},
-      {"data": "Total Number Of Student"}
+      {"data": "Report Date"},
+      {"data": "Total Number Of Student"},
+      {"data": "Meal"}
     ],
     "pagingType": "full_numbers",
     "jQueryUI": true,
@@ -48,7 +96,7 @@ $(function() {
       },
       data: {
         'AjaxToken': $('#AjaxToken').val(),
-        'CallAPI': 'GetReportTable',
+        'CallAPI': 'GetMealData',
       }
     })
             .done(function(data) {
@@ -79,5 +127,5 @@ $(function() {
               $('#Msg').html(msg);
             });
   });
-
+  $('#Msg').html('Loaded Successfully');
 });
