@@ -152,12 +152,9 @@ class WebLib {
    * Generates call to jQuery Scripts in Head Section
    */
   public static function JQueryInclude() {
-    echo '<link href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css"'
-    . ' type="text/css" rel="Stylesheet" />'
-    . '<script type="text/javascript" src="//code.jquery.com/jquery-1.10.2.min.js">
-      </script>'
-    . '<script type="text/javascript" src="//code.jquery.com/ui/1.10.4/jquery-ui.js">
-      </script>';
+    echo '<link type="text/css" href="' . $_SESSION['BaseURL'] . 'css/dark-hive/jquery-ui-1.10.3.custom.min.css" rel="Stylesheet" />'
+    . '<script type="text/javascript" src="' . $_SESSION['BaseURL'] . 'js/jquery-1.10.2.min.js"></script>'
+    . '<script type="text/javascript" src="' . $_SESSION['BaseURL'] . 'js/jquery-ui-1.10.3.custom.min.js"></script>';
   }
 
   /**

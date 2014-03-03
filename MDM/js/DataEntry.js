@@ -11,29 +11,78 @@
  */
 
 $(function() {
-
+  $.ajax({
+    type: 'POST',
+    url: 'AjaxData.php',
+    dataType: 'html',
+    xhrFields: {
+      withCredentials: true
+    },
+    data: {
+      'AjaxToken': $('#AjaxToken').val(),
+      'CallAPI': 'GetSchoolData'
+    }
+  }).done(function(data) {
+    try {
+      var DataResp = $.parseJSON(data);
+      delete data;
+      $('#Msg').html(DataResp.Msg);
+      $('#ED').html(DataResp.RT);
+      var Options = '<option value=""></option>';
+      $.each(DataResp.Data,
+              function(index, value) {
+                //option for Schools...
+                Options += '<option value="' + value.SchoolID + '">'
+                        + value.SchoolID + ' - ' + value.Schoolname
+                        + '</option>';
+              });
+      $('#SchoolName').html(Options)
+              .trigger("chosen:updated");
+      $('#SchoolName').data('SchoolData', DataResp.Data);
+      $("#Msg").html('');
+    }
+    catch (e) {
+      $('#Msg').html('Server Error:' + e);
+    }
+  }).fail(function(msg) {
+    $('#Msg').html(msg);
+  });
+  $("#SchoolName").chosen({width: "450px",
+    no_results_text: "Oops, nothing found!"
+  }).change(function() {
+    var School = Number($(this).val());
+    var SchoolData = $('#SchoolName').data('SchoolData');
+    $.each(SchoolData,
+            function(index, value) {
+              if (value.SchoolID === School)
+              {
+                $("#TotalStudent").val(value.TotalStudent);
+                return false;
+              }
+            });
+  });
   /**
    * Binds Receiptdate Field with datepicker
    */
-  $(".ReceiptDate").datepicker({
-    dateFormat: 'yy-mm-dd',
-    showOtherMonths: true,
-    selectOtherMonths: true,
-    showButtonPanel: true,
-    showAnim: "slideDown",
-    onClose: function() {
-      DataChanged(this);
-      var curDate = new Date($(this).val());
-      $('#Msg').html('Date: ' + curDate);
-      if ((('' + curDate) === 'Invalid Date') && ($(this).val() !== '')) {
-        $(this).addClass('ui-state-error');
-      } else
-      {
-        $(this).datepicker('setDate', curDate);
-        $(this).removeClass('ui-state-error');
-      }
-    }
-  });
+//  $(".ReceiptDate").datepicker({
+//    dateFormat: 'yy-mm-dd',
+//    showOtherMonths: true,
+//    selectOtherMonths: true,
+//    showButtonPanel: true,
+//    showAnim: "slideDown",
+//    onClose: function() {
+//      DataChanged(this);
+//      var curDate = new Date($(this).val());
+//      $('#Msg').html('Date: ' + curDate);
+//      if ((('' + curDate) === 'Invalid Date') && ($(this).val() !== '')) {
+//        $(this).addClass('ui-state-error');
+//      } else
+//      {
+//        $(this).datepicker('setDate', curDate);
+//        $(this).removeClass('ui-state-error');
+//      }
+//    }
+//  });
 
   /**
    * Binds Date of birth field with datepicker
@@ -63,7 +112,6 @@ $(function() {
       }
     }
   });
-
   /**
    * @todo Tabs Rendered
    */
@@ -72,7 +120,6 @@ $(function() {
       $('#ActiveMealReportForm').val(ui.newPanel.attr('id'));
     }
   });
-
   /**
    *  OnChange put PartID into hidden field #ActivePartID
    *  @todo PartID Selected
@@ -384,7 +431,6 @@ $(function() {
    */
   $('#SRER_Forms').css('display', 'table');
 });
-
 /**
  * Clears all the fields
  *

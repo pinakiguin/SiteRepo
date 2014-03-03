@@ -14,9 +14,11 @@ WebLib::IncludeCSS('MDM/css/forms.css');
 WebLib::IncludeCSS('MDM/css/DataEntry.css');
 WebLib::IncludeJS('MDM/js/DataEntry.js');
 WebLib::IncludeCSS('css/chosen.css');
+//WebLib::IncludeJS('MDM/js/Entry.js');
 WebLib::IncludeJS('js/chosen.jquery.min.js');
 WebLib::IncludeJS('js/jquery.validate.min.js');
 WebLib::IncludeJS('js/additional-methods.min.js');
+session_start();
 ?>
 </head>
 <body>
@@ -37,13 +39,23 @@ WebLib::IncludeJS('js/additional-methods.min.js');
     <form name="frmMealReport" method="post" action="<?php
     echo WebLib::GetVal($_SERVER, 'PHP_SELF');
     ?>">
+      <div class="FieldGroup">
+        <select id="SchoolName" name="SchoolName"
+                data-placeholder="Select SchoolName">
+        </select>
+      </div>
+      <div class="FieldGroup">
+        <input type="text" name="TotalStudent" id="TotalStudent" value=""
+               placeholder="Total Student" disabled/>
+      </div>
     </form>
     <div style="clear:both;"></div>
     <hr />
     <?php
     $Month       = date('M');
     $PreMonth    = date("M", strtotime("-1 months"));
-    $SecPreMonth = date("M", strtotime("-2 months")); {
+    $SecPreMonth = date("M", strtotime("-2 months"));
+    {
       ?>
       <input type="hidden" id="ActivePartID" />
       <input type="hidden" id="ActiveMealReportForm" value="Primary <?php echo "$Month"; ?>" />
@@ -92,6 +104,16 @@ WebLib::IncludeJS('js/additional-methods.min.js');
       <div id="UpperPrimary<?php echo "$PreMonth"; ?>">
         <?php
         MealReportForm("UpperPrimary$PreMonth");
+        ?>
+      </div>
+      <div id="Primary<?php echo "$Month"; ?>">
+        <?php
+        MealReportForm("Primary$Month");
+        ?>
+      </div>
+      <div id="UpperPrimary<?php echo "$Month"; ?>">
+        <?php
+        MealReportForm("UpperPrimary$Month");
         ?>
       </div>
     </div>
