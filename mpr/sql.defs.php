@@ -164,7 +164,6 @@ function SQLDefs($ObjectName) {
           . '(\'MPR\', 4, 1, \'Schemes\', \'mpr/Schemes.php\', 1),'
           . '(\'MPR\', 6, 1, \'Progress\', \'mpr/Progress.php\', 1),'
           . '(\'MPR\', 7, 1, \'Reports\', \'mpr/Reports.php\', 1),'
-          . '(\'MPR\', 7, 1, \'IAP_Reports\', \'mpr/IAP_Reports.php\', 1),'
           . '(\'MPR\', 8, 1, \'Log Out!\', \'login.php?LogOut=1\', 1);';
       break;
   }

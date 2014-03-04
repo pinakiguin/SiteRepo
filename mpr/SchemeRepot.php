@@ -34,7 +34,7 @@ WebLib::IncludeJS('DataTables/media/js/jquery.dataTables.js');
       ?>" id="frmIAP" ><?php
             include __DIR__ . '/DataMPR.php';
             ?>
-        <span class="myHeader">Sector wise complied report of IAP</span>
+        <span class="myHeader">Scheme wise Report</span>
         <div class="formControl">
           <input type="submit" name="CreateReport" value="Vew Report" id="CreateReport">
           <input type="button" name="reset" id="reset" value="Reset">

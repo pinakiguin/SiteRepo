@@ -1,21 +1,17 @@
 <?php
-//ini_set('display_errors', '1');
-//error_reporting(E_ALL);
-
 require_once __DIR__ . '/../lib.inc.php';
 
 WebLib::AuthSession();
-WebLib::Html5Header('Reports');
+WebLib::Html5Header('Departments');
 WebLib::IncludeCSS();
 WebLib::JQueryInclude();
-WebLib::IncludeCSS('css/chosen.css');
-WebLib::IncludeJS('mpr/js/forms.js');
+WebLib::IncludeJS('mpr/js/IAP.js');
+WebLib::IncludeJS('mpr/js/neumeric.js');
 WebLib::IncludeCSS('mpr/css/forms.css');
+WebLib::IncludeCSS('css/chosen.css');
 WebLib::IncludeJS('js/chosen.jquery.min.js');
-?>
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-<?php
-WebLib::IncludeJS('mpr/js/Reports.js');
+WebLib::IncludeCSS('DataTables/media/css/jquery.dataTables_themeroller.css');
+WebLib::IncludeJS('DataTables/media/js/jquery.dataTables.js');
 ?>
 </head>
 <body>
@@ -29,58 +25,25 @@ WebLib::IncludeJS('mpr/js/Reports.js');
   WebLib::ShowMenuBar('MPR');
   ?>
   <div class="content">
-    <?php
-    if (WebLib::GetVal($_SESSION, 'Token') === null) {
-      $_SESSION['Token'] = md5($_SERVER['REMOTE_ADDR'] . session_id() . $_SESSION['ET']);
-    }
-    ?>
+    <span class="Message" id="Msg" style="float: right;">
+      <b>Loading Please Wait...</b>
+    </span>
     <div class="formWrapper">
-      <form id="frmModify" method="post" autocomplete="off"
-            action="<?php
-            echo WebLib::GetVal($_SERVER, 'PHP_SELF');
-            ?>" >
-        <h3>Process </h3>
-        <span class="Message" id="Msg" style="float: right;">
-          <b>Loading please wait...</b>
-        </span>
-        <?php
-        include __DIR__ . '/DataMPR.php';
-        WebLib::ShowMsg();
-        ?>
-        <div class="FieldGroup">
-          <label for="DeptID"><strong>Department</strong></label><br/>
-          <select name="DeptID" id="DeptID" data-placeholder="Select Department">
-          </select>
-        </div>
-        <div class="FieldGroup">
-          <label for="SectorID"><strong>Sector</strong></label><br/>
-          <select name="SectorID" id="SectorID" data-placeholder="Select Sector">
-          </select>
-        </div>
-        <div class="FieldGroup">
-          <label for="SchemeID"><strong>Scheme</strong></label><br/>
-          <select name="SchemeID" id="SchemeID" data-placeholder="Select Sector">
-          </select>
-        </div>
-        <div class="FieldGroup">
-          <label for="ProjectID"><strong>Project Name</strong></label><br/>
-          <select name="ProjectID" id="ProjectID" data-placeholder="Select Project">
-          </select>
-        </div>
-        <div class="FieldGroup">
-          <br/>
-          <input type="button" id="CmdRefresh" name="CmdRefresh" value="Refresh"/>
-          <input type="hidden" id="FormToken"
-                 value="<?php echo WebLib::GetVal($_SESSION, 'FormToken') ?>" />
-          <input type="hidden" id="AjaxToken"
-                 value="<?php echo WebLib::GetVal($_SESSION, 'Token'); ?>" />
-        </div>
-        <div style="clear: both;"></div>
-        <div id="visualization" style="width:400; height:300"></div>
+      <form method="post" action="<?php
+      echo WebLib::GetVal($_SERVER, 'PHP_SELF');
+      ?>" id="frmIAP" ><?php
+            include __DIR__ . '/DataMPR.php';
+            ?>
+
+        <span class="myHeader">MPR Reports</span>
+        <hr/>
+
+        <a href="http://localhost/SiteRepo/mpr/SchemeRepot.php">
+          <span class="myHeader">1>Scheme Wise Report</span></a><br>
+        <a href="http://localhost/SiteRepo/mpr/Chart.php">
+          <span class="myHeader">2>Chart Report</span></a>
       </form>
     </div>
-    <pre id="Error">
-    </pre>
   </div>
   <div class="pageinfo">
     <?php WebLib::PageInfo(); ?>
@@ -89,4 +52,11 @@ WebLib::IncludeJS('mpr/js/Reports.js');
     <?php WebLib::FooterInfo(); ?>
   </div>
 </body>
-</html>
+</html><?php
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
