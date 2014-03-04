@@ -14,7 +14,6 @@ WebLib::IncludeCSS('MDM/css/forms.css');
 WebLib::IncludeCSS('MDM/css/DataEntry.css');
 WebLib::IncludeJS('MDM/js/DataEntry.js');
 WebLib::IncludeCSS('css/chosen.css');
-//WebLib::IncludeJS('MDM/js/Entry.js');
 WebLib::IncludeJS('js/chosen.jquery.min.js');
 WebLib::IncludeJS('js/jquery.validate.min.js');
 WebLib::IncludeJS('js/additional-methods.min.js');
@@ -54,8 +53,7 @@ session_start();
     <?php
     $Month       = date('M');
     $PreMonth    = date("M", strtotime("-1 months"));
-    $SecPreMonth = date("M", strtotime("-2 months"));
-    {
+    $SecPreMonth = date("M", strtotime("-2 months")); {
       ?>
       <input type="hidden" id="ActivePartID" />
       <input type="hidden" id="ActiveMealReportForm" value="Primary <?php echo "$Month"; ?>" />

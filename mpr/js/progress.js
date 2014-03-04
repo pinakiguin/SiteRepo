@@ -46,6 +46,7 @@ $(function() {
     $('#FinancialSlider').slider("value", 0);
     $("#lblPhysicalProgress").html("Physical Progress:");
     $("#lblFinancialProgress").html("Physical Progress: ");
+    location.reload();
   });
   $('#CmdSaveUpdate').on("click", function() {
     $("#TxtAction").val($(this).val());
@@ -159,6 +160,7 @@ $(function() {
           $('#FinancialSlider').slider("value", 0);
           $("#lblPhysicalProgress").html("Physical Progress:");
           $("#lblFinancialProgress").html("Physical Progress: ");
+
         }
         delete DataResp;
       }

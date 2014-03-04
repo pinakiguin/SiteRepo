@@ -76,5 +76,5 @@ $(function() {
               $('#Msg').html(msg);
             });
   });
-
+  $('#Msg').html('Loaded Successfully');
 });
