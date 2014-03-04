@@ -52,7 +52,7 @@ $(function() {
     },
     data: {
       'AjaxToken': $('#AjaxToken').val(),
-      'CallAPI': 'GetChosenData'
+      'CallAPI': 'GetReportData'
     }
   }).done(function(data) {
     try {

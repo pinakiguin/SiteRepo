@@ -8,6 +8,8 @@ function CreateSchemas() {
   $ObjDB->ddlQuery(SQLDefs('MDM_SubDivision'));
   $ObjDB->ddlQuery(SQLDefs('MDM_DataSubDivision'));
   $ObjDB->ddlQuery(SQLDefs('MDM_MealData'));
+  $ObjDB->ddlQuery(SQLDefs('MDM_SMS'));
+  $ObjDB->ddlQuery(SQLDefs('MDM_SMSData'));
   $ObjDB->ddlQuery(SQLDefs('MenuData'));
   unset($ObjDB);
 }
@@ -112,14 +114,72 @@ function SQLDefs($ObjectName) {
           . '(\'1503\', \'GHATAL\'),'
           . '(\'1504\', \'JHARGRAM\');';
       break;
+    case 'MDM_SMS':
+      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . $ObjectName . '` ('
+          . '`MsgID` bigint(20) NOT NULL AUTO_INCREMENT,'
+          . '`MsgType` enum(\'SMS\',\'Delivery Report\',\'\',\'\') NOT NULL DEFAULT \'SMS\','
+          . '`IP` text NOT NULL,`MsgData` longtext NOT NULL,'
+          . '`ReadUnread` tinyint(1) NOT NULL DEFAULT \'0\','
+          . '`ReceivedOn` '
+          . 'timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,'
+          . 'PRIMARY KEY (`MsgID`)) ENGINE=InnoDB '
+          . ' DEFAULT CHARSET=latin1 AUTO_INCREMENT=1138 ;';
+      break;
+
+    case 'MDM_SMSData':
+      $SqlDB = 'INSERT INTO `' . MySQL_Pre . 'MDM_SMS`'
+          . ' (`MsgID`, `MsgType`, `IP`, `MsgData`, `ReadUnread`, `ReceivedOn`) VALUES'
+          . '(1, \'SMS\', \'10.173.168.20\', \'[]\', 0, \'2013-03-12 09:52:58\'),
+(2, \'SMS\', \'10.173.168.20\', \'[]\', 0, \'2013-03-13 08:50:47\'),
+(3, \'SMS\', \'10.173.168.20\', \'[]\', 0, \'2013-03-13 08:52:00\'),
+(4, \'SMS\', \'10.173.168.20\', \'[]\', 0, \'2013-03-13 08:52:06\'),
+(5, \'SMS\', \'10.1.16.148\', \'[]\', 0, \'2013-03-14 04:24:59\'),
+(6, \'SMS\', \'164.100.14.9\', \'[]\', 0, \'2013-03-14 17:47:39\'),
+(7, \'SMS\', \'164.100.14.9\', \'{&quot;
+      Sender&quot;
+      :&quot;
+      918348691719&quot;
+      , &quot;
+      Message&quot;
+      :&quot;
+      Life is beautiful.&quot;
+      , &quot;
+      Destination&quot;
+      :&quot;
+      919211728082&quot;
+      , &quot;
+      Time&quot;
+      :&quot;
+      14-03-2013-23.14.37&quot;
+      }\', 0, \'2013-03-14 17:53:51\'),
+(8, \'SMS\', \'164.100.14.9\', \'{&quot;
+      Sender&quot;
+      :&quot;
+      919830668086&quot;
+      , &quot;
+      Message&quot;
+      :&quot;
+      Hi.....&quot;
+      , &quot;
+      Destination&quot;
+      :&quot;
+      919211728082&quot;
+      , &quot;
+      Time&quot;
+      :&quot;
+      15-03-2013-10.48.52&quot;
+      }\', 0, \'2013-03-15 05:28:05\'),
+(9, \'SMS\', \'10.26.19.4\', \'[]\', 0, \'2013-04-11 11:42:10\'),
+(10, \'SMS\', \'10.26.19.4\', \'[]\', 0, \'2013-04-11 11:42:13\');';
+      break;
+
     case 'MenuData':
       $SqlDB = 'INSERT INTO `' . MySQL_Pre . 'MenuItems` '
           . '(`AppID`,`MenuOrder`,`AuthMenu`,`Caption`,`URL`,`Activated`) VALUES'
           . '(\'MDM\', 1, 0, \'Home\', \'index.php\', 1),'
-          . '(\'MDM\', 2, 1, \'NewAdd\', \'MDM/Newadd.php\', 1),'
+          . '(\'MDM\', 2, 1, \'New Registration\', \'MDM/Newadd.php\', 1),'
           . '(\'MDM\', 3, 1, \'Report\', \'MDM/Report.php\', 1),'
-          . '(\'MDM\', 4, 1, \'Update Data\', \'MDM/Update.php\', 1),'
-          . '(\'MDM\', 5, 1, \'Total\', \'MDM/Total.php\', 1),'
+          . '(\'MDM\', 4, 1, \'Other\', \'MDM/Update.php\', 1),'
           . '(\'MDM\', 6, 1, \'Log Out!\', \'login.php?LogOut=1\', 1);';
       break;
   }
