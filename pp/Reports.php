@@ -25,13 +25,6 @@ WebLib::IncludeJS('pp/js/Reports.js');
   WebLib::ShowMenuBar('PP');
   ?>
   <div class="formWrapper" >
-    <form action="CheckList.php" target="_blank" method="post">
-      <input type="submit" name="CmdChkLst" value="Checklist PP1"/>
-      <select id="OfficeID" name="OfficeID"
-              data-placeholder="Select Office Name" >
-      </select>
-      <input type="submit" name="CmdChkLst" value="Checklist PP2"/>
-    </form>
     <form method="post"
           action="<?php
           echo WebLib::GetVal($_SERVER, 'PHP_SELF');
@@ -70,6 +63,16 @@ WebLib::IncludeJS('pp/js/Reports.js');
                value="<?php
                echo WebLib::GetVal($_SESSION, 'Token');
                ?>" />
+      </div>
+    </form>
+    <form action="CheckList.php" target="_blank" method="post">
+      <div class="jQuery-ButtonSet-Wrapper"
+           style="display: inline-block;min-height: 0;">
+        <input type="submit" name="CmdChkLst" value="Checklist PP1"/>
+        <select id="OfficeID" name="OfficeID"
+                data-placeholder="Select Office Name" >
+        </select>
+        <input type="submit" name="CmdChkLst" value="Checklist PP2"/>
       </div>
     </form>
   </div>

@@ -3,6 +3,7 @@ require_once __DIR__ . '/../lib.inc.php';
 session_start();
 if (WebLib::CheckAuth() === "Valid") {
   $CmdChkLst = WebLib::GetVal($_POST, 'CmdChkLst');
+  $OfficeID  = WebLib::GetVal($_POST, 'OfficeID');
   WebLib::Html5Header($CmdChkLst);
   ?>
   </head>
@@ -40,12 +41,20 @@ if (WebLib::CheckAuth() === "Valid") {
         break;
 
       case 'Checklist PP2':
-        echo '<h2 style="text-align:center;">Checklist (Polling Personnel)</h2><hr/>';
-        $Data = new MySQLiDBHelper();
-
-        $Query = 'Select `EmpSL`,`EmpName`,`DesgID`,`DOB`,`SexId`,`P`.`AcNo`,`PartNo`,`SLNo`,`EPIC`'
+        echo '<h2 style="text-align:center;">Checklist (Polling Personnel)</h2>';
+        $Data  = new MySQLiDBHelper();
+        $Rows  = $Data->where('OfficeSL', $OfficeID)
+            ->query('Select OfficeName from ' . MySQL_Pre . 'PP_Offices');
+        echo '<h3>' . $Rows[0]['OfficeName'] . '</h3><hr/>';
+        $Query = 'Select CONCAT(`EmpName`,", ",`DesgID`," (",`EmpSL`,")")'
+            . ' as `Name, Designation (Code)`,DATE_FORMAT(`DOB`,"%d/%c/%Y") '
+            . 'as `Date of Birth`,`SexId` as `Gender`,`Scale` as `Pay Scale`,'
+            . '`BasicPay` as `Basic Pay`,'
+            . '`P`.`AcNo` as `Assembly (Voter)`,'
+            . '`PartNo`,`SLNo`,`EPIC`'
             . ' from ' . MySQL_Pre . 'PP_Personnel P JOIN '
-            . MySQL_Pre . 'PP_Offices O ON(P.OfficeSL=O.OfficeSL)';
+            . MySQL_Pre . 'PP_Offices O ON(P.OfficeSL=O.OfficeSL) JOIN '
+            . MySQL_Pre . 'PP_PayScales S ON(P.PayScale=S.ScaleCode)';
 
         $Rows = $Data->where('UserMapID', $_SESSION['UserMapID'])->query($Query);
         ShowCheckList($Rows);
