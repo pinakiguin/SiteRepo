@@ -7,9 +7,13 @@ $(function() {
   $("#OfficeName").hide();
 
   $("#OfficeSL").chosen({width: "650px",
-    no_results_text: "Oops, nothing found!"})
-          .change(function() {
+    no_results_text: "Oops, nothing found!"
+  }).change(function() {
     $("#DataPPs").trigger("click");
+  });
+
+  $("#OfficeID").chosen({width: "650px",
+    no_results_text: "Oops, nothing found!"
   });
 
   $.ajax({
@@ -40,6 +44,10 @@ $(function() {
               });
       $('#OfficeSL').html(Options)
               .trigger("chosen:updated");
+
+      $('#OfficeID').html(Options)
+              .trigger("chosen:updated");
+
       delete DataResp;
       $("#Msg").html('');
     }
@@ -82,9 +90,11 @@ $(function() {
         if (DataResp.CallAPI === "DataOffices") {
           $("#OfficeName").hide();
           InitDataTablePP1("#ReportDT");
-        } else {
+        } else if (DataResp.CallAPI === "DataPPs") {
           $("#OfficeName").show();
           InitDataTablePP2("#ReportDT");
+        } else {
+          $("#ReportDT_wrapper").hide();
         }
         var dataTablePP = $('#ReportDT').dataTable();
         oSettings = dataTablePP.fnSettings();

@@ -18,6 +18,9 @@ $(function() {
   $("#BlockID").chosen({width: "300px",
     no_results_text: "Oops, nothing found!"
   });
+  $("#SchoolID").chosen({width: "300px",
+    no_results_text: "Oops, nothing found!"
+  });
   //fetch data....
   $.ajax({
     type: 'POST',
@@ -28,7 +31,7 @@ $(function() {
     },
     data: {
       'AjaxToken': $('#AjaxToken').val(),
-      'CallAPI': 'GetChosenData'
+      'CallAPI': 'GetReportData'
     }
   }).done(function(data) {
     try {
@@ -49,7 +52,7 @@ $(function() {
               .trigger("chosen:updated");
       $('#SubDivID').data('SubDivID', DataResp.SubDivID);
       $('#BlockID').data('Blocks', DataResp.Blocks);
-      $('#SchoolID').data('Schools', DataResp.Blocks);
+      $('#SchoolID').data('Schools', DataResp.Schools);
       delete DataResp;
       $("#SubDivID").chosen({width: "350px",
         no_results_text: "Oops, nothing found!"
@@ -67,6 +70,28 @@ $(function() {
                 });
         $('#BlockID').html(Options)
                 .trigger("chosen:updated");
+        $('#SchoolID').html('<option value=""></option>')
+                .trigger("chosen:updated");
+
+
+      });
+      $("#BlockID").chosen({width: "350px",
+        no_results_text: "Oops, nothing found!"
+      }).change(function() {
+        var BlockID = ($(this).val());
+        var Options = '<option value=""></option>';
+        var Schools = $('#SchoolID').data('Schools');
+        $.each(Schools.Data,
+                function(index, value) {
+                  if (value.BlockID === BlockID)
+                  {
+                    Options += '<option value="' + value.SchoolID + '">'
+                            + value.SchoolID + ' - ' + value.Schoolname
+                            + '</option>';
+                  }
+                });
+        $('#SchoolID').html(Options)
+                .trigger("chosen:updated");
 
 
       });
@@ -74,7 +99,7 @@ $(function() {
     }
     catch (e) {
       $('#Msg').html('Server Error:' + e);
-      // $('#Error').html(data);
+      $('#Error').html(data);
     }
   }).fail(function(msg) {
     $('#Msg').html(msg);
@@ -82,8 +107,8 @@ $(function() {
   $("#TypeID").chosen({width: "350px",
     no_results_text: "Oops, nothing found!"
   });
-  // set the schoolvalue depand on the School name.......
-  $("#SchoolName").chosen({width: "450px",
+  //set the schoolvalue depand on the School name.......
+  $("#SchoolID").chosen({width: "450px",
     no_results_text: "Oops, nothing found!"
   }).change(function() {
     var School = Number($(this).val());

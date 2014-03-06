@@ -81,10 +81,12 @@ if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
      * Get Data For Reports
      */
     case 'GetOffices':  //Populate the OfficeCombo for DataPPs
-      $Query = 'SELECT `OfficeSL`, `OfficeName` '
-          . ' FROM `' . MySQL_Pre . 'PP_Offices` '
+      $Query = 'SELECT `O`.`OfficeSL`, `OfficeName` '
+          . ' FROM `' . MySQL_Pre . 'PP_Offices` `O` JOIN '
+          . '`' . MySQL_Pre . 'PP_Personnel` `P`'
+          . ' ON(`O`.`OfficeSL`=`P`.`OfficeSL`)'
           . ' Where `UserMapID`=?'
-          . ' Order by `OfficeSL`';
+          . ' GROUP By `OfficeSL`, `OfficeName`';
       doQuery($DataResp, $Query, array($_SESSION['UserMapID']));
       break;
 

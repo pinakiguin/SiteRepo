@@ -87,11 +87,12 @@ if (WebLib::GetVal($_POST, 'AjaxToken') ===
           . ' Order by `BlockID`';
       $DataResp['BlockID']  = array();
       doQuery($DataResp['Blocks'], $Query);
-      $Query                = 'Select `BlockID`,`SubDivID`,`SchoolID`,`SchoolName`'
-          . ' FROM `' . MySQL_Pre . 'MDM_Blocks`'
+      $Query                = 'Select `SchoolID`,`SubDivID`,`BlockID`,`Schoolname`'
+          . ' FROM `' . MySQL_Pre . 'MDM_Newdata`'
           . ' Order by `SchoolID`';
       $DataResp['SchoolID'] = array();
       doQuery($DataResp['Schools'], $Query);
+
 
       break;
 //    case 'GetMealData':

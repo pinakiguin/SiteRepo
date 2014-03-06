@@ -50,44 +50,37 @@ session_start();
     </form>
     <div style="clear:both;"></div>
     <hr />
-    <?php
-    $Month       = date('M');
-    $PreMonth    = date("M", strtotime("-1 months"));
-    $SecPreMonth = date("M", strtotime("-2 months")); {
-      ?>
-      <input type="hidden" id="ActivePartID" />
-      <input type="hidden" id="ActiveMealReportForm" value="Primary <?php echo "$Month"; ?>" />
 
-      <div id="SRER_Forms" style="text-align:center;width:100%;display:none;">
-        <ul>
-          <li><a href="#Primary<?php echo $SecPreMonth; ?>" >
-              Primary <?php echo "$SecPreMonth"; ?></a>
-          </li>
-          <li><a href="#UpperPrimary<?php echo "$SecPreMonth"; ?>" >
-              Upper Primary<?php echo "$SecPreMonth"; ?></a>
-          </li>
-          <li><a href="#Primary<?php echo "$PreMonth"; ?>" >
-              Primary <?php echo "$PreMonth"; ?></a>
-          </li>
-          <li><a href="#UpperPrimary<?php echo "$PreMonth"; ?>" >
-              Upper Primary <?php echo "$PreMonth"; ?></a>
-          </li>
-          <li><a href="#Primary<?php echo "$Month"; ?>" >
-              Primary <?php echo "$Month"; ?></a>
-          </li>
-          <li><a href="#UpperPrimary<?php echo "$Month"; ?>" >
-              Upper Primary <?php echo "$Month"; ?></a>
-          </li>
-        </ul>
-        <?php
-      }
-      ?>
+    <input type="hidden" id="ActivePartID" />
+    <input type="hidden" id="ActiveMealReportForm" value="Primary
+           <?php echo "$Month"; ?>" />
+
+    <div id="SRER_Forms" style="text-align:center;width:100%;display:none;">
+      <ul>
+        <li><a href="#B01" >
+            B01 </a>
+        </li>
+        <li><a href="#B02" >
+            B02</a>
+        </li>
+<!--        <li><a href="#Primary<?php echo "$PreMonth"; ?>" >
+            Primary <?php echo "$PreMonth"; ?></a>
+        </li>
+        <li><a href="#UpperPrimary<?php echo "$PreMonth"; ?>" >
+            Upper Primary <?php echo "$PreMonth"; ?></a>
+        </li>
+        <li><a href="#Primary<?php echo "$Month"; ?>" >
+            Primary <?php echo "$Month"; ?></a>
+        </li>
+        <li><a href="#UpperPrimary<?php echo "$Month"; ?>" >
+            Upper Primary <?php echo "$Month"; ?></a>
+        </li>-->
+      </ul>
+
       <input type="hidden" id="AjaxToken"
              value="<?php echo WebLib::GetVal($_SESSION, 'Token'); ?>" />
-      <div id="Primary<?php echo $SecPreMonth; ?>">
-        <?php
-        MealReportForm("Primary$SecPreMonth");
-        ?>
+      <div id="B01">
+        <?php MealReportForm("B01"); ?>
       </div>
       <div id="UpperPrimary<?php echo $SecPreMonth; ?>">
         <?php

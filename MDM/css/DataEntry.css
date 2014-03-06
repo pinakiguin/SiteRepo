@@ -102,6 +102,9 @@ input[id$="FromRow"]{
 #SRER_Forms {
   font-size: 14px;
 }
+#MDM_Forms {
+  font-size: 14px;
+}
 .new {
   color: whitesmoke;
   background-color: gray;

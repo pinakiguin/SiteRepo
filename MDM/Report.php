@@ -47,8 +47,8 @@ WebLib::IncludeJS('MDM/js/Report.js');
           </label>
         </div>
         <div class="FieldGroup">
-          <label for="SchoolName"><span class="myfont">Select Name of School Name</span>
-            <select id="SchoolName" name="SchoolName"
+          <label for="SchoolID"><span class="myfont">Select Name of School Name</span>
+            <select id="SchoolID" name="SchoolID"
                     data-placeholder="Select SchoolName">
             </select>
           </label>

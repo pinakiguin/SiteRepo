@@ -1,60 +1,6 @@
 <?php
 require_once(__DIR__ . '/../lib.inc.php');
-session_start();
 
-function GetPartName() {
-  if (intval(WebLib::GetVal($_SESSION, 'PartID')) > 0) {
-    $Fields   = new MySQLiDB();
-    $PartName = $Fields->do_max_query('Select CONCAT(PartNo,\' - \',PartName) as PartName from `' . MySQL_Pre . 'SRER_PartMap`'
-        . ' Where PartID=' . WebLib::GetVal($_SESSION, 'PartID'));
-    $Fields->do_close();
-    unset($Fields);
-  }
-  return ($PartName);
-}
-
-function GetColHead($ColName) {
-  $Fields  = new MySQLiDB();
-  $ColHead = $Fields->do_max_query('Select Description from `' . MySQL_Pre . 'SRER_FieldNames`'
-      . ' Where FieldName=\'' . $ColName . '\'');
-  $Fields->do_close();
-  unset($Fields);
-  return (!$ColHead ? $ColName : $ColHead);
-}
-
-function ShowSRER($QueryString) {
-  // Connecting, selecting database
-  $Data      = new MySQLiDB();
-  $TotalRows = $Data->do_sel_query($QueryString);
-  $TotalCols = $Data->ColCount;
-  // Printing results in HTML
-  echo '<table rules="all" frame="box" width="100%" cellpadding="5" cellspacing="1">';
-  $i         = 0;
-
-  echo 'Total Records: ' . $TotalRows . '<br />';
-  while ($i < $TotalCols) {
-    echo '<th style="text-align:center;">' . GetColHead($Data->GetFieldName($i)) . '</th>';
-    $i++;
-  }
-  $j    = 0;
-  while ($line = $Data->get_row()) {
-    echo '<tr>';
-    foreach ($line as $col_value)
-      echo '<td>' . $col_value . '</td>';
-    echo '</tr>';
-    $j++;
-  }
-  echo '</table>';
-  unset($Data);
-  return ($j);
-}
-
-/**
- * Shows the Table for SRER FormPanels
- * @todo FieldNames sent as ID to be encrypted using Secret
- *
- * @param string $FormName Possible values: (MealReportForm6I|MealReportForm6A|MealReportForm7I|MealReportForm8I|MealReportForm8A)
- */
 function MealReportForm($FormName) {
   //$Data = new MySQLiDBHelper(HOST_Name, MySQL_User, MySQL_Pass, MySQL_DB);
   switch ($FormName) {

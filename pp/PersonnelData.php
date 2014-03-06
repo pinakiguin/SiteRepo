@@ -46,7 +46,13 @@ if ($FormToken !== NULL) {
         break;
     }
     if ($QueryExecuted === false) {
-      $_SESSION['Msg'] = 'Unable to ' . $CmdAction . '!';
+      $ErrorNo  = $Data->error_no();
+      $ErrorMsg = error_get_last();
+      if ($ErrorNo) {
+        $_SESSION['Msg'] = 'Error#: ' . $ErrorNo . ', ' . $ErrorMsg['message'];
+      }
+      $_SESSION['Msg'] = WebLib::GetVal($_SESSION, 'Msg')
+          . '<br/>Unable to ' . $CmdAction . '!';
     } else {
       $_SESSION['Msg']      = 'Successfully ' . $CmdAction . 'd!';
       $_SESSION['PostData'] = array();

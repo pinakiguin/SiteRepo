@@ -48,20 +48,22 @@ $(function() {
 
   $("#Qualification").chosen({width: "300px",
     no_results_text: "Oops, nothing found!"});
-
   $("#BranchName").chosen({width: "418px",
-    no_results_text: "Oops, nothing found!"
-  }).change(function() {
-    var BranchSL = Number($(this).val());
-    var IFSC = $('#BranchName').data('BranchName');
-    $.each(IFSC,
-            function(index, value) {
-              if (value.BranchSL === BranchSL) {
-                $("#IFSC").val(value.IFSC);
-                return false;
-              }
-            });
-  });
+    no_results_text: "Oops, nothing found!"});
+
+//  $("#BranchName").chosen({width: "418px",
+//    no_results_text: "Oops, nothing found!"
+//  }).change(function() {
+//    var BranchSL = Number($(this).val());
+//    var IFSC = $('#BranchName').data('BranchName');
+//    $.each(IFSC,
+//            function(index, value) {
+//              if (value.BranchSL === BranchSL) {
+//                $("#IFSC").val(value.IFSC);
+//                return false;
+//              }
+//            });
+//  });
 
   $("#BankName").chosen({width: "250px",
     no_results_text: "Oops, nothing found!"
@@ -82,6 +84,7 @@ $(function() {
     }).done(function(data) {
       try {
         var DataResp = $.parseJSON(data);
+        var xyz = $.parseJSON(data);
         delete data;
         $('#AjaxToken').val(DataResp.AjaxToken);
         $('#ED').html(DataResp.RT);
@@ -349,7 +352,7 @@ $(function() {
       catch (e) {
         $('#Msg').html('Server Error:' + e);
         $('#Error').html(data);
-        location.reload();
+        //location.reload();
       }
     }).fail(function(msg) {
       $('#Msg').html(msg);
@@ -375,8 +378,10 @@ function FillData(FormData) {
             });
           });
   $('#BankName').trigger("chosen:updated");
-  $('#BankName').trigger("change");
-  $('#BranchName').val(FormData[0].BranchName).trigger("chosen:updated");
+  //$('#BankName').trigger("change");
+  $('#BranchName').val(FormData[0].BranchName);
+  $('#BranchName').trigger("chosen:updated");
+  //$('#BranchName').trigger("change");
   $('#Remarks').trigger("chosen:updated");
   $('#Qualification').trigger("chosen:updated");
   $('#PayScale').trigger("chosen:updated");

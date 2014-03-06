@@ -286,6 +286,15 @@ class MySQLiDBHelper {
   }
 
   /**
+   * Returns the mysqli_errorno
+   *
+   * @return int errorno
+   */
+  public function error_no() {
+    return $this->_mysqli->errno;
+  }
+
+  /**
    * This method is needed for prepared statements. They require
    * the data type of the field to be bound with "i" s", etc.
    * This function takes the input, determines what type it is,
