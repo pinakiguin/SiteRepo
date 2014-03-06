@@ -94,6 +94,12 @@ $(function() {
                 });
         $('#BranchName').html(Options)
                 .trigger("chosen:updated");
+        var BranchSL = $('#BranchName').data('BranchSL');
+        if (BranchSL !== "") {
+          $('#BranchName').val(BranchSL);
+          $('#BranchName').removeData('BranchSL');
+        }
+        $('#BranchName').trigger("chosen:updated");
         $('#BranchName').data('BranchName', DataResp.Data);
         $('#Msg').html('');
         delete DataResp;
@@ -374,6 +380,7 @@ function FillData(FormData) {
               Field.val(data);
             });
           });
+  $('#BranchName').data('BranchSL', FormData[0].BranchName);
   $('#BankName').trigger("chosen:updated");
   $('#BankName').trigger("change");
   $('#BranchName').val(FormData[0].BranchName).trigger("chosen:updated");
