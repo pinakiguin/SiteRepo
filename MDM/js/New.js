@@ -42,7 +42,7 @@ $(function() {
     $("#DesigID").trigger("chosen:updated");
     $("#RegDate").val($.datepicker.formatDate("dd-mm-yy", new Date()));
   });
-  //call ajax for fetch data......
+  //call ajax for fetch data.........
   $.ajax({
     type: 'POST',
     url: 'AjaxData.php',
