@@ -64,28 +64,14 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
     if ($Query !== '') {
       $Inserted = $Data->do_ins_query($Query);
       if ($Inserted > 0) {
-        if (WebLib::GetVal($_POST, 'CmdSubmit') === 'Create') {
-          $_SESSION['Msg'] = 'User Created Successfully!';
-        } else if (WebLib::GetVal($User, 1)) {
-          $GmailResp = GMailSMTP($User[1], $User[0], $Subject, $Body);
-          $Mail = json_decode($GmailResp);
-          if ($Mail->Sent) {
-            if (WebLib::GetVal($_SESSION, 'Msg') === '') {
-              $_SESSION['Msg'] = 'User ' . WebLib::GetVal($_POST, 'CmdSubmit') 
-                  . 'd Successfully!';
-            }
-          } else {
-            $_SESSION['Msg'] = 'Action completed Successfully! But Unable to Send eMail!';
-          }
-        }
+            $_SESSION['Msg'] = 'Action Completed Successfully!';
       } else {
-        $_SESSION['Msg'] = 'Unable to ' . WebLib::GetVal($_POST, 'CmdSubmit') . '!';
+        $_SESSION['Msg'] = 'Unable to ' 
+            . WebLib::GetVal($_POST, 'CmdMenuAction') . '!';
       }
     }
   }
 }
 $_SESSION['FormToken'] = md5($_SERVER['REMOTE_ADDR'] . session_id() . microtime());
-unset($Mail);
-unset($GmailResp);
 unset($Data);
 ?>
