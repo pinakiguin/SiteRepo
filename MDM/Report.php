@@ -53,6 +53,15 @@ WebLib::IncludeJS('MDM/js/Report.js');
             </select>
           </label>
         </div>
+        <div style="clear: both"></div>
+        <div class="formControl">
+          <input type="button" onclick
+                 ="window.location = 'http://localhost/SiteRepo/MDM/School.php';"
+                 id="show" value="Show Data">
+          <input type="button" id="reset" value="Reset">
+
+        </div>
+
 
         <table id="Mdmreport" class="display stripe row-border hover order-column"
                cellspacing="0" width="100%" style="

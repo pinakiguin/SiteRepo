@@ -7,7 +7,7 @@ WebLib::JQueryInclude();
 WebLib::IncludeJS('MDM/js/neumeric.js');
 WebLib::IncludeCSS('MDM/css/forms.css');
 WebLib::IncludeCSS('css/chosen.css');
-WebLib::IncludeJS('js/chosen.jquery.min.js');
+WebLib::IncludeJS('MDM/js/School.js');
 ?>
 </head>
 <body>
@@ -28,8 +28,19 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
       <form method="post" action="<?php
       echo WebLib::GetVal($_SERVER, 'PHP_SELF');
       ?>" id="frmlater" >
-        <h3>more requirement </h3>
-        <h1>Under Construction</h1>
+        <div style="font-size:20px; font-family: Times New Roman;
+             color: #0063DC; text-align: center; text-decoration:underline;">
+          Table Of School Report
+        </div>
+        <div>
+          <table border="1px" id="SchoolData" Name="SchoolData">
+            <tr>
+              <th class="myfont">School Name</th>
+              <th class="myfont">Meal Made</th>
+              <th class="myfont">total Student</th>
+            </tr>
+          </table>
+        </div>
       </form>
       <pre id="Error">
       </pre>
