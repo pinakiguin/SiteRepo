@@ -40,6 +40,7 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
         foreach ($_POST['UserMapID'] as $UserMapID) {
           foreach ($_POST['MenuID'] as $MenuID) {
             $DataACL['AllowOnly'] = 1;
+            $DataACL['Activated'] = 1;
             $Data->where('UserMapID', $UserMapID);
             $Data->where('MenuID', $MenuID);
             $Data->update(MySQL_Pre . 'MenuACL', $DataACL);
@@ -51,9 +52,10 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
         foreach ($_POST['UserMapID'] as $UserMapID) {
           foreach ($_POST['MenuID'] as $MenuID) {
             $DataACL['AllowOnly'] = 1;
+            $DataACL['Activated'] = 0;
             $Data->where('UserMapID', $UserMapID);
             $Data->where('MenuID', $MenuID);
-            $Data->delete(MySQL_Pre . 'MenuACL', $DataACL);
+            $Data->update(MySQL_Pre . 'MenuACL', $DataACL);
           }
         }
         $_SESSION['Msg'] = 'Deactivated Successfully!';
@@ -69,7 +71,8 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
           $Mail = json_decode($GmailResp);
           if ($Mail->Sent) {
             if (WebLib::GetVal($_SESSION, 'Msg') === '') {
-              $_SESSION['Msg'] = 'User ' . WebLib::GetVal($_POST, 'CmdSubmit') . 'd Successfully!';
+              $_SESSION['Msg'] = 'User ' . WebLib::GetVal($_POST, 'CmdSubmit') 
+                  . 'd Successfully!';
             }
           } else {
             $_SESSION['Msg'] = 'Action completed Successfully! But Unable to Send eMail!';
