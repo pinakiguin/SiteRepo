@@ -4,8 +4,8 @@ WebLib::AuthSession();
 WebLib::Html5Header('Mid Day Meal');
 WebLib::IncludeCSS();
 WebLib::JQueryInclude();
-WebLib::IncludeJS('MDM/js/neumeric.js');
 WebLib::IncludeCSS('MDM/css/forms.css');
+WebLib::IncludeJS('MDM/js/neumeric.js');
 WebLib::IncludeCSS('css/chosen.css');
 WebLib::IncludeJS('MDM/js/School.js');
 ?>
@@ -30,20 +30,35 @@ WebLib::IncludeJS('MDM/js/School.js');
       ?>" id="frmlater" >
         <div style="font-size:20px; font-family: Times New Roman;
              color: #0063DC; text-align: center; text-decoration:underline;">
-          Table Of School Report
+          School Mid Day Meal Report
         </div>
-        <div>
-          <table border="1px" id="SchoolData" Name="SchoolData">
-            <tr>
-              <th class="myfont">School Name</th>
-              <th class="myfont">Meal Made</th>
-              <th class="myfont">total Student</th>
-            </tr>
-          </table>
+        <div style="text-align: right" class="myfont">
+          <?php
+          $Dt = date('d-M-Y h:i:s A');
+          print_r("$Dt");
+          ?>
         </div>
+        <div class="FieldGroup">
+          <label class="myfont" for="SchoolName">School Name</label>
+          <input type="text" name="SchoolName" id="SchoolName" disabled />
+        </div>
+        <div class="FieldGroup">
+          <label class="myfont" for="MealMade">Total Meal Made Today</label>
+          <input type="text" name="MealMade" id="MealMade" disabled />
+        </div>
+        <div class="FieldGroup">
+          <label class="myfont" for="TotalStudent">Total Student</label>
+          <input type="text" name="TotalStudent" id="TotalStudent" disabled />
+        </div>
+        <p>Count numbers: <output id="result"></output></p>
+        <input type="button" id="startWorker" value="startWorker">
+        <input type="button" id="stopWorker" value="stopWorker">
+        <br><br>
+        <div style="clear: both"></div>
+
+        <pre id="Error">
+        </pre>
       </form>
-      <pre id="Error">
-      </pre>
     </div>
   </div>
   <div class="pageinfo">

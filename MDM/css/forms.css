@@ -77,8 +77,8 @@ root {
 }
 .formWrapper .FieldGroup {
   float: left;
-  margin: 10px,10px,10px,10px;
-  padding: 10px,10px,10px,10px;
+  margin: 10px 10px 10px 10px;
+  padding: 10px 10px 10px 10px;
 }
 .formSliderLabel{
   font-size: 20px;
@@ -118,6 +118,29 @@ root {
   text-decoration: none;
   margin: 0px;
   padding-left: 0px;
+}
+.table-header {
+  color: #660000;
+  font-family: Calibri, Georgia, "Book Antiqua", Verdana;
+  font-size:15px;
+  font-style: normal;
+  line-height: normal;
+  font-weight: bold;
+  font-variant: normal;
+  text-transform: none;
+  text-decoration: none;
+  margin: 0px;
+  padding-left: 0px;
+  text-align: center;
+}
+.table {
+  background-color:#d9d9d9;
+  alignment-adjust: middle;
+  alignment-baseline: middle;
+
+
+
+
 }
 
 .formWrapper legend{

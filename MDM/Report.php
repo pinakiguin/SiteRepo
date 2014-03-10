@@ -31,7 +31,7 @@ WebLib::IncludeJS('MDM/js/Report.js');
       <form method="post" action="<?php
       echo WebLib::GetVal($_SERVER, 'PHP_SELF');
       ?>" id="frmNewAdd" >
-        <h3>Report Mid Day Meal Data</h3>
+        <span style="text-align: center"><h3> Mid Day Meal Report</h3></span>
         <div class="FieldGroup">
           <label for="SubDivID"><span class="myfont">Select The SubDivision Name</span>
             <select id="SubDivID" name="SubDivID"
@@ -54,34 +54,51 @@ WebLib::IncludeJS('MDM/js/Report.js');
           </label>
         </div>
         <div style="clear: both"></div>
+        <hr/>
         <div class="formControl">
           <input type="button" onclick
                  ="window.location = 'http://localhost/SiteRepo/MDM/School.php';"
                  id="show" value="Show Data">
           <input type="button" id="reset" value="Reset">
-
         </div>
-
-
-        <table id="Mdmreport" class="display stripe row-border hover order-column"
-               cellspacing="0" width="100%" style="
-               font-weight:bold;font-family:Calibri;font-size:15px">
-          <thead>
-            <tr class="myfont">
-              <th>School Name</th>
-              <th>Type of School</th>
-              <th>Report Date</th>
-              <th>Number Of Present</th>
-              <th>Total Number Of Student</th>
+        <label for="DistResult" style="text-align: center">
+          <h3> Mid Day Meal Report Table</h3></label>
+        <div>
+          <table class="table" border="2px" cellpadding="10px"
+                 cellspacing="2px" id="TotalReport" align="center";>
+            <tr class="table-header">
+              <th >SL.No</th>
+              <th>Name of SubDiv</th>
+              <th>Reported Blocks</th>
+              <th>Number Of Blocks</th>
+              <th>Meal Maid</th>
+              <th>Total Student</th>
             </tr>
-          </thead>
-        </table>
-        <div style="clear: both;"></div>
-        <div class="formControl">
-          <input type="submit" name="CmdSubmit" value="Show Data" id="CmdSaveUpdate">
-          <input type="hidden" id="TxtAction" name="CmdSubmit" value="" />
-          <input type="button" name="Refresh" value="Refresh" id="Refresh">
+          </table>
         </div>
+        <div style="clear: both"></div>
+        <label for="DistResult" style="text-align: center">
+          <h3>District Mid Day Meal Report</h3></label>
+
+        <div class="FieldGroup">
+          <label for="TotalMeal" class="myfont">Total Number Of Meal Made
+            <input type="text" name="TotalMeal" id="TotalMeal" disabled />
+          </label></div>
+        <div class="FieldGroup">
+          <label for="TotalStudent" class="myfont">Total Number Of Student
+            <input type="text" name="TotalStudent" id="TotalStudent" disabled />
+          </label></div>
+        <div class="FieldGroup">
+          <label for="ReportedSchool" class="myfont">Total Reported School
+            <input type="text" name="ReportedSchool" id="ReportedSchool" disabled />
+          </label></div>
+        <div class="FieldGroup">
+          <label for="TotalSchool" class="myfont">Total Number Of School
+            <input type="text" name="TotalSchool" id="TotalSchool" disabled />
+          </label> </div>
+        <div style="clear: both"></div>
+
+
         <input type="hidden" name="FormToken" id="FormToken"
                value="<?php echo WebLib::GetVal($_SESSION, 'FormToken') ?>" />
         <input type="hidden" name="AjaxToken" id="AjaxToken"
