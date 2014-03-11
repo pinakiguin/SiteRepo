@@ -49,9 +49,8 @@ function SQLDefs($ObjectName) {
     case 'MDM_MealData':
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . $ObjectName . '` ('
           . '`SchoolID` int(10) DEFAULT NULL,'
-          . '`TotalStudent` int(10) DEFAULT NULL,'
           . '`Meal` int(10) DEFAULT NULL,'
-          . '`ReportDate` varchar(10) DEFAULT NULL,'
+          . '`ReportDate` Date DEFAULT NULL,'
           . '`UserMapID` INT(10) DEFAULT 1,'
           . 'UNIQUE KEY `Report` (`SchoolID`,`ReportDate`)'
           . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';

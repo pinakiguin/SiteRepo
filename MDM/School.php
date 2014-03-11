@@ -10,7 +10,8 @@ WebLib::IncludeCSS('css/chosen.css');
 WebLib::IncludeJS('MDM/js/School.js');
 ?>
 </head>
-<body>
+<body onload="startWorker()">
+  <div id="txt"></div>
   <div class="TopPanel">
     <div class="LeftPanelSide"></div>
     <div class="RightPanelSide"></div>
@@ -33,10 +34,34 @@ WebLib::IncludeJS('MDM/js/School.js');
           School Mid Day Meal Report
         </div>
         <div style="text-align: right" class="myfont">
-          <?php
-          $Dt = date('d-M-Y h:i:s A');
-          print_r("$Dt");
-          ?>
+          <p>Current Time Is: <output id="result"></output></p>
+          <br><br>
+          <script>
+            var w;
+            function startWorker()
+            {
+              if (typeof (Worker) !== "undefined")
+              {
+                if (typeof (w) === "undefined")
+                {
+                  w = new Worker("time.js");
+                }
+                w.onmessage = function(event) {
+                  document.getElementById("result").innerHTML = event.data;
+                };
+              }
+              else
+              {
+                document.getElementById("result").innerHTML =
+                        "Sorry, your browser does not support Web Workers...";
+              }
+            }
+
+            function stopWorker()
+            {
+              w.terminate();
+            }
+          </script>
         </div>
         <div class="FieldGroup">
           <label class="myfont" for="SchoolName">School Name</label>
@@ -50,9 +75,6 @@ WebLib::IncludeJS('MDM/js/School.js');
           <label class="myfont" for="TotalStudent">Total Student</label>
           <input type="text" name="TotalStudent" id="TotalStudent" disabled />
         </div>
-        <p>Count numbers: <output id="result"></output></p>
-        <input type="button" id="startWorker" value="startWorker">
-        <input type="button" id="stopWorker" value="stopWorker">
         <br><br>
         <div style="clear: both"></div>
 

@@ -92,36 +92,24 @@ if (WebLib::GetVal($_POST, 'AjaxToken') ===
           . ' Order by `SchoolID`';
       $DataResp['SchoolID'] = array();
       doQuery($DataResp['Schools'], $Query);
+      $Query                = 'Select S.SchoolID,S.Schoolname,'
+          . 'S.TotalStudent,M.Meal,M.ReportDate,'
+          . 'B.BlockName,'
+          . 'D.SubdivName FROM ' . MySQL_Pre . 'MDM_Newdata S '
+          . 'INNER JOIN ' . MySQL_Pre . 'MDM_MealData M '
+          . 'ON S.SchoolID=M.SchoolID '
+          . 'INNER JOIN ' . MySQL_Pre . 'MDM_Blocks B '
+          . 'ON S.BlockID=B.BlockID '
+          . 'INNER JOIN ' . MySQL_Pre . 'MDM_SubDivision D '
+          . 'ON B.SubDivID=D.SubDivID '
+          . 'Order by S.SchoolID';
 
+      $DataResp['ReportID'] = array();
+      doQuery($DataResp['ReportID'], $Query);
 
       break;
-//    case 'GetMealData':
-//      $Query = 'Select S.SchoolID,S.Schoolname,'
-//          . 'S.TotalStudent,M.Meal,M.ReportDate,'
-//          . 'B.BlockName,'
-//          . 'D.SubdivName FROM ' . MySQL_Pre . 'MDM_Newdata S '
-//          . 'INNER JOIN ' . MySQL_Pre . 'MDM_MealData M '
-//          . 'ON S.SchoolID=M.SchoolID '
-//          . 'INNER JOIN ' . MySQL_Pre . 'MDM_Blocks B '
-//          . 'ON S.BlockID=B.BlockID '
-//          . 'INNER JOIN ' . MySQL_Pre . 'MDM_SubDivision D '
-//          . 'ON B.SubDivID=D.SubDivID '
-//          . 'Order by S.SchoolID';
-//
-//      doQuery($DataResp, $Query, array(WebLib::GetVal($_POST, 'Meals')));
-//      break;
-
     default :
       $DataResp['Msg'] = 'Invalid API Call';
-    /*
-     * Select S.SchoolID,S.Schoolname,S.Mobile,S.DesigID,S.TotalStudent,S.NameID,S.RegDate,B.BlockName,D.SubdivName FROM WebSite_MDM_Newdata S INNER JOIN WebSite_MDM_Blocks B ON S.BlockID=B.BlockID INNER JOIN WebSite_MDM_SubDivision D ON B.SubDivID=D.SubDivID
-
-     *
-     * ' . MySQL_Pre . ' */
-
-
-
-
     default :
       $DataResp['Msg'] = 'Invalid API Call';
       break;
