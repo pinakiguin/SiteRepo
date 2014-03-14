@@ -54,15 +54,15 @@ $_SESSION['FormToken'] = md5($_SERVER['REMOTE_ADDR']
             . 'ON S.SchoolID=M.SchoolID ORDER BY SchoolID';
 
         $MealRecord = $Data->rawQuery($Query);
-        print_r($MealRecord);
+        // print_r($MealRecord);
         echo '<hr>';
         foreach ($MealRecord as $key => $val) {
           $TotalStudent                = $TotalStudent + $val ['TotalStudent'];
           $TotalMeal                   = $TotalMeal + $val ['Meal'];
           $SubMData[$val['SubdivID']]  = $SubMData[$val['SubdivID']] + $val ['Meal'];
           $SubSData[$val['SubdivID']]  = $SubSData[$val['SubdivID']] + $val ['TotalStudent'];
-          $BlockSData[$val['BlockID']] = $BlockSData[$val['BlockID']] + $val ['Meal'];
-          $BlockMData[$val['BlockID']] = $BlockMData[$val['BlockID']] + $val ['TotalStudent'];
+          $BlockSData[$val['BlockID']] = $BlockSData[$val['BlockID']] + $val ['TotalStudent'];
+          $BlockMData[$val['BlockID']] = $BlockMData[$val['BlockID']] + $val ['Meal'];
         }
         echo "The total srudent of the district is=> $TotalStudent";
         echo '<br>';
