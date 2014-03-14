@@ -59,7 +59,6 @@ function SQLDefs($ObjectName) {
     case 'MDM_DataBlocks':
       $SqlDB = 'INSERT INTO `' . MySQL_Pre . 'MDM_Blocks` '
           . '(`BlockID`, `BlockName`, `SubDivID`) VALUES'
-          . '(\'0bm\', \'OTHERS\', NULL),'
           . '(\'B01\', \'MIDNAPORE SADAR\', \'1501\'),'
           . '(\'B02\', \'KESHPUR\', \'1501\'),'
           . '(\'B03\', \'SALBONI\', \'1501\'),'

@@ -41,15 +41,18 @@ $_SESSION['FormToken'] = md5($_SERVER['REMOTE_ADDR']
         $SubMData              = array();
         $BlockSData            = array();
         $BlockMData            = array();
+        $BlockList             = array();
         $Data                  = new MySQLiDBHelper();
 
-        $Query      = 'Select S.SchoolID,S.Schoolname,S.TotalStudent,'
-            . 'M.Meal,M.ReportDate, B.BlockID,B.BlockName,D.SubdivID,D.SubdivName '
-            . 'FROM WebSite_MDM_Newdata S '
+        $Query = 'Select D.SubdivID,D.SubdivName,B.BlockID,B.BlockName,'
+            . 'S.SchoolID,S.SchoolName,S.TotalStudent,M.Meal,'
+            . 'M.ReportDate FROM WebSite_MDM_SubDivision D '
+            . 'INNER JOIN WebSite_MDM_Blocks B '
+            . 'ON D.SubDivID=B.SubDivID INNER JOIN '
+            . 'WebSite_MDM_Newdata S ON B.BlockID=S.BlockID '
             . 'LEFT JOIN WebSite_MDM_MealData M '
-            . 'ON S.SchoolID=M.SchoolID LEFT JOIN WebSite_MDM_Blocks B '
-            . 'ON S.BlockID=B.BlockID LEFT JOIN WebSite_MDM_SubDivision D '
-            . 'ON B.SubDivID=D.SubDivID Order by S.SchoolID';
+            . 'ON S.SchoolID=M.SchoolID ORDER BY SchoolID';
+
         $MealRecord = $Data->rawQuery($Query);
         print_r($MealRecord);
         echo '<hr>';
