@@ -8,6 +8,7 @@ WebLib::JQueryInclude();
 WebLib::IncludeCSS('MDM/css/forms.css');
 WebLib::IncludeCSS('css/chosen.css');
 WebLib::IncludeJS('js/chosen.jquery.min.js');
+WebLib::IncludeJS('MDM/js/Other.js');
 $_SESSION['FormToken'] = md5($_SERVER['REMOTE_ADDR']
     . session_id() . microtime());
 ?>
@@ -32,17 +33,59 @@ $_SESSION['FormToken'] = md5($_SERVER['REMOTE_ADDR']
       ?>" id="sms" >
 
         <?php
-        $db                    = mysql_connect("localhost", "root", "mysql");
-        mysql_select_db("WebSite", $db);
-        $query                 = "SELECT * FROM WebSite_MDM_SMS";
-        $result                = mysql_query($query);
-        while ($row                   = mysql_fetch_array($result)) {
-          print_r($row);
+//change.....................
+        $ID                    = 0;
+        $TotalMeal             = 0;
+        $TotalStudent          = 0;
+        $SubSData              = array();
+        $SubMData              = array();
+        $BlockSData            = array();
+        $BlockMData            = array();
+        $Data                  = new MySQLiDBHelper();
+
+        $Query      = 'Select S.SchoolID,S.Schoolname,S.TotalStudent,'
+            . 'M.Meal,M.ReportDate, B.BlockID,B.BlockName,D.SubdivID,D.SubdivName '
+            . 'FROM WebSite_MDM_Newdata S '
+            . 'LEFT JOIN WebSite_MDM_MealData M '
+            . 'ON S.SchoolID=M.SchoolID LEFT JOIN WebSite_MDM_Blocks B '
+            . 'ON S.BlockID=B.BlockID LEFT JOIN WebSite_MDM_SubDivision D '
+            . 'ON B.SubDivID=D.SubDivID Order by S.SchoolID';
+        $MealRecord = $Data->rawQuery($Query);
+        print_r($MealRecord);
+        echo '<hr>';
+        foreach ($MealRecord as $key => $val) {
+          $TotalStudent                = $TotalStudent + $val ['TotalStudent'];
+          $TotalMeal                   = $TotalMeal + $val ['Meal'];
+          $SubMData[$val['SubdivID']]  = $SubMData[$val['SubdivID']] + $val ['Meal'];
+          $SubSData[$val['SubdivID']]  = $SubSData[$val['SubdivID']] + $val ['TotalStudent'];
+          $BlockSData[$val['BlockID']] = $BlockSData[$val['BlockID']] + $val ['Meal'];
+          $BlockMData[$val['BlockID']] = $BlockMData[$val['BlockID']] + $val ['TotalStudent'];
+        }
+        echo "The total srudent of the district is=> $TotalStudent";
+        echo '<br>';
+        echo "Total Meal made today is=>$TotalMeal";
+        echo '<br>';
+        echo '<hr>';
+        foreach ($SubMData as $key => $val) {
+          echo "Total Meal made today is=>$key : " . $val;
+          echo '<br>';
+        }
+        echo '<hr>';
+        foreach ($SubSData as $key => $val) {
+          echo "Total Student is=>$key : " . $val;
+          echo '<br>';
+        }
+        echo '<hr>';
+        foreach ($BlockSData as $key => $val) {
+          echo "Total Student is=>$key : " . $val;
+          echo '<br>';
+        }
+        echo '<hr>';
+        foreach ($BlockMData as $key => $val) {
+          echo "Total Meal made today is=>$key : " . $val;
           echo '<br>';
         }
         ?>
-
-
       </form>
     </div>
   </div>
