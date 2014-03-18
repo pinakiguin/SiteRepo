@@ -14,6 +14,7 @@ WebLib::IncludeJS('MDM/js/Report.js');
 ?>
 </head>
 <body>
+  <script src="js/defer.js" defer></script>
   <div class="TopPanel">
     <div class="LeftPanelSide"></div>
     <div class="RightPanelSide"></div>

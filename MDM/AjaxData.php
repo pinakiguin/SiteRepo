@@ -108,6 +108,20 @@ if (WebLib::GetVal($_POST, 'AjaxToken') ===
       doQuery($DataResp['ReportID'], $Query);
 
       break;
+    case 'GetdailyData':
+
+      $Query                   = 'Select D.SubdivID,D.SubdivName,B.BlockID,B.BlockName,'
+          . 'S.SchoolID,S.SchoolName,S.TotalStudent,M.Meal,'
+          . 'M.ReportDate FROM ' . MySQL_Pre . 'MDM_SubDivision D '
+          . 'INNER JOIN ' . MySQL_Pre . 'MDM_Blocks B '
+          . 'ON D.SubDivID=B.SubDivID '
+          . 'INNER JOIN ' . MySQL_Pre . 'MDM_Newdata S ON B.BlockID=S.BlockID '
+          . 'LEFT JOIN ' . MySQL_Pre . 'MDM_MealData M '
+          . 'ON S.SchoolID=M.SchoolID ORDER BY SchoolID';
+      $DataResp['DailyReport'] = array();
+      doQuery($DataResp['DailyReport'], $Query);
+
+      break;
     default :
       $DataResp['Msg'] = 'Invalid API Call';
     default :
