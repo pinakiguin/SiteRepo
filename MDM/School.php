@@ -29,7 +29,7 @@ WebLib::IncludeJS('MDM/js/School.js');
     <div class="formWrapper">
       <form method="post" action="<?php
       echo WebLib::GetVal($_SERVER, 'PHP_SELF');
-      ?>" id="frmlater" >
+      ?>" id="Schoolfrom" >
         <span style="text-align: center"><h3> School Mid Day Meal Report</h3></span>
         <div style="text-align: right" class="myfont">
           <p>Current Time Is: <output id="result"></output></p>

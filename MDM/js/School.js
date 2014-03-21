@@ -11,6 +11,13 @@ $(function() {
   $('#Refresh').click(function() {
     location.reload();
   });
+  $('#Reset').click(function() {
+    $('#Schoolfrom').trigger("reset");
+    $("#SubDivID").trigger("chosen:updated");
+    $("#BlockID").trigger("chosen:updated");
+    $("#SchoolID").trigger("chosen:updated");
+  });
+
   $("#SubDivID").chosen({width: "300px",
     no_results_text: "Oops, nothing found!"
   });
