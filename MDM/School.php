@@ -7,6 +7,7 @@ WebLib::JQueryInclude();
 WebLib::IncludeCSS('MDM/css/forms.css');
 WebLib::IncludeJS('MDM/js/neumeric.js');
 WebLib::IncludeCSS('css/chosen.css');
+WebLib::IncludeJS('js/chosen.jquery.min.js');
 WebLib::IncludeJS('MDM/js/School.js');
 ?>
 </head>
@@ -29,10 +30,7 @@ WebLib::IncludeJS('MDM/js/School.js');
       <form method="post" action="<?php
       echo WebLib::GetVal($_SERVER, 'PHP_SELF');
       ?>" id="frmlater" >
-        <div style="font-size:20px; font-family: Times New Roman;
-             color: #0063DC; text-align: center; text-decoration:underline;">
-          School Mid Day Meal Report
-        </div>
+        <span style="text-align: center"><h3> Mid Day Meal Report</h3></span>
         <div style="text-align: right" class="myfont">
           <p>Current Time Is: <output id="result"></output></p>
           <br><br>
@@ -63,6 +61,29 @@ WebLib::IncludeJS('MDM/js/School.js');
             }
           </script>
         </div>
+
+        <div class="FieldGroup">
+          <label for="SubDivID"><span class="myfont">Select The SubDivision Name</span>
+            <select id="SubDivID" name="SubDivID"
+                    data-placeholder="Select SubDiv Name">
+            </select>
+          </label>
+        </div>
+        <div class="FieldGroup">
+          <label for="BlockID"><span class="myfont">Select The Block Name</span>
+            <select id="BlockID" name="BlockID"
+                    data-placeholder="Select Block">
+            </select>
+          </label>
+        </div>
+        <div class="FieldGroup">
+          <label for="SchoolID"><span class="myfont">Select Name of School Name</span>
+            <select id="SchoolID" name="SchoolID"
+                    data-placeholder="Select SchoolName">
+            </select>
+          </label>
+        </div>
+        <div style="clear: both"></div>
         <div class="FieldGroup">
           <label class="myfont" for="SchoolName">School Name</label>
           <input type="text" name="SchoolName" id="SchoolName" disabled />
@@ -76,10 +97,25 @@ WebLib::IncludeJS('MDM/js/School.js');
           <input type="text" name="TotalStudent" id="TotalStudent" disabled />
         </div>
         <br><br>
-        <div style="clear: both"></div>
+        <div class="FieldGroup">
+          <input type="hidden" id="SchoolReportID" name="SchoolReportID"/>
+        </div>
+        <div style="clear: both">
+          <div class="formControl">
+  <!--          <input type="button" id="show" value="Show Data">-->
 
-        <pre id="Error">
-        </pre>
+            <hr/>
+            <input type="button" id="Refresh" value="Refresh">
+            <input type="reset" id="Reset" value="Reset">
+          </div>
+          <div style="clear: both"></div>
+          <input type="hidden" name="FormToken" id="FormToken"
+                 value="<?php echo WebLib::GetVal($_SESSION, 'FormToken') ?>" />
+          <input type="hidden" name="AjaxToken" id="AjaxToken"
+                 value="<?php echo WebLib::GetVal($_SESSION, 'Token'); ?>" />
+
+          <pre id="Error">
+          </pre>
       </form>
     </div>
   </div>

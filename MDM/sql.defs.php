@@ -176,8 +176,8 @@ function SQLDefs($ObjectName) {
           . '(`AppID`,`MenuOrder`,`AuthMenu`,`Caption`,`URL`,`Activated`) VALUES'
           . '(\'MDM\', 1, 0, \'Home\', \'index.php\', 1),'
           . '(\'MDM\', 2, 1, \'New Registration\', \'MDM/Newadd.php\', 1),'
-          . '(\'MDM\', 3, 1, \'Report\', \'MDM/Report.php\', 1),'
-          . '(\'MDM\', 4, 1, \'Other\', \'MDM/Update.php\', 1),'
+          . '(\'MDM\', 3, 1, \'Total Report\', \'MDM/Report.php\', 1),'
+          . '(\'MDM\', 4, 1, \'School Report\', \'MDM/School.php\', 1),'
           . '(\'MDM\', 6, 1, \'Log Out!\', \'login.php?LogOut=1\', 1);';
       break;
   }

@@ -8,8 +8,6 @@ WebLib::IncludeJS('MDM/js/neumeric.js');
 WebLib::IncludeCSS('MDM/css/forms.css');
 WebLib::IncludeCSS('css/chosen.css');
 WebLib::IncludeJS('js/chosen.jquery.min.js');
-WebLib::IncludeCSS('DataTables/media/css/jquery.dataTables_themeroller.css');
-WebLib::IncludeJS('DataTables/media/js/jquery.dataTables.js');
 WebLib::IncludeJS('MDM/js/Report.js');
 ?>
 </head>
@@ -32,36 +30,7 @@ WebLib::IncludeJS('MDM/js/Report.js');
       <form method="post" action="<?php
       echo WebLib::GetVal($_SERVER, 'PHP_SELF');
       ?>" id="frmNewAdd" >
-        <span style="text-align: center"><h3> Mid Day Meal Report</h3></span>
-        <div class="FieldGroup">
-          <label for="SubDivID"><span class="myfont">Select The SubDivision Name</span>
-            <select id="SubDivID" name="SubDivID"
-                    data-placeholder="Select SubDiv Name">
-            </select>
-          </label>
-        </div>
-        <div class="FieldGroup">
-          <label for="BlockID"><span class="myfont">Select The Block Name</span>
-            <select id="BlockID" name="BlockID"
-                    data-placeholder="Select Block">
-            </select>
-          </label>
-        </div>
-        <div class="FieldGroup">
-          <label for="SchoolID"><span class="myfont">Select Name of School Name</span>
-            <select id="SchoolID" name="SchoolID"
-                    data-placeholder="Select SchoolName">
-            </select>
-          </label>
-        </div>
-        <div style="clear: both"></div>
-        <hr/>
-        <div class="formControl">
-          <input type="button" onclick
-                 ="window.location = 'http://localhost/SiteRepo/MDM/School.php';"
-                 id="show" value="Show Data">
-          <input type="button" id="reset" value="Reset">
-        </div>
+
         <label for="DistResult" style="text-align: center">
           <h3> Mid Day Meal Report Table</h3></label>
         <div>
@@ -98,8 +67,6 @@ WebLib::IncludeJS('MDM/js/Report.js');
             <input type="text" name="TotalSchool" id="TotalSchool" disabled />
           </label> </div>
         <div style="clear: both"></div>
-
-
         <input type="hidden" name="FormToken" id="FormToken"
                value="<?php echo WebLib::GetVal($_SESSION, 'FormToken') ?>" />
         <input type="hidden" name="AjaxToken" id="AjaxToken"

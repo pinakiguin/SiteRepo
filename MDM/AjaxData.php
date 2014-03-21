@@ -39,14 +39,19 @@ if (WebLib::GetVal($_POST, 'AjaxToken') ===
       $DataResp['SubDivID'] = array();
       doQuery($DataResp['SubDivID'], $Query);
 
-      $Query               = 'Select `BlockID`,`BlockName`,`SubDivID`'
+      $Query                = 'Select `BlockID`,`BlockName`,`SubDivID`'
           . ' FROM `' . MySQL_Pre . 'MDM_Blocks`'
           . ' Order by `BlockID`';
-      $DataResp['BlockID'] = array();
+      $DataResp['BlockID']  = array();
       doQuery($DataResp['Blocks'], $Query);
+      $Query                = 'Select `SchoolID`,`SubDivID`,`BlockID`,`Schoolname`'
+          . ' FROM `' . MySQL_Pre . 'MDM_Newdata`'
+          . ' Order by `SchoolID`';
+      $DataResp['SchoolID'] = array();
+      doQuery($DataResp['Schools'], $Query);
       break;
     case 'GetSchoolData':
-      $Query               = 'Select S.SchoolID,S.Schoolname,S.Mobile,'
+      $Query                = 'Select S.SchoolID,S.Schoolname,S.Mobile,'
           . 'S.DesigID,S.TotalStudent,S.NameID,'
           . 'S.RegDate,B.BlockName,'
           . 'D.SubdivName FROM ' . MySQL_Pre . 'MDM_Newdata S '
@@ -58,22 +63,6 @@ if (WebLib::GetVal($_POST, 'AjaxToken') ===
 
       doQuery($DataResp, $Query, array(WebLib::GetVal($_POST, 'Schools')));
       break;
-    case 'GetMealData':
-      $Query = 'Select S.SchoolID,S.Schoolname,'
-          . 'S.TotalStudent,M.Meal,M.ReportDate,'
-          . 'B.BlockName,'
-          . 'D.SubdivName FROM ' . MySQL_Pre . 'MDM_Newdata S '
-          . 'INNER JOIN ' . MySQL_Pre . 'MDM_MealData M '
-          . 'ON S.SchoolID=M.SchoolID '
-          . 'INNER JOIN ' . MySQL_Pre . 'MDM_Blocks B '
-          . 'ON S.BlockID=B.BlockID '
-          . 'INNER JOIN ' . MySQL_Pre . 'MDM_SubDivision D '
-          . 'ON B.SubDivID=D.SubDivID '
-          . 'Order by S.SchoolID';
-
-      doQuery($DataResp, $Query, array(WebLib::GetVal($_POST, 'Meals')));
-      break;
-
     case 'GetReportData':
 
       $Query                = 'Select `SubDivID`,`SubDivName`'
@@ -108,6 +97,15 @@ if (WebLib::GetVal($_POST, 'AjaxToken') ===
       doQuery($DataResp['ReportID'], $Query);
 
       break;
+    case 'SchoolMealData':
+      $Query                      = 'Select S.SchoolID,S.Schoolname,S.TotalStudent,'
+          . 'M.Meal,M.ReportDate FROM ' . MySQL_Pre . 'MDM_Newdata S '
+          . 'INNER JOIN ' . MySQL_Pre . 'MDM_MealData M '
+          . 'ON S.SchoolID=M.SchoolID '
+          . 'Order by S.SchoolID';
+      $DataResp['SchoolMealData'] = array();
+      doQuery($DataResp['SchoolMealData'], $Query);
+      break;
     case 'GetdailyData':
 
       $Query                   = 'Select D.SubdivID,D.SubdivName,B.BlockID,B.BlockName,'
@@ -122,8 +120,6 @@ if (WebLib::GetVal($_POST, 'AjaxToken') ===
       doQuery($DataResp['DailyReport'], $Query);
 
       break;
-    default :
-      $DataResp['Msg'] = 'Invalid API Call';
     default :
       $DataResp['Msg'] = 'Invalid API Call';
       break;
