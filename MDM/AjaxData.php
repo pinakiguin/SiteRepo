@@ -102,7 +102,7 @@ if (WebLib::GetVal($_POST, 'AjaxToken') ===
           . 'M.Meal,M.ReportDate FROM ' . MySQL_Pre . 'MDM_Newdata S '
           . 'INNER JOIN ' . MySQL_Pre . 'MDM_MealData M '
           . 'ON S.SchoolID=M.SchoolID '
-          . 'Order by S.SchoolID';
+          . 'Order by S.SchoolID DESC';
       $DataResp['SchoolMealData'] = array();
       doQuery($DataResp['SchoolMealData'], $Query);
       break;
