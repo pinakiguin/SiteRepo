@@ -100,4 +100,3 @@ $_SESSION['FormToken'] = md5($_SERVER['REMOTE_ADDR']
   </div>
 </body>
 </html>
-

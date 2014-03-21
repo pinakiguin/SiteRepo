@@ -61,33 +61,6 @@ $(function() {
               }
             });
   });
-  /**
-   * Binds Receiptdate Field with datepicker
-   */
-//  $(".ReceiptDate").datepicker({
-//    dateFormat: 'yy-mm-dd',
-//    showOtherMonths: true,
-//    selectOtherMonths: true,
-//    showButtonPanel: true,
-//    showAnim: "slideDown",
-//    onClose: function() {
-//      DataChanged(this);
-//      var curDate = new Date($(this).val());
-//      $('#Msg').html('Date: ' + curDate);
-//      if ((('' + curDate) === 'Invalid Date') && ($(this).val() !== '')) {
-//        $(this).addClass('ui-state-error');
-//      } else
-//      {
-//        $(this).datepicker('setDate', curDate);
-//        $(this).removeClass('ui-state-error');
-//      }
-//    }
-//  });
-
-  /**
-   * Binds Date of birth field with datepicker
-   * @todo Date Validation to be done properly
-   */
   $(".DOB").datepicker({
     dateFormat: 'yy-mm-dd',
     maxDate: new Date("1996-01-01"),
