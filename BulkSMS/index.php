@@ -4,7 +4,7 @@ require_once __DIR__ . '/../lib.inc.php';
 WebLib::AuthSession();
 WebLib::Html5Header('NIC SMS Gateway');
 WebLib::IncludeCSS();
-//WebLib::CreateDB();
+WebLib::CreateDB();
 ?>
 </head>
 <body>
