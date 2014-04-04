@@ -1,0 +1,16 @@
+/*
+    Document   : SendSMS
+    Created on : 4 Feb, 2014, 12:59:30 PM
+    Author     : abu
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root {
+  display: block;
+}
+#ListData{
+  height: 600px;
+  overflow-y: auto;
+  padding-right: 20px;
+}

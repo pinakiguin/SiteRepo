@@ -1,12 +1,11 @@
 <?php
 
 function CreateSchemas() {
-  $ObjDB = new MySQLiDB();
-  $ObjDB->do_ins_query(SQLDefs('SMS_Templates'));
-  $ObjDB->do_ins_query(SQLDefs('SMS_Contacts'));
-  $ObjDB->do_ins_query(SQLDefs('SMS_Logs'));
-  $ObjDB->do_ins_query(SQLDefs('MenuData'));
-  $ObjDB->do_close();
+  $ObjDB = new MySQLiDBHelper();
+  $ObjDB->ddlQuery(SQLDefs('SMS_Templates'));
+  $ObjDB->ddlQuery(SQLDefs('SMS_Contacts'));
+  $ObjDB->ddlQuery(SQLDefs('SMS_Logs'));
+  $ObjDB->ddlQuery(SQLDefs('MenuData'));
   unset($ObjDB);
 }
 
