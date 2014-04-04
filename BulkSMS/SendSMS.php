@@ -84,6 +84,13 @@ WebLib::IncludeJS('BulkSMS/js/SendSMS.js');
           <?php
         }
         ?>
+
+        <div class="formWrapper-Clear"></div>
+        <hr/>
+        <div class="formControl">
+          <input type="submit" name="CmdAction" value="Send SMS"
+                 onclick="SendSms($Mobile, $Sms)"/>
+        </div>
         <?php
 
         function SendSms($Mobile,
@@ -91,12 +98,6 @@ WebLib::IncludeJS('BulkSMS/js/SendSMS.js');
           echo "$Mobile , $Sms . <br>";
         }
         ?>
-        <div class="formWrapper-Clear"></div>
-        <hr/>
-        <div class="formControl">
-          <input type="submit" name="CmdAction" value="Send SMS"
-                 onclick="SendSms()"/>
-        </div>
       </form>
     </div>
     <pre id="Error"></pre>
