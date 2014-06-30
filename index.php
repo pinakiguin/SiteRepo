@@ -1,17 +1,19 @@
 <?php
+ini_set('display_errors', '1');
+error_reporting(E_ALL);
 if (version_compare(phpversion(), '5.3.0', 'ge')) {
   $MySQLi = extension_loaded('mysqli');
-  $MySQL  = extension_loaded('mysql');
+  $MySQL = extension_loaded('mysql');
   if (( $MySQLi === true) && ( $MySQL === true)) {
     include_once __DIR__ . '/lib.inc.php';
     WebLib::CreateDB();
   } else {
     die('Required PHP Extensions: mysql and mysqli  <br/>'
-        . ' But you have: ' . implode(', ', get_loaded_extensions()));
+            . ' But you have: ' . implode(', ', get_loaded_extensions()));
   }
 } else {
   die('Required PHP Version: 5.3 or later. <br/>'
-      . ' You have: ' . phpversion());
+          . ' You have: ' . phpversion());
 }
 
 WebLib::SetPATH();
