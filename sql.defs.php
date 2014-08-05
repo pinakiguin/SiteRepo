@@ -151,13 +151,14 @@ function SQLDefs($ObjectName) {
           . '(\'WebSite\', 3, 1, \'Polling Personnel 2014\', \'pp\', 1),'
           . '(\'WebSite\', 4, 1, \'Counting Personnel 2013\', \'cp\', 0),'
           . '(\'WebSite\', 5, 1, \'RSBY-2014\', \'rsby\', 1),'
-          . '(\'WebSite\', 6, 1, \'Attendance Register\', \'atnd-reg\', 0),'
-          . '(\'WebSite\', 7, 1, \'Monthly Performance Report\', \'mpr\', 1),'
-          . '(\'WebSite\', 8, 1, \'Website Upload\', \'uploads\', 0),'
-          . '(\'WebSite\', 9, 1, \'SMS Gateway\', \'BulkSMS\', 1),'
-          . '(\'WebSite\',10, 1, \'User Management\', \'users\', 1),'
-          . '(\'WebSite\',11, 1, \'Helpline\', \'Helpline.php\', 0),'
-          . '(\'WebSite\',12, 1, \'Log Out!\', \'login.php?LogOut=1\', 1);';
+          . '(\'WebSite\', 6, 1, \'DRDC\', \'drdc\', 1),'
+          . '(\'WebSite\', 7, 1, \'Attendance Register\', \'atnd-reg\', 0),'
+          . '(\'WebSite\', 8, 1, \'Monthly Performance Report\', \'mpr\', 1),'
+          . '(\'WebSite\', 9, 1, \'Website Upload\', \'uploads\', 0),'
+          . '(\'WebSite\',10, 1, \'SMS Gateway\', \'BulkSMS\', 1),'
+          . '(\'WebSite\',11, 1, \'User Management\', \'users\', 1),'
+          . '(\'WebSite\',12, 1, \'Helpline\', \'Helpline.php\', 0),'
+          . '(\'WebSite\',13, 1, \'Log Out!\', \'login.php?LogOut=1\', 1);';
       break;
 
     case 'MenuACL':
