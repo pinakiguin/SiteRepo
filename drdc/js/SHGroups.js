@@ -1,11 +1,17 @@
-$(function() {
+$(function () {
   $('input[type="submit"]').button();
   $('input[type="reset"]').button();
-  $("#HODMobile").numericInput();
-  $("#DeptNumber").numericInput();
+  $(".DateField").datepicker({
+    dateFormat: 'yy-mm-dd',
+    showOn: "both",
+    buttonImage: "images/calendar.gif",
+    buttonImageOnly: true
+  });
+  $(".chosen-select").chosen({disable_search_threshold: 10});
+
   $('#Error').hide();
-//calling ajax for saving data.............
-  $("form").on("submit", function(event) {
+
+  $("form").on("submit", function (event) {
     event.preventDefault();
     $('#Msg').html('Saving Please Wait...');
     $.ajax({
@@ -28,15 +34,14 @@ $(function() {
         'Strength': $("#Strength").val(),
         'DeptAddress': $("#DeptAddress").val()
       }
-    }).done(function(data) {
+    }).done(function (data) {
       try {
         var DataResp = $.parseJSON(data);
         delete data;
         $("#FormToken").val(DataResp.FormToken);
         $("#Ajax").val(DataResp.FormToken);
         $("#Msg").html(DataResp.Msg + DataResp.CheckVal);
-        if (DataResp.CheckVal === null)
-        {
+        if (DataResp.CheckVal === null) {
           $('#frmDepartment').trigger("reset");
         }
         delete DataResp;
@@ -45,9 +50,9 @@ $(function() {
         $('#Msg').html('Server Error:' + e);
         $('#Error').html(data);
       }
-    }).fail(function(msg) {
+    }).fail(function (msg) {
       $('#Msg').html(msg);
     });
   });
-  $('#Msg').html('Loaded Successfully');
+  $('#Msg').hide();
 });

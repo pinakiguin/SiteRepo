@@ -80,7 +80,7 @@ function SQLDefs($ObjectName) {
       $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . $ObjectName . '` ('
           . '`SHGCode` int(9) DEFAULT NULL,'
           . '`SHGName` varchar(36) DEFAULT NULL,'
-          . '`FormedOn` varchar(10) DEFAULT NULL,'
+          . '`FormedOn` DATE NULL DEFAULT NULL,'
           . '`SBAccCode` int(3) DEFAULT NULL,'
           . '`SHGType` varchar(6) DEFAULT NULL,'
           . '`Scheme` varchar(6) DEFAULT NULL,'
