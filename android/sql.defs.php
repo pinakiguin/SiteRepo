@@ -3,6 +3,9 @@
 function CreateSchemas() {
   $ObjDB = new MySQLiDBHelper();
   $ObjDB->ddlQuery(SQLDefs('SMS_Users'));
+  $ObjDB->ddlQuery(SQLDefs('SMS_Groups'));
+  $ObjDB->ddlQuery(SQLDefs('SMS_Messages'));
+  $ObjDB->ddlQuery(SQLDefs('SMS_Contacts'));
   unset($ObjDB);
 }
 
@@ -11,26 +14,51 @@ function SQLDefs($ObjectName) {
   switch ($ObjectName) {
 
     case 'SMS_Users':
-      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . $ObjectName.'` ('
-          . '`UserMapID` int(10) NOT NULL AUTO_INCREMENT,'
-          . '`UserID` varchar(50) DEFAULT NULL,'
+      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . $ObjectName . '` ('
           . '`MobileNo` varchar(10) DEFAULT NULL,'
           . '`UserName` varchar(50) DEFAULT NULL,'
-          . '`UserPass` varchar(32) DEFAULT NULL,'
-          . '`CtrlMapID` int(10) NOT NULL,'
-          . '`Remarks` varchar(25) DEFAULT NULL,'
-          . '`HOD` varchar(80) NOT NULL,'
-          . '`PhoneNo` int(10) NOT NULL,'
-          . '`HODMobileNo` int(10) NOT NULL,'
-          . '`WebSiteURL` varchar(64) NOT NULL,'
-          . '`LoginCount` int(10) DEFAULT \'0\','
-          . '`LastLoginTime` timestamp NOT NULL '
+          . '`UserData` text DEFAULT NULL,'
+          . '`TempData` text DEFAULT NULL,'
+          . '`Designation` varchar(50) DEFAULT NULL,'
+          . '`eMailID` text DEFAULT NULL,'
+          . '`UsageCount` int DEFAULT 0,'
+          . '`Status` enum(\'Registered\',\'Activated\',\'Inactive\') DEFAULT NULL,'
+          . '`LastAccessTime` timestamp NOT NULL '
           . ' DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,'
-          . '`Registered` tinyint(1) NOT NULL,'
-          . '`Activated` tinyint(1) NOT NULL,'
-          . ' PRIMARY KEY (`UserMapID`)'
+          . ' PRIMARY KEY (`MobileNo`)'
           . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
       break;
+
+    case 'SMS_Groups':
+      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . $ObjectName . '` ('
+          . '`GroupID` int NOT NULL AUTO_INCREMENT,'
+          . '`GroupName` varchar(20) DEFAULT NULL,'
+          . ' PRIMARY KEY (`GroupID`),'
+          . ' UNIQUE KEY `GroupName` (`GroupName`)'
+          . ') ENGINE=InnoDB  DEFAULT CHARSET = utf8;';
+      break;
+
+    case 'SMS_Messages':
+      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . $ObjectName . '` ('
+          . '`MessageID` int NOT NULL AUTO_INCREMENT,'
+          . '`UserID` int DEFAULT NULL,'
+          . '`GroupID` int DEFAULT NULL,'
+          . '`MsgText` varchar(500) DEFAULT NULL,'
+          . '`SentTime` timestamp NULL DEFAULT NULL,'
+          . ' PRIMARY KEY (`MessageID`)'
+          . ') ENGINE=InnoDB  DEFAULT CHARSET=utf8;';
+      break;
+
+    case 'SMS_Contacts':
+      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . $ObjectName . '` ('
+          . '`ContactID` int NOT NULL AUTO_INCREMENT,'
+          . '`GroupID` int DEFAULT NULL,'
+          . '`ContactName` varchar(50) DEFAULT NULL,'
+          . '`MobileNo` varchar(10) DEFAULT NULL,'
+          . ' PRIMARY KEY (`ContactID`)'
+          . ') ENGINE=InnoDB  DEFAULT CHARSET = utf8;';
+      break;
+
   }
   return $SqlDB;
 }
