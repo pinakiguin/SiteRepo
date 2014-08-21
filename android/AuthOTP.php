@@ -7,6 +7,10 @@ class AuthOTP extends GoogleAuthenticator {
   private $Mode;
 
   function __construct($Mode = 0) {
+    /**
+     * Important: Key Skew and Hunt values needs to be set.
+     */
+    parent::__construct();
     $this->Mode = $Mode;
   }
 

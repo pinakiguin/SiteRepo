@@ -33,8 +33,7 @@ require_once(__DIR__ . '/Group.php');
 require_once(__DIR__ . '/Contact.php');
 
 
-class MessageAPI
-{
+class MessageAPI {
   private $Req;
   private $Resp;
 
@@ -112,17 +111,19 @@ class MessageAPI
         $AuthUser = new AuthOTP(1);
         if ($AuthUser->authenticateUser($this->Req->MDN, $this->Req->OTP)) {
           $DB = new MySQLiDBHelper();
-          $DB->where('MobileNo', $this->Req->MDN);
-          $this->Resp['DB']['KeyUpdated'] = $DB->query('Update ' . MySQL_Pre . 'SMS_Users Set UserData=TempData');
+
+          $this->Resp['DB']['KeyUpdated'] = $DB->where('MobileNo', $this->Req->MDN)
+              ->ddlQuery('Update ' . MySQL_Pre . 'SMS_Users Set UserData=TempData');
 
           $DB->where('MobileNo', $this->Req->MDN);
           $Profile = $DB->query('Select UserName, Designation, eMailID FROM ' . MySQL_Pre . 'SMS_Users');
           $this->Resp['DB']['USER'] = $Profile[0];
 
           $this->Resp['API'] = true;
-          $this->Resp['MSG'] = 'Registered Successfully!';
+          $this->Resp['MSG'] = 'Mobile No. ' . $this->Req->MDN . ' is Registered Successfully!'
+              . ' Now you can start using NIC SMS Gateway for sending Group Messages.';
         } else {
-          $this->Resp['URL'] = $AuthUser->createURL($this->Req->MDN);
+          //$this->Resp['URL'] = $AuthUser->createURL($this->Req->MDN);
           $this->Resp['DB'] = "Key: Not For Production"; //. $AuthUser->oath_hotp($AuthUser->getKey($this->Req->MDN), $this->Req->TC);
           $this->Resp['API'] = false;
           $this->Resp['MSG'] = 'Invalid OTP';
@@ -176,13 +177,14 @@ class MessageAPI
         $AuthUser = new AuthOTP();
         if ($AuthUser->authenticateUser($this->Req->MDN, $this->Req->OTP)) {
           $Msg = new Message();
-          $User=new User($this->Req->MDN);
-          $Mid = $Msg->createSMS($User,$this->Req->TXT, $this->Req->GRP);
+          $User = new User($this->Req->MDN);
+          $Mid = $Msg->createSMS($User, $this->Req->TXT, $this->Req->GRP);
           $Contact = new Contact();
           $count = $Contact->CountContactByGroup($this->Req->GRP);
           $this->Resp['DB'] = $Mid;
           $this->Resp['API'] = true;
-          $this->Resp['MSG'] = 'Message Sent to ' . $count . " " . $this->Req->GRP;
+          $this->Resp['MSG'] = 'Message Sent to ' . $count
+              . ' Contacts of ' . $this->Req->GRP . ' Group';
         } else {
           $this->Resp['API'] = false;
           $this->Resp['MSG'] = 'Invalid OTP ' . $this->Req->OTP;

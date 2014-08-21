@@ -49,11 +49,10 @@ class Message {
     $insertData['UserID'] = $User->getMobileNo();
     $insertData['GroupID'] = $Group->getGroupID();
     $insertData['MsgText'] = $Message;
-    //$insertData['SentTime'] =time();
     $MessageID = $DB->insert(MySQL_Pre . 'SMS_Messages', $insertData);
     $getCon = new Contact();
     $Cont = $getCon->getContactByGroup($Gid);
-    //print_r($Cont);
+
     foreach ($Cont as $ContactID) {
       $this->sendSMS($Message, $ContactID['MobileNo']);
     }
@@ -62,9 +61,8 @@ class Message {
     return $Mid;
   }
 
-  function sendSMS($MobileNo, $Message) {
-    echo $MobileNo.'--'. $Message;
-    SMSGW::SendSMS($Message . "\n--\n".$this->User->getDesignation(), $MobileNo);
+  function sendSMS($Message, $MobileNo) {
+    SMSGW::SendSMS($Message . "\n".'--'."\n".$this->User->getDesignation(), $MobileNo);
   }
 
   function getAllSMS() {
