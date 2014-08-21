@@ -3,8 +3,10 @@
 require_once __DIR__ . '/../lib.inc.php';
 require_once __DIR__ . '/User.php';
 require_once __DIR__ . '/Contact.php';
+
 require_once __DIR__ . '/Group.php';
 require_once(__DIR__ . '/../smsgw/smsgw.inc.php');
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -16,12 +18,19 @@ require_once(__DIR__ . '/../smsgw/smsgw.inc.php');
  *
  * @author Abu Salam
  */
-class Message
-{
+
+class Message {
 
   protected $User;
   protected $MsgID;
   protected $Msg;
+
+  public function setUser($User) {
+    $this->User = $User;
+  }
+ public function getUser() {
+   return $this->User;
+  }
 
   public function setMsg($Msg) {
     $this->Msg = $Msg;
@@ -31,7 +40,6 @@ class Message
     return $this->Msg;
   }
 
-  //put your code here
   function createSMS($User, $Message, $GroupName) {
     $Group = new Group();
     $Group->setGroup($GroupName);

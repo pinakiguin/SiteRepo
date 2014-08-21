@@ -47,4 +47,5 @@ class Contact {
       $n= count($s);
       return $n;
     }
+
 }
