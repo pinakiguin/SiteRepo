@@ -87,6 +87,7 @@ abstract class GoogleAuthenticator {
 		
 		$token = $this->internalGetData($username);
 		$token["tokenkey"] = $hkey;
+    $token["tokencounter"] = 0;
 		$token["tokentype"] = $ttype;
 		
 		if(!$this->internalPutData($username, $token)) {
@@ -154,7 +155,7 @@ abstract class GoogleAuthenticator {
 				$en = $tlid+$this->hotpSkew;
 				for($i=$st; $i<$en; $i++) {
 					$stest = $this->oath_hotp($tkey, $i);
-					error_log("testing code: $code, $stest, $tkey, $tid");
+					error_log("testing code: $code, $stest, $tkey, $tlid");
 					if($code == $stest) {
 						$tokendata["tokencounter"] = $i;
 						$this->internalPutData($username, $tokendata);

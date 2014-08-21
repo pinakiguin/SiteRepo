@@ -1,42 +1,41 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: nic
- * Date: 14/8/14
- * Time: 12:08 PM
+
+require_once __DIR__ . '/../lib.inc.php';
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
 
+/**
+ * Description of Group
+ *
+ * @author Abu Salam
+ */
 class Group {
 
-  protected $GroupName;
   protected $GroupID;
 
-  /**
-   * @param mixed $GroupName
-   */
-  public function setGroupName($GroupName) {
-    $this->GroupName = $GroupName;
+  public function setGroup($GroupName) {
+    $DB = new MySQLiDBHelper();
+    $DB->where('GroupName', $GroupName);
+    $Group=$DB->get(MySQL_Pre. 'SMS_Groups');
+    $this->GroupID =$Group[0]['GroupID'];
   }
-
-  /**
-   * @return mixed
-   */
-  public function getGroupName() {
-    return $this->GroupName;
-  }
-
-  /**
-   * @param mixed $GroupID
-   */
-  public function setGroupID($GroupID) {
-    $this->GroupID = $GroupID;
-  }
-
-  /**
-   * @return mixed
-   */
   public function getGroupID() {
     return $this->GroupID;
   }
 
+  function CreateGroup($GName) {
+    $DB = new MySQLiDBHelper();
+    $insertData['GroupName'] = $GName;
+    $GroupID = $DB->insert(MySQL_Pre . 'SMS_Groups', $insertData);
+    return $GroupID;
+  }
+  static function getAllGroups(){
+    $DB = new MySQLiDBHelper();
+    $Groups = $DB->query('Select GroupName FROM '.MySQL_Pre.'SMS_Groups');
+    return $Groups;
+  }
+  //put your code here
 }

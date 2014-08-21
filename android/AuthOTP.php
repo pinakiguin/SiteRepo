@@ -1,8 +1,14 @@
 <?php
-require_once('../lib.inc.php');
- require_once('ga4php.php');
+require_once(__DIR__ . '/../lib.inc.php');
+require_once(__DIR__ . '/ga4php.php');
 
-class AuthOTP extends  GoogleAuthenticator{
+class AuthOTP extends GoogleAuthenticator {
+
+  private $Mode;
+
+  function __construct($Mode = 0) {
+    $this->Mode = $Mode;
+  }
 
   /**
    * "select tokendata from users where username='$username'"
@@ -13,11 +19,15 @@ class AuthOTP extends  GoogleAuthenticator{
    */
   function getData($UserID) {
     // TODO: Implement getData() method.
-    $MySQLiDB=new MySQLiDBHelper();
-    $Users=$MySQLiDB->where('Uid',$UserID)->get(MySQL_Pre.'SMS_Users');
-    $_SESSION['TokenOTP']=$Users[0]['Password'];
-    $TokenData=$_SESSION['TokenOTP'];
-    return $TokenData;
+    $MySQLiDB = new MySQLiDBHelper();
+    $User = $MySQLiDB->where('MobileNo', $UserID)->get(MySQL_Pre . 'SMS_Users');
+    if (count($User) > 0) {
+      if ($this->Mode == 0){
+        return $User[0]['UserData'];
+      }else{
+        return $User[0]['TempData'];
+      }
+    }
   }
 
   /**
@@ -32,10 +42,16 @@ class AuthOTP extends  GoogleAuthenticator{
    */
   function putData($UserID, $TokenData) {
     // TODO: Implement putData() method.
-    $MySQLiDB=new MySQLiDBHelper();
-    $Data['Password']=$TokenData;
-    $MySQLiDB->where('Uid',$UserID)->update(MySQL_Pre.'SMS_Users',$Data);
-    $_SESSION['TokenOTP']=$TokenData;
+    $MySQLiDB = new MySQLiDBHelper();
+    if ($this->Mode == 0) {
+      $Data['UserData'] = $TokenData;
+    } else {
+      $Data['TempData'] = $TokenData;
+    }
+    if ($MySQLiDB->where('MobileNo', $UserID)->update(MySQL_Pre . 'SMS_Users', $Data) == 0) {
+      $MySQLiDB->insert(MySQL_Pre . 'SMS_Users', $Data);
+    }
+    $_SESSION['TokenOTP'] = $TokenData;
     return true;
   }
 
@@ -45,8 +61,8 @@ class AuthOTP extends  GoogleAuthenticator{
    */
   function getUsers() {
     // TODO: Implement getUsers() method.
-    $MySQLiDB=new MySQLiDBHelper();
-    $UserIDs=$MySQLiDB->get(MySQL_Pre.'SMS_Users');
+    $MySQLiDB = new MySQLiDBHelper();
+    $UserIDs = $MySQLiDB->query('Select MobileNo from ' . MySQL_Pre . 'SMS_Users');
     return $UserIDs;
   }
 

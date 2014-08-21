@@ -1,103 +1,50 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: nic
- * Date: 14/8/14
- * Time: 11:32 AM
+require_once __DIR__.'/../lib.inc.php';
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
 
+/**
+ * Description of Contact
+ *
+ * @author Abu Salam
+ */
 class Contact {
 
-  protected $UserID;
-  protected $UserName;
-  protected $Designation;
-  protected $eMailID;
-  protected $MobileNo;
-  protected $GroupID;
+    function CreateContact($Mobile,$Name,$Gid){
+        $DB=new MySQLiDBHelper();
+        $insertData['GroupID']=$Gid;
+        $insertData['Name']=$Name;
+        $insertData['MobileNo']=$Mobile;
+        $ContactID=$DB->insert(MySQL_Pre. 'SMS_Contacts', $insertData);
+        return true;
+    }
 
-  /**
-   * @param mixed $UserID
-   */
-  public function setUserID($UserID) {
-    $this->UserID = $UserID;
-  }
+    function getAllContacts(){
+      $DB=new MySQLiDBHelper();
+      $Contacts=$DB->get(MySQL_Pre. 'SMS_Contacts');
+      print_r($Contacts);
+      return $Contacts;
+    }
 
-  /**
-   * @return mixed
-   */
-  public function getUserID() {
-    return $this->UserID;
-  }
+    function getContactByGroup($Gid){
+      $DB=new MySQLiDBHelper();
+      $DB->where('GroupID', $Gid);
+      $Contacts=$DB->get(MySQL_Pre. 'SMS_Contacts');
+      //print_r($Contacts);
+      return $Contacts;
+    }
 
-  /**
-   * @param mixed $UserName
-   */
-  public function setUserName($UserName) {
-    $this->UserName = $UserName;
-  }
-
-  /**
-   * @return mixed
-   */
-  public function getUserName() {
-    return $this->UserName;
-  }
-
-  /**
-   * @param mixed $Designation
-   */
-  public function setDesignation($Designation) {
-    $this->Designation = $Designation;
-  }
-
-  /**
-   * @return mixed
-   */
-  public function getDesignation() {
-    return $this->Designation;
-  }
-
-  /**
-   * @param mixed $eMailID
-   */
-  public function setEMailID($eMailID) {
-    $this->eMailID = $eMailID;
-  }
-
-  /**
-   * @return mixed
-   */
-  public function getEMailID() {
-    return $this->eMailID;
-  }
-
-  /**
-   * @param mixed $MobileNo
-   */
-  public function setMobileNo($MobileNo) {
-    $this->MobileNo = $MobileNo;
-  }
-
-  /**
-   * @return mixed
-   */
-  public function getMobileNo() {
-    return $this->MobileNo;
-  }
-
-  /**
-   * @param mixed $GroupID
-   */
-  public function setGroupID($GroupID) {
-    $this->GroupID = $GroupID;
-  }
-
-  /**
-   * @return mixed
-   */
-  public function getGroupID() {
-    return $this->GroupID;
-  }
-
-
+    function CountContactByGroup($GroupName){
+      $Group=new Group();
+      $Group->setGroup($GroupName);
+      $Gid=$Group->getGroupID();
+      $DB=new MySQLiDBHelper();
+      $DB->where('GroupID', $Gid);
+      $s=$DB->get(MySQL_Pre. 'SMS_Contacts');
+      $n= count($s);
+      return $n;
+    }
 }
