@@ -211,6 +211,10 @@ class MessageAPI {
 
     header('Content-Type: application/json');
     header('Content-Length: ' . strlen($JsonResp));
+    /**
+     * Important: Tells volley not to cache the response
+     */
+    header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() - 3600));
     echo $JsonResp;
   }
 

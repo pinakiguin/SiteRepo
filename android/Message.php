@@ -62,7 +62,10 @@ class Message {
   }
 
   function sendSMS($Message, $MobileNo) {
-    SMSGW::SendSMS($Message . "\n".'--'."\n".$this->User->getDesignation(), $MobileNo);
+    $Message .= "\n--\n".$this->User->getDesignation();
+    $Message .= "\n".date('l d/m/Y H:i:s', time());
+    $Message .= "\nPlayStore: http://goo.gl/hwAWuA";
+    SMSGW::SendSMS($Message, $MobileNo);
   }
 
   function getAllSMS() {
