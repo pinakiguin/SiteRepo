@@ -6,6 +6,7 @@ function CreateSchemas() {
   $ObjDB->ddlQuery(SQLDefs('SMS_Groups'));
   $ObjDB->ddlQuery(SQLDefs('SMS_Messages'));
   $ObjDB->ddlQuery(SQLDefs('SMS_Contacts'));
+  $ObjDB->ddlQuery(SQLDefs('SMS_Status'));
   unset($ObjDB);
 }
 
@@ -56,6 +57,17 @@ function SQLDefs($ObjectName) {
           . '`ContactName` varchar(50) DEFAULT NULL,'
           . '`MobileNo` varchar(10) DEFAULT NULL,'
           . ' PRIMARY KEY (`ContactID`)'
+          . ') ENGINE=InnoDB  DEFAULT CHARSET = utf8;';
+      break;
+
+    case 'SMS_Status':
+      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . $ObjectName . '` ('
+          . '`StatusID` int NOT NULL AUTO_INCREMENT,'
+          . '`MessageID` int DEFAULT NULL,'
+          . '`Report` text DEFAULT NULL,'
+          . '`MobileNo` varchar(10) DEFAULT NULL,'
+          . '`Status` text DEFAULT NULL,'
+          . ' PRIMARY KEY (`StatusID`)'
           . ') ENGINE=InnoDB  DEFAULT CHARSET = utf8;';
       break;
 

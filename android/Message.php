@@ -54,7 +54,14 @@ class Message {
     $Cont = $getCon->getContactByGroup($Gid);
 
     foreach ($Cont as $ContactID) {
-      $this->sendSMS($Message, $ContactID['MobileNo']);
+      $Report=$this->sendSMS($Message, $ContactID['MobileNo']);
+      $pos1=  strpos($Report, "=");
+      $S1=  substr($Report, $pos1+1);
+      $pos2= strpos($S1, "~");
+      $Status=  substr($S1,0,$pos2);
+      $this->Msg = $Message;
+      $Mid = $this->MsgID = $MessageID;
+      $this->CreateStatus($Mid, $Report,$ContactID['MobileNo'],$Status);
     }
     $this->Msg = $Message;
     $Mid = $this->MsgID = $MessageID;
@@ -65,8 +72,9 @@ class Message {
     $Message .= "\n--\n".$this->User->getDesignation();
     $Message .= "\n".date('l d/m/Y H:i:s', time());
     $Message .= "\nPlayStore: http://goo.gl/hwAWuA";
-    SMSGW::SendSMS($Message, $MobileNo);
-  }
+    $Status=SMSGW::SendSMS($Message, $MobileNo);
+    return $Status;
+    }
 
   function getAllSMS() {
     $DB = new MySQLiDBHelper();
@@ -81,6 +89,14 @@ class Message {
     $SMS = $DB->get(MySQL_Pre . 'SMS_Messages');
     print_r($SMS);
     return $SMS;
+  }
+  function CreateStatus($MessageID,$Report,$MobileNo,$Status){
+    $DB = new MySQLiDBHelper();
+    $insertData['MessageID'] = $MessageID;
+    $insertData['Report'] = $Report;
+    $insertData['MobileNo'] = $MobileNo;
+    $insertData['Status'] = $Status;
+    $StatusID = $DB->insert(MySQL_Pre . 'SMS_Status', $insertData);
   }
 }
 
