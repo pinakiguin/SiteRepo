@@ -85,6 +85,8 @@ class MessageAPI {
           $this->Resp['API'] = false;
           $this->Resp['MSG'] = 'Mobile No.' . $this->Req->MDN . ' is not allowed to register!';
         }
+        $fieldData['MobileNo']=$this->Req->MDN;
+        $DB->insert(MySQL_Pre.'SMS_Register',$fieldData);
         break;
 
       /**

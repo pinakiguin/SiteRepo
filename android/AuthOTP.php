@@ -26,9 +26,9 @@ class AuthOTP extends GoogleAuthenticator {
     $MySQLiDB = new MySQLiDBHelper();
     $User = $MySQLiDB->where('MobileNo', $UserID)->get(MySQL_Pre . 'SMS_Users');
     if (count($User) > 0) {
-      if ($this->Mode == 0){
+      if ($this->Mode == 0) {
         return $User[0]['UserData'];
-      }else{
+      } else {
         return $User[0]['TempData'];
       }
     }

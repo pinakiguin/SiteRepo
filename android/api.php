@@ -16,6 +16,6 @@ WebLib::CreateDB();
 $json = file_get_contents('php://input');
 $jsonData = json_decode($json);
 
-$mAPI=new MessageAPI($jsonData);
+$mAPI = new MessageAPI($jsonData);
 $mAPI->executeAPI();
 exit();
