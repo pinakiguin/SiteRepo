@@ -85,8 +85,8 @@ class MessageAPI {
           $this->Resp['API'] = false;
           $this->Resp['MSG'] = 'Mobile No.' . $this->Req->MDN . ' is not allowed to register!';
         }
-        $fieldData['MobileNo']=$this->Req->MDN;
-        $DB->insert(MySQL_Pre.'SMS_Register',$fieldData);
+        $fieldData['MobileNo'] = $this->Req->MDN;
+        $DB->insert(MySQL_Pre . 'SMS_Register', $fieldData);
         break;
 
       /**
@@ -216,7 +216,7 @@ class MessageAPI {
     /**
      * Important: Tells volley not to cache the response
      */
-    header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() - 3600));
+    header('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() - 3600));
     echo $JsonResp;
   }
 

@@ -20,11 +20,11 @@ class User {
 
   function __construct($MobileNo) {
     $DB = new MySQLiDBHelper();
-    $DB->where('MobileNo',$MobileNo);
-    $Users=$DB->get(MySQL_Pre.'SMS_Users');
-    $this->eMailID=$Users[0]['eMailID'];
-    $this->UserName=$Users[0]['UserName'];
-    $this->Designation=$Users[0]['Designation'];
+    $DB->where('MobileNo', $MobileNo);
+    $Users = $DB->get(MySQL_Pre . 'SMS_Users');
+    $this->eMailID = $Users[0]['eMailID'];
+    $this->UserName = $Users[0]['UserName'];
+    $this->Designation = $Users[0]['Designation'];
     $this->MobileNo = $MobileNo;
   }
 
@@ -58,14 +58,14 @@ class User {
     return true;
   }
 
-  function createUser($UserName,$Password){
-      $DB = new MySQLiDBHelper();
-      $Pass=md5($Password);
-      $insertData['UserName'] = $UserName;
-      $insertData['Password'] =$Pass;
-      $insertData['Status'] ='off';
-      $UserID = $DB->insert(MySQL_Pre . 'SMS_Users', $insertData);
-      return true;
-      
+  function createUser($UserName, $Password) {
+    $DB = new MySQLiDBHelper();
+    $Pass = md5($Password);
+    $insertData['UserName'] = $UserName;
+    $insertData['Password'] = $Pass;
+    $insertData['Status'] = 'off';
+    $UserID = $DB->insert(MySQL_Pre . 'SMS_Users', $insertData);
+    return true;
+
   }
 }

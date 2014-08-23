@@ -19,8 +19,8 @@ class Group {
   public function setGroup($GroupName) {
     $DB = new MySQLiDBHelper();
     $DB->where('GroupName', $GroupName);
-    $Group=$DB->get(MySQL_Pre. 'SMS_Groups');
-    $this->GroupID =$Group[0]['GroupID'];
+    $Group = $DB->get(MySQL_Pre . 'SMS_Groups');
+    $this->GroupID = $Group[0]['GroupID'];
   }
 
   public function getGroupID() {
@@ -34,9 +34,9 @@ class Group {
     return $GroupID;
   }
 
-  static function getAllGroups(){
+  static function getAllGroups() {
     $DB = new MySQLiDBHelper();
-    $Groups = $DB->query('Select GroupName FROM '.MySQL_Pre.'SMS_Groups');
+    $Groups = $DB->query('Select GroupName FROM ' . MySQL_Pre . 'SMS_Groups');
     return $Groups;
   }
 
