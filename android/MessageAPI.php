@@ -194,6 +194,43 @@ class MessageAPI {
         break;
 
       /**
+       * Sync Profile: Sync User Profile from Registration Data on Server
+       *
+       * Request:
+       *   JSONObject={"API":"SP",
+       *               "MDN":"9876543210",
+       *               "OTP":"123456"}
+       *
+       * Response:
+       *    JSONObject={"API":true,
+       *               "DB": {"UserName":"John Smith",
+       *                      "Designation":"Operator",
+       *                      "eMailID":"jsmith@gmail.com"
+       *                     }
+       *
+       *               "MSG":"Profile Downloaded Successfully.",
+       *               "ET":2.0987,
+       *               "ST":"Wed 20 Aug 08:31:23 PM"}
+       */
+      case 'SP':
+        $AuthUser = new AuthOTP(1);
+        if ($AuthUser->authenticateUser($this->Req->MDN, $this->Req->OTP)) {
+          $DB = new MySQLiDBHelper();
+          $DB->where('MobileNo', $this->Req->MDN);
+          $Profile = $DB->query('Select UserName, Designation, eMailID FROM ' . MySQL_Pre . 'SMS_Users');
+          $this->Resp['DB'] = $Profile[0];
+
+          $this->Resp['API'] = true;
+          $this->Resp['MSG'] = 'Profile Downloaded Successfully.';
+        } else {
+          //$this->Resp['URL'] = $AuthUser->createURL($this->Req->MDN);
+          $this->Resp['DB'] = "Key: Not For Production"; //. $AuthUser->oath_hotp($AuthUser->getKey($this->Req->MDN), $this->Req->TC);
+          $this->Resp['API'] = false;
+          $this->Resp['MSG'] = 'Invalid OTP';
+        }
+        break;
+
+      /**
        * Unknown API Call
        */
       default :
@@ -204,7 +241,7 @@ class MessageAPI {
   }
 
   protected function sendResponse() {
-    $this->Resp['json'] = $this->Req; //TODO: Remove for Production
+    //$this->Resp['json'] = $this->Req; //TODO: Remove for Production
     $this->Resp['ET'] = time() - $this->Resp['ET'];
     $DateFormat = 'D d M g:i:s A';
     $this->Resp['ST'] = date($DateFormat, time());
