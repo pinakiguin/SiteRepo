@@ -17,32 +17,33 @@
  * @return json
  *
  */
-require_once ( __DIR__ . '/../lib.inc.php');
+require_once(__DIR__ . '/../lib.inc.php');
 if (!isset($_SESSION)) {
   session_start();
 }
 
 if (WebLib::GetVal($_POST, 'AjaxToken') ===
-    WebLib::GetVal($_SESSION, 'Token')) {
-  $_SESSION['LifeTime']  = time();
-  $_SESSION['RT']        = microtime(TRUE);
+    WebLib::GetVal($_SESSION, 'Token')
+) {
+  $_SESSION['LifeTime'] = time();
+  $_SESSION['RT'] = microtime(TRUE);
   $_SESSION['CheckAuth'] = 'Valid';
-  $DataResp['Data']      = array();
-  $DataResp['Msg']       = '';
+  $DataResp['Data'] = array();
+  $DataResp['Msg'] = '';
   switch (WebLib::GetVal($_POST, 'CallAPI')) {
 
     case 'GetComboData':
-      $Query                = 'Select `DeptID`,`DeptName`'
+      $Query = 'Select `DeptID`,`DeptName`'
           . ' FROM `' . MySQL_Pre . 'MPR_Departments`'
           . ' Order by `DeptID`';
-      $DataResp['DeptID']   = array();
+      $DataResp['DeptID'] = array();
       doQuery($DataResp['DeptID'], $Query);
-      $Query                = 'Select `SectorID`,`SectorName`'
+      $Query = 'Select `SectorID`,`SectorName`'
           . ' FROM `' . MySQL_Pre . 'MPR_Sectors`'
           . ' Order by `SectorName`';
       $DataResp['SectorID'] = array();
       doQuery($DataResp['SectorID'], $Query);
-      $Query                = 'Select `SchemeID`,`SchemeName`'
+      $Query = 'Select `SchemeID`,`SchemeName`'
           . ' FROM `' . MySQL_Pre . 'MPR_Schemes`'
           . ' Order by `SchemeName`';
       $DataResp['SchemeID'] = array();
@@ -50,13 +51,13 @@ if (WebLib::GetVal($_POST, 'AjaxToken') ===
       break;
 
     case 'GetProjectData':
-      $Query               = 'Select `SchemeID`,`SchemeName`'
+      $Query = 'Select `SchemeID`,`SchemeName`'
           . ' FROM `' . MySQL_Pre . 'MPR_Schemes`'
           . ' Order by `SchemeName`';
       $DataResp['Schemes'] = array();
       doQuery($DataResp['Schemes'], $Query);
 
-      $Query                = 'Select * FROM `' . MySQL_Pre . 'MPR_Progress`'
+      $Query = 'Select * FROM `' . MySQL_Pre . 'MPR_Progress`'
           . ' Order by `ReportID` DESC';
       $DataResp['Progress'] = array();
       doQuery($DataResp['Progress'], $Query);
@@ -66,20 +67,20 @@ if (WebLib::GetVal($_POST, 'AjaxToken') ===
 
     case 'GetChosenData':
 
-      $Query                = 'Select `DeptID`,`DeptName`'
+      $Query = 'Select `DeptID`,`DeptName`'
           . ' FROM `' . MySQL_Pre . 'MPR_Departments`'
           . ' Order by `DeptID`';
-      $DataResp['DeptID']   = array();
+      $DataResp['DeptID'] = array();
       doQuery($DataResp['DeptID'], $Query);
-      $Query                = 'Select `SectorID`,`SectorName`'
+      $Query = 'Select `SectorID`,`SectorName`'
           . ' FROM `' . MySQL_Pre . 'MPR_Sectors`'
           . ' Order by `SectorName`';
       $DataResp['SectorID'] = array();
       doQuery($DataResp['SectorID'], $Query);
-      $Query                = 'Select `BlockID`,`BlockName`'
+      $Query = 'Select `BlockID`,`BlockName`'
           . ' FROM `' . MySQL_Pre . 'MPR_Blocks`'
           . ' Order by `BlockID`';
-      $DataResp['BlockID']  = array();
+      $DataResp['BlockID'] = array();
       doQuery($DataResp['BlockID'], $Query);
       break;
     /*
@@ -87,8 +88,8 @@ if (WebLib::GetVal($_POST, 'AjaxToken') ===
 
      */
     case 'GetReportTable':
-      $_SESSION['POST']     = $_POST;
-      $Query                = 'SELECT S.SchemeID, S.SchemeName , P.ReportDate,'
+      $_SESSION['POST'] = $_POST;
+      $Query = 'SELECT S.SchemeID, S.SchemeName , P.ReportDate,'
           . ' P.PhysicalProgress, P.FinancialProgress,P.Remarks '
           . ' FROM ' . MySQL_Pre . 'MPR_Schemes S'
           . ' INNER JOIN ' . MySQL_Pre . 'MPR_Progress P'
@@ -120,8 +121,8 @@ if (WebLib::GetVal($_POST, 'AjaxToken') ===
   exit();
 } else {
   $_SESSION['LifeTime'] = time();
-  $DataResp['Msg']      = 'Invalid Ajax Token';
-  $DataResp['RT']       = '<b>Response Time:</b> '
+  $DataResp['Msg'] = 'Invalid Ajax Token';
+  $DataResp['RT'] = '<b>Response Time:</b> '
       . round(microtime(TRUE) - WebLib::GetVal($_SESSION, 'RT'), 6) . ' Sec';
   //PHP 5.4+ is required for JSON_PRETTY_PRINT
   //@todo Remove PRETTY_PRINT for Production
@@ -143,18 +144,18 @@ exit();
 /**
  * Perfroms Select Query to the database
  *
- * @param ref     $DataResp
- * @param string  $Query
- * @param array   $Params
+ * @param ref $DataResp
+ * @param string $Query
+ * @param array $Params
  * @example GetData(&$DataResp, "Select a,b,c from Table Where c=? Order By b LIMIT ?,?", array('1',30,10))
  */
 function doQuery(&$DataResp,
                  $Query,
                  $Params = NULL) {
-  $Data             = new MySQLiDBHelper();
-  $Result           = $Data->rawQuery($Query, $Params);
+  $Data = new MySQLiDBHelper();
+  $Result = $Data->rawQuery($Query, $Params);
   $DataResp['Data'] = $Result;
-  $DataResp['Msg']  = 'Total Rows: ' . count($Result);
+  $DataResp['Msg'] = 'Total Rows: ' . count($Result);
   unset($Result);
   unset($Data);
 }

@@ -1,7 +1,7 @@
-$(function() {
+$(function () {
   $('input[type="button"]').button();
   $('input[type="reset"]').button();
-  $('#CmdReset').click(function() {
+  $('#CmdReset').click(function () {
     $('#frmScheme').trigger("reset");
     $("#DeptID").trigger("chosen:updated");
     $("#BlockID").trigger("chosen:updated");
@@ -57,7 +57,7 @@ $(function() {
       'AjaxToken': $('#AjaxToken').val(),
       'CallAPI': 'GetChosenData'
     }
-  }).done(function(data) {
+  }).done(function (data) {
     try {
       var DataResp = $.parseJSON(data);
       $('#Error').html(data);
@@ -67,36 +67,36 @@ $(function() {
       $('#ED').html(DataResp.RT);
       var Options = '<option value=""></option>';
       $.each(DataResp.DeptID.Data,
-              function(index, value) {
-                //option for Projects...
-                Options += '<option value="' + value.DeptID + '">'
-                        + value.DeptID + ' - ' + value.DeptName
-                        + '</option>';
-              });
+          function (index, value) {
+            //option for Projects...
+            Options += '<option value="' + value.DeptID + '">'
+                + value.DeptID + ' - ' + value.DeptName
+                + '</option>';
+          });
       $('#DeptID').html(Options)
-              .trigger("chosen:updated");
+          .trigger("chosen:updated");
       $('#DeptID').data('DeptID', DataResp.DeptID);
       //option for Sectors..
       Options = '<option value=""></option>';
       $.each(DataResp.SectorID.Data,
-              function(index, value) {
-                Options += '<option value="' + value.SectorID + '">'
-                        + value.SectorID + ' - ' + value.SectorName
-                        + '</option>';
-              });
+          function (index, value) {
+            Options += '<option value="' + value.SectorID + '">'
+                + value.SectorID + ' - ' + value.SectorName
+                + '</option>';
+          });
       $('#SectorID').html(Options)
-              .trigger("chosen:updated");
+          .trigger("chosen:updated");
       $('#SectorID').data('SectorID', DataResp.SectorID);
       //option for BlockID...
       Options = '<option value=""></option>';
       $.each(DataResp.BlockID.Data,
-              function(index, value) {
-                Options += '<option value="' + value.BlockID + '">'
-                        + value.BlockID + ' - ' + value.BlockName
-                        + '</option>';
-              });
+          function (index, value) {
+            Options += '<option value="' + value.BlockID + '">'
+                + value.BlockID + ' - ' + value.BlockName
+                + '</option>';
+          });
       $('#BlockID').html(Options)
-              .trigger("chosen:updated");
+          .trigger("chosen:updated");
       $('#BlockID').data('BlockID', DataResp.BlockID);
       delete DataResp;
       $("#Msg").html('');
@@ -105,12 +105,12 @@ $(function() {
       $('#Msg').html('Server Error:' + e);
       $('#Error').html(data);
     }
-  }).fail(function(msg) {
+  }).fail(function (msg) {
     $('#Msg').html(msg);
   });
 //calling ajax for saving data.............
 //for create new Scheme.........
-  $('#CmdSaveScheme').click(function() {
+  $('#CmdSaveScheme').click(function () {
     $.ajax({
       type: 'POST',
       url: 'AjaxSaveData.php',
@@ -136,7 +136,7 @@ $(function() {
         'TenderDate': $("#TenderDate").val(),
         'WorkOrderDate': $("#WorkOrderDate").val()
       }
-    }).done(function(data) {
+    }).done(function (data) {
       try {
         var DataResp = $.parseJSON(data);
         delete data;
@@ -144,8 +144,7 @@ $(function() {
         $("#AjaxToken").val(DataResp.AjaxToken);
         $("#Msg").html(DataResp.Msg);
         $("#CheckVal").html(DataResp.CheckVal);
-        if (DataResp.CheckVal === null)
-        {
+        if (DataResp.CheckVal === null) {
           $('#frmScheme').trigger("reset");
           $("#DeptID").trigger("chosen:updated");
           $("#BlockID").trigger("chosen:updated");
@@ -157,7 +156,7 @@ $(function() {
         $('#Msg').html('Server Error:' + e);
         $('#Error').html(data);
       }
-    }).fail(function(msg) {
+    }).fail(function (msg) {
       $('#Msg').html(msg);
     });
   });

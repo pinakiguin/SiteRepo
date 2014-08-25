@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-$(function() {
+$(function () {
   var OldPhysicalProgress;
   var OldFinancialProgress;
   $('input[type="submit"]').button();
@@ -21,7 +21,7 @@ $(function() {
     value: 0,
     min: 0,
     max: 100,
-    slide: function(event, ui) {
+    slide: function (event, ui) {
       $("#lblPhysicalProgress").html("Physical Progress: " + ui.value + "%");
       $("#PhysicalProgress").val(ui.value);
     }
@@ -31,7 +31,7 @@ $(function() {
     value: 0,
     min: 0,
     max: 100,
-    slide: function(event, ui) {
+    slide: function (event, ui) {
       $("#lblFinancialProgress").html("Financial Progress: " + ui.value + "%");
       $("#FinancialProgress").val(ui.value);
     }
@@ -39,7 +39,7 @@ $(function() {
 //  $('#CmdDel').on("click", function() {
 //    $("#TxtAction").val($(this).val());
 //  });
-  $('#Reload').click(function() {
+  $('#Reload').click(function () {
     $('#frmProgress').trigger("reset");
     $("#SchemeID").trigger("chosen:updated");
     $('#PhysicalSlider').slider("value", 0);
@@ -48,7 +48,7 @@ $(function() {
     $("#lblFinancialProgress").html("Physical Progress: ");
     location.reload();
   });
-  $('#CmdSaveUpdate').on("click", function() {
+  $('#CmdSaveUpdate').on("click", function () {
     $("#TxtAction").val($(this).val());
   });
 //calling Ajax for fetching the project data...
@@ -63,7 +63,7 @@ $(function() {
       'AjaxToken': $('#AjaxToken').val(),
       'CallAPI': 'GetProjectData'
     }
-  }).done(function(data) {
+  }).done(function (data) {
     try {
       var DataResp = $.parseJSON(data);
       $('#Error').html(data);
@@ -73,14 +73,14 @@ $(function() {
       $('#ED').html(DataResp.RT);
       var Options = '<option value=""></option>';
       $.each(DataResp.Schemes.Data,
-              function(index, value) {
-                //option for Schemes...
-                Options += '<option value="' + value.SchemeID + '">'
-                        + value.SchemeID + ' - ' + value.SchemeName
-                        + '</option>';
-              });
+          function (index, value) {
+            //option for Schemes...
+            Options += '<option value="' + value.SchemeID + '">'
+                + value.SchemeID + ' - ' + value.SchemeName
+                + '</option>';
+          });
       $('#SchemeID').html(Options)
-              .trigger("chosen:updated");
+          .trigger("chosen:updated");
       $('#SchemeID').data('Schemes', DataResp.Schemes);
       $('#ProgressID').data('Progress', DataResp.Progress);
       delete DataResp;
@@ -90,39 +90,38 @@ $(function() {
       $('#Msg').html('Server Error:' + e);
       $('#Error').html(data);
     }
-  }).fail(function(msg) {
+  }).fail(function (msg) {
     $('#Msg').html(msg);
   });
   // set the slider min value depand on the Scheme name.......
   $("#SchemeID").chosen({width: "250px",
     no_results_text: "Oops, nothing found!"
-  }).change(function() {
+  }).change(function () {
     var SchemeID = Number($(this).val());
     var Progress = $('#ProgressID').data('Progress');
     $.each(Progress.Data,
-            function(index, value) {
-              if (value.SchemeID === SchemeID)
-              {
-                $('#PhysicalSlider').slider("value", value.PhysicalProgress);
-                $('#FinancialSlider').slider("value", value.FinancialProgress);
-                $("#lblPhysicalProgress").html("Physical Progress: " +
-                        value.PhysicalProgress + "%");
-                $("#lblFinancialProgress").html("Financial Progress: " +
-                        value.FinancialProgress + "%");
-                $('#LastReportDate').val(value.ReportDate);
-                $('#OldRemarks').val(value.Remarks);
-                $("#FinancialProgress").val(value.FinancialProgress);
-                $("#PhysicalProgress").val(value.PhysicalProgress);
-                OldPhysicalProgress = (value.PhysicalProgress);
-                OldFinancialProgress = (value.FinancialProgress);
-                return false;
-              }
-            });
+        function (index, value) {
+          if (value.SchemeID === SchemeID) {
+            $('#PhysicalSlider').slider("value", value.PhysicalProgress);
+            $('#FinancialSlider').slider("value", value.FinancialProgress);
+            $("#lblPhysicalProgress").html("Physical Progress: " +
+                value.PhysicalProgress + "%");
+            $("#lblFinancialProgress").html("Financial Progress: " +
+                value.FinancialProgress + "%");
+            $('#LastReportDate').val(value.ReportDate);
+            $('#OldRemarks').val(value.Remarks);
+            $("#FinancialProgress").val(value.FinancialProgress);
+            $("#PhysicalProgress").val(value.PhysicalProgress);
+            OldPhysicalProgress = (value.PhysicalProgress);
+            OldFinancialProgress = (value.FinancialProgress);
+            return false;
+          }
+        });
   });
 
   //****************************************
   //calling ajax for saving data.............
-  $("form").on("submit", function(event) {
+  $("form").on("submit", function (event) {
     event.preventDefault();
     $('#Msg').html('Saving Please Wait...');
     $.ajax({
@@ -145,15 +144,14 @@ $(function() {
         'OldPhysicalProgress': OldPhysicalProgress,
         'OldFinancialProgress': OldFinancialProgress
       }
-    }).done(function(data) {
+    }).done(function (data) {
       try {
         var DataResp = $.parseJSON(data);
         delete data;
         $("#FormToken").val(DataResp.FormToken);
         $("#AjaxToken").val(DataResp.AjaxToken);
         $("#Msg").html(DataResp.Msg);
-        if (DataResp.CheckVal === null)
-        {
+        if (DataResp.CheckVal === null) {
           $('#frmProgress').trigger("reset");
           $("#SchemeID").trigger("chosen:updated");
           $('#PhysicalSlider').slider("value", 0);
@@ -168,7 +166,7 @@ $(function() {
         $('#Msg').html('Server Error:' + e);
         $('#Error').html(data);
       }
-    }).fail(function(msg) {
+    }).fail(function (msg) {
       $('#Msg').html(msg);
     });
   });

@@ -5,50 +5,48 @@
  */
 google.load('visualization', '1', {packages: ['corechart']});
 //google.setOnLoadCallback(drawVisualization);
-$(function() {
+$(function () {
   $('input[type="button"]').button();
-  $('#CmdRefresh').click(function() {
+  $('#CmdRefresh').click(function () {
     drawVisualization();
   });
 //filter
   $("#SectorID").chosen({width: "200px",
     no_results_text: "Oops, nothing found!"
-  }).change(function() {
+  }).change(function () {
     var Options = '<option value=""></option>';
     var SchemeID = $('#SchemeID').data('SchemeID');
     var SectorID = Number($(this).val());
     var DeptID = Number($("#DeptID").val());
     $.each(SchemeID.Data,
-            function(index, value) {
-              if ((value.SectorID === SectorID) && (value.DeptID === DeptID))
-              {
-                Options += '<option value="' + value.SchemeID + '">'
-                        + value.SchemeID + ' - ' + value.SchemeName
-                        + '</option>';
-              }
-            });
+        function (index, value) {
+          if ((value.SectorID === SectorID) && (value.DeptID === DeptID)) {
+            Options += '<option value="' + value.SchemeID + '">'
+                + value.SchemeID + ' - ' + value.SchemeName
+                + '</option>';
+          }
+        });
     $('#SchemeID').html(Options)
-            .trigger("chosen:updated");
+        .trigger("chosen:updated");
   });
 
   $("#DeptID").chosen({width: "200px",
     no_results_text: "Oops, nothing found!"
-  }).change(function() {
+  }).change(function () {
     var Options = '<option value=""></option>';
     var SchemeID = $('#SchemeID').data('SchemeID');
     var SectorID = Number($(this).val());
     var DeptID = Number($("#DeptID").val());
     $.each(SchemeID.Data,
-            function(index, value) {
-              if ((value.SectorID === SectorID) && (value.DeptID === DeptID))
-              {
-                Options += '<option value="' + value.SchemeID + '">'
-                        + value.SchemeID + ' - ' + value.SchemeName
-                        + '</option>';
-              }
-            });
+        function (index, value) {
+          if ((value.SectorID === SectorID) && (value.DeptID === DeptID)) {
+            Options += '<option value="' + value.SchemeID + '">'
+                + value.SchemeID + ' - ' + value.SchemeName
+                + '</option>';
+          }
+        });
     $('#SchemeID').html(Options)
-            .trigger("chosen:updated");
+        .trigger("chosen:updated");
   });
   //filter
   $("#SchemeID").chosen({width: "200px",
@@ -66,7 +64,7 @@ $(function() {
       'AjaxToken': $('#AjaxToken').val(),
       'CallAPI': 'GetComboData'
     }
-  }).done(function(data) {
+  }).done(function (data) {
     try {
       var DataResp = $.parseJSON(data);
       // $('#Error').html(data);
@@ -76,35 +74,35 @@ $(function() {
       $('#ED').html(DataResp.RT);
       var Options = '<option value=""></option>';
       $.each(DataResp.DeptID.Data,
-              function(index, value) {
-                //option for Projects...
-                Options += '<option value="' + value.DeptID + '">'
-                        + value.DeptID + ' - ' + value.DeptName
-                        + '</option>';
-              });
+          function (index, value) {
+            //option for Projects...
+            Options += '<option value="' + value.DeptID + '">'
+                + value.DeptID + ' - ' + value.DeptName
+                + '</option>';
+          });
       $('#DeptID').html(Options)
-              .trigger("chosen:updated");
+          .trigger("chosen:updated");
       $('#DeptID').data('DeptID', DataResp.DeptID);
       //option for Sectors..
       Options = '<option value=""></option>';
       $.each(DataResp.SectorID.Data,
-              function(index, value) {
-                Options += '<option value="' + value.SectorID + '">'
-                        + value.SectorID + ' - ' + value.SectorName
-                        + '</option>';
-              });
+          function (index, value) {
+            Options += '<option value="' + value.SectorID + '">'
+                + value.SectorID + ' - ' + value.SectorName
+                + '</option>';
+          });
       $('#SectorID').html(Options)
-              .trigger("chosen:updated");
+          .trigger("chosen:updated");
       $('#SectorID').data('SectorID', DataResp.SectorID);
       //option for Schemes...
       Options = '<option value=""></option>';
       $.each(DataResp.SchemeID.Data,
-              function(index, value) {
-                Options += '<option value="' + value.SchemeID + '">'
-                        + '</option>';
-              });
+          function (index, value) {
+            Options += '<option value="' + value.SchemeID + '">'
+                + '</option>';
+          });
       $('#SchemeID').html(Options)
-              .trigger("chosen:updated");
+          .trigger("chosen:updated");
       $('#SchemeID').data('SchemeID', DataResp.SchemeID);
 
       delete DataResp;
@@ -114,7 +112,7 @@ $(function() {
       $('#Msg').html('Server Error:' + e);
       $('#Error').html(data);
     }
-  }).fail(function(msg) {
+  }).fail(function (msg) {
     $('#Msg').html(msg);
   });
 
@@ -140,7 +138,7 @@ function drawVisualization() {
       'CallAPI': 'GetReportTable',
       'SchemeID': $('#SchemeID').val()
     }
-  }).done(function(data) {
+  }).done(function (data) {
     try {
       var DataResp = $.parseJSON(data);
       delete data;
@@ -157,11 +155,11 @@ function drawVisualization() {
 
       var Options = '<option value=""></option>';
       $.each(DataResp.Data,
-              function(index, value) {
-                var dt = new Date(value.ReportDate);
-                dataChart.setValue(0, 0, dt);
-                dataChart.setValue(0, 1, value.PhysicalProgress);
-                dataChart.setValue(0, 2, value.FinancialProgress);
+          function (index, value) {
+            var dt = new Date(value.ReportDate);
+            dataChart.setValue(0, 0, dt);
+            dataChart.setValue(0, 1, value.PhysicalProgress);
+            dataChart.setValue(0, 2, value.FinancialProgress);
 
 //                for (var i = 0; i <= DataResp.Data.length; i++)
 //                {
@@ -172,7 +170,7 @@ function drawVisualization() {
 //                            + ":" + value.PhysicalProgress + "</span><br/>");
 //                  }
 //                }
-              });
+          });
       var formatter = new google.visualization.DateFormat({formatType: 'long'});
       formatter.format(dataChart, 0);
       // Create and draw the visualization.
@@ -193,7 +191,7 @@ function drawVisualization() {
       $('#Msg').html('Server Error:' + e);
       $('#Error').html(data);
     }
-  }).fail(function(msg) {
+  }).fail(function (msg) {
     $('#Msg').html(msg);
   });
 }
