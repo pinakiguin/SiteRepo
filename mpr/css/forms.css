@@ -19,6 +19,7 @@ root {
   -moz-border-radius: 10px;
   background-color: #ebebeb;
   display: inline-block;
+  width: 90%;
 }
 .formWrapper fieldset{
   margin: 10px;
@@ -31,6 +32,9 @@ root {
   transition: background .25s linear,box-shadow .25s linear;
 }
 .formWrapper input[type=text],
+.formWrapper input[type=email],
+.formWrapper input[type=number],
+.formWrapper textarea,
 .formWrapper input[type=password]{
   font-size: 15px;
   color: #858585;
@@ -85,6 +89,7 @@ root {
   width: 500px;
   background: white;
 }
+
 #FinancialSlider .ui-slider-range-min{
   background: #dc3912;
 }
@@ -101,3 +106,36 @@ root {
   padding: 0px;
   float: left;
 }
+.myfont {
+  color: #404040;
+  font-family: Calibri, Georgia, "Book Antiqua", Verdana;
+  font-size:12px;
+  font-style: normal;
+  line-height: normal;
+  font-weight: bold;
+  font-variant: normal;
+  text-transform: none;
+  text-decoration: none;
+  margin: 0px;
+  padding-left: 0px;
+}
+.myHeader {
+  color: #660000;
+  font-family: Calibri, Georgia, "Book Antiqua", Verdana;
+  font-size:20px;
+  font-style: normal;
+  line-height: normal;
+  font-weight: bold;
+  font-variant: normal;
+  text-transform: none;
+  text-decoration: none;
+  margin: 0px;
+  padding-left: 0px;
+  text-underline-position:auto;
+}
+
+.formWrapper legend{
+  margin: 0px 0px 0px 20px;
+  font-size: 20px;
+}
+

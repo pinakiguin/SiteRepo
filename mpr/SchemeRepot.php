@@ -34,22 +34,31 @@ WebLib::IncludeJS('DataTables/media/js/jquery.dataTables.js');
       ?>" id="frmIAP" ><?php
             include __DIR__ . '/DataMPR.php';
             ?>
-        <span class="myHeader">MPR Reports</span>
-        <hr/>
-        <ol>
-          <li>
-            <a href="<?php echo $_SESSION['BaseURL']; ?>mpr/SchemeRepot.php">
-              Scheme Wise Report
-            </a>
-          </li>
-          <li>
-            <a href="<?php echo $_SESSION['BaseURL']; ?>mpr/Chart.php">
-              Chart Report
-            </a>
-          </li>
-        </ol>
-        <br>
+        <span class="myHeader">Scheme wise Report</span>
+        <pre id="Error">
+        </pre>
+        <input type="submit" name="CreateReport" value="Vew Report" id="CreateReport">
+        <input type="button" name="reset" id="reset" value="Reset">
+        <input type="hidden" name="FormToken" id="FormToken"
+               value="<?php echo WebLib::GetVal($_SESSION, 'FormToken') ?>" />
+        <input type="hidden" id="AjaxToken" name="AjaxToken"
+               value="<?php echo WebLib::GetVal($_SESSION, 'Token'); ?>" />
       </form>
+      <div style="clear: both;"></div>
+      <table id="example" class="display stripe row-border hover order-column"
+             cellspacing="0" width="100%" style="
+             font-weight:bold;font-family:Calibri;font-size:15px">
+        <thead>
+          <tr>
+            <th>Scheme ID</th>
+            <th>Scheme Name</th>
+            <th>Report Date</th>
+            <th>Physical Progress</th>
+            <th>Financial Progress</th>
+            <th>Remarks</th>
+          </tr>
+        </thead>
+      </table>
     </div>
   </div>
   <div class="pageinfo">

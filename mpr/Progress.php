@@ -8,11 +8,12 @@ WebLib::AuthSession();
 WebLib::Html5Header('Progress');
 WebLib::IncludeCSS();
 WebLib::JQueryInclude();
-WebLib::IncludeCSS('css/chosen.css');
-WebLib::IncludeJS('mpr/js/forms.js');
-WebLib::IncludeJS('mpr/js/mpr.js');
+
+//WebLib::IncludeJS('mpr/js/forms.js');
+WebLib::IncludeJS('mpr/js/progress.js');
 WebLib::IncludeCSS('mpr/css/forms.css');
 WebLib::IncludeJS('js/chosen.jquery.min.js');
+WebLib::IncludeCSS('css/chosen.css');
 ?>
 </head>
 <body>
@@ -26,11 +27,15 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
   WebLib::ShowMenuBar('MPR');
   ?>
   <div class="content">
+    <span class="Message" id="Msg" style="float: right;">
+      <b>Loaded Successfully..</b>
+    </span>
     <div class="formWrapper">
-      <form method="post"
+      <form method="post" id="frmProgress"
             action="<?php
             echo WebLib::GetVal($_SERVER, 'PHP_SELF');
-            ?>">
+            ?>"
+            id="frmProgress" >
         <h3>Process </h3>
         <?php
         include __DIR__ . '/DataMPR.php';
@@ -39,54 +44,71 @@ WebLib::IncludeJS('js/chosen.jquery.min.js');
         $Data1 = new MySQLiDBHelper();
         ?>
         <div class="FieldGroup">
-          <div class="FieldGroup">
-            <label for="ProjectName">
-              <strong>Project Name</strong>
-              <select name="ProjectID" id="ProjectID"
-                      data-placeholder="Select Project">
-              </select>
-            </label>
-          </div>
-          <div class="FieldGroup">
-            <label for="ReportDate">
-              <strong>Report Date</strong>
-              <input type="text" id="ReportDate" name="ReportDate"
-                     placeholder="YYYY-MM-DD" size="12" />
-            </label>
-          </div>
-          <div style="clear: both;"></div>
-
-          <h3 id="lblPhysicalProgress">Physical Progress</h3>
-          <input type="hidden" name="PhysicalProgress"
-                 id="PhysicalProgress" />
-          <div style="clear: both;"></div>
-          <div id="PhysicalSlider" class="jQuery-Slider"></div>
-
-          <h3 id="lblFinancialProgress">Financial Progress</h3>
-          <input type="hidden" name="FinancialProgress"
-                 id="FinancialProgress" />
-          <div id="FinancialSlider" class="jQuery-Slider"></div>
-
-          <label for="Remarks">
-            <strong>Remarks</strong>
-            <input type="text" name="Remarks" id="Remarks"
-                   placeholder="Remarks"/>
+          <label for="SchemeID">
+            <span class="myfont">Scheme Name</span>
+            <select name="SchemeID" id="SchemeID"
+                    data-placeholder="Select Scheme">
+            </select>
+          </label>
+        </div>
+        <div class="FieldGroup">
+          <label for="ReportDate">
+            <span class="myfont">Report Date</span>
+            <input type="text" id="ReportDate" name="ReportDate"
+                   placeholder="YYYY-MM-DD" size="12" required />
+          </label>
+        </div>
+        <div class="FieldGroup">
+          <label for="LastReportDate">
+            <span class="myfont">Last Report Date</span>
+            <input type="text" id="LastReportDate" name="LastReportDate"
+                   placeholder="LastReportDate" size="12" readonly="readonly"/>
           </label>
         </div>
         <div style="clear: both;"></div>
-        <div class="formControl">
-          <input type="hidden" name="FormToken"
-                 value="<?php echo WebLib::GetVal($_SESSION, 'FormToken') ?>" />
-          <input type="hidden" id="AjaxToken"
-                 value="<?php echo WebLib::GetVal($_SESSION, 'Token'); ?>" />
-          <input type="submit" name="CmdSubmit" value="Save Progress">
+
+        <h3 id="lblPhysicalProgress">Physical Progress</h3>
+        <input type="hidden" name="PhysicalProgress"
+               id="PhysicalProgress" />
+        <div style="clear: both;"></div>
+        <div id="PhysicalSlider" class="jQuery-Slider"></div>
+
+        <h3 id="lblFinancialProgress">Financial Progress</h3>
+        <input type="hidden" name="FinancialProgress"
+               id="FinancialProgress" />
+        <div id="FinancialSlider" class="jQuery-Slider"></div>
+        <div class="FieldGroup">
+          <label for="OldRemarks">
+            <span class="myfont">Old Remarks</span>
+            <input type="text" name="OldRemarks" id="OldRemarks"
+                   placeholder="OldRemarks" readonly="readonly"/>
+          </label>
         </div>
+        <div class="FieldGroup">
+          <label for="Remarks">
+            <span class="myfont">Give a New Remarks Here..!</span>
+            <input type="text" name="Remarks" id="Remarks"
+                   placeholder="Remarks" required/>
+          </label>
+        </div>
+        <div class="FieldGroup">
+          <input type="hidden" id="ProgressID" name="ProgressID"/>
+        </div>
+
+        <div style="clear: both;"></div>
+        <div class="formControl">
+          <input type="submit" name="CmdSubmit" value="Save Progress" id="CmdSaveUpdate">
+          <input type="hidden" id="TxtAction" name="CmdSubmit" value=" " />
+          <input type="button" value="Refresh"  id="Reload">
+        </div>
+        <input type="hidden" name="FormToken" id="FormToken"
+               value="<?php echo WebLib::GetVal($_SESSION, 'FormToken') ?>" />
+        <input type="hidden" name="AjaxToken" id="AjaxToken"
+               value="<?php echo WebLib::GetVal($_SESSION, 'Token'); ?>" />
+<!--        <pre id="Error">
+        </pre>-->
       </form>
     </div>
-    <?php
-    unset($Data);
-    unset($Data1);
-    ?>
   </div>
   <div class="pageinfo">
     <?php WebLib::PageInfo(); ?>
