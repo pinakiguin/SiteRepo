@@ -5,7 +5,11 @@
  *
  * @version v1.0
  */
-require_once 'config.inc.php';
+if (file_exists(__DIR__ . '/config.inc.php')) {
+  require_once __DIR__ . '/config.inc.php';
+} else {
+  require_once __DIR__ . '/config.sample.inc.php';
+}
 
 /**
  * Class DB helper class for MySQL database handling functions
@@ -79,8 +83,7 @@ class MySQLiDB {
     }
   }
 
-  function __set($var,
-                 $val) {
+  function __set($var, $val) {
     switch ($var) {
       case 'Debug' :
         $this->Debug = $val;
@@ -149,12 +152,12 @@ class MySQLiDB {
     $this->do_connect();
     $this->RecSet = mysql_query($querystr, $this->conn);
     if (!$this->RecSet) {
-      $message         = 'Error(database): ' . mysql_error();
+      $message = 'Error(database): ' . mysql_error();
       //$message .= 'Whole query: '. $querystr."<br>";
       if ($this->Debug)
         $_SESSION['Msg'] = $message;
       trigger_error($message, E_USER_NOTICE);
-      $this->RowCount  = 0;
+      $this->RowCount = 0;
       return 0;
     }
     $this->NoResult = 1;
@@ -176,8 +179,8 @@ class MySQLiDB {
     if (mysql_errno($this->conn)) {
       if ($this->Debug)
         $_SESSION['Msg'] = mysql_error($this->conn);
-      $this->NoResult  = 1;
-      $this->RowCount  = 0;
+      $this->NoResult = 1;
+      $this->RowCount = 0;
       return 0;
     }
     $this->NoResult = 0;
@@ -246,11 +249,10 @@ class MySQLiDB {
    * @param string $ColName Name of the database field
    * @return string
    */
-  function GetCaption($ColName,
-                      $FieldsTable = "SRER_FieldNames") {
-    $Fields  = new MySQLiDB();
+  function GetCaption($ColName, $FieldsTable = "SRER_FieldNames") {
+    $Fields = new MySQLiDB();
     $ColHead = $Fields->do_max_query("Select `Description` from `" . MySQL_Pre . "{$FieldsTable}`"
-        . " Where `FieldName`='{$ColName}'");
+            . " Where `FieldName`='{$ColName}'");
     $Fields->do_close();
     unset($Fields);
     return (!$ColHead ? $ColName : $ColHead);
@@ -266,10 +268,7 @@ class MySQLiDB {
    * @example Output: <option value="$row[$val]"> $row[$txt] < /option>;
    * htmlspecialchars() applied to all the values
    */
-  public function show_sel($val,
-                           $txt,
-                           $query,
-                           $sel_val = "") {
+  public function show_sel($val, $txt, $query, $sel_val = "") {
     $this->do_sel_query($query);
     $opt = $this->RowCount;
     echo "<option value=''></option>";
@@ -300,10 +299,11 @@ class MySQLiDB {
       echo '<th>' . htmlspecialchars(mysql_field_name($this->RecSet, $i)) . '</th>';
       $i++;
     }
-    $j    = 0;
+    $j = 0;
     while ($line = mysql_fetch_array($this->RecSet, MYSQL_ASSOC)) {
       echo "\t<tr>\n";
-      foreach ($line as $col_value) echo "\t\t<td>" . $col_value . "</td>\n";
+      foreach ($line as $col_value)
+        echo "\t\t<td>" . $col_value . "</td>\n";
       //$strdt=date("F j, Y, g:i:s a",$ntime);
       //echo "\t\t<td>$strdt</td>\n";
       echo "\t</tr>\n";
@@ -320,13 +320,12 @@ class MySQLiDB {
     // Printing results in HTML
     echo '<table rules="all" frame="box" width="100%" cellpadding="5" cellspacing="1" border="1">';
     echo '<tr><td colspan="2" style="background-color:#F4A460;height:3px;border: 1px solid black;"></td></tr>';
-    $i    = 0;
+    $i = 0;
     while ($line = mysql_fetch_array($this->RecSet, MYSQL_ASSOC)) {
       $i = 0;
       foreach ($line as $col_value) {
         echo "\t<tr>\n";
-        echo '<th  style="background-color:#FFDA91;font-weight:bold;text-align:left;border: 1px solid black;">' . htmlspecialchars(mysql_field_name($this->RecSet,
-                                                                                                                                                    $i)) . '</th>';
+        echo '<th  style="background-color:#FFDA91;font-weight:bold;text-align:left;border: 1px solid black;">' . htmlspecialchars(mysql_field_name($this->RecSet, $i)) . '</th>';
         echo "\t\t" . '<td style="border: 1px solid black;">' . $col_value . "</td>\n";
         //$strdt=date("F j, Y, g:i:s a",$ntime);
         //echo "\t\t<td>$strdt</td>\n";
