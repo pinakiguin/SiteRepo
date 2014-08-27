@@ -67,6 +67,7 @@ class MySQLiDB {
 
   function __construct() {
     $this->NoResult = 1;
+    trigger_error("This Module is Deprecated use MySQLi instead",E_USER_DEPRECATED);
   }
 
   function __get($var) {
