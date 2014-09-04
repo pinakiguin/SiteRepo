@@ -65,9 +65,12 @@ class MySQLiDB {
    */
   private $NoResult;
 
+  private $DB;
+
   function __construct() {
     $this->NoResult = 1;
-    trigger_error("This Module is Deprecated use MySQLi instead",E_USER_DEPRECATED);
+    $this->DB=new MySQLiDBHelper();
+    //trigger_error("This Module is Deprecated use MySQLi instead",E_USER_DEPRECATED);
   }
 
   function __get($var) {
@@ -270,17 +273,15 @@ class MySQLiDB {
    * htmlspecialchars() applied to all the values
    */
   public function show_sel($val, $txt, $query, $sel_val = "") {
-    $this->do_sel_query($query);
-    $opt = $this->RowCount;
+    $Rows=$this->DB->rawQuery($query);
     echo "<option value=''></option>";
-    for ($i = 0; $i < $opt; $i++) {
-      $row = $this->get_row();
-      if ($row[$val] == $sel_val)
+    foreach ($Rows as $Row) {
+      if ($Row[$val] == $sel_val)
         $sel = "selected";
       else
         $sel = "";
-      echo '<option value="' . htmlspecialchars($row[$val])
-      . '"' . $sel . '>' . htmlspecialchars($row[$txt]) . '</option>';
+      echo '<option value="' . htmlspecialchars($Row[$val])
+      . '"' . $sel . '>' . htmlspecialchars($Row[$txt]) . '</option>';
     }
   }
 
@@ -292,27 +293,26 @@ class MySQLiDB {
    */
   public function ShowTable($QueryString) {
     // Performing SQL query
-    $this->do_sel_query($QueryString);
+    $Rows=$this->DB->rawQuery($QueryString);
     // Printing results in HTML
     echo '<table rules="all" frame="box" width="100%" cellpadding="5" cellspacing="1">';
-    $i = 0;
-    while ($i < mysql_num_fields($this->RecSet)) {
-      echo '<th>' . htmlspecialchars(mysql_field_name($this->RecSet, $i)) . '</th>';
-      $i++;
-    }
-    $j = 0;
-    while ($line = mysql_fetch_array($this->RecSet, MYSQL_ASSOC)) {
+    $Header=true;
+    foreach($Rows as $Row){
+      if($Header){
+        foreach($Row as $Field => $Value){
+          echo '<th>' . $Field . '</th>';
+        }
+
+      }
+      $Header=false;
       echo "\t<tr>\n";
-      foreach ($line as $col_value)
-        echo "\t\t<td>" . $col_value . "</td>\n";
-      //$strdt=date("F j, Y, g:i:s a",$ntime);
-      //echo "\t\t<td>$strdt</td>\n";
+      foreach($Row as $Value){
+        echo "\t\t<td>" . $Value . "</td>\n";
+      }
       echo "\t</tr>\n";
-      $j++;
     }
     echo "</table>\n";
-    //$this->do_close();
-    return ($j);
+    return (count($Rows));
   }
 
   public function ShowTableKiosk($QueryString) {

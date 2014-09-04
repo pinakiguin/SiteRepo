@@ -5,7 +5,9 @@
  * @todo Keep All District, AC, Parts available for parent users
  */
 
-$Data               = new MySQLiDB();
+$DB = new MySQLiDBHelper();
+$Inserted=0;
+$RunQuery=true;
 $_SESSION['action'] = 0;
 $Query              = '';
 if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
@@ -35,7 +37,7 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
           }
           $_SESSION['UserMapID']   = WebLib::GetVal($_POST, 'UserMapID');
           $_SESSION['UserName']    = 'Impersonated-'
-              . $Data->do_max_query('Select UserName '
+              . $DB->do_max_query('Select UserName '
                   . ' From `' . MySQL_Pre . 'Users`'
                   . ' Where `UserMapID`=' . $_SESSION['UserMapID']);
           $_SESSION['Msg']         = $_SESSION['UserName'];
@@ -56,20 +58,23 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
         break;
 
       case 'Activate':
-        $Query = 'Update `' . MySQL_Pre . 'Users` '
-            . ' Set `Activated`=1'
-            . ' Where `Activated`=0 AND `CtrlMapID`='
-            . WebLib::GetVal($_SESSION, 'UserMapID', TRUE)
-            . ' AND `UserMapID`=' . WebLib::GetVal($_POST, 'UserMapID');
+        $DB->where('Activated',0);
+        $DB->where('CtrlMapID',WebLib::GetVal($_SESSION, 'UserMapID', TRUE));
+        $DB->where('UserMapID',WebLib::GetVal($_POST, 'UserMapID'));
+        $Inserted = $DB->update(MySQL_Pre . 'Users',array('Activated'=>1));
 
-        $QueryUser = 'Select CONCAT(`UserName`,\'|\',`UserID`) '
-            . ' FROM `' . MySQL_Pre . 'Users`'
-            . ' Where UserMapID=' . WebLib::GetVal($_POST, 'UserMapID');
-        $User      = explode('|', $Data->do_max_query($QueryUser));
+        $QueryUser = 'Select `UserName`,`UserID` '
+            . ' FROM `' . MySQL_Pre . 'Users`';
+        $DB->where('UserMapID',WebLib::GetVal($_POST, 'UserMapID'));
+        $Rows      = $DB->query($QueryUser);
+        $User=$Rows[0];
+        unset($Rows);
 
         $Subject = 'User Account Activated';
-        $Body    = '<span>Your UserID: <b>' . $User[1]
+        $Body    = '<span>Your UserID: <b>' . $User['UserID']
             . '</b> is now Activated</span>';
+
+        $RunQuery=false;
         break;
 
       case 'De-Activate':
@@ -81,7 +86,7 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
         $QueryUser = 'Select CONCAT(`UserName`,\'|\',`UserID`) '
             . ' FROM `' . MySQL_Pre . 'Users`'
             . ' Where UserMapID=' . WebLib::GetVal($_POST, 'UserMapID');
-        $User      = explode('|', $Data->do_max_query($QueryUser));
+        $User      = explode('|', $DB->do_max_query($QueryUser));
 
         $Subject = 'User Account De-Activated - SRER 2014';
         $Body    = '<span>Your UserID: <b>' . $User[1]
@@ -98,7 +103,7 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
         $QueryUser = 'Select CONCAT(`UserName`,\'|\',`UserID`) '
             . ' FROM `' . MySQL_Pre . 'Users`'
             . ' Where UserMapID=' . WebLib::GetVal($_POST, 'UserMapID');
-        $User      = explode('|', $Data->do_max_query($QueryUser));
+        $User      = explode('|', $DB->do_max_query($QueryUser));
 
         $Subject = 'User Account Un-Registered - SRER 2014';
         $Body    = '<span>Your UserID: <b>' . $User[1]
@@ -107,12 +112,14 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
         break;
     }
     if ($Query !== '') {
-      $Inserted = $Data->do_ins_query($Query);
+      if($RunQuery){
+        $Inserted = $DB->rawQuery($Query);
+      }
       if ($Inserted > 0) {
         if (WebLib::GetVal($_POST, 'CmdSubmit') === 'Create') {
           $_SESSION['Msg'] = 'User Created Successfully!';
-        } else if (WebLib::GetVal($User, 1)) {
-          $GmailResp = GMailSMTP($User[1], $User[0], $Subject, $Body);
+        } else if (WebLib::GetVal($User, 'UserID')) {
+          $GmailResp = GMailSMTP($User['UserID'], $User['UserName'], $Subject, $Body);
           $Mail      = json_decode($GmailResp);
           if ($Mail->Sent) {
             if (WebLib::GetVal($_SESSION, 'Msg') === '') {
@@ -133,8 +140,7 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
 }
 $_SESSION['FormToken'] = md5($_SERVER['REMOTE_ADDR']
     . session_id() . microtime());
-$Data->do_close();
 unset($Mail);
 unset($GmailResp);
-unset($Data);
+unset($DB);
 ?>

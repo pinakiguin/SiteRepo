@@ -39,7 +39,7 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
       case 'Activate':
         foreach ($_POST['UserMapID'] as $UserMapID) {
           foreach ($_POST['MenuID'] as $MenuID) {
-            $DataACL['AllowOnly'] = 1;
+            $DataACL['AllowOnly'] = 0;
             $DataACL['Activated'] = 1;
             $Data->where('UserMapID', $UserMapID);
             $Data->where('MenuID', $MenuID);

@@ -92,6 +92,11 @@ WebLib::IncludeCSS('users/css/MenuACL.css');
           ?>
         </pre>
       </div>
+    <span class="Message" style="float: right;">
+      Allow => Add New ACL and Hide Menu <br/>
+      Restrict => Show Menu <br/>
+      Activate => Hide Menu
+    </span>
       <div style="clear: both;"></div>
       <input type="submit"  name="CmdMenuAction" value="Allow" />
       <input type="submit"  name="CmdMenuAction" value="Restrict" />
@@ -101,6 +106,7 @@ WebLib::IncludeCSS('users/css/MenuACL.css');
       <input type="submit"  name="CmdMenuAction" value="Filter Users" />
       <input type="hidden" name="FormToken" value="<?php echo WebLib::GetVal($_SESSION, 'FormToken') ?>" />
     </form>
+
     <?php
     unset($Data);
     unset($RowsUser);

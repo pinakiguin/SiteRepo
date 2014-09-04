@@ -113,7 +113,8 @@ function SQLDefs($ObjectName) {
           . ' DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,'
           . '`Registered` tinyint(1) NOT NULL,'
           . '`Activated` tinyint(1) NOT NULL,'
-          . ' PRIMARY KEY (`UserMapID`)'
+          . ' PRIMARY KEY (`UserMapID`),'
+          . ' UNIQUE(`UserName`)'
           . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
       break;
 
