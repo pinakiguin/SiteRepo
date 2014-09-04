@@ -105,7 +105,7 @@ $result = $DB->get(MySQL_Pre . 'DPRDO_Admit');
 <p>You are hereby provisionally allowed to appear at the written test in connection
   with selection of candidate against the vacancy of Gram Panchayat and Panchayat
   Samiti level post under Paschim Medinipur district to be held <strong>on 21.09.2014
-    at Colonelgola Sri Narayan Vidya Bhavan Boys' High School, Medinipur, Pin-721101.
+    at <?php echo $result[0]['ExamCenter']; ?>, Medinipur, Pin-721101.
   </strong>
 </p>
 <ol>
