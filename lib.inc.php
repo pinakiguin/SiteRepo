@@ -165,7 +165,7 @@ class WebLib {
    *
    * Generates Script tag
    *
-   * @param string $JavaScript src including path
+   * @param string $PathToJS src including path
    */
   public static function IncludeJS($PathToJS) {
     echo '<script type="text/javascript" src="' . $_SESSION['BaseURL'] . $PathToJS . '"></script>';
@@ -176,7 +176,7 @@ class WebLib {
    *
    * Generates link to css specified by $CSS
    *
-   * @param string $CSS href including path
+   * @param string $PathToCSS href including path
    */
   public static function IncludeCSS($PathToCSS = 'css/Style.css') {
     echo '<link type="text/css" href="' . $_SESSION['BaseURL'] . $PathToCSS . '" rel="Stylesheet" />';
@@ -394,7 +394,6 @@ class WebLib {
   /**
    * Excutes DDL Queried for creating database objects
    *
-   * @param string $ForWhat
    */
   public static function CreateDB() {
     if (NeedsDB) {
@@ -784,6 +783,57 @@ class WebLib {
     }
   }
 
+  /**
+   * Displays a HTML Combo filled with options specified by $txt & $val
+   *
+   * @param string $val Name of the Field which will be used as value
+   * @param string $txt Name of the Field which will be shown in options
+   * @param string $query Should select the $val & $txt fields
+   * @param string $sel_val Value of the Option to be selected
+   * @example Output: <option value="$row[$val]"> $row[$txt] < /option>;
+   * htmlspecialchars() applied to all the values
+   */
+  public static function showSelect($val, $txt, $query, $sel_val = "") {
+    $DB=new MySQLiDBHelper();
+    $Rows=$DB->rawQuery($query);
+    echo "<option value=''></option>";
+    foreach ($Rows as $Row) {
+      if ($Row[$val] == $sel_val)
+        $sel = "selected";
+      else
+        $sel = "";
+      echo '<option value="' . htmlspecialchars($Row[$val])
+        . '"' . $sel . '>' . htmlspecialchars($Row[$txt]) . '</option>';
+    }
+    unset($DB);
+    unset($Rows);
+  }
+
+  /**
+   * Displays the data in a table
+   *
+   * @param array $Rows
+   * @return int Number of Total Rows displayed
+   */
+  public static function ShowTable($Rows) {
+    // Printing results in HTML
+    echo '<table rules="all" frame="box" width="100%" cellpadding="5" cellspacing="2">';
+    $Header=true;
+    foreach($Rows as $Row){
+      if($Header){
+        foreach($Row as $Field => $Value){
+          echo '<th>' . $Field . '</th>';
+        }
+      }
+      $Header=false;
+      echo "\t<tr>\n";
+      foreach($Row as $Value){
+        echo "\t\t<td>" . $Value . "</td>\n";
+      }
+      echo "\t</tr>\n";
+    }
+    echo "</table>\n";
+  }
 }
 
 /**

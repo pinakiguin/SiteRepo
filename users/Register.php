@@ -71,7 +71,7 @@ WebLib::IncludeJS("js/jQuery-MD5/jquery.md5.js");
 
           WebLib::ShowMsg();
           if ($MailSent->Sent) {
-            $_SESSION['Msg'] = "<h3>Regristration successful.</h3>"
+            $_SESSION['Msg'] = "<h3>Registration successful.</h3>"
                 . "<b>Please Note: </b>Password is sent to: {$email}" . $SentSMS;
           }
           WebLib::ShowMsg();
