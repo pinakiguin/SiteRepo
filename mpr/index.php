@@ -17,8 +17,15 @@ WebLib::CreateDB();
   <?php
   WebLib::ShowMenuBar('MPR');
   ?>
-  <div class="content"> 
-
+  <div class="content">
+    <?php
+    //$userid=$_SESSION['UserMapID'];
+    //$DB = new MySQLiDBHelper();
+    //$DB->where('UserMapID',$userid);
+    //$user=$DB->get(MySQL_Pre.'MPR_UserAccess');
+    //$_SESSION['UserLevel']=$user['0']['UserLevel'];
+    //$_SESSION['BlockCode']=$user['0']['BlockCode'];
+    ?>
   </div>
   <div class="pageinfo">
     <?php WebLib::PageInfo(); ?>

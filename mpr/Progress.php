@@ -1,98 +1,157 @@
 <?php
-//ini_set('display_errors', '1');
-//error_reporting(E_ALL);
-
 require_once __DIR__ . '/../lib.inc.php';
 
 WebLib::AuthSession();
-WebLib::Html5Header('Progress');
-WebLib::IncludeCSS();
+WebLib::Html5Header('Monthly Performance Report');
 WebLib::JQueryInclude();
+WebLib::IncludeCSS();
+//WebLib::CreateDB();
 WebLib::IncludeCSS('css/chosen.css');
-WebLib::IncludeJS('mpr/js/forms.js');
-WebLib::IncludeJS('mpr/js/mpr.js');
-WebLib::IncludeCSS('mpr/css/forms.css');
 WebLib::IncludeJS('js/chosen.jquery.min.js');
+WebLib::IncludeCSS('css/forms.css');
+WebLib::IncludeCSS('css/Style.css');
+
+if (isset($_POST['BtnPrg']) == 1) {
+  require_once __DIR__ . '/../lib.inc.php';
+  $DB = new MySQLiDBHelper();
+  $insertdata['WorkID'] = $_POST['Work'];
+  $insertdata['ExpenditureAmount'] = $_POST['txtAmount'];
+  $insertdata['Balance'] = $_POST['txtBalance'];
+  $insertdata['Date'] = $_POST['txtDate'];
+  $insertdata['Remarks'] = $_POST['txtRemark'];
+  $insertdata['UserMapID'] = $_SESSION['UserMapID'];
+  $SchemeID = $DB->insert(MySQL_Pre . 'MPR_Progress', $insertdata);
+}
+
+$DB = new MySQLiDBHelper();
+$uid = $_SESSION['UserMapID'];
+$DB->where('UserMapID', $uid);
+$Work = $DB->get(MySQL_Pre . 'MPR_Works');
+$DB->where('UserMapID', $uid);
+$prg = $DB->get(MySQL_Pre . 'MPR_Progress');
+$n = count($prg);
+$Schemes = $DB->get(MySQL_Pre . 'MPR_Schemes');
+
+$DB = new MySQLiDBHelper();
+$DB->where('UserMapID', $uid);
+$DB->where('SchemeID', $_POST['SchemeID']);
+$Work = $DB->get(MySQL_Pre . 'MPR_Works');
 ?>
+<script type="text/javascript">
+  $(function(){
+    $('.chzn-select')
+        .chosen({width: "300px",
+          no_results_text: "Oops, nothing found!"
+        });
+    $("#cmbScheme").change(function () {
+      $("#frmscheme").submit();
+    });
+  });
+</script>
 </head>
 <body>
-  <div class="TopPanel">
-    <div class="LeftPanelSide"></div>
-    <div class="RightPanelSide"></div>
-    <h1><?php echo AppTitle; ?></h1>
-  </div>
-  <div class="Header"></div>
-  <?php
-  WebLib::ShowMenuBar('MPR');
-  ?>
-  <div class="content">
-    <div class="formWrapper">
-      <form method="post"
-            action="<?php
-            echo WebLib::GetVal($_SERVER, 'PHP_SELF');
-            ?>">
-        <h3>Process </h3>
-        <?php
-        include __DIR__ . '/DataMPR.php';
-        WebLib::ShowMsg();
-        $Data  = new MySQLiDB();
-        $Data1 = new MySQLiDBHelper();
-        ?>
-        <div class="FieldGroup">
+<div class="TopPanel">
+  <div class="LeftPanelSide"></div>
+  <div class="RightPanelSide"></div>
+  <h1><?php echo AppTitle; ?></h1>
+</div>
+<div class="Header"></div>
+<?php
+WebLib::ShowMenuBar('MPR');
+?>
+<div class="content">
+
+      <h3>Work Progress</h3>
+    <div class="formWrapper-Autofit">
+
+          <h3  class="formWrapper-h3">Create New Progress</h3>
+        <form method="post" id="frmscheme">
+          Scheme Name:<select name="SchemeID" class="chzn-select" id="cmbScheme">
+            <option>--Select Scheme--</option>
+            <?php foreach ($Schemes as $SchemeID) {
+              $Selected="";
+              if($_POST['SchemeID']==$SchemeID['SchemeID']){
+                $Selected=" selected ";
+              }
+              echo '<option value="' . $SchemeID['SchemeID'] . '" '.$Selected.'>'
+                  . $SchemeID['SchemeName'] . '</option>';
+            } ?>
+          </select><br/>
+          Work:
+          <select name="Work" class="chzn-select" id="target">
+            <option>--Select Work--</option>
+            <?php foreach ($Work as $WorkID) {
+              echo '<option value="' . $WorkID['WorkID'] . '">' . $WorkID['WorkDescription'] . '</option>';
+            } ?>
+          </select><br/>
           <div class="FieldGroup">
-            <label for="ProjectName">
-              <strong>Project Name</strong>
-              <select name="ProjectID" id="ProjectID"
-                      data-placeholder="Select Project">
-              </select>
+            <label for="txtPhyP"><strong>Physical Progress:(%)</strong><br/>
+              <input id="txtPhyP" type="text" name="txtPhyP" class="form-TxtInput">
             </label>
           </div>
           <div class="FieldGroup">
-            <label for="ReportDate">
-              <strong>Report Date</strong>
-              <input type="text" id="ReportDate" name="ReportDate"
-                     placeholder="YYYY-MM-DD" size="12" />
+            <label for="txtAmount"><strong>Expenditure Amount:</strong><br/>
+              <input id="txtAmount" type="text" name="txtAmount" class="form-TxtInput">
             </label>
           </div>
-          <div style="clear: both;"></div>
-
-          <h3 id="lblPhysicalProgress">Physical Progress</h3>
-          <input type="hidden" name="PhysicalProgress"
-                 id="PhysicalProgress" />
-          <div style="clear: both;"></div>
-          <div id="PhysicalSlider" class="jQuery-Slider"></div>
-
-          <h3 id="lblFinancialProgress">Financial Progress</h3>
-          <input type="hidden" name="FinancialProgress"
-                 id="FinancialProgress" />
-          <div id="FinancialSlider" class="jQuery-Slider"></div>
-
-          <label for="Remarks">
-            <strong>Remarks</strong>
-            <input type="text" name="Remarks" id="Remarks"
-                   placeholder="Remarks"/>
-          </label>
-        </div>
-        <div style="clear: both;"></div>
-        <div class="formControl">
-          <input type="hidden" name="FormToken"
-                 value="<?php echo WebLib::GetVal($_SESSION, 'FormToken') ?>" />
-          <input type="hidden" id="AjaxToken"
-                 value="<?php echo WebLib::GetVal($_SESSION, 'Token'); ?>" />
-          <input type="submit" name="CmdSubmit" value="Save Progress">
-        </div>
-      </form>
+          <div class="FieldGroup">
+            <label for="txtBalance"><strong>Balance:</strong><br/>
+              <input id="txtBalance" type="text" name="txtBalance" class="form-TxtInput">
+            </label>
+          </div>
+          <div class="FieldGroup">
+            <label for="txtDate"><strong>Date:</strong><br/>
+              <input id="txtDate" type="text" name="txtDate" class="form-TxtInput">
+            </label>
+          </div>
+          <div class="FieldGroup">
+            <label for="txtRemark"><strong>Remarks:</strong><br/>
+              <input id="txtRemark" type="text" name="txtRemark" class="form-TxtInput">
+            </label>
+          </div>
+          <div class="formControl">
+            <hr/>
+            <input type="Submit" value="Create" name="BtnPrg">
+          </div>
+        </form>
     </div>
-    <?php
-    unset($Data);
-    unset($Data1);
-    ?>
-  </div>
-  <div class="pageinfo">
-    <?php WebLib::PageInfo(); ?>
-  </div>
-  <div class="footer">
-    <?php WebLib::FooterInfo(); ?>
-  </div>
+    <div class="formWrapper">
+          <h3 class="formWrapper-h3">Progress Details</h3>
+        <table border="1">
+          <tr>
+            <th>Description of Work</th>
+            <th>Expenditure Amount</th>
+            <th>Balance</th>
+            <th>date</th>
+            <th>Remarks</th>
+            <th>Action</th>
+          </tr>
+          <?php $i = 0;
+          while ($i < $n) {
+            $workid = $prg[$i]['WorkID'];
+            $DB->where('WorkID', $workid);
+            $WorkName = $DB->get(MySQL_Pre . 'MPR_Works'); ?>
+            <tr>
+              <td><?php echo $WorkName[0]['WorkDescription']; ?></td>
+              <td><?php echo $prg[$i]['ExpenditureAmount']; ?></td>
+              <td><?php echo $prg[$i]['Balance']; ?></td>
+              <td><?php echo $prg[$i]['Date']; ?></td>
+              <td><?php echo $prg[$i]['Remarks']; ?></td>
+              <td><a href="savesessionprg.php?pid=<?php echo $prg[$i]['ProgressID'] ?>">edit</a></td>
+            </tr>
+            <?php $i++;
+          } ?>
+        </table>
+
+    </div>
+
+</div>
+<div class="pageinfo">
+  <?php WebLib::PageInfo(); ?>
+</div>
+<div class="footer">
+  <?php WebLib::FooterInfo(); ?>
+</div>
 </body>
 </html>
+

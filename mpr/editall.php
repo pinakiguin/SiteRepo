@@ -4,6 +4,8 @@ require_once __DIR__ . '/../lib.inc.php';
 WebLib::AuthSession();
 WebLib::Html5Header('Monthly Performance Report');
 WebLib::IncludeCSS();
+//WebLib::CreateDB();
+
 ?>
 </head>
 <body>
@@ -17,17 +19,13 @@ WebLib::IncludeCSS();
   WebLib::ShowMenuBar('MPR');
   ?>
   <div class="content">
-    <form method="post" enctype="multipart/form-data"
-          action="<?php
-          echo WebLib::GetVal($_SERVER, 'PHP_SELF');
-          ?>">
-            <?php
-            if (WebLib::GetVal($_POST, 'CmdUpload') === 'Upload') {
-              print_r($_FILES);
-            }
-            ?>
-      <input name="ExcelFile" type="file"/>
-      <input type="submit" name="CmdUpload" value="Upload"/>
+    <h2>Edit Allotment Details</h2>
+    <form action="" method="post">
+      Scheme Name:<input type="text" name="txtAmount">
+      Block Name:<input type="text" name="txtAmount">
+      Allotment Amount:<input type="text" name="txtAmount">
+      Date of Allotment:<input type="date" name="txtDate">
+      <input type="Submit" value="Update" name="BtnEdtAll">
     </form>
   </div>
   <div class="pageinfo">

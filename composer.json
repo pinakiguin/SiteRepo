@@ -1,0 +1,19 @@
+{
+  "name": "abusalam/apps",
+  "description": "paschimmedinipur.gov.in",
+  "minimum-stability": "dev",
+  "require-dev": {
+  },
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Abu Salam Parvez Alam",
+      "email": "abusalamparvezalam@gmail.com"
+    }
+  ],
+  "require": {
+    "phpunit/phpunit": "4.4.x-dev",
+    "phpunit/phpunit-skeleton-generator": "2.0.1",
+    "phpunit/dbunit": "1.3.1"
+  }
+}
