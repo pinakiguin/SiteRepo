@@ -8,6 +8,8 @@ function CreateSchemas() {
   $ObjDB->ddlQuery(SQLDefs('MPR_SchemeAllotments'));
   $ObjDB->ddlQuery(SQLDefs('MPR_Progress'));
   $ObjDB->ddlQuery(SQLDefs('MenuData'));
+  $ObjDB->ddlQuery(SQLDefs('MPR_UserSchemeAllotments'));
+  $ObjDB->ddlQuery(SQLDefs('MPR_SchemeWiseExpenditure'));
   unset($ObjDB);
 }
 
@@ -86,8 +88,34 @@ function SQLDefs($ObjectName) {
         . '(\'MPR\', 8, 1, \'Reports\', \'mpr/Reports.php\', 1),'
         . '(\'MPR\', 9, 1, \'Log Out!\', \'login.php?LogOut=1\', 1);';
       break;
+
+    case 'MPR_UserSchemeAllotments':
+      $SqlDB = 'CREATE OR REPLACE VIEW `' . MySQL_Pre . $ObjectName . '` AS '
+        . 'select `A`.`SchemeID` AS `SchemeID`,`S`.`SchemeName` AS `SchemeName`,'
+        . '`A`.`AllotmentID` AS `AllotmentID`,`A`.`Amount` AS `Amount`,'
+        . '`A`.`OrderNo` AS `OrderNo`,`A`.`Date` AS `Date`,'
+        . '`A`.`Year` AS `Year`,`S`.`UserMapID` AS `UserMapID`'
+        . ' from (`' . MySQL_Pre . 'MPR_SchemeAllotments` `A` join `' . MySQL_Pre . 'MPR_Schemes` `S`'
+        . ' on(`S`.`SchemeID` = `A`.`SchemeID`));';
+      break;
+
+    case 'MPR_SchemeWiseExpenditure':
+      $SqlDB = 'CREATE OR REPLACE VIEW `' . MySQL_Pre . $ObjectName . '` AS '
+        . 'select `A`.`Year` AS `Year`,'
+        . '`S`.`SchemeID` AS `SchemeID`,`S`.`SchemeName` AS `SchemeName`,'
+        . 'sum(`A`.`Amount`) AS `Amount`,'
+        . 'max(`P`.`ExpenditureAmount`) AS `ExpenditureAmount`'
+        . 'from ((`' . MySQL_Pre . 'MPR_SchemeAllotments` `A` join '
+        . '(`' . MySQL_Pre . 'MPR_Works` `W` left join `' . MySQL_Pre . 'MPR_Progress` `P`'
+        . ' on((`W`.`WorkID` = `P`.`WorkID`)))'
+        . ' on((`A`.`SchemeID` = `W`.`SchemeID`))) join'
+        . ' `' . MySQL_Pre . 'MPR_Schemes` `S` on((`A`.`SchemeID` = `S`.`SchemeID`)))'
+        . ' group by `A`.`Year`,`S`.`SchemeID`,`S`.`SchemeName`;';
+      break;
+
   }
   return $SqlDB;
 }
-
 ?>
+
+

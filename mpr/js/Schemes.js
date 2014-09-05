@@ -1,4 +1,3 @@
-
 $(function () {
 
     var dialog = $("#createNewScheme").dialog({
@@ -7,12 +6,12 @@ $(function () {
         width: 350,
         modal: true,
         buttons: {
-            "Create Scheme": function(){
+            "Create Scheme": function () {
                 $("#frmCreateScheme").submit();
-                dialog.dialog( "close" );
+                dialog.dialog("close");
             },
-            Cancel: function() {
-                dialog.dialog( "close" );
+            Cancel: function () {
+                dialog.dialog("close");
             }
         }
     });
@@ -22,6 +21,30 @@ $(function () {
     }).change(function () {
         if ($(this).val() === "NewScheme") {
             dialog.dialog("open");
+        } else {
+            $.ajax({
+                type: 'POST',
+                url: 'AjaxData.php',
+                dataType: 'html',
+                xhrFields: {
+                    withCredentials: true
+                },
+                data: {
+                    'AjaxToken': $('#AjaxToken').val(),
+                    'CallAPI': 'GetComboData',
+                    'Scheme':$(this).val()
+                }
+            }).done(function (data) {
+                try {
+                    $('#DataTable').html(data);
+                }
+                catch (e) {
+                    $('#Msg').html('Server Error:' + e);
+                    $('#Error').html(data);
+                }
+            }).fail(function (msg) {
+                $('#Msg').html(msg);
+            });
         }
     });
 });

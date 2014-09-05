@@ -30,7 +30,7 @@ WebLib::ShowMenuBar('MPR');
   <div class="formWrapper-Autofit">
     <h3 class="formWrapper-h3">Allotment Received for Schemes</h3>
     <?php WebLib::ShowMsg(); ?>
-    <form action="" method="POST">
+    <form id="frmSchemeAllotment" action="" method="POST">
       <div class="FieldGroup">
         <label for="Schemes"><strong>Scheme Name:</strong></label><br/>
         <select id="Schemes" name="Scheme" class="chzn">
@@ -69,6 +69,7 @@ WebLib::ShowMenuBar('MPR');
         <input type="Submit" value="Save Allotment" name="BtnScheme">
       </div>
     </form>
+    <div id="DataTable"></div>
   </div>
   <div id="createNewScheme" title="Create New Scheme">
     <form id="frmCreateScheme" action="" method="POST">

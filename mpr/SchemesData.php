@@ -20,7 +20,7 @@ if (isset($_POST['BtnScheme']) == 1) {
   $tableData['Year'] = $_POST['txtYear'];
   $SchemeID = $DB->insert(MySQL_Pre . 'MPR_SchemeAllotments', $tableData);
   if($SchemeID>0){
-    $_SESSION['Msg'].="Allotment Saved Successfully!";
+    $_SESSION['Msg']="Allotment Saved Successfully!";
   }else{
     $_SESSION['Msg'].="Unable to Save Allotment!";
   }
