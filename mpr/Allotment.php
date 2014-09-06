@@ -20,8 +20,8 @@ if(isset($_POST['BtnAll'])==1)
 }
 $DB = new MySQLiDBHelper();
 $Schemes = $DB->get(MySQL_Pre . 'MPR_Schemes');
-$Block = $DB->get(MySQL_Pre . 'MPR_Blocks');
-$All = $DB->get(MySQL_Pre . 'MPR_Allotment');
+$Block = $DB->get(MySQL_Pre . 'MPR_Users');
+//$All = $DB->get(MySQL_Pre . 'MPR_Allotment');
 $n = count($All);
 ?>
 </head>

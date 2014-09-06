@@ -16,7 +16,7 @@ if (isset($_POST['BtnScheme']) == 1) {
   $tableData['SchemeID'] = $_POST['Scheme'];
   $tableData['Amount'] = $_POST['txtAmount'];
   $tableData['OrderNo'] = $_POST['txtOrderNo'];
-  $tableData['Date'] = $_POST['txtDate'];
+  $tableData['Date'] = WebLib::ToDBDate($_POST['txtDate']);
   $tableData['Year'] = $_POST['txtYear'];
   $SchemeID = $DB->insert(MySQL_Pre . 'MPR_SchemeAllotments', $tableData);
   if($SchemeID>0){

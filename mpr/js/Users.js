@@ -1,26 +1,10 @@
 $(function () {
 
-    var dialog = $("#createNewScheme").dialog({
-        autoOpen: false,
-        height: 300,
-        width: 350,
-        modal: true,
-        buttons: {
-            "Create Scheme": function () {
-                $("#frmCreateScheme").submit();
-                dialog.dialog("close");
-            },
-            Cancel: function () {
-                dialog.dialog("close");
-            }
-        }
-    });
-
-    $(".chzn").chosen({width: "200px",
+    $(".chzn").chosen({width: "300px",
         no_results_text: "Oops, nothing found!"
     }).change(function () {
-        if ($(this).val() === "NewScheme") {
-            dialog.dialog("open");
+        if ($(this).val() === "NewUser") {
+            $("#frmUsers").submit();
         } else {
             $.ajax({
                 type: 'POST',
@@ -31,8 +15,8 @@ $(function () {
                 },
                 data: {
                     'AjaxToken': $('#AjaxToken').val(),
-                    'CallAPI': 'Schemes_GetSchemeTable',
-                    'Scheme':$(this).val()
+                    'CallAPI': 'Users_GetUserData',
+                    'UserID':$(this).val()
                 }
             }).done(function (data) {
                 try {

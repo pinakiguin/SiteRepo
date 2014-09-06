@@ -7,135 +7,74 @@
 */
 
 root {
-  display: block;
+    display: block;
 }
 
 .formWrapper {
-  border: 3px solid #858585;
-  padding: 10px;
-  margin: 10px;
-  border-radius: 10px;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  background-color: #ebebeb;
-  display: inline-block;
-  width: 90%;
+    border: 2px solid #858585;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 10px;
+    background-color: #ebebeb;
+    display: block;
 }
-.formWrapper fieldset{
-  margin: 10px;
-  padding: 10px 5px 5px 0px;
-  border: 1px solid #858585;
-  border-radius: 10px;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  float: left;
-  transition: background .25s linear,box-shadow .25s linear;
+.formWrapper-Autofit {
+    float: left;
+    border: 1px solid #909090;
+    padding: 10px;
+    margin: 10px 10px 20px 0px;;
+    border-radius: 10px;
+    background-color: #ebebeb;
+    text-align: left;
+    display: inline-block;
 }
-.formWrapper input[type=text],
-.formWrapper input[type=email],
-.formWrapper input[type=number],
-.formWrapper textarea,
-.formWrapper input[type=password]{
-  font-size: 15px;
-  color: #858585;
-  box-shadow: 0 0 0px 2px #ebebeb;
-  -webkit-box-shadow: 0 0 0px 2px #ebebeb;
-  -moz-box-shadow: 0 0 0px 2px #ebebeb;
-  padding: 7px 27px 7px 9px;
-  border: 2px solid #d7d7d7;
-  display: block;
-  margin: 5px 5px 10px 5px;
-  clear: both;
+
+.form-TxtInput{
+    font-size: 15px;
+    color: #858585;
+    width: 179px;
+    box-shadow:0 2px #ebebeb;
+    padding: 7px 27px 7px 9px;
+    border: 2px solid #d7d7d7;
+    display: block;
+    margin: 5px 5px 10px 5px;
+    clear: both;
 }
-.formWrapper .chosen-container{
-  font-size: 15px;
-  color: #858585;
-  box-shadow: 0 0 0px 2px #ebebeb;
-  -webkit-box-shadow: 0 0 0px 2px #ebebeb;
-  -moz-box-shadow: 0 0 0px 2px #ebebeb;
-  display: block;
-  margin: 5px 5px 10px 5px;
-  clear: both;
+
+.form-TxtInput:focus{
+    border: 2px solid #858585;
+    border-radius: 2px;
 }
-.formWrapper label{
-  margin: 15px 0px 0px 5px;
+
+.formWrapper-h3{
+    text-align: left;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 3px solid #858585;
 }
-.formWrapper h3{
-  margin-bottom: 10px;
-  padding-bottom: 5px;
-  border-bottom: 3px solid #858585;
-}
-.formWrapper input[type=text]:focus, .formWrapper input[type=password]:focus {
-  border: 2px solid #858585;
-  border-radius: 2px;
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-}
+
 .formControl{
-  margin: 5px 0px 0px 0px;
-  text-align: right;
+    font-size: 12px;
+    margin: 5px;
+    text-align: right;
 }
-.formWrapper .FieldGroup {
-  float: left;
-  margin: 10px,10px,10px,10px;
-  padding: 10px,10px,10px,10px;
-}
-.formSliderLabel{
-  font-size: 20px;
+.FieldGroup {
+    float: left;
+    margin-left: 5px;
+    padding-left: 0px;
 }
 
-.jQuery-Slider{
-  margin: 20px 0px 20px 0px;
-  width: 500px;
-  background: white;
+#Msg:empty{
+    display: none;
 }
 
-#FinancialSlider .ui-slider-range-min{
-  background: #dc3912;
-}
-#PhysicalSlider .ui-slider-range-min{
-  background: #3366CC;
-}
-
-.StartDate, .AlotmentDate,.TenderDate,.WorkOrderDate,.ReportDate{
-  text-align: center;
-  width: 100px;
-}
-.ui-datepicker-trigger{
-  margin: -35px 0px 0px 135px;
-  padding: 0px;
-  float: left;
-}
-.myfont {
-  color: #660000;
-  font-family: Calibri, Georgia, "Book Antiqua", Verdana;
-  font-size:15px;
-  font-style: normal;
-  line-height: normal;
-  font-weight: bold;
-  font-variant: normal;
-  text-transform: none;
-  text-decoration: none;
-  margin: 0px;
-  padding-left: 0px;
-}
-.myHeader {
-  color: #660000;
-  font-family: Calibri, Georgia, "Book Antiqua", Verdana;
-  font-size:20px;
-  font-style: normal;
-  line-height: normal;
-  font-weight: bold;
-  font-variant: normal;
-  text-transform: none;
-  text-decoration: none;
-  margin: 0px;
-  padding-left: 0px;
-  text-underline-position:auto;
+input[type=search]{
+    border: 1px solid darkgray;
+    padding: 4px;
+    background-color: buttonface;
+    border-radius: 4px;
 }
 
-.formWrapper legend{
-  margin: 0px 0px 0px 20px;
-  font-size: 20px;
+.formWrapper-Clear{
+    clear: both;
 }
-

@@ -4,8 +4,7 @@ require_once __DIR__ . '/../lib.inc.php';
 WebLib::AuthSession();
 WebLib::Html5Header('Monthly Performance Report');
 WebLib::IncludeCSS();
-WebLib::IncludeCSS('css/forms.css');
-WebLib::IncludeCSS('css/Style.css');
+WebLib::IncludeCSS('mpr/css/forms.css');
 WebLib::JQueryInclude();
 WebLib::IncludeCSS('css/chosen.css');
 WebLib::IncludeJS('js/chosen.jquery.min.js');
@@ -20,7 +19,7 @@ require_once('SchemesData.php');
 <div class="TopPanel">
   <div class="LeftPanelSide"></div>
   <div class="RightPanelSide"></div>
-  <h1><?php echo AppTitle; ?></h1>
+  <h1><?php echo $_SESSION['UserName']; ?></h1>
 </div>
 <div class="Header"></div>
 <?php
@@ -46,8 +45,8 @@ WebLib::ShowMenuBar('MPR');
         </select>
       </div>
       <div class="FieldGroup">
-        <label for="txtAmount"><strong>Allotment Amount:</strong><br/>
-          <input id="txtAmount" type="text" name="txtAmount" class="form-TxtInput">
+        <label for="txtAmount"><strong>Amount:</strong><br/>
+          <input id="txtAmount" type="text" name="txtAmount" class="form-TxtInput" style="width: 90px;">
         </label>
       </div>
       <div class="FieldGroup">
@@ -57,14 +56,16 @@ WebLib::ShowMenuBar('MPR');
       </div>
       <div class="FieldGroup">
         <label for="txtDate"><strong>Date:</strong><br/>
-          <input id="txtDate" type="text" name="txtDate" class="form-TxtInput">
+          <input id="txtDate" type="text" name="txtDate" class="form-TxtInput datePicker">
         </label>
       </div>
       <div class="FieldGroup">
         <label for="txtYear"><strong>Year:</strong><br/>
-          <input id="txtYear" type="text" name="txtYear" class="form-TxtInput">
+          <input id="txtYear" type="text" name="txtYear" class="form-TxtInput" style="width: 60px;">
         </label>
       </div>
+      <div style="clear: both;"></div>
+      <hr/>
       <div class="formControl">
         <input type="Submit" value="Save Allotment" name="BtnScheme">
       </div>

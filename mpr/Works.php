@@ -4,101 +4,137 @@ require_once __DIR__ . '/../lib.inc.php';
 WebLib::AuthSession();
 WebLib::Html5Header('Monthly Performance Report');
 WebLib::IncludeCSS();
-//WebLib::CreateDB();
-WebLib::IncludeCSS('css/forms.css');
-WebLib::IncludeCSS('css/Style.css');
+WebLib::JQueryInclude();
+WebLib::IncludeCSS('mpr/css/forms.css');
 WebLib::IncludeCSS('css/chosen.css');
 WebLib::IncludeJS('js/chosen.jquery.min.js');
 
 if (isset($_POST['BtnWrk']) == 1) {
-  require_once __DIR__ . '/../lib.inc.php';
   $DB = new MySQLiDBHelper();
-  $insertdata['SchemeID'] = $_POST['Scheme'];
-  $insertdata['UserMapID'] = $_SESSION['UserMapID'];
-  $insertdata['AllotmentAmount'] = $_POST['txtAmount'];
-  $insertdata['WorkDescription'] = $_POST['txtWork'];
-  $insertdata['EstimatedCost'] = $_POST['txtCost'];
-  $SchemeID = $DB->insert(MySQL_Pre . 'MPR_Works', $insertdata);
+  $tableData['SchemeID'] = $_POST['Scheme'];
+  $tableData['MprMapID'] = $_POST['UserID'];
+  $tableData['AsOnDate'] = WebLib::ToDBDate($_POST['txtDate']);
+  $tableData['AllotmentAmount'] = $_POST['txtAmount'];
+  $tableData['WorkDescription'] = $_POST['txtWork'];
+  $tableData['EstimatedCost'] = $_POST['txtCost'];
+  $SchemeID = $DB->insert(MySQL_Pre . 'MPR_Works', $tableData);
 }
-
-$DB = new MySQLiDBHelper();
-$Schemes = $DB->get(MySQL_Pre . 'MPR_Schemes');
-$uid=$_SESSION['UserMapID'];
-$DB->where('UserMapID',$uid);
-$Works = $DB->get(MySQL_Pre . 'MPR_Works');
-$n = count($Works);
 ?>
+<script type="text/javascript">
+  $(function () {
+    $(".chzn").chosen({width: "200px",
+      no_results_text: "Oops, nothing found!"
+    });
+    $(".datePicker").datepicker().css({"width": "80px"});
+  });
+</script>
 </head>
 <body>
 <div class="TopPanel">
   <div class="LeftPanelSide"></div>
   <div class="RightPanelSide"></div>
-  <h1><?php echo AppTitle; ?></h1>
+  <h1><?php echo $_SESSION['UserName']; ?></h1>
 </div>
 <div class="Header"></div>
 <?php
 WebLib::ShowMenuBar('MPR');
 ?>
 <div class="content">
-  <fieldset>
-    <legend>
-      <h2>Work</h2></legend>
-    <div class="formWrapper-Autofit">
-  <fieldset>
-    <legend>
-  <h3>Create New Work</h3></legend>
-  <form action="" method="post">
-    Scheme Name:<select name="Scheme" class="form-TxtInput">
-      <option>--Select Scheme--</option>
-      <?php foreach ($Schemes as $SchemeID) {
-        echo '<option value="' . $SchemeID['SchemeID'] . '">' . $SchemeID['SchemeName'] . '</option>';
-      } ?>
-    </select>
-    <div class="FieldGroup">
-      <label for="txtWork"><strong>Description of Work:</strong><br/>
-        <input id="txtWork" type="text" name="txtWork" class="form-TxtInput">
-      </label>
-    </div>
-    <div class="FieldGroup">
-      <label for="txtCost"><strong>Estimated Cost:</strong><br/>
-        <input id="txtCost" type="text" name="txtCost" class="form-TxtInput">
-      </label>
-    </div>
-    <div class="FieldGroup">
-      <label for="txtAmount"><strong>Released Amount:</strong><br/>
-        <input id="txtAmount" type="text" name="txtAmount" class="form-TxtInput">
-      </label>
-    </div>
-   <input type="Submit" value="Create" name="BtnWrk">
-  </form></fieldset></div>
-    <div class="formWrapper-Autofit">
-      <fieldset>
-        <legend>
-          <h3>Work Lists</h3></legend>
-   <table border="1">
-    <tr>
-      <th>Scheme Name</th>
-      <th>Description of Work</th>
-      <th>Estimated Cost(Rs.)</th>
-      <th>Allotment Amount(Rs.)</th>
-      <th>Action</th>
-    </tr>
-    <?php $i = 0;
-    while ($i < $n) {
-      $schemeid = $Works[$i]['SchemeID'];
-      $DB->where('SchemeID', $schemeid);
-      $SchemeName = $DB->get(MySQL_Pre . 'MPR_Schemes'); ?>
+  <div class="formWrapper-Autofit">
+    <h3 class="formWrapper-h3">Sanction of Work for Schemes</h3>
+
+    <form action="" method="post">
+      <div class="FieldGroup">
+        <label for="Schemes"><strong>Scheme Name:</strong></label><br/>
+        <select id="Schemes" name="Scheme" class="chzn">
+          <option></option>
+          <?php
+          $DB = new MySQLiDBHelper();
+          $DB->where('UserMapID', $_SESSION['UserMapID']);
+          $Schemes = $DB->get(MySQL_Pre . 'MPR_Schemes');
+          foreach ($Schemes as $SchemeID) {
+            echo '<option value="' . $SchemeID['SchemeID'] . '">' . $SchemeID['SchemeName'] . '</option>';
+          } ?>
+        </select>
+      </div>
+      <div class="FieldGroup">
+        <label for="UserID"><strong>Executing Agency:</strong></label><br/>
+        <select id="UserID" name="UserID" class="chzn">
+          <option></option>
+          <?php
+          $DB = new MySQLiDBHelper();
+          $DB->where('CtrlMapID', $_SESSION['UserMapID']);
+          $Users = $DB->get(MySQL_Pre . 'MPR_MappedUsers');
+          foreach ($Users as $User) {
+            echo '<option value="' . $User['MprMapID'] . '">' . $User['UserName'] . '</option>';
+          } ?>
+        </select>
+      </div>
+      <br/>
+
+      <div class="FieldGroup">
+        <label for="txtWork"><strong>Description of Work:</strong><br/>
+          <input id="txtWork" type="text" name="txtWork" class="form-TxtInput" style="width: 380px;">
+        </label>
+      </div>
+      <br/>
+
+      <div class="FieldGroup">
+        <label for="txtCost"><strong>Estimated Cost:</strong><br/>
+          <input id="txtCost" type="text" name="txtCost" class="form-TxtInput" style="width: 80px;">
+        </label>
+      </div>
+      <div class="FieldGroup">
+        <label for="txtAmount"><strong>Amount Released:</strong><br/>
+          <input id="txtAmount" type="text" name="txtAmount" class="form-TxtInput" style="width: 80px;">
+        </label>
+      </div>
+      <div class="FieldGroup">
+        <label for="txtDate"><strong>As on Date:</strong><br/>
+          <input id="txtDate" type="text" name="txtDate" class="form-TxtInput datePicker">
+        </label>
+      </div>
+      <div style="clear: both;"></div>
+      <hr/>
+      <div class="formControl">
+        <input type="Submit" value="Create" name="BtnWrk">
+      </div>
+    </form>
+  </div>
+  <div class="formWrapper-Autofit">
+    <h3 class="formWrapper-h3">Sanctioned Works</h3>
+    <table rules="all" frame="box" width="100%" cellpadding="5" cellspacing="2">
       <tr>
-        <td><?php echo $SchemeName[0]['SchemeName'] ?></td>
-        <td><?php echo $Works[$i]['WorkDescription'] ?></td>
-        <td><?php echo $Works[$i]['EstimatedCost'] ?></td>
-        <td><?php echo $Works[$i]['AllotmentAmount'] ?></td>
-        <td><a href="savesessionwork.php?wid=<?php echo $Works[$i]['WorkID'] ?>">edit</a></td>
+        <th>Scheme Name</th>
+        <th>Description of Work</th>
+        <th>Estimated Cost(Rs.)</th>
+        <th>Fund Released(Rs.)</th>
+        <th>As on Date(YYYY-MM-DD)</th>
+        <th>Action</th>
       </tr>
-      <?php $i++;
-    } ?>
-  </table></fieldset></div>
-    </fieldset>
+      <?php
+
+      $DB = new MySQLiDBHelper();
+      $DB->where('CtrlMapID', $_SESSION['UserMapID']);
+      $UserWorks = $DB->get(MySQL_Pre . 'MPR_UserWorks');
+      foreach ($UserWorks as $Work) {
+        $DB->where('SchemeID', $Work['SchemeID']);
+        $Scheme = $DB->get(MySQL_Pre . 'MPR_Schemes');
+        $DB->where('WorkID', $Work['WorkID']);
+        $Works = $DB->get(MySQL_Pre . 'MPR_Works');
+        ?>
+        <tr>
+          <td><?php echo $Scheme[0]['SchemeName'] ?></td>
+          <td><?php echo $Work['Work'] ?></td>
+          <td><?php echo $Works[0]['EstimatedCost'] ?></td>
+          <td><?php echo $Works[0]['AllotmentAmount'] ?></td>
+          <td><?php echo $Works[0]['AllotmentAmount'] ?></td>
+          <td><a href="savesessionwork.php?wid=<?php echo $Work['WorkID'] ?>">edit</a></td>
+        </tr>
+      <?php
+      } ?>
+    </table>
+  </div>
 </div>
 <div class="pageinfo">
   <?php WebLib::PageInfo(); ?>
@@ -108,4 +144,3 @@ WebLib::ShowMenuBar('MPR');
 </div>
 </body>
 </html>
-
