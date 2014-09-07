@@ -4,7 +4,7 @@ $(function () {
             no_results_text: "Oops, nothing found!"
         });
 
-    $("#Scheme").chosen({width: "150px",
+    $("#Scheme").chosen({width: "250px",
         no_results_text: "Oops, nothing found!"
     }).change(function () {
         $.ajax({

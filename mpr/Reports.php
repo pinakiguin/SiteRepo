@@ -26,7 +26,7 @@ WebLib::ShowMenuBar('MPR');
     <form action="" method="post">
       <div class="FieldGroup">
         <label for="Scheme"><strong>Scheme:</strong></label><br/>
-        <select id="Scheme" name="Scheme" class="chzn">
+        <select id="Scheme" name="Scheme">
           <option></option>
           <?php
           $DB = new MySQLiDBHelper();
@@ -39,7 +39,7 @@ WebLib::ShowMenuBar('MPR');
       </div>
       <div class="FieldGroup">
         <label for="UserID"><strong>Executing Agency:</strong></label><br/>
-        <select id="UserID" name="UserID" class="chzn">
+        <select id="UserID" name="UserID">
           <option></option>
           <?php
           $DB = new MySQLiDBHelper();

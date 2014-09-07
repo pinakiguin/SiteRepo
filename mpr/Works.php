@@ -83,7 +83,7 @@ WebLib::ShowMenuBar('MPR');
         </label>
       </div>
       <div class="FieldGroup">
-        <label for="txtDate"><strong>As on Date:</strong><br/>
+        <label for="txtDate"><strong>Till Dated:</strong><br/>
           <input id="txtDate" type="text" name="txtDate" class="form-TxtInput datePicker">
         </label>
       </div>
