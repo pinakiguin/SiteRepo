@@ -32,7 +32,7 @@ $(function () {
                 data: {
                     'AjaxToken': $('#AjaxToken').val(),
                     'CallAPI': 'Schemes_GetSchemeTable',
-                    'Scheme':$(this).val()
+                    'Scheme': $(this).val()
                 }
             }).done(function (data) {
                 try {
@@ -47,5 +47,5 @@ $(function () {
             });
         }
     });
-    $(".datePicker").datepicker().css({"width":"80px"});
+    $(".datePicker").datepicker().css({"width": "80px"});
 });

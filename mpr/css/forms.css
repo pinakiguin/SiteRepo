@@ -18,6 +18,7 @@ root {
     background-color: #ebebeb;
     display: block;
 }
+
 .formWrapper-Autofit {
     float: left;
     border: 1px solid #909090;
@@ -29,11 +30,11 @@ root {
     display: inline-block;
 }
 
-.form-TxtInput{
+.form-TxtInput {
     font-size: 15px;
     color: #858585;
     width: 179px;
-    box-shadow:0 2px #ebebeb;
+    box-shadow: 0 2px #ebebeb;
     padding: 7px 27px 7px 9px;
     border: 2px solid #d7d7d7;
     display: block;
@@ -41,40 +42,41 @@ root {
     clear: both;
 }
 
-.form-TxtInput:focus{
+.form-TxtInput:focus {
     border: 2px solid #858585;
     border-radius: 2px;
 }
 
-.formWrapper-h3{
+.formWrapper-h3 {
     text-align: left;
     margin-bottom: 10px;
     padding-bottom: 5px;
     border-bottom: 3px solid #858585;
 }
 
-.formControl{
+.formControl {
     font-size: 12px;
     margin: 5px;
     text-align: right;
 }
+
 .FieldGroup {
     float: left;
     margin-left: 5px;
     padding-left: 0px;
 }
 
-#Msg:empty{
+#Msg:empty {
     display: none;
 }
 
-input[type=search]{
+input[type=search] {
     border: 1px solid darkgray;
     padding: 4px;
     background-color: buttonface;
     border-radius: 4px;
 }
 
-.formWrapper-Clear{
+.formWrapper-Clear {
     clear: both;
 }

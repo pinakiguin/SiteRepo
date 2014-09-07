@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../lib.inc.php';
 
 WebLib::AuthSession();
-if(WebLib::GetVal($_POST,'UserID')==='NewUser'){
+if (WebLib::GetVal($_POST, 'UserID') === 'NewUser') {
   header('Location: ../users/Users.php');
 }
 WebLib::Html5Header('Monthly Performance Report');
@@ -37,7 +37,7 @@ WebLib::ShowMenuBar('MPR');
           <?php
           $DB = new MySQLiDBHelper();
           $Users = $DB->rawQuery('Select `UserName`, `UserMapID` '
-            .'FROM '. MySQL_Pre . 'Users Where `CtrlMapID`>=?',array($_SESSION['UserMapID']));
+            . 'FROM ' . MySQL_Pre . 'Users Where `CtrlMapID`>=?', array($_SESSION['UserMapID']));
           foreach ($Users as $User) {
             echo '<option value="' . $User['UserMapID'] . '">' . $User['UserName'] . '</option>';
           } ?>

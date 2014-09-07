@@ -16,7 +16,7 @@ $(function () {
                 data: {
                     'AjaxToken': $('#AjaxToken').val(),
                     'CallAPI': 'Users_GetUserData',
-                    'UserID':$(this).val()
+                    'UserID': $(this).val()
                 }
             }).done(function (data) {
                 try {
@@ -31,5 +31,5 @@ $(function () {
             });
         }
     });
-    $(".datePicker").datepicker().css({"width":"80px"});
+    $(".datePicker").datepicker().css({"width": "80px"});
 });

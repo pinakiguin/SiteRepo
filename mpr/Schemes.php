@@ -74,8 +74,8 @@ WebLib::ShowMenuBar('MPR');
   </div>
   <div id="createNewScheme" title="Create New Scheme">
     <form id="frmCreateScheme" action="" method="POST">
-        <label for="txtSchemeName"><strong>Scheme Name:</strong></label>
-        <input id="txtSchemeName" type="text" name="txtSchemeName" class="form-TxtInput">
+      <label for="txtSchemeName"><strong>Scheme Name:</strong></label>
+      <input id="txtSchemeName" type="text" name="txtSchemeName" class="form-TxtInput">
       <input type="hidden" name="BtnCreScheme" value="1"/>
     </form>
   </div>

@@ -13,6 +13,8 @@ function CreateSchemas() {
   $ObjDB->ddlQuery(SQLDefs('MPR_WorkerSchemes'));
   $ObjDB->ddlQuery(SQLDefs('MPR_UserSchemeAllotments'));
   $ObjDB->ddlQuery(SQLDefs('MPR_SchemeWiseExpenditure'));
+  $ObjDB->ddlQuery(SQLDefs('MPR_SchemeWiseAllotments'));
+  $ObjDB->ddlQuery(SQLDefs('MPR_SchemeWiseFunds'));
   unset($ObjDB);
 }
 
@@ -119,13 +121,20 @@ function SQLDefs($ObjectName) {
         . ' on(`M`.`UserMapID` = `U`.`UserMapID`));';
       break;
 
+    /*
+     * COALESCE, an SQL command that selects the first non-null from a range of values
+     */
     case 'MPR_UserWorks':
       $SqlDB = 'CREATE OR REPLACE VIEW `' . MySQL_Pre . $ObjectName . '` AS '
         . 'select `W`.`WorkID` AS `WorkID`,`W`.`WorkDescription` AS `Work`,'
         . '`W`.`SchemeID` AS `SchemeID`,`M`.`UserMapID` AS `UserMapID`,'
-        . '`M`.`CtrlMapID` AS `CtrlMapID`'
+        . '`M`.`CtrlMapID` AS `CtrlMapID`,`S`.`SchemeName` AS `SchemeName`,'
+        . '`W`.`AllotmentAmount` AS `Allotments`,COALESCE(SUM(`P`.`ExpenditureAmount`), 0) AS `Expenditure`,'
+        . '`W`.`AllotmentAmount`-COALESCE(SUM(`P`.`ExpenditureAmount`), 0) AS `Balance`'
         . ' from (`' . MySQL_Pre . 'MPR_UserMaps` `M` join `' . MySQL_Pre . 'MPR_Works` `W`'
-        . ' on(`M`.`MprMapID` = `W`.`MprMapID`));';
+        . ' on(`M`.`MprMapID` = `W`.`MprMapID`)) join `' . MySQL_Pre . 'MPR_Schemes` `S`'
+        . ' on(`S`.`SchemeID`=`W`.`SchemeID`) left join `' . MySQL_Pre . 'MPR_Progress` `P`'
+        . ' on(`P`.`WorkID`=`W`.`WorkID`) Group By `W`.`WorkID`';
       break;
 
     case 'MPR_WorkerSchemes':
@@ -140,21 +149,39 @@ function SQLDefs($ObjectName) {
 
     case 'MPR_SchemeWiseExpenditure':
       $SqlDB = 'CREATE OR REPLACE VIEW `' . MySQL_Pre . $ObjectName . '` AS '
-        . 'select `A`.`Year` AS `Year`,'
-        . '`S`.`SchemeID` AS `SchemeID`,`S`.`SchemeName` AS `SchemeName`,'
-        . 'sum(`A`.`Amount`) AS `Amount`,'
-        . 'max(`P`.`ExpenditureAmount`) AS `ExpenditureAmount` '
-        . 'from ((`' . MySQL_Pre . 'MPR_SchemeAllotments` `A` join '
-        . '(`' . MySQL_Pre . 'MPR_Works` `W` left join `' . MySQL_Pre . 'MPR_Progress` `P`'
-        . ' on((`W`.`WorkID` = `P`.`WorkID`)))'
-        . ' on((`A`.`SchemeID` = `W`.`SchemeID`))) join'
-        . ' `' . MySQL_Pre . 'MPR_Schemes` `S` on((`A`.`SchemeID` = `S`.`SchemeID`)))'
-        . ' group by `A`.`Year`,`S`.`SchemeID`,`S`.`SchemeName`;';
+        . 'select `A`.`Year` AS `Year`,`S`.`SchemeID` AS `SchemeID`,'
+        . '`S`.`SchemeName` AS `SchemeName`,COALESCE(SUM(`P`.`ExpenditureAmount`), 0) AS `Expense` '
+        . 'from (((`' . MySQL_Pre . 'MPR_Schemes` `S`'
+        . ' LEFT JOIN `' . MySQL_Pre . 'MPR_SchemeAllotments` `A` on(`A`.`SchemeID` = `S`.`SchemeID`))'
+        . ' LEFT JOIN `' . MySQL_Pre . 'MPR_Works` `W` on(`W`.`SchemeID` = `S`.`SchemeID`))'
+        . ' LEFT JOIN `' . MySQL_Pre . 'MPR_Progress` `P` on(`W`.`WorkID` = `P`.`WorkID`))'
+        . ' GROUP BY `A`.`Year`,`S`.`SchemeID`,`S`.`SchemeName`;';
+      break;
+
+    case 'MPR_SchemeWiseAllotments':
+      $SqlDB = 'CREATE OR REPLACE VIEW `' . MySQL_Pre . $ObjectName . '` AS '
+        . 'select `A`.`Year` AS `Year`,`S`.`SchemeID` AS `SchemeID`,'
+        . '`S`.`SchemeName` AS `SchemeName`,SUM(`A`.`Amount`) AS `Funds`'
+        . ' from `' . MySQL_Pre . 'MPR_Schemes` `S`'
+        . ' LEFT JOIN `' . MySQL_Pre . 'MPR_SchemeAllotments` `A` on(`A`.`SchemeID` = `S`.`SchemeID`)'
+        . ' GROUP BY `A`.`Year`,`S`.`SchemeID`,`S`.`SchemeName`;';
+      break;
+
+    case 'MPR_SchemeWiseFunds':
+      $SqlDB = 'CREATE OR REPLACE VIEW `' . MySQL_Pre . $ObjectName . '` AS '
+        . 'select `A`.`Year` AS `Year`,`A`.`SchemeID` AS `SchemeID`,'
+        . '`A`.`SchemeName` AS `SchemeName`,`Funds`,`Expense`, '
+        . ' `A`.`Funds`-`E`.`Expense` AS `Balance`'
+        . ' from `' . MySQL_Pre . 'MPR_SchemeWiseAllotments` `A`'
+        . ' LEFT JOIN `' . MySQL_Pre . 'MPR_SchemeWiseExpenditure` `E` '
+        . ' on((`A`.`SchemeID` = `E`.`SchemeID`) AND (`A`.`Year`=`E`.`Year`))'
+        . ' GROUP BY `A`.`Year`,`A`.`SchemeID`,`A`.`SchemeName`;';
       break;
 
   }
   return $SqlDB;
 }
+
 ?>
 
 

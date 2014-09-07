@@ -8,6 +8,7 @@ WebLib::JQueryInclude();
 WebLib::IncludeCSS('mpr/css/forms.css');
 WebLib::IncludeCSS('css/chosen.css');
 WebLib::IncludeJS('js/chosen.jquery.min.js');
+WebLib::IncludeJS('mpr/js/Works.js');
 
 if (isset($_POST['BtnWrk']) == 1) {
   $DB = new MySQLiDBHelper();
@@ -20,14 +21,6 @@ if (isset($_POST['BtnWrk']) == 1) {
   $SchemeID = $DB->insert(MySQL_Pre . 'MPR_Works', $tableData);
 }
 ?>
-<script type="text/javascript">
-  $(function () {
-    $(".chzn").chosen({width: "200px",
-      no_results_text: "Oops, nothing found!"
-    });
-    $(".datePicker").datepicker().css({"width": "80px"});
-  });
-</script>
 </head>
 <body>
 <div class="TopPanel">
@@ -45,21 +38,21 @@ WebLib::ShowMenuBar('MPR');
 
     <form action="" method="post">
       <div class="FieldGroup">
-        <label for="Schemes"><strong>Scheme Name:</strong></label><br/>
-        <select id="Schemes" name="Scheme" class="chzn">
+        <label for="Scheme"><strong>Scheme:</strong></label><br/>
+        <select id="Scheme" name="Scheme">
           <option></option>
           <?php
           $DB = new MySQLiDBHelper();
           $DB->where('UserMapID', $_SESSION['UserMapID']);
           $Schemes = $DB->get(MySQL_Pre . 'MPR_Schemes');
-          foreach ($Schemes as $SchemeID) {
-            echo '<option value="' . $SchemeID['SchemeID'] . '">' . $SchemeID['SchemeName'] . '</option>';
+          foreach ($Schemes as $Scheme) {
+            echo '<option value="' . $Scheme['SchemeID'] . '">' . $Scheme['SchemeName'] . '</option>';
           } ?>
         </select>
       </div>
       <div class="FieldGroup">
         <label for="UserID"><strong>Executing Agency:</strong></label><br/>
-        <select id="UserID" name="UserID" class="chzn">
+        <select id="UserID" name="UserID">
           <option></option>
           <?php
           $DB = new MySQLiDBHelper();
@@ -74,7 +67,7 @@ WebLib::ShowMenuBar('MPR');
 
       <div class="FieldGroup">
         <label for="txtWork"><strong>Description of Work:</strong><br/>
-          <input id="txtWork" type="text" name="txtWork" class="form-TxtInput" style="width: 380px;">
+          <input id="txtWork" type="text" name="txtWork" class="form-TxtInput" style="width: 410px;">
         </label>
       </div>
       <br/>
@@ -85,7 +78,7 @@ WebLib::ShowMenuBar('MPR');
         </label>
       </div>
       <div class="FieldGroup">
-        <label for="txtAmount"><strong>Amount Released:</strong><br/>
+        <label for="txtAmount"><strong>Funds Released:</strong><br/>
           <input id="txtAmount" type="text" name="txtAmount" class="form-TxtInput" style="width: 80px;">
         </label>
       </div>
@@ -101,40 +94,8 @@ WebLib::ShowMenuBar('MPR');
       </div>
     </form>
   </div>
-  <div class="formWrapper-Autofit">
-    <h3 class="formWrapper-h3">Sanctioned Works</h3>
-    <table rules="all" frame="box" width="100%" cellpadding="5" cellspacing="2">
-      <tr>
-        <th>Scheme Name</th>
-        <th>Description of Work</th>
-        <th>Estimated Cost(Rs.)</th>
-        <th>Fund Released(Rs.)</th>
-        <th>As on Date(YYYY-MM-DD)</th>
-        <th>Action</th>
-      </tr>
-      <?php
-
-      $DB = new MySQLiDBHelper();
-      $DB->where('CtrlMapID', $_SESSION['UserMapID']);
-      $UserWorks = $DB->get(MySQL_Pre . 'MPR_UserWorks');
-      foreach ($UserWorks as $Work) {
-        $DB->where('SchemeID', $Work['SchemeID']);
-        $Scheme = $DB->get(MySQL_Pre . 'MPR_Schemes');
-        $DB->where('WorkID', $Work['WorkID']);
-        $Works = $DB->get(MySQL_Pre . 'MPR_Works');
-        ?>
-        <tr>
-          <td><?php echo $Scheme[0]['SchemeName'] ?></td>
-          <td><?php echo $Work['Work'] ?></td>
-          <td><?php echo $Works[0]['EstimatedCost'] ?></td>
-          <td><?php echo $Works[0]['AllotmentAmount'] ?></td>
-          <td><?php echo $Works[0]['AllotmentAmount'] ?></td>
-          <td><a href="savesessionwork.php?wid=<?php echo $Work['WorkID'] ?>">edit</a></td>
-        </tr>
-      <?php
-      } ?>
-    </table>
-  </div>
+  <div class="formWrapper-Clear"></div>
+  <div id="DataTable"></div>
 </div>
 <div class="pageinfo">
   <?php WebLib::PageInfo(); ?>

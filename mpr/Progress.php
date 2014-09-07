@@ -7,6 +7,7 @@ WebLib::JQueryInclude();
 WebLib::IncludeCSS();
 WebLib::IncludeCSS('css/chosen.css');
 WebLib::IncludeJS('js/chosen.jquery.min.js');
+WebLib::IncludeJS('mpr/js/Progress.js');
 WebLib::IncludeCSS('mpr/css/forms.css');
 
 if (isset($_POST['BtnPrg']) == 1) {
@@ -21,30 +22,6 @@ if (isset($_POST['BtnPrg']) == 1) {
   $SchemeID = $DB->insert(MySQL_Pre . 'MPR_Progress', $tableData);
 }
 ?>
-<script type="text/javascript">
-  $(function () {
-    $('.chzn')
-      .chosen({width: "200px",
-        no_results_text: "Oops, nothing found!"
-      });
-    $("#cmbScheme").change(function () {
-      $("#frmProgress").submit();
-    });
-
-    $(".datePick").datepicker().css({"width": "80px"});
-
-    $("#PhyPrgSlider").slider({
-      range: "min",
-      value: 37,
-      min: 1,
-      max: 100,
-      slide: function (event, ui) {
-        $("#PhyPrgValue").val(ui.value);
-        $("#PhyPrgLbl").html(ui.value);
-      }
-    }).next().find('.ui-slider-handle').hide();
-  });
-</script>
 </head>
 <body>
 <div class="TopPanel">
@@ -56,7 +33,7 @@ if (isset($_POST['BtnPrg']) == 1) {
 <?php
 WebLib::ShowMenuBar('MPR');
 ?>
-<div class="content">
+<div class="content" style="display: block;">
   <div class="formWrapper-Autofit">
     <h3 class="formWrapper-h3">Progress Report</h3>
 
@@ -81,14 +58,20 @@ WebLib::ShowMenuBar('MPR');
       </div>
       <div class="FieldGroup">
         <label for="Work"><strong>Work:</strong></label><br/>
-        <select id="Work" name="Work" class="chzn">
+        <select id="Work" name="Work">
           <option></option>
           <?php
           $DB = new MySQLiDBHelper();
           $DB->where('UserMapID', $_SESSION['UserMapID']);
-          $Schemes = $DB->get(MySQL_Pre . 'MPR_UserWorks');
-          foreach ($Schemes as $SchemeID) {
-            echo '<option value="' . $SchemeID['WorkID'] . '">' . $SchemeID['Work'] . '</option>';
+          $DB->where('SchemeID', WebLib::GetVal($_POST, 'Scheme'));
+          $Works = $DB->get(MySQL_Pre . 'MPR_UserWorks');
+          foreach ($Works as $Work) {
+            $Sel = '';
+            if ($Work['WorkID'] == WebLib::GetVal($_POST, 'Work')) {
+              $Sel = 'Selected';
+            }
+            echo '<option value="' . $Work['WorkID'] . '" ' . $Sel . '>'
+              . $Work['SchemeName'] . ' - ' . $Work['Work'] . '</option>';
           } ?>
         </select>
       </div>
@@ -97,6 +80,7 @@ WebLib::ShowMenuBar('MPR');
         <label for="PhyPrgSlider" style="padding-bottom: 10px;">
           <strong>Physical Progress:(<span id="PhyPrgLbl"></span>%)</strong>
         </label>
+
         <div id="PhyPrgSlider"></div>
         <input type="hidden" id="PhyPrgValue" name="PhyPrgValue">
       </div>
@@ -108,7 +92,19 @@ WebLib::ShowMenuBar('MPR');
       </div>
       <div class="FieldGroup">
         <label for="txtBalance"><strong>Balance:</strong><br/>
-          <input id="txtBalance" type="text" name="txtBalance" class="form-TxtInput">
+          <?php
+          $DB = new MySQLiDBHelper();
+          $DB->where('UserMapID', $_SESSION['UserMapID']);
+          $DB->where('WorkID', WebLib::GetVal($_POST, 'Work'));
+          $PrgBalances = $DB->get(MySQL_Pre . 'MPR_UserWorks');
+          $Balance = 0;
+          if (count($PrgBalances) > 0) {
+            $Balance = WebLib::GetVal($PrgBalances[0], 'Balance');
+          }
+          ?>
+          <input id="txtBalance" type="text" name="txtBalance"
+                 value="<?php echo $Balance; ?>"
+                 class="form-TxtInput">
         </label>
       </div>
       <div style="clear: both;"></div>
@@ -133,35 +129,30 @@ WebLib::ShowMenuBar('MPR');
     <h3 class="formWrapper-h3">Progress Details</h3>
     <table rules="all" frame="box" width="100%" cellpadding="5" cellspacing="2">
       <tr>
-        <th>Description of Work</th>
-        <th>Expenditure Amount</th>
+        <th>Report Date</th>
         <th>Balance</th>
-        <th>date</th>
+        <th>Expenditure Amount</th>
+        <th>Physical Progress(%)</th>
         <th>Remarks</th>
-        <th>Action</th>
       </tr>
       <?php
       $DB = new MySQLiDBHelper();
-      $DB->where('UserMapID', $_SESSION['UserMapID']);
-      $DB->where('SchemeID', WebLib::GetVal($_POST, 'Scheme'));
-      $Works = $DB->get(MySQL_Pre . 'MPR_UserWorks');
-      foreach ($Works as $Work) {
-        $DB->where('WorkID', $Work['WorkID']);
-        $Progress = $DB->get(MySQL_Pre . 'MPR_Progress'); ?>
+      $DB->where('WorkID', WebLib::GetVal($_POST, 'Work'));
+      $PrgReports = $DB->get(MySQL_Pre . 'MPR_Progress');
+      foreach ($PrgReports as $PrgReport) {
+        ?>
         <tr>
-          <td><?php echo $Work['Work']; ?></td>
-          <td><?php echo $Progress[0]['ExpenditureAmount']; ?></td>
-          <td><?php echo $Progress[0]['Balance']; ?></td>
-          <td><?php echo $Progress[0]['ReportDate']; ?></td>
-          <td><?php echo $Progress[0]['Remarks']; ?></td>
-          <td><a href="savesessionprg.php?pid=<?php echo $Progress[0]['ProgressID'] ?>">Details</a></td>
+          <td><?php echo $PrgReport['ReportDate']; ?></td>
+          <td><?php echo $PrgReport['Balance']; ?></td>
+          <td><?php echo $PrgReport['ExpenditureAmount']; ?></td>
+          <td><?php echo $PrgReport['Progress']; ?> %</td>
+          <td><?php echo $PrgReport['Remarks']; ?></td>
         </tr>
       <?php
       } ?>
     </table>
-
   </div>
-
+  <div class="formWrapper-Clear"></div>
 </div>
 <div class="pageinfo">
   <?php WebLib::PageInfo(); ?>
