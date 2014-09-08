@@ -819,18 +819,22 @@ class WebLib {
     // Printing results in HTML
     echo '<table rules="all" frame="box" width="100%" cellpadding="5" cellspacing="2">';
     $Header=true;
+    $i=1;
     foreach($Rows as $Row){
       if($Header){
+        echo '<th>Sl No.</th>';
         foreach($Row as $Field => $Value){
           echo '<th>' . $Field . '</th>';
         }
       }
       $Header=false;
-      echo "\t<tr>\n";
+      echo "\t<tr>\n<td>" . $i . "</td>";
+
       foreach($Row as $Value){
         echo "\t\t<td>" . $Value . "</td>\n";
       }
       echo "\t</tr>\n";
+      $i++;
     }
     echo "</table>\n";
   }

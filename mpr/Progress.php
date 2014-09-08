@@ -13,13 +13,19 @@ WebLib::IncludeCSS('mpr/css/forms.css');
 if (isset($_POST['BtnPrg']) == 1) {
   require_once __DIR__ . '/../lib.inc.php';
   $DB = new MySQLiDBHelper();
-  $tableData['WorkID'] = $_POST['Work'];
+  $tableData['WorkID'] = WebLib::GetVal($_POST,'Work');
   $tableData['ExpenditureAmount'] = $_POST['txtAmount'];
   $tableData['Progress'] = $_POST['PhyPrgValue'];
   $tableData['Balance'] = $_POST['txtBalance'];
   $tableData['ReportDate'] = WebLib::ToDBDate($_POST['txtDate']);
   $tableData['Remarks'] = $_POST['txtRemark'];
   $SchemeID = $DB->insert(MySQL_Pre . 'MPR_Progress', $tableData);
+  unset($tableData);
+  $tableData['TenderDate'] = WebLib::ToDBDate($_POST['txtTenderDate']);
+  $tableData['WorkOrderDate'] = WebLib::ToDBDate($_POST['txtWorkOrderDate']);
+  $DB->where('WorkID',WebLib::GetVal($_POST,'Work'));
+  $SchemeID = $DB->update(MySQL_Pre . 'MPR_Works', $tableData);
+  unset($tableData);
 }
 ?>
 </head>
@@ -45,7 +51,7 @@ WebLib::ShowMenuBar('MPR');
           <?php
           $DB = new MySQLiDBHelper();
           $DB->where('UserMapID', $_SESSION['UserMapID']);
-          $Schemes = $DB->get(MySQL_Pre . 'MPR_WorkerSchemes');
+          $Schemes = $DB->get(MySQL_Pre . 'MPR_ViewWorkerSchemes');
           foreach ($Schemes as $Scheme) {
             $Sel = '';
             if ($Scheme['SchemeID'] == WebLib::GetVal($_POST, 'Scheme')) {
@@ -60,19 +66,6 @@ WebLib::ShowMenuBar('MPR');
         <label for="Work"><strong>Work:</strong></label><br/>
         <select id="Work" name="Work">
           <option></option>
-          <?php
-          $DB = new MySQLiDBHelper();
-          $DB->where('UserMapID', $_SESSION['UserMapID']);
-          $DB->where('SchemeID', WebLib::GetVal($_POST, 'Scheme'));
-          $Works = $DB->get(MySQL_Pre . 'MPR_UserWorks');
-          foreach ($Works as $Work) {
-            $Sel = '';
-            if ($Work['WorkID'] == WebLib::GetVal($_POST, 'Work')) {
-              $Sel = 'Selected';
-            }
-            echo '<option value="' . $Work['WorkID'] . '" ' . $Sel . '>'
-              . $Work['SchemeName'] . ' - ' . $Work['Work'] . '</option>';
-          } ?>
         </select>
       </div>
       <div style="clear: both;"></div>
@@ -96,7 +89,7 @@ WebLib::ShowMenuBar('MPR');
           $DB = new MySQLiDBHelper();
           $DB->where('UserMapID', $_SESSION['UserMapID']);
           $DB->where('WorkID', WebLib::GetVal($_POST, 'Work'));
-          $PrgBalances = $DB->get(MySQL_Pre . 'MPR_UserWorks');
+          $PrgBalances = $DB->get(MySQL_Pre . 'MPR_ViewUserWorks');
           $Balance = 0;
           if (count($PrgBalances) > 0) {
             $Balance = WebLib::GetVal($PrgBalances[0], 'Balance');
@@ -105,6 +98,16 @@ WebLib::ShowMenuBar('MPR');
           <input id="txtBalance" type="text" name="txtBalance"
                  value="<?php echo $Balance; ?>"
                  class="form-TxtInput">
+        </label>
+      </div>
+      <div class="FieldGroup">
+        <label for="txtTenderDate"><strong>Tender Date:</strong><br/>
+          <input id="txtTenderDate" type="text" name="txtTenderDate" class="form-TxtInput datePick">
+        </label>
+      </div>
+      <div class="FieldGroup">
+        <label for="txtWorkOrderDate"><strong>Work Order Date:</strong><br/>
+          <input id="txtWorkOrderDate" type="text" name="txtWorkOrderDate" class="form-TxtInput datePick">
         </label>
       </div>
       <div style="clear: both;"></div>
@@ -125,33 +128,9 @@ WebLib::ShowMenuBar('MPR');
       </div>
     </form>
   </div>
-  <div class="formWrapper-Autofit">
-    <h3 class="formWrapper-h3">Progress Details</h3>
-    <table rules="all" frame="box" width="100%" cellpadding="5" cellspacing="2">
-      <tr>
-        <th>Report Date</th>
-        <th>Balance</th>
-        <th>Expenditure Amount</th>
-        <th>Physical Progress(%)</th>
-        <th>Remarks</th>
-      </tr>
-      <?php
-      $DB = new MySQLiDBHelper();
-      $DB->where('WorkID', WebLib::GetVal($_POST, 'Work'));
-      $PrgReports = $DB->get(MySQL_Pre . 'MPR_Progress');
-      foreach ($PrgReports as $PrgReport) {
-        ?>
-        <tr>
-          <td><?php echo $PrgReport['ReportDate']; ?></td>
-          <td><?php echo $PrgReport['Balance']; ?></td>
-          <td><?php echo $PrgReport['ExpenditureAmount']; ?></td>
-          <td><?php echo $PrgReport['Progress']; ?> %</td>
-          <td><?php echo $PrgReport['Remarks']; ?></td>
-        </tr>
-      <?php
-      } ?>
-    </table>
-  </div>
+  <div id="ProgressTable"></div>
+  <div class="formWrapper-Clear"></div>
+  <div id="DataTable"></div>
   <div class="formWrapper-Clear"></div>
 </div>
 <div class="pageinfo">

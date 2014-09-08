@@ -7,7 +7,7 @@ switch (WebLib::GetVal($_POST, 'CallAPI')) {
     $DB = new MySQLiDBHelper();
     $DB->where('CtrlMapID', $_SESSION['UserMapID']);
     WebLib::ShowTable($DB->query('Select `UserName` AS `Scheme Users`'
-      . 'from ' . MySQL_Pre . 'MPR_MappedUsers'));
+      . 'from ' . MySQL_Pre . 'MPR_ViewMappedUsers'));
     unset($DB);
     break;
 
@@ -17,7 +17,7 @@ switch (WebLib::GetVal($_POST, 'CallAPI')) {
     $DB->where('SchemeID', WebLib::GetVal($_POST, 'Scheme'));
     WebLib::ShowTable($DB->query('Select Year, SchemeName, Amount, OrderNo, '
       . 'Date as `Order Date(YYYY-MM-DD)` '
-      . 'from ' . MySQL_Pre . 'MPR_UserSchemeAllotments'));
+      . 'from ' . MySQL_Pre . 'MPR_ViewUserSchemeAllotments'));
     unset($DB);
     break;
 
@@ -25,8 +25,7 @@ switch (WebLib::GetVal($_POST, 'CallAPI')) {
     $DB = new MySQLiDBHelper();
     $DB->where('SchemeID', WebLib::GetVal($_POST, 'Scheme'));
     WebLib::ShowTable($DB->query('Select `Year`,`SchemeName`,`Funds`,`Expense`,`Balance` '
-      . ' '
-      . 'from ' . MySQL_Pre . 'MPR_SchemeWiseFunds'));
+      . 'from ' . MySQL_Pre . 'MPR_ViewSchemeWiseFunds'));
     unset($DB);
     break;
 
@@ -35,9 +34,9 @@ switch (WebLib::GetVal($_POST, 'CallAPI')) {
     $DB->where('SchemeID', WebLib::GetVal($_POST, 'Scheme'));
     $DB->where('CtrlMapID', $_SESSION['UserMapID']);
     $DB->where('UserMapID', WebLib::GetVal($_POST, 'User'));
-    WebLib::ShowTable($DB->query('Select `SchemeName`,`Work`,`Allotments`,`Expenditure`,`Balance` '
-      . ' '
-      . 'from ' . MySQL_Pre . 'MPR_UserWorks'));
+    WebLib::ShowTable($DB->query('Select `SchemeName`,`Work`,`EstimatedCost`,`Funds`, '
+      . ' `Expenses`,`Balance`,`Progress`,`TenderDate`,`WorkOrderDate`,`WorkRemarks`'
+      . 'from ' . MySQL_Pre . 'MPR_ViewUserWorks'));
     unset($DB);
     break;
 
@@ -47,36 +46,119 @@ switch (WebLib::GetVal($_POST, 'CallAPI')) {
       <h3 class="formWrapper-h3">Sanctioned Works</h3>
       <table rules="all" frame="box" width="100%" cellpadding="5" cellspacing="2">
         <tr>
+          <td>Sl No.</td>
           <th>Description of Work</th>
           <th>Estimated Cost(Rs.)</th>
           <th>Fund Released(Rs.)</th>
-          <th>Till Dated(YYYY-MM-DD)</th>
           <th>Fund Utilised(Rs.)</th>
           <th>Balance(Rs.)</th>
-          <th>Action</th>
+          <th>Physical Progress(%)</th>
+          <th>Tender Date</th>
+          <th>Work Order Date</th>
+          <th>Remarks</th>
         </tr>
         <?php
         $DB = new MySQLiDBHelper();
         $DB->where('CtrlMapID', $_SESSION['UserMapID']);
-        $DB->where('MprMapID', WebLib::GetVal($_POST, 'User'));
-        $Users = $DB->get(MySQL_Pre . 'MPR_MappedUsers');
-
-        if (count($Users) > 0) {
-          $DB->where('UserMapID', $Users[0]['UserMapID']);
+        $MprMapID = WebLib::GetVal($_POST, 'MprMapID');
+        if ($MprMapID > 0) {
+          $DB->where('MprMapID', $MprMapID);
         }
-        $DB->where('CtrlMapID', $_SESSION['UserMapID']);
         $DB->where('SchemeID', WebLib::GetVal($_POST, 'Scheme'));
-        $UserWorks = $DB->get(MySQL_Pre . 'MPR_UserWorks');
+        $UserWorks = $DB->get(MySQL_Pre . 'MPR_ViewUserWorks');
+        $i = 1;
         foreach ($UserWorks as $Work) {
           ?>
           <tr>
+            <td><?php echo $i; ?></td>
             <td><?php echo $Work['Work'] ?></td>
             <td><?php echo $Work['EstimatedCost'] ?></td>
-            <td><?php echo $Work['Allotments'] ?></td>
-            <td><?php echo $Work['AsOnDate'] ?></td>
-            <td><?php echo $Work['Expenditure'] ?></td>
+            <td><?php echo $Work['Funds'] ?></td>
+            <td><?php echo $Work['Expenses'] ?></td>
             <td><?php echo $Work['Balance'] ?></td>
-            <td><a href="savesessionwork.php?wid=<?php echo $Work['WorkID'] ?>">Release More Funds</a></td>
+            <td><?php echo $Work['Progress'] ?></td>
+            <td><?php echo $Work['TenderDate'] ?></td>
+            <td><?php echo $Work['WorkOrderDate'] ?></td>
+            <td><?php echo $Work['WorkRemarks'] ?></td>
+          </tr>
+          <?php
+          $i++;
+        } ?>
+      </table>
+    </div>
+    <?php
+    break;
+
+  case 'Works_GetSanctions':
+    ?>
+    <div class="formWrapper-Autofit">
+      <h3 class="formWrapper-h3">Sanctioned Funds</h3>
+      <?php
+      $DB = new MySQLiDBHelper();
+      $DB->where('WorkID', WebLib::GetVal($_POST, 'WorkID'));
+      $UserWorks = $DB->query('Select `SanctionOrderNo` AS `Order No.`, '
+        . '`SanctionDate` AS `Sanction/Approval Date`, `SanctionAmount` AS `Amount`, '
+        . '`SanctionRemarks` AS `Remarks` FROM ' . MySQL_Pre . 'MPR_Sanctions');
+      WebLib::ShowTable($UserWorks);
+      ?>
+    </div>
+    <?php
+    break;
+
+  case 'Works_GetWorksForSanction':
+    $DB = new MySQLiDBHelper();
+    $DB = new MySQLiDBHelper();
+    $DB->where('SchemeID', WebLib::GetVal($_POST, 'Scheme'));
+    $DB->where('MprMapID', WebLib::GetVal($_POST, 'MprMapID'));
+    $Works = $DB->get(MySQL_Pre . 'MPR_Works');
+    echo '<option></option>';
+    foreach ($Works as $Work) {
+      echo '<option value="' . $Work['WorkID'] . '">' . $Work['WorkDescription'] . '</option>';
+    }
+    //print_r($_POST);
+    unset($DB);
+    break;
+
+  case 'Progress_GetWorks':
+          $DB = new MySQLiDBHelper();
+          $DB->where('UserMapID', $_SESSION['UserMapID']);
+          $DB->where('SchemeID', WebLib::GetVal($_POST, 'Scheme'));
+          $Works = $DB->get(MySQL_Pre . 'MPR_ViewUserWorks');
+          echo '<option></option>';
+          foreach ($Works as $Work) {
+            $Sel = '';
+            if ($Work['WorkID'] == WebLib::GetVal($_POST, 'Work')) {
+              $Sel = 'Selected';
+            }
+            echo '<option value="' . $Work['WorkID'] . '" ' . $Sel . '>'
+              . $Work['SchemeName'] . ' - ' . $Work['Work'] . '</option>';
+          }
+    break;
+
+  case 'Progress_GetDetails':
+    ?>
+    <div class="formWrapper-Autofit">
+      <h3 class="formWrapper-h3">Progress Details</h3>
+      <table rules="all" frame="box" width="100%" cellpadding="5" cellspacing="2">
+        <tr>
+          <th>Report Date</th>
+          <th>Balance</th>
+          <th>Expenditure Amount</th>
+          <th>Physical Progress(%)</th>
+          <th>Remarks</th>
+        </tr>
+        <?php
+        $DB = new MySQLiDBHelper();
+        $DB->where('WorkID', WebLib::GetVal($_POST, 'Work'));
+        $PrgReports = $DB->get(MySQL_Pre . 'MPR_Progress');
+        foreach ($PrgReports as $PrgReport) {
+          ?>
+          <tr>
+            <td><?php echo $PrgReport['ReportDate']; ?></td>
+            <td><?php echo $PrgReport['Balance']; ?></td>
+            <td><?php echo $PrgReport['ExpenditureAmount']; ?></td>
+            <td><?php echo $PrgReport['Progress']; ?> %</td>
+            <td><?php echo $PrgReport['Remarks']; ?></td>
           </tr>
         <?php
         } ?>
@@ -84,5 +166,52 @@ switch (WebLib::GetVal($_POST, 'CallAPI')) {
     </div>
     <?php
     break;
+
+  case 'Progress_GetWorkDetails':
+    ?>
+    <div class="formWrapper-Autofit">
+      <h3 class="formWrapper-h3">Sanctioned Works</h3>
+      <table rules="all" frame="box" width="100%" cellpadding="5" cellspacing="2">
+        <tr>
+          <td>Sl No.</td>
+          <th>Description of Work</th>
+          <th>Estimated Cost(Rs.)</th>
+          <th>Fund Released(Rs.)</th>
+          <th>Fund Utilised(Rs.)</th>
+          <th>Balance(Rs.)</th>
+          <th>Physical Progress(%)</th>
+          <th>Tender Date</th>
+          <th>Work Order Date</th>
+          <th>Remarks</th>
+        </tr>
+        <?php
+        $DB = new MySQLiDBHelper();
+        $DB->where('UserMapID', $_SESSION['UserMapID']);
+        $DB->where('SchemeID', WebLib::GetVal($_POST, 'Scheme'));
+        $UserWorks = $DB->get(MySQL_Pre . 'MPR_ViewUserWorks');
+        $i = 1;
+        foreach ($UserWorks as $Work) {
+          ?>
+          <tr>
+            <td><?php echo $i; ?></td>
+            <td><?php echo $Work['Work'] ?></td>
+            <td><?php echo $Work['EstimatedCost'] ?></td>
+            <td><?php echo $Work['Funds'] ?></td>
+            <td><?php echo $Work['Expenses'] ?></td>
+            <td><?php echo $Work['Balance'] ?></td>
+            <td><?php echo $Work['Progress'] ?></td>
+            <td><?php echo $Work['TenderDate'] ?></td>
+            <td><?php echo $Work['WorkOrderDate'] ?></td>
+            <td><?php echo $Work['WorkRemarks'] ?></td>
+          </tr>
+          <?php
+          $i++;
+        } ?>
+      </table>
+    </div>
+    <?php
+    break;
+
 }
+//print_r($_POST);
 ?>

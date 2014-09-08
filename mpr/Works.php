@@ -9,17 +9,6 @@ WebLib::IncludeCSS('mpr/css/forms.css');
 WebLib::IncludeCSS('css/chosen.css');
 WebLib::IncludeJS('js/chosen.jquery.min.js');
 WebLib::IncludeJS('mpr/js/Works.js');
-
-if (isset($_POST['BtnWrk']) == 1) {
-  $DB = new MySQLiDBHelper();
-  $tableData['SchemeID'] = $_POST['Scheme'];
-  $tableData['MprMapID'] = $_POST['UserID'];
-  $tableData['AsOnDate'] = WebLib::ToDBDate($_POST['txtDate']);
-  $tableData['AllotmentAmount'] = $_POST['txtAmount'];
-  $tableData['WorkDescription'] = $_POST['txtWork'];
-  $tableData['EstimatedCost'] = $_POST['txtCost'];
-  $SchemeID = $DB->insert(MySQL_Pre . 'MPR_Works', $tableData);
-}
 ?>
 </head>
 <body>
@@ -33,10 +22,11 @@ if (isset($_POST['BtnWrk']) == 1) {
 WebLib::ShowMenuBar('MPR');
 ?>
 <div class="content">
+  <?php require_once(__DIR__ . '/WorkData.php'); ?>
   <div class="formWrapper-Autofit">
-    <h3 class="formWrapper-h3">Sanction of Work for Schemes</h3>
+    <h3 class="formWrapper-h3">Works for Schemes</h3>
 
-    <form action="" method="post">
+    <form id="frmWorks" action="" method="post">
       <div class="FieldGroup">
         <label for="Scheme"><strong>Scheme:</strong></label><br/>
         <select id="Scheme" name="Scheme">
@@ -51,13 +41,13 @@ WebLib::ShowMenuBar('MPR');
         </select>
       </div>
       <div class="FieldGroup">
-        <label for="UserID"><strong>Executing Agency:</strong></label><br/>
-        <select id="UserID" name="UserID">
+        <label for="MprMapID"><strong>Executing Agency:</strong></label><br/>
+        <select id="MprMapID" name="MprMapID">
           <option></option>
           <?php
           $DB = new MySQLiDBHelper();
           $DB->where('CtrlMapID', $_SESSION['UserMapID']);
-          $Users = $DB->get(MySQL_Pre . 'MPR_MappedUsers');
+          $Users = $DB->get(MySQL_Pre . 'MPR_ViewMappedUsers');
           foreach ($Users as $User) {
             echo '<option value="' . $User['MprMapID'] . '">' . $User['UserName'] . '</option>';
           } ?>
@@ -78,24 +68,60 @@ WebLib::ShowMenuBar('MPR');
         </label>
       </div>
       <div class="FieldGroup">
-        <label for="txtAmount"><strong>Funds Released:</strong><br/>
-          <input id="txtAmount" type="text" name="txtAmount" class="form-TxtInput" style="width: 80px;">
-        </label>
-      </div>
-      <div class="FieldGroup">
-        <label for="txtDate"><strong>Till Dated:</strong><br/>
-          <input id="txtDate" type="text" name="txtDate" class="form-TxtInput datePicker">
+        <label for="txtWorkRemarks"><strong>Items/Remarks:</strong><br/>
+          <input id="txtWorkRemarks" type="text" name="txtWorkRemarks" class="form-TxtInput" style="width: 275px;">
         </label>
       </div>
       <div style="clear: both;"></div>
       <hr/>
       <div class="formControl">
-        <input type="Submit" value="Create" name="BtnWrk">
+        <input type="Submit" value="Create Work" name="CmdAction">
       </div>
     </form>
   </div>
-  <div class="formWrapper-Clear"></div>
+  <div class="formWrapper-Autofit">
+    <h3 class="formWrapper-h3">Sanction for Works</h3>
+
+    <form action="" method="post">
+      <div class="FieldGroup">
+        <label for="WorkID"><strong>Work:</strong></label><br/>
+        <select id="WorkID" name="WorkID">
+          <option></option>
+        </select>
+      </div>
+      <div style="clear: both;"></div>
+      <div class="FieldGroup">
+        <label for="txtOrderNo"><strong>Order No:</strong><br/>
+          <input id="txtOrderNo" type="text" name="txtOrderNo" class="form-TxtInput" style="width: 120px;">
+        </label>
+      </div>
+      <div class="FieldGroup">
+        <label for="txtDate"><strong>Order Date:</strong><br/>
+          <input id="txtDate" type="text" name="txtDate" class="form-TxtInput datePicker">
+        </label>
+      </div>
+      <div class="FieldGroup">
+        <label for="txtAmount"><strong>Funds To Release:</strong><br/>
+          <input id="txtAmount" type="text" name="txtAmount" class="form-TxtInput" style="width: 100px;">
+        </label>
+      </div>
+      <div style="clear: both;"></div>
+      <div class="FieldGroup">
+        <label for="txtSanctionRemarks"><strong>Remarks:</strong><br/>
+          <input id="txtSanctionRemarks" type="text" name="txtSanctionRemarks" class="form-TxtInput" style="width: 410px;">
+        </label>
+      </div>
+      <div style="clear: both;"></div>
+      <hr/>
+      <div class="formControl">
+        <input type="Submit" value="Release Fund" name="CmdAction">
+      </div>
+    </form>
+  </div>
+  <div id="SanctionData"></div>
+  <div style="clear: both;"></div>
   <div id="DataTable"></div>
+  <div class="formWrapper-Clear"></div>
 </div>
 <div class="pageinfo">
   <?php WebLib::PageInfo(); ?>

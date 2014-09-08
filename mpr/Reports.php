@@ -44,7 +44,7 @@ WebLib::ShowMenuBar('MPR');
           <?php
           $DB = new MySQLiDBHelper();
           $DB->where('CtrlMapID', $_SESSION['UserMapID']);
-          $Users = $DB->get(MySQL_Pre . 'MPR_MappedUsers');
+          $Users = $DB->get(MySQL_Pre . 'MPR_ViewMappedUsers');
           foreach ($Users as $User) {
             echo '<option value="' . $User['UserMapID'] . '">' . $User['UserName'] . '</option>';
           } ?>

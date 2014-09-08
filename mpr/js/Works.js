@@ -32,7 +32,7 @@ $(function () {
         });
     });
 
-    $("#UserID").chosen({width: "275px",
+    $("#MprMapID").chosen({width: "275px",
         no_results_text: "Oops, nothing found!"
     }).change(function () {
         $.ajax({
@@ -44,13 +44,65 @@ $(function () {
             },
             data: {
                 'AjaxToken': $('#AjaxToken').val(),
-                'CallAPI': 'Works_GetWorks',
+                'CallAPI': 'Works_GetWorksForSanction',
                 'Scheme': $("#Scheme").val(),
-                'User': $(this).val()
+                'MprMapID': $(this).val()
             }
         }).done(function (data) {
             try {
-                $('#DataTable').html(data);
+                $("#WorkID").html(data).trigger("chosen:updated");
+                $.ajax({
+                    type: 'POST',
+                    url: 'AjaxData.php',
+                    dataType: 'html',
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    data: {
+                        'AjaxToken': $('#AjaxToken').val(),
+                        'CallAPI': 'Works_GetWorks',
+                        'Scheme': $("#Scheme").val(),
+                        'MprMapID': $("#MprMapID").val()
+                    }
+                }).done(function (data) {
+                    try {
+                        $('#DataTable').html(data);
+                    }
+                    catch (e) {
+                        $('#Msg').html('Server Error:' + e);
+                        $('#Error').html(data);
+                    }
+                }).fail(function (msg) {
+                    $('#Msg').html(msg);
+                });
+            }
+            catch (e) {
+                $('#Msg').html('Server Error:' + e);
+                $('#Error').html(data);
+            }
+        }).fail(function (msg) {
+            $('#Msg').html(msg);
+        });
+    });
+
+    $("#WorkID").chosen({width: "460px",
+        no_results_text: "Oops, nothing found!"
+    }).change(function () {
+        $.ajax({
+            type: 'POST',
+            url: 'AjaxData.php',
+            dataType: 'html',
+            xhrFields: {
+                withCredentials: true
+            },
+            data: {
+                'AjaxToken': $('#AjaxToken').val(),
+                'CallAPI': 'Works_GetSanctions',
+                'WorkID': $(this).val()
+            }
+        }).done(function (data) {
+            try {
+                $('#SanctionData').html(data);
             }
             catch (e) {
                 $('#Msg').html('Server Error:' + e);

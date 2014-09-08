@@ -4,17 +4,20 @@ function CreateSchemas() {
   $ObjDB = new MySQLiDBHelper();
   $ObjDB->ddlQuery(SQLDefs('MPR_UserMaps'));
   $ObjDB->ddlQuery(SQLDefs('MPR_Schemes'));
-  $ObjDB->ddlQuery(SQLDefs('MPR_Works'));
   $ObjDB->ddlQuery(SQLDefs('MPR_SchemeAllotments'));
+  $ObjDB->ddlQuery(SQLDefs('MPR_Works'));
+  $ObjDB->ddlQuery(SQLDefs('MPR_Sanctions'));
   $ObjDB->ddlQuery(SQLDefs('MPR_Progress'));
   $ObjDB->ddlQuery(SQLDefs('MenuData'));
-  $ObjDB->ddlQuery(SQLDefs('MPR_MappedUsers'));
-  $ObjDB->ddlQuery(SQLDefs('MPR_UserWorks'));
-  $ObjDB->ddlQuery(SQLDefs('MPR_WorkerSchemes'));
-  $ObjDB->ddlQuery(SQLDefs('MPR_UserSchemeAllotments'));
-  $ObjDB->ddlQuery(SQLDefs('MPR_SchemeWiseExpenditure'));
-  $ObjDB->ddlQuery(SQLDefs('MPR_SchemeWiseAllotments'));
-  $ObjDB->ddlQuery(SQLDefs('MPR_SchemeWiseFunds'));
+  $ObjDB->ddlQuery(SQLDefs('MPR_ViewMappedUsers'));
+  $ObjDB->ddlQuery(SQLDefs('MPR_ViewWorkAllotments'));
+  $ObjDB->ddlQuery(SQLDefs('MPR_ViewWorkExpenses'));
+  $ObjDB->ddlQuery(SQLDefs('MPR_ViewUserWorks'));
+  $ObjDB->ddlQuery(SQLDefs('MPR_ViewWorkerSchemes'));
+  $ObjDB->ddlQuery(SQLDefs('MPR_ViewUserSchemeAllotments'));
+  $ObjDB->ddlQuery(SQLDefs('MPR_ViewSchemeWiseExpenditure'));
+  $ObjDB->ddlQuery(SQLDefs('MPR_ViewSchemeWiseAllotments'));
+  $ObjDB->ddlQuery(SQLDefs('MPR_ViewSchemeWiseFunds'));
   unset($ObjDB);
 }
 
@@ -64,15 +67,30 @@ function SQLDefs($ObjectName) {
         . '`WorkID` bigint NOT NULL AUTO_INCREMENT,'
         . '`SchemeID` bigint NOT NULL,'
         . '`MprMapID` bigint NOT NULL,'
-        . '`AllotmentAmount` bigint NOT NULL,'
         . '`WorkDescription` text NOT NULL,'
         . '`EstimatedCost` bigint NOT NULL,'
-        . '`AsOnDate` date,'
+        . '`TenderDate` date,'
+        . '`WorkOrderDate` date,'
+        . '`WorkRemarks` text NOT NULL,'
         . ' PRIMARY KEY (`WorkID`),'
         . ' FOREIGN KEY (`SchemeID`)'
         . ' REFERENCES `' . MySQL_Pre . 'MPR_Schemes`(`SchemeID`),'
         . ' FOREIGN KEY (`MprMapID`)'
         . ' REFERENCES `' . MySQL_Pre . 'MPR_UserMaps`(`MprMapID`)'
+        . ') ENGINE=InnoDB  DEFAULT CHARSET=utf8;';
+      break;
+
+    case 'MPR_Sanctions':
+      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . $ObjectName . '` ('
+        . '`SanctionID` bigint NOT NULL AUTO_INCREMENT,'
+        . '`WorkID` bigint NOT NULL,'
+        . '`SanctionOrderNo` text NOT NULL,'
+        . '`SanctionDate` date,'
+        . '`SanctionAmount` bigint NOT NULL,'
+        . '`SanctionRemarks` text NOT NULL,'
+        . ' PRIMARY KEY (`SanctionID`),'
+        . ' FOREIGN KEY (`WorkID`)'
+        . ' REFERENCES `' . MySQL_Pre . 'MPR_Works`(`WorkID`)'
         . ') ENGINE=InnoDB  DEFAULT CHARSET=utf8;';
       break;
 
@@ -103,7 +121,7 @@ function SQLDefs($ObjectName) {
         . '(\'MPR\', 9, 1, \'Log Out!\', \'login.php?LogOut=1\', 1);';
       break;
 
-    case 'MPR_UserSchemeAllotments':
+    case 'MPR_ViewUserSchemeAllotments':
       $SqlDB = 'CREATE OR REPLACE VIEW `' . MySQL_Pre . $ObjectName . '` AS '
         . 'select `A`.`SchemeID` AS `SchemeID`,`S`.`SchemeName` AS `SchemeName`,'
         . '`A`.`AllotmentID` AS `AllotmentID`,`A`.`Amount` AS `Amount`,'
@@ -113,7 +131,7 @@ function SQLDefs($ObjectName) {
         . ' on(`S`.`SchemeID` = `A`.`SchemeID`));';
       break;
 
-    case 'MPR_MappedUsers':
+    case 'MPR_ViewMappedUsers':
       $SqlDB = 'CREATE OR REPLACE VIEW `' . MySQL_Pre . $ObjectName . '` AS '
         . 'select `M`.`MprMapID` AS `MprMapID`,`U`.`UserMapID` AS `UserMapID`,'
         . '`U`.`UserName` AS `UserName`,`M`.`CtrlMapID` AS `CtrlMapID`'
@@ -124,21 +142,40 @@ function SQLDefs($ObjectName) {
     /*
      * COALESCE, an SQL command that selects the first non-null from a range of values
      */
-    case 'MPR_UserWorks':
+    case 'MPR_ViewWorkAllotments':
       $SqlDB = 'CREATE OR REPLACE VIEW `' . MySQL_Pre . $ObjectName . '` AS '
-        . 'select `W`.`WorkID` AS `WorkID`,`W`.`WorkDescription` AS `Work`,'
-        . '`W`.`SchemeID` AS `SchemeID`,`M`.`UserMapID` AS `UserMapID`,'
-        . '`M`.`CtrlMapID` AS `CtrlMapID`,`S`.`SchemeName` AS `SchemeName`,'
-        . '`EstimatedCost`,`AsOnDate`,`W`.`AllotmentAmount` AS `Allotments`,'
-        . 'COALESCE(SUM(`P`.`ExpenditureAmount`), 0) AS `Expenditure`,'
-        . '`W`.`AllotmentAmount`-COALESCE(SUM(`P`.`ExpenditureAmount`), 0) AS `Balance`'
-        . ' from (`' . MySQL_Pre . 'MPR_UserMaps` `M` join `' . MySQL_Pre . 'MPR_Works` `W`'
-        . ' on(`M`.`MprMapID` = `W`.`MprMapID`)) join `' . MySQL_Pre . 'MPR_Schemes` `S`'
-        . ' on(`S`.`SchemeID`=`W`.`SchemeID`) left join `' . MySQL_Pre . 'MPR_Progress` `P`'
-        . ' on(`P`.`WorkID`=`W`.`WorkID`) Group By `W`.`WorkID`';
+        . 'select `W`.`WorkID` AS `WorkID`,'
+        . 'COALESCE(SUM(`S`.`SanctionAmount`),0) AS `Funds`'
+        . ' FROM `' . MySQL_Pre . 'MPR_Works` `W`'
+        . ' LEFT join `' . MySQL_Pre . 'MPR_Sanctions` `S` on(`S`.`WorkID`=`W`.`WorkID`)'
+        . ' GROUP BY `W`.`WorkID`';
       break;
 
-    case 'MPR_WorkerSchemes':
+    case 'MPR_ViewWorkExpenses':
+      $SqlDB = 'CREATE OR REPLACE VIEW `' . MySQL_Pre . $ObjectName . '` AS '
+        . 'select `W`.`WorkID` AS `WorkID`,'
+        . 'COALESCE(SUM(`P`.`ExpenditureAmount`),0) AS `Expenses`, MAX(`Progress`) AS `Progress`'
+        . ' FROM `' . MySQL_Pre . 'MPR_Works` `W`'
+        . ' LEFT join `' . MySQL_Pre . 'MPR_Progress` `P` on(`P`.`WorkID`=`W`.`WorkID`)'
+        . ' GROUP BY `W`.`WorkID`';
+      break;
+
+    case 'MPR_ViewUserWorks':
+      $SqlDB = 'CREATE OR REPLACE VIEW `' . MySQL_Pre . $ObjectName . '` AS '
+        . 'select `W`.`WorkID` AS `WorkID`,`W`.`WorkDescription` AS `Work`,'
+        . '`W`.`SchemeID` AS `SchemeID`,`S`.`SchemeName` AS `SchemeName`,'
+        . '`M`.`MprMapID` AS `MprMapID`,`M`.`CtrlMapID` AS `CtrlMapID`,`M`.`UserMapID` AS `UserMapID`,'
+        . '`EstimatedCost`,`A`.`Funds`,`E`.`Expenses`,`A`.`Funds`-`E`.`Expenses` AS `Balance`,`Progress`,'
+        . 'DATE_FORMAT(`TenderDate`,"%d/%m/%Y") AS `TenderDate`,'
+        . 'DATE_FORMAT(`WorkOrderDate`,"%d/%m/%Y") AS `WorkOrderDate`,`WorkRemarks`'
+        . ' FROM (((`' . MySQL_Pre . 'MPR_Works` `W` '
+        . ' JOIN `' . MySQL_Pre . 'MPR_Schemes` `S` on(`S`.`SchemeID`=`W`.`SchemeID`))'
+        . ' LEFT JOIN `' . MySQL_Pre . 'MPR_UserMaps` `M` on(`M`.`MprMapID` = `W`.`MprMapID`))'
+        . ' LEFT JOIN `' . MySQL_Pre . 'MPR_ViewWorkAllotments` `A` on(`A`.`WorkID`=`W`.`WorkID`))'
+        . ' LEFT JOIN `' . MySQL_Pre . 'MPR_ViewWorkExpenses` `E` on(`E`.`WorkID`=`W`.`WorkID`)';
+      break;
+
+    case 'MPR_ViewWorkerSchemes':
       $SqlDB = 'CREATE OR REPLACE VIEW `' . MySQL_Pre . $ObjectName . '` AS '
         . 'select `W`.`SchemeID` AS `SchemeID`,`S`.`SchemeName` AS `SchemeName`,'
         . '`M`.`UserMapID` AS `UserMapID`'
@@ -148,7 +185,7 @@ function SQLDefs($ObjectName) {
         . 'Group By `S`.`SchemeID`,`S`.`SchemeName`,`M`.`UserMapID`;';
       break;
 
-    case 'MPR_SchemeWiseExpenditure':
+    case 'MPR_ViewSchemeWiseExpenditure':
       $SqlDB = 'CREATE OR REPLACE VIEW `' . MySQL_Pre . $ObjectName . '` AS '
         . 'select `A`.`Year` AS `Year`,`S`.`SchemeID` AS `SchemeID`,'
         . '`S`.`SchemeName` AS `SchemeName`,COALESCE(SUM(`P`.`ExpenditureAmount`), 0) AS `Expense` '
@@ -159,7 +196,7 @@ function SQLDefs($ObjectName) {
         . ' GROUP BY `A`.`Year`,`S`.`SchemeID`,`S`.`SchemeName`;';
       break;
 
-    case 'MPR_SchemeWiseAllotments':
+    case 'MPR_ViewSchemeWiseAllotments':
       $SqlDB = 'CREATE OR REPLACE VIEW `' . MySQL_Pre . $ObjectName . '` AS '
         . 'select `A`.`Year` AS `Year`,`S`.`SchemeID` AS `SchemeID`,'
         . '`S`.`SchemeName` AS `SchemeName`,SUM(`A`.`Amount`) AS `Funds`'
@@ -168,13 +205,13 @@ function SQLDefs($ObjectName) {
         . ' GROUP BY `A`.`Year`,`S`.`SchemeID`,`S`.`SchemeName`;';
       break;
 
-    case 'MPR_SchemeWiseFunds':
+    case 'MPR_ViewSchemeWiseFunds':
       $SqlDB = 'CREATE OR REPLACE VIEW `' . MySQL_Pre . $ObjectName . '` AS '
         . 'select `A`.`Year` AS `Year`,`A`.`SchemeID` AS `SchemeID`,'
         . '`A`.`SchemeName` AS `SchemeName`,`Funds`,`Expense`, '
         . ' `A`.`Funds`-`E`.`Expense` AS `Balance`'
-        . ' from `' . MySQL_Pre . 'MPR_SchemeWiseAllotments` `A`'
-        . ' LEFT JOIN `' . MySQL_Pre . 'MPR_SchemeWiseExpenditure` `E` '
+        . ' from `' . MySQL_Pre . 'MPR_ViewSchemeWiseAllotments` `A`'
+        . ' LEFT JOIN `' . MySQL_Pre . 'MPR_ViewSchemeWiseExpenditure` `E` '
         . ' on((`A`.`SchemeID` = `E`.`SchemeID`) AND (`A`.`Year`=`E`.`Year`))'
         . ' GROUP BY `A`.`Year`,`A`.`SchemeID`,`A`.`SchemeName`;';
       break;
