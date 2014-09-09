@@ -618,7 +618,7 @@ class WebLib {
           . '<img id="siimage"'
           . ' src="ShowCaptcha.php?captchaId=' . $captchaId . '"'
           . ' alt="captcha image" />'
-          . '<input class="form-TxtInput" placeholder="Solution of the math above" '
+          . '<input class="form-TxtInput" placeholder="Solve the math above" '
           . 'type="text" name="captcha_code" value="" required />';
       echo $Captcha;
     } else {

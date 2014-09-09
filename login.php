@@ -19,94 +19,98 @@ $_SESSION['ET'] = microtime(TRUE);
 $Data = new MySQLiDBHelper();
 $ID = WebLib::GetVal($_SESSION, 'ID');
 $_SESSION['ID'] = session_id();
-if (WebLib::GetVal($_SESSION, 'LifeTime') === NULL)
+if (WebLib::GetVal($_SESSION, 'LifeTime') === NULL) {
   $_SESSION['LifeTime'] = time();
+}
 $action = WebLib::CheckAuth();
 if ($action == "LogOut") {
   $QueryData['SessionID'] = WebLib::GetVal($_SESSION, 'ID');
-  $QueryData['IP']        = $_SERVER['REMOTE_ADDR'];
-  $QueryData['Referrer']  = $Data->escape($_SERVER["HTTP_REFERER"]);
+  $QueryData['IP'] = $_SERVER['REMOTE_ADDR'];
+  $QueryData['Referrer'] = $Data->escape($_SERVER["HTTP_REFERER"]);
   $QueryData['UserAgent'] = $_SERVER['HTTP_USER_AGENT'];
-  $QueryData['UserID']    = WebLib::GetVal($_SESSION, 'UserMapID');
-  $QueryData['URL']       = $Data->escape($_SERVER['PHP_SELF']);
-  $QueryData['Action']    = $action . ': (' . $_SERVER['SCRIPT_NAME'] . ')';
-  $QueryData['Method']    = $Data->escape($_SERVER['REQUEST_METHOD']);
-  $QueryData['URI']       = $Data->escape($_SERVER['REQUEST_URI']);
+  $QueryData['UserID'] = WebLib::GetVal($_SESSION, 'UserMapID');
+  $QueryData['URL'] = $Data->escape($_SERVER['PHP_SELF']);
+  $QueryData['Action'] = $action . ': (' . $_SERVER['SCRIPT_NAME'] . ')';
+  $QueryData['Method'] = $Data->escape($_SERVER['REQUEST_METHOD']);
+  $QueryData['URI'] = $Data->escape($_SERVER['REQUEST_URI']);
   $Data->insert(MySQL_Pre . 'Logs', $QueryData);
   unset($QueryData);
   unset($Data);
   session_unset();
   session_destroy();
   session_start();
-  $_SESSION          = array();
-  $_SESSION['ET']    = microtime(TRUE);
+  $_SESSION = array();
+  $_SESSION['ET'] = microtime(TRUE);
   $_SESSION['Debug'] = WebLib::GetVal($_SESSION, 'Debug') . $action . "TOKEN-!Valid";
   header("Location: index.php");
   exit();
-} elseif ($action != "Valid") {
+}
+elseif ($action != "Valid") {
   WebLib::InitSess();
 }
 
 if (WebLib::GetVal($_SESSION, 'TryCount') >= $FailedTry) {
   $ValidCaptcha = WebLib::StaticCaptcha();
-} else {
+}
+else {
   $ValidCaptcha = TRUE;
 }
 
 if ((WebLib::GetVal($_POST, 'UserID') !== NULL) && (WebLib::GetVal($_POST,
-            'UserPass') !== NULL) && $ValidCaptcha
+      'UserPass') !== NULL) && $ValidCaptcha
 ) {
   $QueryLogin = "Select UserMapID,UserName from `" . MySQL_Pre . "Users` "
-      . " Where `UserID`=? AND MD5(CONCAT(`UserPass`,MD5(?)))=? AND Activated";
-  $filter[]   = WebLib::GetVal($_POST, 'UserID', TRUE);
-  $filter[]   = WebLib::GetVal($_SESSION, 'Token', TRUE);
-  $filter[]   = WebLib::GetVal($_POST, 'UserPass', TRUE);
+    . " Where `UserID`=? AND MD5(CONCAT(`UserPass`,MD5(?)))=? AND Activated";
+  $filter[] = WebLib::GetVal($_POST, 'UserID', TRUE);
+  $filter[] = WebLib::GetVal($_SESSION, 'Token', TRUE);
+  $filter[] = WebLib::GetVal($_POST, 'UserPass', TRUE);
 
   $rows = $Data->rawQuery($QueryLogin, $filter);
 
   if (count($rows) > 0) {
     session_regenerate_id();
-    $Row                     = $rows[0];
-    $_SESSION['CheckAuth']   = "Valid";
-    $_SESSION['UserName']    = $Row['UserName'];
-    $_SESSION['UserMapID']   = $Row['UserMapID'];
-    $_SESSION['ID']          = session_id();
+    $Row = $rows[0];
+    $_SESSION['CheckAuth'] = "Valid";
+    $_SESSION['UserName'] = $Row['UserName'];
+    $_SESSION['UserMapID'] = $Row['UserMapID'];
+    $_SESSION['ID'] = session_id();
     $_SESSION['FingerPrint'] = md5($_SERVER['REMOTE_ADDR'] . $_SERVER['HTTP_USER_AGENT'] . "KeyLeft");
-    $_SESSION['REFERER1']    = "http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-    $action                  = "JustLoggedIn";
+    $_SESSION['REFERER1'] = "http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+    $action = "JustLoggedIn";
 
     $Data->ddlQuery("Update " . MySQL_Pre . "Users Set LoginCount=LoginCount+1"
-        . " Where `UserID`='" . WebLib::GetVal($_POST, 'UserID', TRUE) . "'"
-        . " AND MD5(concat(`UserPass`,MD5('" . WebLib::GetVal($_POST,
-            'LoginToken', TRUE) . "')))='" . WebLib::GetVal($_POST,
-            'UserPass',
-            TRUE) . "'");
+      . " Where `UserID`='" . WebLib::GetVal($_POST, 'UserID', TRUE) . "'"
+      . " AND MD5(concat(`UserPass`,MD5('" . WebLib::GetVal($_POST,
+        'LoginToken', TRUE) . "')))='" . WebLib::GetVal($_POST,
+        'UserPass',
+        TRUE) . "'");
 
     $QueryData['SessionID'] = WebLib::GetVal($_SESSION, 'ID');
-    $QueryData['IP']        = $_SERVER['REMOTE_ADDR'];
-    $QueryData['Referrer']  = $Data->escape($_SERVER["HTTP_REFERER"]);
+    $QueryData['IP'] = $_SERVER['REMOTE_ADDR'];
+    $QueryData['Referrer'] = $Data->escape($_SERVER["HTTP_REFERER"]);
     $QueryData['UserAgent'] = $_SERVER['HTTP_USER_AGENT'];
-    $QueryData['UserID']    = WebLib::GetVal($_SESSION, 'UserMapID');
-    $QueryData['URL']       = $Data->escape($_SERVER['PHP_SELF']);
-    $QueryData['Action']    = 'Login: Success';
-    $QueryData['Method']    = $Data->escape($_SERVER['REQUEST_METHOD']);
-    $QueryData['URI']       = $Data->escape($_SERVER['REQUEST_URI']);
+    $QueryData['UserID'] = WebLib::GetVal($_SESSION, 'UserMapID');
+    $QueryData['URL'] = $Data->escape($_SERVER['PHP_SELF']);
+    $QueryData['Action'] = 'Login: Success';
+    $QueryData['Method'] = $Data->escape($_SERVER['REQUEST_METHOD']);
+    $QueryData['URI'] = $Data->escape($_SERVER['REQUEST_URI']);
 
     $Data->insert(MySQL_Pre . 'Logs', $QueryData);
     unset($QueryData);
 
-  } else {
+  }
+  else {
     $action = "NoAccess";
 
     $QueryData['SessionID'] = WebLib::GetVal($_SESSION, 'ID');
-    $QueryData['IP']        = $_SERVER['REMOTE_ADDR'];
-    $QueryData['Referrer']  = $Data->escape($_SERVER["HTTP_REFERER"]);
+    $QueryData['IP'] = $_SERVER['REMOTE_ADDR'];
+    $QueryData['Referrer'] = $Data->escape($_SERVER["HTTP_REFERER"]);
     $QueryData['UserAgent'] = $_SERVER['HTTP_USER_AGENT'];
-    $QueryData['UserID']    = WebLib::GetVal($_SESSION, 'UserMapID');
-    $QueryData['URL']       = $Data->escape($_SERVER['PHP_SELF']);
-    $QueryData['Action']    = 'Login: Failed[' . WebLib::GetVal($_POST, 'UserID', TRUE) . ']';
-    $QueryData['Method']    = $Data->escape($_SERVER['REQUEST_METHOD']);
-    $QueryData['URI']       = $Data->escape($_SERVER['REQUEST_URI']);
+    $QueryData['UserID'] = WebLib::GetVal($_SESSION, 'UserMapID');
+    $QueryData['URL'] = $Data->escape($_SERVER['PHP_SELF']);
+    $QueryData['Action'] = 'Login: Failed[' . WebLib::GetVal($_POST, 'UserID', TRUE) . ']';
+    $QueryData['Method'] = $Data->escape($_SERVER['REQUEST_METHOD']);
+    $QueryData['URI'] = $Data->escape($_SERVER['REQUEST_URI']);
 
     $Data->insert(MySQL_Pre . 'Logs', $QueryData);
     unset($QueryData);
@@ -146,7 +150,7 @@ WebLib::ShowMenuBar('WebSite');
         echo "<h2>Already logged In as {$_SESSION['UserName']}!</h2>";
         break;
       case "NoAccess":
-        $_SESSION['Msg']      = "Sorry! Access Denied!";
+        $_SESSION['Msg'] = "Sorry! Access Denied!";
         $_SESSION['TryCount'] = WebLib::GetVal($_SESSION, 'TryCount') + 1;
         //echo "Try Count:" . WebLib::GetVal($_SESSION, 'TryCount');
         break;
