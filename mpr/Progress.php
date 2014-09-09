@@ -13,7 +13,7 @@ WebLib::IncludeCSS('mpr/css/forms.css');
 if (isset($_POST['BtnPrg']) == 1) {
   require_once __DIR__ . '/../lib.inc.php';
   $DB = new MySQLiDBHelper();
-  $tableData['WorkID'] = WebLib::GetVal($_POST,'Work');
+  $tableData['WorkID'] = WebLib::GetVal($_POST, 'Work');
   $tableData['ExpenditureAmount'] = $_POST['txtAmount'];
   $tableData['Progress'] = $_POST['PhyPrgValue'];
   $tableData['Balance'] = $_POST['txtBalance'];
@@ -23,7 +23,7 @@ if (isset($_POST['BtnPrg']) == 1) {
   unset($tableData);
   $tableData['TenderDate'] = WebLib::ToDBDate($_POST['txtTenderDate']);
   $tableData['WorkOrderDate'] = WebLib::ToDBDate($_POST['txtWorkOrderDate']);
-  $DB->where('WorkID',WebLib::GetVal($_POST,'Work'));
+  $DB->where('WorkID', WebLib::GetVal($_POST, 'Work'));
   $SchemeID = $DB->update(MySQL_Pre . 'MPR_Works', $tableData);
   unset($tableData);
 }
@@ -42,7 +42,8 @@ WebLib::ShowMenuBar('MPR');
 <div class="content" style="display: block;">
   <div class="formWrapper-Autofit">
     <h3 class="formWrapper-h3">Progress Report</h3>
-
+    <span class="Message" id="Msg" style="float: right;"></span>
+    <pre id="Error">   <?php //print_r($_POST); ?></pre>
     <form method="post" id="frmProgress">
       <div class="FieldGroup">
         <label for="cmbScheme"><strong>Scheme:</strong></label><br/>
@@ -73,7 +74,6 @@ WebLib::ShowMenuBar('MPR');
         <label for="PhyPrgSlider" style="padding-bottom: 10px;">
           <strong>Physical Progress:(<span id="PhyPrgLbl"></span>%)</strong>
         </label>
-
         <div id="PhyPrgSlider"></div>
         <input type="hidden" id="PhyPrgValue" name="PhyPrgValue">
       </div>
@@ -85,21 +85,10 @@ WebLib::ShowMenuBar('MPR');
       </div>
       <div class="FieldGroup">
         <label for="txtBalance"><strong>Balance:</strong><br/>
-          <?php
-          $DB = new MySQLiDBHelper();
-          $DB->where('UserMapID', $_SESSION['UserMapID']);
-          $DB->where('WorkID', WebLib::GetVal($_POST, 'Work'));
-          $PrgBalances = $DB->get(MySQL_Pre . 'MPR_ViewUserWorks');
-          $Balance = 0;
-          if (count($PrgBalances) > 0) {
-            $Balance = WebLib::GetVal($PrgBalances[0], 'Balance');
-          }
-          ?>
-          <input id="txtBalance" type="text" name="txtBalance"
-                 value="<?php echo $Balance; ?>"
-                 class="form-TxtInput">
+          <input id="txtBalance" type="text" name="txtBalance" class="form-TxtInput">
         </label>
       </div>
+      <div style="clear: both;"></div>
       <div class="FieldGroup">
         <label for="txtTenderDate"><strong>Tender Date:</strong><br/>
           <input id="txtTenderDate" type="text" name="txtTenderDate" class="form-TxtInput datePick">
@@ -110,15 +99,15 @@ WebLib::ShowMenuBar('MPR');
           <input id="txtWorkOrderDate" type="text" name="txtWorkOrderDate" class="form-TxtInput datePick">
         </label>
       </div>
-      <div style="clear: both;"></div>
       <div class="FieldGroup">
         <label for="txtDate"><strong>Report Date:</strong><br/>
           <input id="txtDate" type="text" name="txtDate" class="form-TxtInput datePick">
         </label>
       </div>
+      <div style="clear: both;"></div>
       <div class="FieldGroup">
         <label for="txtRemark"><strong>Remarks:</strong><br/>
-          <input id="txtRemark" type="text" name="txtRemark" class="form-TxtInput">
+          <input id="txtRemark" type="text" name="txtRemark" class="form-TxtInput" style="width: 412px;">
         </label>
       </div>
       <div style="clear: both;"></div>

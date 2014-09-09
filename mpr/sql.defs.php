@@ -32,7 +32,10 @@ function SQLDefs($ObjectName) {
         . '`CtrlMapID` bigint NOT NULL,'
         . '`UserLevel` VARCHAR(100) DEFAULT NULL,'
         . ' PRIMARY KEY (`MprMapID`),'
-        . ' UNIQUE KEY (`UserMapID`,`CtrlMapID`)'
+        . ' UNIQUE KEY (`UserMapID`,`CtrlMapID`),'
+        . ' FOREIGN KEY (`UserMapID`)'
+        . ' REFERENCES `' . MySQL_Pre . 'Users`(`UserMapID`)'
+        . ' ON DELETE RESTRICT ON UPDATE CASCADE'
         . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
       break;
 
@@ -43,7 +46,8 @@ function SQLDefs($ObjectName) {
         . '`UserMapID` bigint NOT NULL,'
         . ' PRIMARY KEY (`SchemeID`),'
         . ' FOREIGN KEY (`UserMapID`)'
-        . ' REFERENCES `' . MySQL_Pre . 'MPR_UserMaps`(`UserMapID`),'
+        . ' REFERENCES `' . MySQL_Pre . 'MPR_UserMaps`(`UserMapID`)'
+        . ' ON DELETE RESTRICT ON UPDATE CASCADE,'
         . ' UNIQUE KEY (`SchemeName`)'
         . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
       break;
@@ -59,6 +63,7 @@ function SQLDefs($ObjectName) {
         . ' PRIMARY KEY (`AllotmentID`),'
         . ' FOREIGN KEY (`SchemeID`)'
         . ' REFERENCES `' . MySQL_Pre . 'MPR_Schemes`(`SchemeID`)'
+        . ' ON DELETE RESTRICT ON UPDATE CASCADE'
         . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
       break;
 
@@ -74,9 +79,11 @@ function SQLDefs($ObjectName) {
         . '`WorkRemarks` text NOT NULL,'
         . ' PRIMARY KEY (`WorkID`),'
         . ' FOREIGN KEY (`SchemeID`)'
-        . ' REFERENCES `' . MySQL_Pre . 'MPR_Schemes`(`SchemeID`),'
+        . ' REFERENCES `' . MySQL_Pre . 'MPR_Schemes`(`SchemeID`)'
+        . ' ON DELETE RESTRICT ON UPDATE CASCADE,'
         . ' FOREIGN KEY (`MprMapID`)'
         . ' REFERENCES `' . MySQL_Pre . 'MPR_UserMaps`(`MprMapID`)'
+        . ' ON DELETE RESTRICT ON UPDATE CASCADE'
         . ') ENGINE=InnoDB  DEFAULT CHARSET=utf8;';
       break;
 
@@ -91,6 +98,7 @@ function SQLDefs($ObjectName) {
         . ' PRIMARY KEY (`SanctionID`),'
         . ' FOREIGN KEY (`WorkID`)'
         . ' REFERENCES `' . MySQL_Pre . 'MPR_Works`(`WorkID`)'
+        . ' ON DELETE RESTRICT ON UPDATE CASCADE'
         . ') ENGINE=InnoDB  DEFAULT CHARSET=utf8;';
       break;
 
@@ -106,6 +114,7 @@ function SQLDefs($ObjectName) {
         . ' PRIMARY KEY (`ProgressID`),'
         . ' FOREIGN KEY (`WorkID`)'
         . ' REFERENCES `' . MySQL_Pre . 'MPR_Works`(`WorkID`)'
+        . ' ON DELETE RESTRICT ON UPDATE CASCADE'
         . ') ENGINE=InnoDB DEFAULT CHARSET=utf8;';
       break;
 

@@ -119,7 +119,7 @@ switch (WebLib::GetVal($_POST, 'CallAPI')) {
     unset($DB);
     break;
 
-  case 'Progress_GetWorks':
+  case 'Progress_GetWorksList':
           $DB = new MySQLiDBHelper();
           $DB->where('UserMapID', $_SESSION['UserMapID']);
           $DB->where('SchemeID', WebLib::GetVal($_POST, 'Scheme'));
@@ -135,8 +135,29 @@ switch (WebLib::GetVal($_POST, 'CallAPI')) {
           }
     break;
 
-  case 'Progress_GetDetails':
+  case 'Progress_GetWorkStatusJSON':
+    $DB = new MySQLiDBHelper();
+    $DB->where('UserMapID', $_SESSION['UserMapID']);
+    $DB->where('WorkID', WebLib::GetVal($_POST, 'Work'));
+    $Works = $DB->get(MySQL_Pre . 'MPR_ViewUserWorks');
+    foreach ($Works as $Work) {
+      echo json_encode($Work);
+    }
+    break;
+
+  case 'Progress_GetProgressDetails':
     ?>
+    <div class="formWrapper-Autofit">
+      <h3 class="formWrapper-h3">Sanctioned Funds</h3>
+      <?php
+      $DB = new MySQLiDBHelper();
+      $DB->where('WorkID', WebLib::GetVal($_POST, 'Work'));
+      $UserWorks = $DB->query('Select `SanctionOrderNo` AS `Order No.`, '
+        . '`SanctionDate` AS `Sanction/Approval Date`, `SanctionAmount` AS `Amount`, '
+        . '`SanctionRemarks` AS `Remarks` FROM ' . MySQL_Pre . 'MPR_Sanctions');
+      WebLib::ShowTable($UserWorks);
+      ?>
+    </div>
     <div class="formWrapper-Autofit">
       <h3 class="formWrapper-h3">Progress Details</h3>
       <table rules="all" frame="box" width="100%" cellpadding="5" cellspacing="2">

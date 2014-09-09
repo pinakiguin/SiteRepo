@@ -7,23 +7,49 @@ $(function () {
     $("#Work").chosen({width: "300px",
         no_results_text: "Oops, nothing found!"
     }).change(function () {
-        $("#PhyPrgSlider").data("minVal",20)
-            .slider("option", "value",20);
         $.ajax({
             type: 'POST',
             url: 'AjaxData.php',
-            dataType: 'html',
+            dataType: 'json',
             xhrFields: {
                 withCredentials: true
             },
             data: {
                 'AjaxToken': $('#AjaxToken').val(),
-                'CallAPI': 'Progress_GetDetails',
+                'CallAPI': 'Progress_GetWorkStatusJSON',
                 'Work': $(this).val()
             }
         }).done(function (data) {
             try {
-                $('#ProgressTable').html(data);
+                $("#PhyPrgLbl").html(data.Progress);
+                $("#PhyPrgSlider").data("minVal",data.Progress)
+                    .slider("option", "value",data.Progress);
+                $("#txtWorkOrderDate").val(data.WorkOrderDate);
+                $("#txtTenderDate").val(data.TenderDate);
+                $("#txtBalance").val(data.Balance)
+                $.ajax({
+                    type: 'POST',
+                    url: 'AjaxData.php',
+                    dataType: 'html',
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    data: {
+                        'AjaxToken': $('#AjaxToken').val(),
+                        'CallAPI': 'Progress_GetProgressDetails',
+                        'Work': $("#Work").val()
+                    }
+                }).done(function (data) {
+                    try {
+                        $('#ProgressTable').html(data);
+                    }
+                    catch (e) {
+                        $('#Msg').html('Server Error:' + e);
+                        $('#Error').html(data);
+                    }
+                }).fail(function (msg) {
+                    $('#Msg').html(msg);
+                });
             }
             catch (e) {
                 $('#Msg').html('Server Error:' + e);
@@ -46,7 +72,7 @@ $(function () {
             },
             data: {
                 'AjaxToken': $('#AjaxToken').val(),
-                'CallAPI': 'Progress_GetWorks',
+                'CallAPI': 'Progress_GetWorksList',
                 'Scheme': $("#cmbScheme").val()
             }
         }).done(function (data) {
@@ -107,6 +133,9 @@ $(function () {
                 return false;
             }
         }
-    }).find(".ui-slider-range").css({ "background": "#00ff00"})
-      .find(".ui-slider-handle").css({ "border-color": "#00ff00"});
+    }).find(".ui-slider-range").css({
+        "background": "#00ff00"
+    }).find(".ui-slider-handle").css({
+        "border-color": "#00ff00"
+    });
 });
