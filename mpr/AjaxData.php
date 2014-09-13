@@ -35,7 +35,7 @@ switch (WebLib::GetVal($_POST, 'CallAPI')) {
     $DB->where('CtrlMapID', $_SESSION['UserMapID']);
     $DB->where('UserMapID', WebLib::GetVal($_POST, 'User'));
     WebLib::ShowTable($DB->query('Select `SchemeName`,`Work`,`EstimatedCost`,`Funds`, '
-      . ' `Expenses`,`Balance`,`Progress`,`TenderDate`,`WorkOrderDate`,`WorkRemarks`'
+      . ' `Expenses`,`Balance`,`Progress`,`Remarks` AS `Status`,`TenderDate`,`WorkOrderDate`,`WorkRemarks` AS `Remarks`'
       . 'from ' . MySQL_Pre . 'MPR_ViewUserWorks'));
     unset($DB);
     break;

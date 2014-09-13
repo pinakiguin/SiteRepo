@@ -35,12 +35,9 @@ WebLib::ShowMenuBar('MPR');
         <select id="UserID" name="UserID" class="chzn">
           <option></option>
           <?php
-          $DB = new MySQLiDBHelper();
-          $Users = $DB->rawQuery('Select `UserName`, `UserMapID` '
-            . 'FROM ' . MySQL_Pre . 'Users Where `CtrlMapID`>=?', array($_SESSION['UserMapID']));
-          foreach ($Users as $User) {
-            echo '<option value="' . $User['UserMapID'] . '">' . $User['UserName'] . '</option>';
-          } ?>
+          WebLib::showSelect('UserMapID','UserName','Select `UserName`, `UserMapID` '
+            . 'FROM ' . MySQL_Pre . 'Users Where `CtrlMapID`>='.$_SESSION['UserMapID'],WebLib::GetVal($_POST,'UserID'));
+        ?>
           <option value="NewUser">Create New...</option>
         </select>
       </div>

@@ -21,8 +21,20 @@ if (isset($_POST['BtnPrg']) == 1) {
   $tableData['Remarks'] = $_POST['txtRemark'];
   $SchemeID = $DB->insert(MySQL_Pre . 'MPR_Progress', $tableData);
   unset($tableData);
-  $tableData['TenderDate'] = WebLib::ToDBDate($_POST['txtTenderDate']);
-  $tableData['WorkOrderDate'] = WebLib::ToDBDate($_POST['txtWorkOrderDate']);
+  $TenderDate=WebLib::GetVal($_POST,'txtTenderDate');
+  $WorkOrderDate=WebLib::GetVal($_POST,'txtWorkOrderDate');
+  if($TenderDate==""){
+    $TenderDate=NULL;
+  }else{
+    $TenderDate= WebLib::ToDBDate($TenderDate);
+  }
+  if($WorkOrderDate==""){
+    $WorkOrderDate=NULL;
+  }else{
+    $WorkOrderDate=WebLib::ToDBDate($WorkOrderDate);
+  }
+  $tableData['TenderDate'] = $TenderDate;
+  $tableData['WorkOrderDate'] = $WorkOrderDate;
   $DB->where('WorkID', WebLib::GetVal($_POST, 'Work'));
   $SchemeID = $DB->update(MySQL_Pre . 'MPR_Works', $tableData);
   unset($tableData);

@@ -74,7 +74,7 @@ WebLib::ShowMenuBar('MPR');
       <fieldset>
         <legend>
           <h3>Allotment List</h3></legend>
-        <table border="1">
+        <table rules="all" frame="box" width="100%" cellpadding="5" cellspacing="2">
           <tr>
             <th>Scheme Name</th>
             <th>Block Name</th>
