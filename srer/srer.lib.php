@@ -13,12 +13,12 @@ function GetPartName() {
 }
 
 function GetColHead($ColName) {
-  $Fields = new MySQLiDB();
-  $ColHead = $Fields->do_max_query('Select Description from `' . MySQL_Pre . 'SRER_FieldNames`'
-          . ' Where FieldName=\'' . $ColName . '\'');
-  $Fields->do_close();
+  $Fields = new MySQLiDBHelper();
+  $Fields->where('FieldName',$ColName);
+  $ColHead = $Fields->query('Select Description from `' . MySQL_Pre . 'SRER_FieldNames`');
+
   unset($Fields);
-  return (!$ColHead ? $ColName : $ColHead);
+  return (count($ColHead)>0 ? $ColHead[0]['Description']:$ColName);
 }
 
 function ShowSRER($QueryString) {

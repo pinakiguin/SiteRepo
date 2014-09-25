@@ -20,7 +20,7 @@ WebLib::CreateDB();
   <div class="content">
     <span class="Message" id="Msg" style="float: right;"></span>
     <?php
-    $Data = new MySQLiDB();
+    $Data = new MySQLiDBHelper();
     $Query = 'Select `W`.`SessionID`,`W`.`UserID`,`U`.`UserName`,`W`.`Action`,`W`.`AccessTime` FROM '
             . '(Select `UserID`,Max(`LogID`) as `LogID` FROM `' . MySQL_Pre . 'Logs`'
             . ' Where `UserID`>0 AND (`AccessTime`+0)>(CURRENT_TIMESTAMP -(' . LifeTime . ' * 60)) '
@@ -29,11 +29,12 @@ WebLib::CreateDB();
             . ' ON (`W`.`LogID`=`L`.`LogID` AND `Action` NOT LIKE \'LogOut:%\')'
             . ' JOIN `' . MySQL_Pre . 'Users` as `U` '
             . ' ON (`W`.`UserID`=`U`.`UserMapID`)';
-    echo "<b>Currently Active Users: </b>" . $Data->do_sel_query($Query);
+    //$Result=$Data->query($Query);
+    //echo "<b>Currently Active Users: </b>" . count($Result);
+
     if (WebLib::GetVal($_SESSION, 'CheckAuth') === 'Valid') {
-      $Data->ShowTable($Query);
+      //$Data->ShowTable($Result);
     }
-    $Data->do_close();
     WebLib::ShowMsg();
     ?>
     <input type="hidden" id="AjaxToken" value="<?php echo WebLib::GetVal($_SESSION, 'Token'); ?>" />

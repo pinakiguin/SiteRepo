@@ -7,6 +7,9 @@ switch (WebLib::GetVal($_POST, 'FormName')) {
     break;
   case 'Download Manuscript':
     $_SESSION['Datewise'] = '0';
+    include __DIR__ . '/Manuscript.php';
+    exit();
+    break;
   case 'Download Datewise Manuscript':
     include __DIR__ . '/Manuscript.php';
     exit();
@@ -17,7 +20,7 @@ WebLib::AuthSession();
 WebLib::Html5Header('SRER Report');
 WebLib::IncludeCSS();
 
-$Data = new MySQLiDB();
+$Data = new MySQLiDBHelper();
 
 if (WebLib::GetVal($_SESSION, 'ACNo') == "")
   $_SESSION['ACNo'] = "-- Choose --";
@@ -49,15 +52,15 @@ if (WebLib::GetVal($_POST, 'ACNo') != "")
         <?php
         $Query = 'Select ACNo,CONCAT(ACNo,\' - \',ACName) AS ACName from ' . MySQL_Pre . 'SRER_ACs'
                 . ' Where `DistCode`=' . DistCode . ' Order by ACNo';
-        $Data->show_sel('ACNo', 'ACName', $Query, WebLib::GetVal($_SESSION, 'ACNo', TRUE));
+        WebLib::showSelect('ACNo', 'ACName', $Query, WebLib::GetVal($_SESSION, 'ACNo', TRUE));
         ?>
       </select>
       <label for="PartID">Part No.:</label>
       <select id="PartID" name="PartID">
         <?php
         $Query = 'Select PartID,CONCAT(PartNo,\' - \',PartName) as PartName from ' . MySQL_Pre . 'SRER_PartMap'
-                . ' Where ACNo=' . WebLib::GetVal($_SESSION, 'ACNo', TRUE) . ' Order by PartNo';
-        $Data->show_sel('PartID', 'PartName', $Query, WebLib::GetVal($_SESSION, 'PartID'));
+                . ' Where ACNo=' . intval(WebLib::GetVal($_SESSION, 'ACNo', TRUE)) . ' Order by PartNo';
+        WebLib::showSelect('PartID', 'PartName', $Query, WebLib::GetVal($_SESSION, 'PartID'));
         ?>
       </select>
       <?php //echo $Query;  ?>

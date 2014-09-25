@@ -1,19 +1,18 @@
 <?php
 
 function CreateSchemas() {
-  $ObjDB = new MySQLiDB();
-  $ObjDB->do_ins_query(SQLDefs('SRER_FieldNames'));
-  $ObjDB->do_ins_query(SQLDefs('SRER_FieldNameData'));
-  $ObjDB->do_ins_query(SQLDefs('SRER_Form6'));
-  $ObjDB->do_ins_query(SQLDefs('SRER_Form6A'));
-  $ObjDB->do_ins_query(SQLDefs('SRER_Form7'));
-  $ObjDB->do_ins_query(SQLDefs('SRER_Form8'));
-  $ObjDB->do_ins_query(SQLDefs('SRER_Form8A'));
-  $ObjDB->do_ins_query(SQLDefs('SRER_Districts'));
-  $ObjDB->do_ins_query(SQLDefs('SRER_ACs'));
-  $ObjDB->do_ins_query(SQLDefs('SRER_PartMap'));
-  $ObjDB->do_ins_query(SQLDefs('MenuData'));
-  $ObjDB->do_close();
+  $ObjDB = new MySQLiDBHelper();
+  $ObjDB->ddlQuery(SQLDefs('SRER_FieldNames'));
+  $ObjDB->ddlQuery(SQLDefs('SRER_FieldNameData'));
+  $ObjDB->ddlQuery(SQLDefs('SRER_Form6'));
+  $ObjDB->ddlQuery(SQLDefs('SRER_Form6A'));
+  $ObjDB->ddlQuery(SQLDefs('SRER_Form7'));
+  $ObjDB->ddlQuery(SQLDefs('SRER_Form8'));
+  $ObjDB->ddlQuery(SQLDefs('SRER_Form8A'));
+  $ObjDB->ddlQuery(SQLDefs('SRER_Districts'));
+  $ObjDB->ddlQuery(SQLDefs('SRER_ACs'));
+  $ObjDB->ddlQuery(SQLDefs('SRER_PartMap'));
+  $ObjDB->ddlQuery(SQLDefs('MenuData'));
   unset($ObjDB);
 }
 
