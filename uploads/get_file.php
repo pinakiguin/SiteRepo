@@ -8,7 +8,7 @@ if (isset($_GET['ID'])) {
   $Data = new MySQLiDB();
   // Fetch the file information
   $query = 'SELECT `Attachment`,`mime`, `Size`, `file` FROM `' . MySQL_Pre . 'Uploads` '
-          . " WHERE `UploadID` = " . intval($LetterID) . " and not Deleted";
+    . " WHERE `UploadID` = " . intval($LetterID) . " and not Deleted";
   $result = $Data->do_sel_query($query);
 
   if ($result > 0) {
@@ -22,14 +22,15 @@ if (isset($_GET['ID'])) {
     // Print data
     echo $row['file'];
     exit;
-  } else {
+  }
+  else {
     echo 'Error! No File exists with that ID.';
   }
 
   // Free the mysql resources
-  $Data->do_close();
-  ;
-} else {
+  $Data->do_close();;
+}
+else {
   echo 'Error! No ID was passed.';
 }
 ?>
