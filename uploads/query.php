@@ -1,12 +1,12 @@
 <?php
 
-require_once( '../library.php');
+require_once('../library.php');
 $Data = new MySQLiDB();
 $return_arr = array();
 /* If connection to database, run sql statement. */
 
 $Query = 'SELECT Dept FROM ' . MySQL_Pre . 'Uploads '
-        . 'Where Dept like \'%' . WebLib::GetVal($_REQUEST, 'term') . '%\' group by Dept';
+  . 'Where Dept like \'%' . WebLib::GetVal($_REQUEST, 'term') . '%\' group by Dept';
 $fetch = $Data->do_sel_query($Query);
 
 /* Retrieve and store in array the results of the query. */
