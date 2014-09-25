@@ -10,7 +10,7 @@ class SRER_PDF extends PDF {
   public $colw;
   public $cols;
   public $fh = 3.5;
-  private $PrintHeader = true;
+  private $PrintHeader = TRUE;
 
   function SRER_PDF() {
     $this->FPDF('L');
@@ -18,10 +18,10 @@ class SRER_PDF extends PDF {
     $this->SetCreator('NIC Paschim Medinipur');
     $this->AliasNbPages();
     $this->SetMargins(5, 5, 5);
-    $this->SetAutoPageBreak(true, 5);
+    $this->SetAutoPageBreak(TRUE, 5);
   }
 
-  function AutoHeader($Print = true) {
+  function AutoHeader($Print = TRUE) {
     $this->PrintHeader = $Print;
   }
 
@@ -94,22 +94,25 @@ class SRER_PDF extends PDF {
         $j = empty($j) ? strlen($s) : $j;
         $this->SetXY($ox, $oy);
         $this->SetDrawColor(255, 0, 0);
-        if (($j > 0) || (strlen($s) > 0))
+        if (($j > 0) || (strlen($s) > 0)) {
           $this->Cell($w, $this->fh, str_replace("|", ", ", substr($s, 0, $j)), 0, 0, $align);
-        $oy+=$this->fh;
+        }
+        $oy += $this->fh;
         $i = $j;
-        if (strlen(substr($s, 0, $j)) > 0)
+        if (strlen(substr($s, 0, $j)) > 0) {
           $s = substr($s, $j + 1, $nb - $j);
+        }
         $nb = strlen($s);
-      }while ($j);
+      } while ($j);
       $this->SetXY($x, $y);
       $this->SetDrawColor(0);
       $this->SetTextColor(255, 255, 255);
       $this->Cell($w, $h, '', $b, 0, $align);
       $this->SetTextColor(0);
     }
-    else
+    else {
       $this->Cell($w, $h, str_replace("|", ", ", $s), $b, 0, $align);
+    }
   }
 
   function Details($Query, $SlNo = 1, $lw = 0.1, $fw = 6) {
@@ -128,10 +131,12 @@ class SRER_PDF extends PDF {
           $this->AddPage();
           $this->maxln = $maxln;
         }
-        if (($i == 0) && ($SlNo == 1))
+        if (($i == 0) && ($SlNo == 1)) {
           $this->Wrap($this->colw[$i], $c);
-        else
+        }
+        else {
           $this->Wrap($this->colw[$i], $row[$i]);
+        }
         $i++;
       }
       $c++;
@@ -144,7 +149,7 @@ class SRER_PDF extends PDF {
   }
 
   function PreHeader() {
-    $this->SetAutoPageBreak(true, 20);
+    $this->SetAutoPageBreak(TRUE, 20);
     $this->SetFont('Arial', 'B', 10);
     $this->SetTextColor(0);
     $this->Cell(0, 7, "Summary Revision of Electoral Roll 2014", 0, 1, "C");

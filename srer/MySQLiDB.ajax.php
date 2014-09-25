@@ -21,11 +21,12 @@
  *
 
  */
-require_once ( __DIR__ . '/../lib.inc.php');
-require_once ( __DIR__ . '/../class.MySQLiDBHelper.php');
-require_once ( __DIR__ . '/../php-mailer/GMail.lib.php');
-if (!isset($_SESSION))
+require_once(__DIR__ . '/../lib.inc.php');
+require_once(__DIR__ . '/../class.MySQLiDBHelper.php');
+require_once(__DIR__ . '/../php-mailer/GMail.lib.php');
+if (!isset($_SESSION)) {
   session_start();
+}
 //@ todo Enable AjaxToken currently disabled
 $CSRF = (WebLib::GetVal($_POST, 'AjaxToken') === WebLib::GetVal($_SESSION, 'Token'));
 if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
@@ -44,8 +45,8 @@ if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
     case 'GetLastSl':
       SetCurrForm(WebLib::GetVal($_POST, 'TableName'));
       $Query = 'Select (count(*)+1) as LastSL '
-              . ' FROM ' . WebLib::GetVal($_SESSION, 'TableName', FALSE, FALSE)
-              . ' Where `PartID`=?';
+        . ' FROM ' . WebLib::GetVal($_SESSION, 'TableName', FALSE, FALSE)
+        . ' Where `PartID`=?';
       doQuery($DataResp, $Query, WebLib::GetVal($_POST, 'Params', FALSE, FALSE));
       $DataResp['Msg'] = 'Total Data in this Form of this Part: ' . ($DataResp['Data'][0]['LastSL'] - 1);
       break;
@@ -53,8 +54,8 @@ if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
     case 'GetSRERData':
       SetCurrForm(WebLib::GetVal($_POST, 'TableName'));
       $Query = 'Select ' . WebLib::GetVal($_SESSION, 'Fields', FALSE, FALSE)
-              . ' FROM ' . WebLib::GetVal($_SESSION, 'TableName', FALSE, FALSE)
-              . ' Where `PartID`=? Order By SlNo LIMIT ?,?';
+        . ' FROM ' . WebLib::GetVal($_SESSION, 'TableName', FALSE, FALSE)
+        . ' Where `PartID`=? Order By SlNo LIMIT ?,?';
       doQuery($DataResp, $Query, WebLib::GetVal($_POST, 'Params', FALSE, FALSE));
       break;
 
@@ -71,14 +72,14 @@ if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
 
     case 'GetACParts':
       $Query = 'Select DISTINCT A.`ACNo`,`ACName`'
-              . ' FROM `' . MySQL_Pre . 'SRER_ACs` A JOIN `' . MySQL_Pre . 'SRER_PartMap` P'
-              . ' ON (A.`ACNo`=P.`ACNo` AND A.`DistCode`=?) '
-              . ' Where P.`UserMapID`=?';
+        . ' FROM `' . MySQL_Pre . 'SRER_ACs` A JOIN `' . MySQL_Pre . 'SRER_PartMap` P'
+        . ' ON (A.`ACNo`=P.`ACNo` AND A.`DistCode`=?) '
+        . ' Where P.`UserMapID`=?';
       $DataResp['ACs'] = array();
       doQuery($DataResp['ACs'], $Query, array(DistCode, WebLib::GetVal($_SESSION, 'UserMapID')));
       $Query = 'Select `PartID`,`PartNo`,`PartName`,`ACNo`'
-              . ' FROM `' . MySQL_Pre . 'SRER_PartMap`'
-              . ' Where `UserMapID`=?';
+        . ' FROM `' . MySQL_Pre . 'SRER_PartMap`'
+        . ' Where `UserMapID`=?';
       $DataResp['Parts'] = array();
       doQuery($DataResp['Parts'], $Query, array(WebLib::GetVal($_SESSION, 'UserMapID')));
       break;
@@ -87,12 +88,13 @@ if ((WebLib::CheckAuth() === 'Valid') && $CSRF) {
   $_SESSION['LifeTime'] = time();
   $DataResp['AjaxToken'] = $_SESSION['Token'];
   $DataResp['RT'] = '<b>Response Time:</b> '
-          . round(microtime(TRUE) - WebLib::GetVal($_SESSION, 'RT'), 6) . ' Sec';
+    . round(microtime(TRUE) - WebLib::GetVal($_SESSION, 'RT'), 6) . ' Sec';
   //PHP 5.4+ is required for JSON_PRETTY_PRINT
   //@todo Remove PRETTY_PRINT for Production
   if (strnatcmp(phpversion(), '5.4') >= 0) {
     $AjaxResp = json_encode($DataResp, JSON_PRETTY_PRINT);
-  } else {
+  }
+  else {
     $AjaxResp = json_encode($DataResp); //WebLib::prettyPrint(json_encode($DataResp));
   }
   unset($DataResp);
@@ -116,8 +118,8 @@ function ChangePassword(&$DataResp, $OldPass) {
   $UserMapID = $_SESSION['UserMapID'];
   $Data = new MySQLiDB();
   $QryChgPwd = 'Update `' . MySQL_Pre . 'Users` Set `UserPass`=\'' . md5($Pass) . '\''
-          . ' Where `UserMapID`=' . $UserMapID . ' AND '
-          . ' MD5(CONCAT(`UserPass`,\'' . WebLib::GetVal($_SESSION, 'Token') . '\'))=\'' . $OldPass . '\''; //
+    . ' Where `UserMapID`=' . $UserMapID . ' AND '
+    . ' MD5(CONCAT(`UserPass`,\'' . WebLib::GetVal($_SESSION, 'Token') . '\'))=\'' . $OldPass . '\''; //
   $Updated = $Data->do_ins_query($QryChgPwd);
   $Data->do_close();
   unset($Data);
@@ -127,15 +129,17 @@ function ChangePassword(&$DataResp, $OldPass) {
     $Result = $Data->query('Select `UserName`,`UserID` FROM `' . MySQL_Pre . 'Users`');
     $Subject = 'Change User Passowrd - SRER 2014';
     $Body = '<span>Your new password for UserID: <b>'
-            . $Result[0]['UserID'] . '</b> is <b>' . $Pass . '</b></span>';
+      . $Result[0]['UserID'] . '</b> is <b>' . $Pass . '</b></span>';
     $DataResp['Msg'] = 'Password Changed Successfully!';
     $Mail = json_decode(GMailSMTP($Result[0]['UserID'], $Result[0]['UserName'], $Subject, $Body));
     if ($Mail->Sent) {
       $DataResp['Msg'] = 'Password Changed Successfully!';
-    } else {
+    }
+    else {
       $DataResp['Msg'] .= ' But Unable to Send eMail!';
     }
-  } else {
+  }
+  else {
     $DataResp['Msg'] = 'Unable to Change Password!';
   }
   unset($Result);
@@ -145,9 +149,9 @@ function ChangePassword(&$DataResp, $OldPass) {
 /**
  * Perfroms Select Query to the database
  *
- * @param ref     $DataResp
- * @param string  $Query
- * @param array   $Params
+ * @param ref $DataResp
+ * @param string $Query
+ * @param array $Params
  * @example GetData(&$DataResp, "Select a,b,c from Table Where c=? Order By b LIMIT ?,?", array('1',30,10))
  */
 function doQuery(&$DataResp, $Query, $Params = NULL) {
@@ -178,30 +182,35 @@ function SaveData(&$DataResp, $tableName, $saveData, $RowIndex = NULL) {
       if ($Saved > 0) {
         $Result['Saved'] = TRUE;
         $Result['RowID'] = $Data->getInsertId();
-      } else {
+      }
+      else {
         $Result['Saved'] = FALSE;
         $Result['RowID'] = NULL;
         $Action = 'not Added[' . $saveData['SlNo'] . ']';
       }
-    } else {
+    }
+    else {
       if ($saveData['SlNo'] !== "") {
         $Data->where('RowID', $saveData['RowID']);
         $Saved = $Data->update($tableName, $saveData);
         if ($Saved > 0) {
           $Result['Saved'] = TRUE;
           $Result['RowID'] = $saveData['RowID'];
-        } else {
+        }
+        else {
           $Result['Saved'] = FALSE;
           $Result['RowID'] = $saveData['RowID'];
           $Action = 'not Updated[' . $saveData['SlNo'] . ']';
         }
-      } else {
+      }
+      else {
         $Data->where('RowID', $saveData['RowID']);
         $Saved = $Data->delete($tableName);
         if ($Saved > 0) {
           $Result['Saved'] = TRUE;
           $Result['RowID'] = '';
-        } else {
+        }
+        else {
           $Result['Saved'] = FALSE;
           $Result['RowID'] = $saveData['RowID'];
           $Action = 'not Deleted[' . $saveData['SlNo'] . ']';
@@ -214,9 +223,11 @@ function SaveData(&$DataResp, $tableName, $saveData, $RowIndex = NULL) {
     $DataResp['Data'][$RowIndex] = $Result;
     unset($Result);
     unset($saveData);
-    if ($Action !== NULL)
+    if ($Action !== NULL) {
       $DataResp['Msg'] .= ' | ' . $Action;
-  } else {
+    }
+  }
+  else {
     $DataResp['Msg'] .= ' But nothing to Save!';
   }
   unset($Data);
@@ -234,31 +245,32 @@ function SetCurrForm($FormName = 'SRERForm6I') {
     case 'SRERForm6I':
       $_SESSION['TableName'] = '`' . MySQL_Pre . 'SRER_Form6`';
       $_SESSION['Fields'] = '`RowID`,`SlNo`,`ReceiptDate`,`Status`,'
-              . '`AppName`,`DOB`,`Sex`,`RelationshipName`,`Relationship`';
+        . '`AppName`,`DOB`,`Sex`,`RelationshipName`,`Relationship`';
       break;
     case 'SRERForm6A':
       $_SESSION['TableName'] = '`' . MySQL_Pre . 'SRER_Form6A`';
       $_SESSION['Fields'] = '`RowID`,`SlNo`,`ReceiptDate`,`Status`,'
-              . '`AppName`,`DOB`,`Sex`,`RelationshipName`,`Relationship`';
+        . '`AppName`,`DOB`,`Sex`,`RelationshipName`,`Relationship`';
       break;
     case 'SRERForm7I':
       $_SESSION['TableName'] = '`' . MySQL_Pre . 'SRER_Form7`';
       $_SESSION['Fields'] = '`RowID`,`SlNo`,`ReceiptDate`, `Status`,'
-              . '`ObjectorName`,`PartNo`,`SerialNoInPart`,`DelPersonName`,`ObjectReason`';
+        . '`ObjectorName`,`PartNo`,`SerialNoInPart`,`DelPersonName`,`ObjectReason`';
       break;
     case 'SRERForm8I':
       $_SESSION['TableName'] = '`' . MySQL_Pre . 'SRER_Form8`';
       $_SESSION['Fields'] = '`RowID`,`SlNo`,`ReceiptDate`, `Status`,'
-              . '`ElectorName`, `ElectorPartNo`, `ElectorSerialNoInPart`,`NatureObjection`';
+        . '`ElectorName`, `ElectorPartNo`, `ElectorSerialNoInPart`,`NatureObjection`';
       break;
     case 'SRERForm8A':
       $_SESSION['TableName'] = '`' . MySQL_Pre . 'SRER_Form8A`';
       $_SESSION['Fields'] = '`RowID`,`SlNo`,`ReceiptDate`,`Status`,'
-              . '`AppName`,`TransName`,`TransPartNo`,`TransSerialNoInPart`,`TransEPIC`,`PreResi`';
+        . '`AppName`,`TransName`,`TransPartNo`,`TransSerialNoInPart`,`TransEPIC`,`PreResi`';
       break;
   }
-  if (WebLib::GetVal($_POST, 'FormName') != '')
+  if (WebLib::GetVal($_POST, 'FormName') != '') {
     $_SESSION['FormName'] = WebLib::GetVal($_POST, 'FormName');
+  }
 }
 
 ?>
