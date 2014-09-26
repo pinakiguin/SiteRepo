@@ -10,7 +10,7 @@
  *
  */
 
-$(function() {
+$(function () {
 
   /**
    * Binds Receiptdate Field with datepicker
@@ -21,14 +21,13 @@ $(function() {
     selectOtherMonths: true,
     showButtonPanel: true,
     showAnim: "slideDown",
-    onClose: function() {
+    onClose: function () {
       DataChanged(this);
       var curDate = new Date($(this).val());
       $('#Msg').html('Date: ' + curDate);
       if ((('' + curDate) === 'Invalid Date') && ($(this).val() !== '')) {
         $(this).addClass('ui-state-error');
-      } else
-      {
+      } else {
         $(this).datepicker('setDate', curDate);
         $(this).removeClass('ui-state-error');
       }
@@ -46,7 +45,7 @@ $(function() {
     selectOtherMonths: true,
     showButtonPanel: true,
     showAnim: "slideDown",
-    onClose: function() {
+    onClose: function () {
       DataChanged(this);
       var curDate = new Date($(this).val());
       var maxDate = new Date("1996-01-01");
@@ -68,7 +67,7 @@ $(function() {
    * @todo Tabs Rendered
    */
   $('#SRER_Forms').tabs({
-    activate: function(event, ui) {
+    activate: function (event, ui) {
       $('#ActiveSRERForm').val(ui.newPanel.attr('id'));
     }
   });
@@ -78,12 +77,12 @@ $(function() {
    *  @todo PartID Selected
    */
   $('#PartID')
-          .chosen({width: "400px",
-    no_results_text: "Oops, nothing found!"
-  })
-          .change(function() {
-    $('#ActivePartID').val(this.value);
-  });
+    .chosen({width: "400px",
+      no_results_text: "Oops, nothing found!"
+    })
+    .change(function () {
+      $('#ActivePartID').val(this.value);
+    });
 
   /**
    * Get the list of ACs and register change event to update Parts
@@ -91,24 +90,24 @@ $(function() {
    *
    */
   $('#ACNo')
-          .chosen({width: "300px",
-    no_results_text: "Oops, nothing found!"
-  })
-          .change(function() {
-    var Options = '<option value=""></option>';
-    var Parts = $('#PartID').data('Parts');
-    var ACNo = $('#ACNo').val();
-    $.each(Parts.Data,
-            function(index, value) {
-              if (value.ACNo === ACNo) {
-                Options += '<option value="' + value.PartID + '">'
-                        + value.PartNo + ' - ' + value.PartName
-                        + '</option>';
-              }
-            });
-    $('#PartID').html(Options)
-            .trigger("liszt:updated");
-  });
+    .chosen({width: "300px",
+      no_results_text: "Oops, nothing found!"
+    })
+    .change(function () {
+      var Options = '<option value=""></option>';
+      var Parts = $('#PartID').data('Parts');
+      var ACNo = $('#ACNo').val();
+      $.each(Parts.Data,
+        function (index, value) {
+          if (value.ACNo === ACNo) {
+            Options += '<option value="' + value.PartID + '">'
+              + value.PartNo + ' - ' + value.PartName
+              + '</option>';
+          }
+        });
+      $('#PartID').html(Options)
+        .trigger("liszt:updated");
+    });
 
 
   /**
@@ -129,31 +128,31 @@ $(function() {
       'CallAPI': 'GetACParts'
     }
   })
-          .done(function(data) {
-    try {
-      var DataResp = $.parseJSON(data);
-      delete data;
-      $('#AjaxToken').val(DataResp.AjaxToken);
-      $('#Msg').html(DataResp.Msg);
-      $('#ED').html(DataResp.RT);
-      var Options = '<option value=""></option>';
-      $.each(DataResp.ACs.Data,
-              function(index, value) {
-                Options += '<option value="' + value.ACNo + '">' + value.ACNo + ' - ' + value.ACName + '</option>';
-              });
-      $('#ACNo').html(Options)
-              .trigger("liszt:updated");
-      $('#PartID').data('Parts', DataResp.Parts);
-      delete DataResp;
-    }
-    catch (e) {
-      $('#Msg').html('Server Error:' + e);
-      $('#Error').html(data);
-    }
-  })
-          .fail(function(msg) {
-    $('#Msg').html(msg);
-  });
+    .done(function (data) {
+      try {
+        var DataResp = $.parseJSON(data);
+        delete data;
+        $('#AjaxToken').val(DataResp.AjaxToken);
+        $('#Msg').html(DataResp.Msg);
+        $('#ED').html(DataResp.RT);
+        var Options = '<option value=""></option>';
+        $.each(DataResp.ACs.Data,
+          function (index, value) {
+            Options += '<option value="' + value.ACNo + '">' + value.ACNo + ' - ' + value.ACName + '</option>';
+          });
+        $('#ACNo').html(Options)
+          .trigger("liszt:updated");
+        $('#PartID').data('Parts', DataResp.Parts);
+        delete DataResp;
+      }
+      catch (e) {
+        $('#Msg').html('Server Error:' + e);
+        $('#Error').html(data);
+      }
+    })
+    .fail(function (msg) {
+      $('#Msg').html(msg);
+    });
 
   /**
    * On Edit Fetch the rows acordingly
@@ -161,55 +160,55 @@ $(function() {
    *
    */
   $('[id$="CmdEdit"]')
-          .each(function() {
-    $(this).bind('click', function() {
-      ClearAll();
-      $('#Msg').html('Editing Please Wait...');
-      var FromRow = $('#' + $('#ActiveSRERForm').val() + 'FromRow').val() - 1;
-      if (FromRow <= 0) {
-        FromRow = 0;
-      }
-      $.ajax({
-        type: 'POST',
-        url: 'MySQLiDB.ajax.php',
-        dataType: 'html',
-        xhrFields: {
-          withCredentials: true
-        },
-        data: {
-          'AjaxToken': $('#AjaxToken').val(),
-          'CallAPI': 'GetSRERData',
-          'TableName': $('#ActiveSRERForm').val(),
-          'Params': new Array($('#ActivePartID').val(), FromRow, 10)
+    .each(function () {
+      $(this).bind('click', function () {
+        ClearAll();
+        $('#Msg').html('Editing Please Wait...');
+        var FromRow = $('#' + $('#ActiveSRERForm').val() + 'FromRow').val() - 1;
+        if (FromRow <= 0) {
+          FromRow = 0;
         }
-      })
-              .done(function(data) {
-        try {
-          var DataResp = $.parseJSON(data);
-          delete data;
-          $('#AjaxToken').val(DataResp.AjaxToken);
-          $('#Msg').html(DataResp.Msg);
-          $.each(DataResp.Data,
-                  function(index, value) {
-                    $.each(value, function(key, data) {
-                      var Field = $('#' + $('#ActiveSRERForm').val() + key + index + '_D');
-                      Field.val(data);
-                      SaveFieldData(Field);
-                    });
+        $.ajax({
+          type: 'POST',
+          url: 'MySQLiDB.ajax.php',
+          dataType: 'html',
+          xhrFields: {
+            withCredentials: true
+          },
+          data: {
+            'AjaxToken': $('#AjaxToken').val(),
+            'CallAPI': 'GetSRERData',
+            'TableName': $('#ActiveSRERForm').val(),
+            'Params': new Array($('#ActivePartID').val(), FromRow, 10)
+          }
+        })
+          .done(function (data) {
+            try {
+              var DataResp = $.parseJSON(data);
+              delete data;
+              $('#AjaxToken').val(DataResp.AjaxToken);
+              $('#Msg').html(DataResp.Msg);
+              $.each(DataResp.Data,
+                function (index, value) {
+                  $.each(value, function (key, data) {
+                    var Field = $('#' + $('#ActiveSRERForm').val() + key + index + '_D');
+                    Field.val(data);
+                    SaveFieldData(Field);
                   });
-          $('#ED').html(DataResp.RT);
-          delete DataResp;
-        }
-        catch (e) {
-          $('#Msg').html('Server Error:' + e);
-          $('#Error').html(data);
-        }
-      })
-              .fail(function(msg) {
-        $('#Msg').html(msg);
+                });
+              $('#ED').html(DataResp.RT);
+              delete DataResp;
+            }
+            catch (e) {
+              $('#Msg').html('Server Error:' + e);
+              $('#Error').html(data);
+            }
+          })
+          .fail(function (msg) {
+            $('#Msg').html(msg);
+          });
       });
     });
-  });
 
   /**
    * Insert the rows acordingly
@@ -220,79 +219,79 @@ $(function() {
    */
 
   $('[id$="CmdSave"]')
-          .each(function() {
-    $(this).bind('click', function() {
-      //$('#Error').html('CmdSave: ');
-      if (parseInt($('#ActivePartID').val()) > 0) {
-        $('#Msg').html('Preparing to Save Please Wait...');
-        var i = 0, j, Params = new Array('');
-        j = 0;
-        $('input[type="checkbox"]').filter(':checked')
-                .each(function() {
-          Params[i] = new Object();
-          $('#Msg').append(document.createTextNode($(this).val() + ', '));
-          $('[id$="' + $(this).attr('id').slice(-3) + '"][id^="' + $('#ActiveSRERForm').val() + '"]')
-                  .each(function() {
-            Params[i][$(this).attr('id').slice($('#ActiveSRERForm').val().length, -3)] = $(this).val();
-          });
-          Params[i]["Index"] = $(this).attr('id').slice(-3, -2);
-          Params[i++]["PartID"] = $('#ActivePartID').val();
-        });
-        if (i > 0) {
-          $.ajax({
-            type: 'POST',
-            url: 'MySQLiDB.ajax.php',
-            dataType: 'html',
-            xhrFields: {
-              withCredentials: true
-            },
-            data: {
-              'AjaxToken': $('#AjaxToken').val(),
-              'CallAPI': 'PutSRERData',
-              'TableName': $('#ActiveSRERForm').val(),
-              'Params': Params
-            }
-          })
-                  .done(function(data) {
-            try {
-              var DataResp = $.parseJSON(data);
-              delete data;
-              $('#AjaxToken').val(DataResp.AjaxToken);
-              $('#Msg').html(DataResp.Msg);
-              $.each(DataResp.Data, function(index, value) {
-                if (value.Saved) {
-                  var ChkRowID = $('#' + $('#ActiveSRERForm').val() + 'RowID' + value.Index + '_D');
-                  ChkRowID.val(value.RowID);
-                  SaveFieldData(ChkRowID);
-                  $.each(value.Data, function(key, data) {
-                    var Field = $('#' + $('#ActiveSRERForm').val() + key + value.Index + '_D');
-                    Field.val(data);
-                    $('#Msg').append(document.createTextNode(data));
-                    SaveFieldData(Field);
+    .each(function () {
+      $(this).bind('click', function () {
+        //$('#Error').html('CmdSave: ');
+        if (parseInt($('#ActivePartID').val()) > 0) {
+          $('#Msg').html('Preparing to Save Please Wait...');
+          var i = 0, j, Params = new Array('');
+          j = 0;
+          $('input[type="checkbox"]').filter(':checked')
+            .each(function () {
+              Params[i] = new Object();
+              $('#Msg').append(document.createTextNode($(this).val() + ', '));
+              $('[id$="' + $(this).attr('id').slice(-3) + '"][id^="' + $('#ActiveSRERForm').val() + '"]')
+                .each(function () {
+                  Params[i][$(this).attr('id').slice($('#ActiveSRERForm').val().length, -3)] = $(this).val();
+                });
+              Params[i]["Index"] = $(this).attr('id').slice(-3, -2);
+              Params[i++]["PartID"] = $('#ActivePartID').val();
+            });
+          if (i > 0) {
+            $.ajax({
+              type: 'POST',
+              url: 'MySQLiDB.ajax.php',
+              dataType: 'html',
+              xhrFields: {
+                withCredentials: true
+              },
+              data: {
+                'AjaxToken': $('#AjaxToken').val(),
+                'CallAPI': 'PutSRERData',
+                'TableName': $('#ActiveSRERForm').val(),
+                'Params': Params
+              }
+            })
+              .done(function (data) {
+                try {
+                  var DataResp = $.parseJSON(data);
+                  delete data;
+                  $('#AjaxToken').val(DataResp.AjaxToken);
+                  $('#Msg').html(DataResp.Msg);
+                  $.each(DataResp.Data, function (index, value) {
+                    if (value.Saved) {
+                      var ChkRowID = $('#' + $('#ActiveSRERForm').val() + 'RowID' + value.Index + '_D');
+                      ChkRowID.val(value.RowID);
+                      SaveFieldData(ChkRowID);
+                      $.each(value.Data, function (key, data) {
+                        var Field = $('#' + $('#ActiveSRERForm').val() + key + value.Index + '_D');
+                        Field.val(data);
+                        $('#Msg').append(document.createTextNode(data));
+                        SaveFieldData(Field);
+                      });
+                      ChkRowID.blur();
+                    }
                   });
-                  ChkRowID.blur();
+                  $('#ED').html(DataResp.RT);
+                  delete DataResp;
                 }
+                catch (e) {
+                  $('#Msg').html(''.e);
+                  $('#Error').html(data);
+                }
+              })
+              .fail(function (msg) {
+                $('#Msg').html(msg);
               });
-              $('#ED').html(DataResp.RT);
-              delete DataResp;
-            }
-            catch (e) {
-              $('#Msg').html(''.e);
-              $('#Error').html(data);
-            }
-          })
-                  .fail(function(msg) {
-            $('#Msg').html(msg);
-          });
-        } else {
-          $('#Msg').html('Nothing to Save...');
+          } else {
+            $('#Msg').html('Nothing to Save...');
+          }
         }
-      }
-      else {
-        $('#Msg').html('Please select AC and Part...');
-      }
+        else {
+          $('#Msg').html('Please select AC and Part...');
+        }
+      });
     });
-  });
 
   /**
    * On New Click
@@ -301,44 +300,44 @@ $(function() {
    * @ todo Implemented to Get Last SlNo
    */
   $('[id$="CmdNew"]')
-          .each(function() {
-    $(this).bind('click', function() {
-      $('#Msg').html('Creating Please Wait...');
-      $.ajax({
-        type: 'POST',
-        url: 'MySQLiDB.ajax.php',
-        dataType: 'html',
-        xhrFields: {
-          withCredentials: true
-        },
-        data: {
-          'AjaxToken': $('#AjaxToken').val(),
-          'CallAPI': 'GetLastSl',
-          'TableName': $('#ActiveSRERForm').val(),
-          'Params': new Array($('#ActivePartID').val())
-        }
-      })
-              .done(function(data) {
-        try {
-          var DataResp = $.parseJSON(data);
-          delete data;
-          $('#AjaxToken').val(DataResp.AjaxToken);
-          $('#Msg').html(DataResp.Msg);
-          $('#' + $('#ActiveSRERForm').val() + 'FromRow').val(DataResp.Data[0].LastSL);
-          $('#ED').html(DataResp.RT);
-          delete DataResp;
-        }
-        catch (e) {
-          $('#Msg').html('Server Error:' + e);
-          $('#Error').html(data);
-        }
-      })
-              .fail(function(msg) {
-        $('#Msg').html(msg);
+    .each(function () {
+      $(this).bind('click', function () {
+        $('#Msg').html('Creating Please Wait...');
+        $.ajax({
+          type: 'POST',
+          url: 'MySQLiDB.ajax.php',
+          dataType: 'html',
+          xhrFields: {
+            withCredentials: true
+          },
+          data: {
+            'AjaxToken': $('#AjaxToken').val(),
+            'CallAPI': 'GetLastSl',
+            'TableName': $('#ActiveSRERForm').val(),
+            'Params': new Array($('#ActivePartID').val())
+          }
+        })
+          .done(function (data) {
+            try {
+              var DataResp = $.parseJSON(data);
+              delete data;
+              $('#AjaxToken').val(DataResp.AjaxToken);
+              $('#Msg').html(DataResp.Msg);
+              $('#' + $('#ActiveSRERForm').val() + 'FromRow').val(DataResp.Data[0].LastSL);
+              $('#ED').html(DataResp.RT);
+              delete DataResp;
+            }
+            catch (e) {
+              $('#Msg').html('Server Error:' + e);
+              $('#Error').html(data);
+            }
+          })
+          .fail(function (msg) {
+            $('#Msg').html(msg);
+          });
+        ClearAll();
       });
-      ClearAll();
     });
-  });
 
   /**
    * @todo CmdDel Click
@@ -346,35 +345,35 @@ $(function() {
    * @ toto Implemented SaveFieldData and DataChanged on Delete via save
    */
   $('[id$="CmdDel"]')
-          .each(function() {
-    $(this).bind('click', function() {
-      $('#Msg').html('RecordID: ');
-      var i = 0;
-      $('input[type="checkbox"]').filter(':checked')
-              .each(function() {
-        $('#Msg').append(document.createTextNode($(this).val() + ', '));
-        $('[id!="' + $('#ActiveSRERForm').val() + 'RowID' + $(this).attr('id').slice(-3) + '"]'
-                + '[id$="' + $(this).attr('id').slice(-3) + '"]'
-                + '[id^="' + $('#ActiveSRERForm').val() + '"]').val('');
-        i++;
+    .each(function () {
+      $(this).bind('click', function () {
+        $('#Msg').html('RecordID: ');
+        var i = 0;
+        $('input[type="checkbox"]').filter(':checked')
+          .each(function () {
+            $('#Msg').append(document.createTextNode($(this).val() + ', '));
+            $('[id!="' + $('#ActiveSRERForm').val() + 'RowID' + $(this).attr('id').slice(-3) + '"]'
+              + '[id$="' + $(this).attr('id').slice(-3) + '"]'
+              + '[id^="' + $('#ActiveSRERForm').val() + '"]').val('');
+            i++;
+          });
+        $('#Msg').append(document.createTextNode(' to be deleted.'));
+        if (i === 0) {
+          $('#Msg').html('Nothing to delete...');
+        }
       });
-      $('#Msg').append(document.createTextNode(' to be deleted.'));
-      if (i === 0) {
-        $('#Msg').html('Nothing to delete...');
-      }
     });
-  });
 
   /**
    * Stores the initial data and bind the blur event of all fields
    */
   $('[id$="_D"]')
-          .each(function() {
-    $(this).bind('blur', function() {
-      DataChanged(this);
+    .each(function () {
+      $(this).bind('blur', function () {
+        DataChanged(this);
+      });
+      SaveFieldData(this);
     });
-    SaveFieldData(this);
-  });
 
   /**
    * Shows the Tabs when loading completes.
@@ -391,7 +390,7 @@ $(function() {
  * @returns {undefined}
  */
 function ClearAll() {
-  $('[id^="' + $('#ActiveSRERForm').val() + '"][id$="_D"]').each(function() {
+  $('[id^="' + $('#ActiveSRERForm').val() + '"][id$="_D"]').each(function () {
     $(this).val('');
     SaveFieldData(this);
     if ($(this).filter(':checked').length !== 0) {
@@ -429,7 +428,7 @@ function DataChanged(Obj) {
     //$('#Msg').text($(Obj).attr('id') + ':changed[' + CheckBox.attr('checked') + ']');
   } else {
     var hasChangedAnyElementOnRow = 0;
-    $('[id$="' + $(Obj).attr('id').slice(-3) + '"]').each(function() {
+    $('[id$="' + $(Obj).attr('id').slice(-3) + '"]').each(function () {
       if ($(this).data('DB') !== $(this).val()) {
         hasChangedAnyElementOnRow = 1;
         //$('#Msg').text($(this).data('DB') + '!==' + $(this).val() + '|' + $(this).attr('id'));
@@ -456,20 +455,17 @@ function DataChanged(Obj) {
 function validatedate(inputText) {
   var dateformat = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/;
   // Match the date format through regular expression
-  if (inputText.value.match(dateformat))
-  {
+  if (inputText.value.match(dateformat)) {
     //Test which seperator is used '/' or '-'
     var opera1 = inputText.value.split('/');
     var opera2 = inputText.value.split('-');
     lopera1 = opera1.length;
     lopera2 = opera2.length;
     // Extract the string into month, date and year
-    if (lopera1 > 1)
-    {
+    if (lopera1 > 1) {
       var pdate = inputText.value.split('/');
     }
-    else if (lopera2 > 1)
-    {
+    else if (lopera2 > 1) {
       var pdate = inputText.value.split('-');
     }
     var dd = parseInt(pdate[0]);
@@ -477,32 +473,25 @@ function validatedate(inputText) {
     var yy = parseInt(pdate[2]);
     // Create list of days of a month [assume there is no leap year by default]
     var ListofDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-    if (mm === 1 || mm > 2)
-    {
-      if (dd > ListofDays[mm - 1])
-      {
+    if (mm === 1 || mm > 2) {
+      if (dd > ListofDays[mm - 1]) {
         return false;
       }
     }
-    if (mm === 2)
-    {
+    if (mm === 2) {
       var lyear = false;
-      if ((!(yy % 4) && yy % 100) || !(yy % 400))
-      {
+      if ((!(yy % 4) && yy % 100) || !(yy % 400)) {
         lyear = true;
       }
-      if ((!lyear) && (dd >= 29))
-      {
+      if ((!lyear) && (dd >= 29)) {
         return false;
       }
-      if ((lyear) && (dd > 29))
-      {
+      if ((lyear) && (dd > 29)) {
         return false;
       }
     }
   }
-  else
-  {
+  else {
     return false;
   }
 }

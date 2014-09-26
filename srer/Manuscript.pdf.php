@@ -19,11 +19,11 @@ class MAN_PDF extends PDF {
     $this->SetCreator('NIC Paschim Medinipur');
     $this->AliasNbPages();
     $this->SetMargins(5, 5, 5);
-    $this->SetAutoPageBreak(true, 5);
+    $this->SetAutoPageBreak(TRUE, 5);
   }
 
   function PreHeader() {
-    $this->SetAutoPageBreak(true, 20);
+    $this->SetAutoPageBreak(TRUE, 20);
     $this->SetFont('Arial', 'B', 12);
     $this->SetTextColor(0);
     $this->Cell(0, 5, $this->TxtHeader, 0, 1, 'C');
@@ -77,20 +77,24 @@ class MAN_PDF extends PDF {
           $this->AddPage();
           $this->maxln = $maxln;
         }
-        if (($i == 0) && ($SlNo == 1))
+        if (($i == 0) && ($SlNo == 1)) {
           $this->Wrap($this->colw[$i], $c);
-        else
+        }
+        else {
           $this->Wrap($this->colw[$i], $row[$i]);
+        }
         $i++;
       }
       if ($this->title !== 'Proforma - D') {
         $i = 0;
         $this->Ln();
         while ($i < count($this->colw)) {
-          if (($i == 0) && ($SlNo == 1))
+          if (($i == 0) && ($SlNo == 1)) {
             $this->Wrap($this->colw[$i], $c);
-          else
+          }
+          else {
             $this->Cell($this->colw[$i], 10, '', 1, 0, 'C');
+          }
           $i++;
         }
       }
