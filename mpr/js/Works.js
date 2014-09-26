@@ -2,7 +2,7 @@ $(function () {
     $(".chzn").chosen({width: "200px",
         no_results_text: "Oops, nothing found!"
     });
-    $(".datePicker").datepicker().css({"width": "80px"});
+    $(".datePicker").datepicker({dateFormat:"dd/mm/yy"}).css({"width": "80px"});
 
     $("#Scheme").chosen({width: "175px",
         no_results_text: "Oops, nothing found!"

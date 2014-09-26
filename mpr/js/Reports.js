@@ -61,5 +61,5 @@ $(function () {
         });
     });
 
-    $(".datePick").datepicker().css({"width": "80px"});
+    $(".datePick").datepicker({dateFormat:"dd/mm/yy"}).css({"width": "80px"});
 });
