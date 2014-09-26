@@ -113,7 +113,7 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
     }
     if ($Query !== '') {
       if($RunQuery){
-        $Inserted = $DB->rawQuery($Query);
+        $Inserted = $DB->ddlQuery($Query);
       }
       if ($Inserted > 0) {
         if (WebLib::GetVal($_POST, 'CmdSubmit') === 'Create') {

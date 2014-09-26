@@ -4,6 +4,9 @@ require_once __DIR__ . '/../lib.inc.php';
 WebLib::AuthSession();
 WebLib::Html5Header('Monthly Performance Report');
 WebLib::IncludeCSS();
+//WebLib::CreateDB();
+WebLib::IncludeCSS('css/forms.css');
+WebLib::IncludeCSS('css/Style.css');
 ?>
 </head>
 <body>
@@ -16,19 +19,8 @@ WebLib::IncludeCSS();
   <?php
   WebLib::ShowMenuBar('MPR');
   ?>
-  <div class="content">
-    <form method="post" enctype="multipart/form-data"
-          action="<?php
-          echo WebLib::GetVal($_SERVER, 'PHP_SELF');
-          ?>">
-            <?php
-            if (WebLib::GetVal($_POST, 'CmdUpload') === 'Upload') {
-              print_r($_FILES);
-            }
-            ?>
-      <input name="ExcelFile" type="file"/>
-      <input type="submit" name="CmdUpload" value="Upload"/>
-    </form>
+  <div class="content"> 
+
   </div>
   <div class="pageinfo">
     <?php WebLib::PageInfo(); ?>

@@ -1,98 +1,238 @@
 <?php
+require_once __DIR__ . '/../lib.inc.php';
+WebLib::AuthSession();
+switch (WebLib::GetVal($_POST, 'CallAPI')) {
 
-/**
- * API For Ajax Calls from a valid authenticated session.
- *
- *
- * The JSON Object will Contain Four Top Level Nodes
- * 1. $DataResp['AjaxToken'] => Token for preventing atacks like CSRF and Sesion Hijack
- * 2. $DataResp['Data']
- * 3. $DataResp['Msg']
- * 4. $DataResp['RT'] => Response Time of the Script
- *
- * @example ($_POST=array(
- *              'CallAPI'=>'GetData',
- *              'AjaxToken'=>'$$$$')
- *
- * @return json
- *
- */
-require_once ( __DIR__ . '/../lib.inc.php');
-if (!isset($_SESSION)) {
-  session_start();
+  case 'Users_GetUserData':
+    $DB = new MySQLiDBHelper();
+    $DB->where('CtrlMapID', $_SESSION['UserMapID']);
+    WebLib::ShowTable($DB->query('Select `UserName` AS `Scheme Users`'
+      . 'from ' . MySQL_Pre . 'MPR_ViewMappedUsers'));
+    unset($DB);
+    break;
+
+  case 'Schemes_GetSchemeTable':
+    $DB = new MySQLiDBHelper();
+    $DB->where('UserMapID', $_SESSION['UserMapID']);
+    $DB->where('SchemeID', WebLib::GetVal($_POST, 'Scheme'));
+    WebLib::ShowTable($DB->query('Select Year, SchemeName, Amount, OrderNo, '
+      . 'Date as `Order Date(YYYY-MM-DD)` '
+      . 'from ' . MySQL_Pre . 'MPR_ViewUserSchemeAllotments'));
+    unset($DB);
+    break;
+
+  case 'Reports_GetSchemeFunds':
+    $DB = new MySQLiDBHelper();
+    $DB->where('SchemeID', WebLib::GetVal($_POST, 'Scheme'));
+    WebLib::ShowTable($DB->query('Select `Year`,`SchemeName`,`Funds`,`Expense`,`Balance` '
+      . 'from ' . MySQL_Pre . 'MPR_ViewSchemeWiseFunds'));
+    unset($DB);
+    break;
+
+  case 'Reports_GetWorkFunds':
+    $DB = new MySQLiDBHelper();
+    $DB->where('SchemeID', WebLib::GetVal($_POST, 'Scheme'));
+    $DB->where('CtrlMapID', $_SESSION['UserMapID']);
+    $DB->where('UserMapID', WebLib::GetVal($_POST, 'User'));
+    WebLib::ShowTable($DB->query('Select `SchemeName`,`Work`,`EstimatedCost`,`Funds`, '
+      . ' `Expenses`,`Balance`,`Progress`,`Remarks` AS `Status`,`TenderDate`,`WorkOrderDate`,`WorkRemarks` AS `Remarks`'
+      . 'from ' . MySQL_Pre . 'MPR_ViewUserWorks'));
+    unset($DB);
+    break;
+
+  case 'Works_GetWorks':
+    ?>
+    <div class="formWrapper-Autofit">
+      <h3 class="formWrapper-h3">Sanctioned Works</h3>
+      <table rules="all" frame="box" width="100%" cellpadding="5" cellspacing="2">
+        <tr>
+          <td>Sl No.</td>
+          <th>Description of Work</th>
+          <th>Estimated Cost(Rs.)</th>
+          <th>Fund Released(Rs.)</th>
+          <th>Fund Utilised(Rs.)</th>
+          <th>Balance(Rs.)</th>
+          <th>Physical Progress(%)</th>
+          <th>Tender Date</th>
+          <th>Work Order Date</th>
+          <th>Remarks</th>
+        </tr>
+        <?php
+        $DB = new MySQLiDBHelper();
+        $DB->where('CtrlMapID', $_SESSION['UserMapID']);
+        $MprMapID = WebLib::GetVal($_POST, 'MprMapID');
+        if ($MprMapID > 0) {
+          $DB->where('MprMapID', $MprMapID);
+        }
+        $DB->where('SchemeID', WebLib::GetVal($_POST, 'Scheme'));
+        $UserWorks = $DB->get(MySQL_Pre . 'MPR_ViewUserWorks');
+        $i = 1;
+        foreach ($UserWorks as $Work) {
+          ?>
+          <tr>
+            <td><?php echo $i; ?></td>
+            <td><?php echo $Work['Work'] ?></td>
+            <td><?php echo $Work['EstimatedCost'] ?></td>
+            <td><?php echo $Work['Funds'] ?></td>
+            <td><?php echo $Work['Expenses'] ?></td>
+            <td><?php echo $Work['Balance'] ?></td>
+            <td><?php echo $Work['Progress'] ?></td>
+            <td><?php echo $Work['TenderDate'] ?></td>
+            <td><?php echo $Work['WorkOrderDate'] ?></td>
+            <td><?php echo $Work['WorkRemarks'] ?></td>
+          </tr>
+          <?php
+          $i++;
+        } ?>
+      </table>
+    </div>
+    <?php
+    break;
+
+  case 'Works_GetSanctions':
+    ?>
+    <div class="formWrapper-Autofit">
+      <h3 class="formWrapper-h3">Sanctioned Funds</h3>
+      <?php
+      $DB = new MySQLiDBHelper();
+      $DB->where('WorkID', WebLib::GetVal($_POST, 'WorkID'));
+      $UserWorks = $DB->query('Select `SanctionOrderNo` AS `Order No.`, '
+        . '`SanctionDate` AS `Sanction/Approval Date`, `SanctionAmount` AS `Amount`, '
+        . '`SanctionRemarks` AS `Remarks` FROM ' . MySQL_Pre . 'MPR_Sanctions');
+      WebLib::ShowTable($UserWorks);
+      ?>
+    </div>
+    <?php
+    break;
+
+  case 'Works_GetWorksForSanction':
+    $DB = new MySQLiDBHelper();
+    $DB = new MySQLiDBHelper();
+    $DB->where('SchemeID', WebLib::GetVal($_POST, 'Scheme'));
+    $DB->where('MprMapID', WebLib::GetVal($_POST, 'MprMapID'));
+    $Works = $DB->get(MySQL_Pre . 'MPR_Works');
+    echo '<option></option>';
+    foreach ($Works as $Work) {
+      echo '<option value="' . $Work['WorkID'] . '">' . $Work['WorkDescription'] . '</option>';
+    }
+    //print_r($_POST);
+    unset($DB);
+    break;
+
+  case 'Progress_GetWorksList':
+          $DB = new MySQLiDBHelper();
+          $DB->where('UserMapID', $_SESSION['UserMapID']);
+          $DB->where('SchemeID', WebLib::GetVal($_POST, 'Scheme'));
+          $Works = $DB->get(MySQL_Pre . 'MPR_ViewUserWorks');
+          echo '<option></option>';
+          foreach ($Works as $Work) {
+            $Sel = '';
+            if ($Work['WorkID'] == WebLib::GetVal($_POST, 'Work')) {
+              $Sel = 'Selected';
+            }
+            echo '<option value="' . $Work['WorkID'] . '" ' . $Sel . '>'
+              . $Work['SchemeName'] . ' - ' . $Work['Work'] . '</option>';
+          }
+    break;
+
+  case 'Progress_GetWorkStatusJSON':
+    $DB = new MySQLiDBHelper();
+    $DB->where('UserMapID', $_SESSION['UserMapID']);
+    $DB->where('WorkID', WebLib::GetVal($_POST, 'Work'));
+    $Works = $DB->get(MySQL_Pre . 'MPR_ViewUserWorks');
+    foreach ($Works as $Work) {
+      echo json_encode($Work);
+    }
+    break;
+
+  case 'Progress_GetProgressDetails':
+    ?>
+    <div class="formWrapper-Autofit">
+      <h3 class="formWrapper-h3">Sanctioned Funds</h3>
+      <?php
+      $DB = new MySQLiDBHelper();
+      $DB->where('WorkID', WebLib::GetVal($_POST, 'Work'));
+      $UserWorks = $DB->query('Select `SanctionOrderNo` AS `Order No.`, '
+        . '`SanctionDate` AS `Sanction/Approval Date`, `SanctionAmount` AS `Amount`, '
+        . '`SanctionRemarks` AS `Remarks` FROM ' . MySQL_Pre . 'MPR_Sanctions');
+      WebLib::ShowTable($UserWorks);
+      ?>
+    </div>
+    <div class="formWrapper-Autofit">
+      <h3 class="formWrapper-h3">Progress Details</h3>
+      <table rules="all" frame="box" width="100%" cellpadding="5" cellspacing="2">
+        <tr>
+          <th>Report Date</th>
+          <th>Balance</th>
+          <th>Expenditure Amount</th>
+          <th>Physical Progress(%)</th>
+          <th>Remarks</th>
+        </tr>
+        <?php
+        $DB = new MySQLiDBHelper();
+        $DB->where('WorkID', WebLib::GetVal($_POST, 'Work'));
+        $PrgReports = $DB->get(MySQL_Pre . 'MPR_Progress');
+        foreach ($PrgReports as $PrgReport) {
+          ?>
+          <tr>
+            <td><?php echo $PrgReport['ReportDate']; ?></td>
+            <td><?php echo $PrgReport['Balance']; ?></td>
+            <td><?php echo $PrgReport['ExpenditureAmount']; ?></td>
+            <td><?php echo $PrgReport['Progress']; ?> %</td>
+            <td><?php echo $PrgReport['Remarks']; ?></td>
+          </tr>
+        <?php
+        } ?>
+      </table>
+    </div>
+    <?php
+    break;
+
+  case 'Progress_GetWorkDetails':
+    ?>
+    <div class="formWrapper-Autofit">
+      <h3 class="formWrapper-h3">Sanctioned Works</h3>
+      <table rules="all" frame="box" width="100%" cellpadding="5" cellspacing="2">
+        <tr>
+          <td>Sl No.</td>
+          <th>Description of Work</th>
+          <th>Estimated Cost(Rs.)</th>
+          <th>Fund Released(Rs.)</th>
+          <th>Fund Utilised(Rs.)</th>
+          <th>Balance(Rs.)</th>
+          <th>Physical Progress(%)</th>
+          <th>Tender Date</th>
+          <th>Work Order Date</th>
+          <th>Remarks</th>
+        </tr>
+        <?php
+        $DB = new MySQLiDBHelper();
+        $DB->where('UserMapID', $_SESSION['UserMapID']);
+        $DB->where('SchemeID', WebLib::GetVal($_POST, 'Scheme'));
+        $UserWorks = $DB->get(MySQL_Pre . 'MPR_ViewUserWorks');
+        $i = 1;
+        foreach ($UserWorks as $Work) {
+          ?>
+          <tr>
+            <td><?php echo $i; ?></td>
+            <td><?php echo $Work['Work'] ?></td>
+            <td><?php echo $Work['EstimatedCost'] ?></td>
+            <td><?php echo $Work['Funds'] ?></td>
+            <td><?php echo $Work['Expenses'] ?></td>
+            <td><?php echo $Work['Balance'] ?></td>
+            <td><?php echo $Work['Progress'] ?></td>
+            <td><?php echo $Work['TenderDate'] ?></td>
+            <td><?php echo $Work['WorkOrderDate'] ?></td>
+            <td><?php echo $Work['WorkRemarks'] ?></td>
+          </tr>
+          <?php
+          $i++;
+        } ?>
+      </table>
+    </div>
+    <?php
+    break;
+
 }
-
-if (WebLib::GetVal($_POST, 'AjaxToken') === WebLib::GetVal($_SESSION, 'Token')) {
-  $_SESSION['LifeTime']  = time();
-  $_SESSION['RT']        = microtime(TRUE);
-  $_SESSION['CheckAuth'] = 'Valid';
-  $DataResp['Data']      = array();
-  $DataResp['Msg']       = '';
-  switch (WebLib::GetVal($_POST, 'CallAPI')) {
-
-    case 'GetComboData':
-      $Query             = 'Select `DeptID`,`DeptName`'
-          . ' FROM `' . MySQL_Pre . 'MPR_Departments` ';
-      $DataResp['Depts'] = array();
-      doQuery($DataResp['Depts'], $Query);
-
-      $Query               = 'Select `SectorID`,`SectorName`'
-          . ' FROM `' . MySQL_Pre . 'MPR_Sectors` ';
-      $DataResp['Sectors'] = array();
-      doQuery($DataResp['Sectors'], $Query);
-
-      $Query               = 'Select `SchemeID`,`SchemeName`,`DeptID`,`SectorID`'
-          . ' FROM `' . MySQL_Pre . 'MPR_Schemes`';
-      $DataResp['Schemes'] = array();
-      doQuery($DataResp['Schemes'], $Query);
-
-      $Query                = 'Select `ProjectID`,`SchemeID`,`ProjectName`,`ProjectName`,`'
-          . 'ProjectCost`,`StartDate`,`AlotmentAmount`,`TenderDate`,`'
-          . 'WorkOrderDate`'
-          . ' FROM `' . MySQL_Pre . 'MPR_Projects`';
-      $DataResp['Projects'] = array();
-      doQuery($DataResp['Projects'], $Query);
-      break;
-  }
-  $_SESSION['Token']     = md5($_SERVER['REMOTE_ADDR'] . session_id() . $_SESSION['ET']);
-  $_SESSION['LifeTime']  = time();
-  $DataResp['AjaxToken'] = $_SESSION['Token'];
-  $DataResp['RT']        = '<b>Response Time:</b> '
-      . round(microtime(TRUE) - WebLib::GetVal($_SESSION, 'RT'), 6) . ' Sec';
-  //PHP 5.4+ is required for JSON_PRETTY_PRINT
-  //@todo Remove PRETTY_PRINT for Production
-  if (strnatcmp(phpversion(), '5.4') >= 0) {
-    $AjaxResp = json_encode($DataResp, JSON_PRETTY_PRINT);
-  } else {
-    $AjaxResp = json_encode($DataResp); //WebLib::prettyPrint(json_encode($DataResp));
-  }
-  unset($DataResp);
-
-  header('Content-Type: application/json');
-  header('Content-Length: ' . strlen($AjaxResp));
-  echo $AjaxResp;
-  exit();
-}
-header("HTTP/1.1 404 Not Found");
-exit();
-
-/**
- * Perfroms Select Query to the database
- *
- * @param ref     $DataResp
- * @param string  $Query
- * @param array   $Params
- * @example GetData(&$DataResp, "Select a,b,c from Table Where c=? Order By b LIMIT ?,?", array('1',30,10))
- */
-function doQuery(&$DataResp,
-                 $Query,
-                 $Params = NULL) {
-  $Data             = new MySQLiDBHelper();
-  $Result           = $Data->rawQuery($Query, $Params);
-  $DataResp['Data'] = $Result;
-  $DataResp['Msg']  = 'Total Rows: ' . count($Result);
-  unset($Result);
-  unset($Data);
-}
-
+//print_r($_POST);
 ?>
