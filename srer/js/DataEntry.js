@@ -106,7 +106,7 @@ $(function () {
           }
         });
       $('#PartID').html(Options)
-        .trigger("liszt:updated");
+        .trigger("chosen:updated");
     });
 
 
@@ -141,7 +141,7 @@ $(function () {
             Options += '<option value="' + value.ACNo + '">' + value.ACNo + ' - ' + value.ACName + '</option>';
           });
         $('#ACNo').html(Options)
-          .trigger("liszt:updated");
+          .trigger("chosen:updated");
         $('#PartID').data('Parts', DataResp.Parts);
         delete DataResp;
       }
