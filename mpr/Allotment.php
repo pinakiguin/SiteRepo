@@ -3,7 +3,6 @@ require_once __DIR__ . '/../lib.inc.php';
 WebLib::AuthSession();
 WebLib::Html5Header('Monthly Performance Report');
 WebLib::IncludeCSS();
-//WebLib::CreateDB();
 WebLib::IncludeCSS('css/forms.css');
 WebLib::IncludeCSS('css/Style.css');
 
@@ -14,13 +13,11 @@ if (isset($_POST['BtnAll']) == 1) {
   $insertdata['BlockID'] = $_POST['Block'];
   $insertdata['AllotmentDate'] = $_POST['txtDate'];
   $insertdata['Amount'] = $_POST['txtAmount'];
-  //$insertdata['UserMapID']="2";
   $SchemeID = $DB->insert(MySQL_Pre . 'MPR_Allotment', $insertdata);
 }
 $DB = new MySQLiDBHelper();
 $Schemes = $DB->get(MySQL_Pre . 'MPR_Schemes');
 $Block = $DB->get(MySQL_Pre . 'MPR_Users');
-//$All = $DB->get(MySQL_Pre . 'MPR_Allotment');
 $n = count($All);
 ?>
 </head>

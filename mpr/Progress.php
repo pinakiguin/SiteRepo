@@ -19,7 +19,7 @@ if (isset($_POST['BtnPrg']) == 1) {
   $tableData['Balance'] = $_POST['txtBalance'];
   $ReportDate = WebLib::GetVal($_POST, 'txtDate');
   if ($ReportDate == "") {
-    $ReportDate = NULL;
+    $ReportDate = WebLib::ToDBDate('');
   }
   else {
     $ReportDate = preg_replace('/(\d{2})\/(\d{2})\/(\d{4})/', '$3-$2-$1', $ReportDate);
@@ -77,7 +77,7 @@ WebLib::ShowMenuBar('MPR');
           foreach ($Schemes as $Scheme) {
             $Sel = '';
             if ($Scheme['SchemeID'] == WebLib::GetVal($_POST, 'Scheme')) {
-              $Sel = 'Selected';
+              //$Sel = 'Selected';
             }
             echo '<option value="' . $Scheme['SchemeID'] . '" ' . $Sel . '>'
               . $Scheme['SchemeName'] . '</option>';
