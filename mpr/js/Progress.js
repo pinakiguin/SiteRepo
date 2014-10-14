@@ -24,6 +24,7 @@ $(function () {
                 $("#PhyPrgLbl").html(data.Progress);
                 $("#PhyPrgSlider").data("minVal",data.Progress)
                     .slider("option", "value",data.Progress);
+                $("#PhyPrgValue").val(data.Progress);
                 $("#txtWorkOrderDate").val(data.WorkOrderDate);
                 $("#txtTenderDate").val(data.TenderDate);
                 $("#txtBalance").val(data.Balance)

@@ -7,6 +7,9 @@
           <option name="UPPER_CASE_BOOLEAN_CONST" value="true" />
           <option name="UPPER_CASE_NULL_CONST" value="true" />
         </PHPCodeStyleSettings>
+        <XML>
+          <option name="XML_LEGACY_SETTINGS_IMPORTED" value="true" />
+        </XML>
         <codeStyleSettings language="CSS">
           <indentOptions>
             <option name="INDENT_SIZE" value="2" />

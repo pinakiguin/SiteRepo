@@ -17,21 +17,30 @@ if (isset($_POST['BtnPrg']) == 1) {
   $tableData['ExpenditureAmount'] = $_POST['txtAmount'];
   $tableData['Progress'] = $_POST['PhyPrgValue'];
   $tableData['Balance'] = $_POST['txtBalance'];
-  $tableData['ReportDate'] = WebLib::ToDBDate($_POST['txtDate']);
+  $ReportDate = WebLib::GetVal($_POST, 'txtDate');
+  if ($ReportDate == "") {
+    $ReportDate = WebLib::ToDBDate('');
+  }
+  else {
+    $ReportDate = preg_replace('/(\d{2})\/(\d{2})\/(\d{4})/', '$3-$2-$1', $ReportDate);
+  }
+  $tableData['ReportDate'] = $ReportDate;
   $tableData['Remarks'] = $_POST['txtRemark'];
   $SchemeID = $DB->insert(MySQL_Pre . 'MPR_Progress', $tableData);
   unset($tableData);
-  $TenderDate=WebLib::GetVal($_POST,'txtTenderDate');
-  $WorkOrderDate=WebLib::GetVal($_POST,'txtWorkOrderDate');
-  if($TenderDate==""){
-    $TenderDate=NULL;
-  }else{
-    $TenderDate= WebLib::ToDBDate($TenderDate);
+  $TenderDate = WebLib::GetVal($_POST, 'txtTenderDate');
+  $WorkOrderDate = WebLib::GetVal($_POST, 'txtWorkOrderDate');
+  if ($TenderDate == "") {
+    $TenderDate = NULL;
   }
-  if($WorkOrderDate==""){
-    $WorkOrderDate=NULL;
-  }else{
-    $WorkOrderDate=WebLib::ToDBDate($WorkOrderDate);
+  else {
+    $TenderDate = preg_replace('/(\d{2})\/(\d{2})\/(\d{4})/', '$3-$2-$1', $TenderDate);
+  }
+  if ($WorkOrderDate == "") {
+    $WorkOrderDate = NULL;
+  }
+  else {
+    $WorkOrderDate = preg_replace('/(\d{2})\/(\d{2})\/(\d{4})/', '$3-$2-$1', $WorkOrderDate);
   }
   $tableData['TenderDate'] = $TenderDate;
   $tableData['WorkOrderDate'] = $WorkOrderDate;
@@ -68,7 +77,7 @@ WebLib::ShowMenuBar('MPR');
           foreach ($Schemes as $Scheme) {
             $Sel = '';
             if ($Scheme['SchemeID'] == WebLib::GetVal($_POST, 'Scheme')) {
-              $Sel = 'Selected';
+              //$Sel = 'Selected';
             }
             echo '<option value="' . $Scheme['SchemeID'] . '" ' . $Sel . '>'
               . $Scheme['SchemeName'] . '</option>';
@@ -86,6 +95,7 @@ WebLib::ShowMenuBar('MPR');
         <label for="PhyPrgSlider" style="padding-bottom: 10px;">
           <strong>Physical Progress:(<span id="PhyPrgLbl"></span>%)</strong>
         </label>
+
         <div id="PhyPrgSlider"></div>
         <input type="hidden" id="PhyPrgValue" name="PhyPrgValue">
       </div>

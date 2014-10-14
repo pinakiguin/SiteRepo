@@ -36,10 +36,10 @@ if (WebLib::GetVal($_POST, 'FormToken') !== NULL) {
             $_SESSION['ImpFromUserName']  = $_SESSION['UserName'];
           }
           $_SESSION['UserMapID']   = WebLib::GetVal($_POST, 'UserMapID');
-          $_SESSION['UserName']    = 'Impersonated-'
-              . $DB->do_max_query('Select UserName '
-                  . ' From `' . MySQL_Pre . 'Users`'
-                  . ' Where `UserMapID`=' . $_SESSION['UserMapID']);
+
+          $User=$DB->where("UserMapID",$_SESSION['UserMapID'])->query('Select UserName '
+                  . ' From `' . MySQL_Pre . 'Users`');
+          $_SESSION['UserName']    = 'Impersonated-' . $User[0]['UserName'];
           $_SESSION['Msg']         = $_SESSION['UserName'];
           $_SESSION['ReloadMenus'] = true;
         } else {
