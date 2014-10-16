@@ -65,4 +65,11 @@ define('NeedsDB', true);
  * If set to TRUE then SMSs will be Sent
  */
 define('UseSMSGW', false);
+
+/**
+ * Google API Credentials
+ */
+define('CLIENT_ID','<YOUR_CLIENT_ID>');
+define('CLIENT_SECRET','<YOUR_CLIENT_SECRET>');
+define('REDIRECT_URI', '<YOUR_REDIRECT_URI>');
 ?>
