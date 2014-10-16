@@ -11,15 +11,15 @@ $FailedTry = 2; //No of Allowed failed login without captcha
 require_once __DIR__ . '/lib.inc.php';
 session_start();
 
-if (WebLib::GetVal($_SESSION, 'BaseDIR') === NULL) {
+if (WebLib::GetVal($_SESSION, 'BaseDIR') === null) {
   header('Location: index.php');
   exit();
 }
-$_SESSION['ET'] = microtime(TRUE);
+$_SESSION['ET'] = microtime(true);
 $Data = new MySQLiDBHelper();
 $ID = WebLib::GetVal($_SESSION, 'ID');
 $_SESSION['ID'] = session_id();
-if (WebLib::GetVal($_SESSION, 'LifeTime') === NULL) {
+if (WebLib::GetVal($_SESSION, 'LifeTime') === null) {
   $_SESSION['LifeTime'] = time();
 }
 $action = WebLib::CheckAuth();
@@ -40,7 +40,7 @@ if ($action == "LogOut") {
   session_destroy();
   session_start();
   $_SESSION = array();
-  $_SESSION['ET'] = microtime(TRUE);
+  $_SESSION['ET'] = microtime(true);
   $_SESSION['Debug'] = WebLib::GetVal($_SESSION, 'Debug') . $action . "TOKEN-!Valid";
   header("Location: index.php");
   exit();
@@ -53,17 +53,17 @@ if (WebLib::GetVal($_SESSION, 'TryCount') >= $FailedTry) {
   $ValidCaptcha = WebLib::StaticCaptcha();
 }
 else {
-  $ValidCaptcha = TRUE;
+  $ValidCaptcha = true;
 }
 
-if ((WebLib::GetVal($_POST, 'UserID') !== NULL) && (WebLib::GetVal($_POST,
-      'UserPass') !== NULL) && $ValidCaptcha
+if ((WebLib::GetVal($_POST, 'UserID') !== null) && (WebLib::GetVal($_POST,
+      'UserPass') !== null) && $ValidCaptcha
 ) {
   $QueryLogin = "Select UserMapID,UserName from `" . MySQL_Pre . "Users` "
     . " Where `UserID`=? AND MD5(CONCAT(`UserPass`,MD5(?)))=? AND Activated";
-  $filter[] = WebLib::GetVal($_POST, 'UserID', TRUE);
-  $filter[] = WebLib::GetVal($_SESSION, 'Token', TRUE);
-  $filter[] = WebLib::GetVal($_POST, 'UserPass', TRUE);
+  $filter[] = WebLib::GetVal($_POST, 'UserID', true);
+  $filter[] = WebLib::GetVal($_SESSION, 'Token', true);
+  $filter[] = WebLib::GetVal($_POST, 'UserPass', true);
 
   $rows = $Data->rawQuery($QueryLogin, $filter);
 
@@ -74,16 +74,17 @@ if ((WebLib::GetVal($_POST, 'UserID') !== NULL) && (WebLib::GetVal($_POST,
     $_SESSION['UserName'] = $Row['UserName'];
     $_SESSION['UserMapID'] = $Row['UserMapID'];
     $_SESSION['ID'] = session_id();
-    $_SESSION['FingerPrint'] = md5($_SERVER['REMOTE_ADDR'] . $_SERVER['HTTP_USER_AGENT'] . "KeyLeft");
+    $_SESSION['FingerPrint'] =
+      md5($_SERVER['REMOTE_ADDR'] . $_SERVER['HTTP_USER_AGENT'] . "KeyLeft");
     $_SESSION['REFERER1'] = "http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
     $action = "JustLoggedIn";
 
     $Data->ddlQuery("Update " . MySQL_Pre . "Users Set LoginCount=LoginCount+1"
-      . " Where `UserID`='" . WebLib::GetVal($_POST, 'UserID', TRUE) . "'"
+      . " Where `UserID`='" . WebLib::GetVal($_POST, 'UserID', true) . "'"
       . " AND MD5(concat(`UserPass`,MD5('" . WebLib::GetVal($_POST,
-        'LoginToken', TRUE) . "')))='" . WebLib::GetVal($_POST,
+        'LoginToken', true) . "')))='" . WebLib::GetVal($_POST,
         'UserPass',
-        TRUE) . "'");
+        true) . "'");
 
     $QueryData['SessionID'] = WebLib::GetVal($_SESSION, 'ID');
     $QueryData['IP'] = $_SERVER['REMOTE_ADDR'];
@@ -108,7 +109,7 @@ if ((WebLib::GetVal($_POST, 'UserID') !== NULL) && (WebLib::GetVal($_POST,
     $QueryData['UserAgent'] = $_SERVER['HTTP_USER_AGENT'];
     $QueryData['UserID'] = WebLib::GetVal($_SESSION, 'UserMapID');
     $QueryData['URL'] = $Data->escape($_SERVER['PHP_SELF']);
-    $QueryData['Action'] = 'Login: Failed[' . WebLib::GetVal($_POST, 'UserID', TRUE) . ']';
+    $QueryData['Action'] = 'Login: Failed[' . WebLib::GetVal($_POST, 'UserID', true) . ']';
     $QueryData['Method'] = $Data->escape($_SERVER['REQUEST_METHOD']);
     $QueryData['URI'] = $Data->escape($_SERVER['REQUEST_URI']);
 
@@ -173,7 +174,7 @@ WebLib::ShowMenuBar('WebSite');
         </label>
         <?php
         if (WebLib::GetVal($_SESSION, 'TryCount') >= $FailedTry) {
-          WebLib::StaticCaptcha(TRUE);
+          WebLib::StaticCaptcha(true);
         }
         ?>
         <hr/>
@@ -183,6 +184,7 @@ WebLib::ShowMenuBar('WebSite');
                  echo WebLib::GetVal($_SESSION, 'Token');
                  ?>"/>
           <input type="submit" class="formButton" value="Login"/>
+          <?php include('googleAuth.php'); ?>
         </div>
       </form>
 

@@ -23,14 +23,14 @@ else {
 }
 
 
-if ((WebLib::GetVal($_POST, 'UserID') !== NULL) && (WebLib::GetVal($_POST,
-      'UserPass') !== NULL) && $ValidCaptcha
+if ((WebLib::GetVal($_POST, 'UserID') !== null) &&
+  (WebLib::GetVal($_POST, 'UserPass') !== null) && $ValidCaptcha
 ) {
   $QueryLogin = "Select UserMapID,UserName from `" . MySQL_Pre . "Users` "
     . " Where `UserID`=? AND MD5(CONCAT(`UserPass`,MD5(?)))=? AND Activated";
-  $filter[] = WebLib::GetVal($_POST, 'UserID', TRUE);
-  $filter[] = WebLib::GetVal($_SESSION, 'Token', TRUE);
-  $filter[] = WebLib::GetVal($_POST, 'UserPass', TRUE);
+  $filter[] = WebLib::GetVal($_POST, 'UserID', true);
+  $filter[] = WebLib::GetVal($_SESSION, 'Token', true);
+  $filter[] = WebLib::GetVal($_POST, 'UserPass', true);
 
   $rows = $Data->rawQuery($QueryLogin, $filter);
 
@@ -46,11 +46,10 @@ if ((WebLib::GetVal($_POST, 'UserID') !== NULL) && (WebLib::GetVal($_POST,
     $action = "JustLoggedIn";
 
     $Data->ddlQuery("Update " . MySQL_Pre . "Users Set LoginCount=LoginCount+1"
-      . " Where `UserID`='" . WebLib::GetVal($_POST, 'UserID', TRUE) . "'"
-      . " AND MD5(concat(`UserPass`,MD5('" . WebLib::GetVal($_POST,
-        'LoginToken', TRUE) . "')))='" . WebLib::GetVal($_POST,
-        'UserPass',
-        TRUE) . "'");
+      . " Where `UserID`='" . WebLib::GetVal($_POST, 'UserID', true) . "'"
+      . " AND MD5(concat(`UserPass`,MD5('" . WebLib::GetVal($_POST, 'LoginToken', true)
+      . "')))='" . WebLib::GetVal($_POST,
+        'UserPass', true) . "'");
 
     $QueryData['SessionID'] = WebLib::GetVal($_SESSION, 'ID');
     $QueryData['IP'] = $_SERVER['REMOTE_ADDR'];
@@ -75,7 +74,7 @@ if ((WebLib::GetVal($_POST, 'UserID') !== NULL) && (WebLib::GetVal($_POST,
     $QueryData['UserAgent'] = $_SERVER['HTTP_USER_AGENT'];
     $QueryData['UserID'] = WebLib::GetVal($_SESSION, 'UserMapID');
     $QueryData['URL'] = $Data->escape($_SERVER['PHP_SELF']);
-    $QueryData['Action'] = 'Login: Failed[' . WebLib::GetVal($_POST, 'UserID', TRUE) . ']';
+    $QueryData['Action'] = 'Login: Failed[' . WebLib::GetVal($_POST, 'UserID', true) . ']';
     $QueryData['Method'] = $Data->escape($_SERVER['REQUEST_METHOD']);
     $QueryData['URI'] = $Data->escape($_SERVER['REQUEST_URI']);
 
@@ -99,17 +98,17 @@ $_SESSION['Token'] = md5($_SERVER['REMOTE_ADDR'] . $ID . time());
   }
   function signinCallback(authResult) {
     if (authResult['status']['signed_in']) {
-
+      console.log(authResult);
       // Update the app to reflect a signed in user
       // Hide the sign-in button now that the user is authorized, for example:
-      document.getElementById('gSignInWrapper').setAttribute('style', 'display: none');
+      //document.getElementById('gSignInWrapper').setAttribute('style', 'display: none');
     } else {
       // Update the app to reflect a signed out user
       // Possible error values:
       //   "user_signed_out" - User is signed-out
       //   "access_denied" - User denied access to your app
       //   "immediate_failed" - Could not automatically log in the user
-      console.log('Sign-in state: ' + authResult['error']);
+      console.log(authResult);
     }
   }
 </script>
@@ -126,10 +125,6 @@ $_SESSION['Token'] = md5($_SERVER['REMOTE_ADDR'] . $ID . time());
   #customBtn:hover {
     background: #e74b37;
     cursor: hand;
-  }
-
-  span.label {
-    font-weight: bold;
   }
 
   span.icon {
@@ -152,7 +147,7 @@ $_SESSION['Token'] = md5($_SERVER['REMOTE_ADDR'] . $ID . time());
     font-family: 'Roboto', arial, sans-serif;
   }
 </style>
-<div id="gSignInWrapper" style="margin:5px;padding:0px;text-align: center;float:right;">
+<div id="gSignInWrapper">
   <div id="customBtn" class="customGPlusSignIn">
     <span class="icon"></span>
     <span class="buttonText">Sign in with Google</span>

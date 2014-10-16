@@ -4,8 +4,11 @@
     <option name="PER_PROJECT_SETTINGS">
       <value>
         <PHPCodeStyleSettings>
-          <option name="UPPER_CASE_BOOLEAN_CONST" value="true" />
-          <option name="UPPER_CASE_NULL_CONST" value="true" />
+          <option name="INDENT_CODE_IN_PHP_TAGS" value="true" />
+          <option name="ALIGN_KEY_VALUE_PAIRS" value="true" />
+          <option name="ALIGN_ASSIGNMENTS" value="true" />
+          <option name="LOWER_CASE_BOOLEAN_CONST" value="true" />
+          <option name="LOWER_CASE_NULL_CONST" value="true" />
         </PHPCodeStyleSettings>
         <XML>
           <option name="XML_LEGACY_SETTINGS_IMPORTED" value="true" />
@@ -37,6 +40,7 @@
           <indentOptions>
             <option name="INDENT_SIZE" value="2" />
             <option name="CONTINUATION_INDENT_SIZE" value="2" />
+            <option name="TAB_SIZE" value="2" />
           </indentOptions>
           <arrangement>
             <groups>
