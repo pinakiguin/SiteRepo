@@ -9,7 +9,12 @@ $reg = new MySQLiDBHelper();
 if (isset($_SESSION['Topic'])) {
   $reg->where('Topic', WebLib::GetVal($_SESSION, 'Topic'));
 }
-$result = $reg->get('`' . MySQL_Pre . 'ViewUploads`');
+
+if (isset($_SESSION['ViewWhatsNew']) && ($_SESSION['ViewWhatsNew']==true)) {
+  $result = $reg->get('`' . MySQL_Pre . 'ViewWhatsNew`');
+} else {
+  $result = $reg->get('`' . MySQL_Pre . 'ViewUploads`');
+}
 
 $Users = $reg->query("Select UserMapID,UserName from `" . MySQL_Pre . "Users`");
 
@@ -46,7 +51,7 @@ unset($reg);
           '<br/><strong>Purpose: </strong>' . htmlspecialchars($row['Subject']) .
           '<br/><strong>File: </strong><a '
           . 'href="http://www.paschimmedinipur.gov.in/apps/publish/get_file.php?ID='
-          . $row['UploadID'] . '" rel="nofollow">' . $row['FileName'] . '/a><br/>'
+          . $row['UploadID'] . '" rel="nofollow">' . $row['FileName'] . '</a><br/>'
           . '<strong>Category: </strong>' . $Topic[$row["Topic"]]
           . ' <strong>Dated: </strong>' . WebLib::ToDate($row["Dated"])
           . ' <strong>Valid Upto: </strong>' . WebLib::ToDate($row["Expiry"])
