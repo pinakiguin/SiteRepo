@@ -13,7 +13,8 @@
  * @version   1.1
  * @todo      To be Used in instead of MySQLiDB Class
  * */
-class MySQLiDBHelper {
+class MySQLiDBHelper
+{
 
   /**
    * Static instance of self
@@ -58,31 +59,34 @@ class MySQLiDBHelper {
   protected $_paramTypeList = '';
 
   /**
-   * Dynamic array that holds a combination of where condition/table data value types and parameter referances
+   * Dynamic array that holds a combination of
+   * where condition/table data value types and parameter references
    *
    * @var array
    */
   protected $_bindParams = array(''); // Create the empty 0 index
 
   /**
-   * @param string $host
-   * @param string $username
-   * @param string $password
-   * @param string $db
+   * @param string $host Uses HOST_Name defined in config.inc.php
+   * @param string $username Uses MySQL_User defined in congif.inc.php
+   * @param string $password Uses MySQL_Pass defined in congif.inc.php
+   * @param string $db Uses MySQL_DB defined in congif.inc.php
    * @param int $port
    */
 
   public function __construct(
-  $host = HOST_Name, // Uses HOST_Name defined in congif.inc.php
-  $username = MySQL_User, // Uses MySQL_User defined in congif.inc.php
-  $password = MySQL_Pass, // Uses MySQL_Pass defined in congif.inc.php
-  $db = MySQL_DB, // Uses MySQL_DB defined in congif.inc.php
-  $port = NULL
+      $host = DB_HOST,
+      $username = DB_USER,
+      $password = DB_PASS,
+      $db = DB_NAME,
+      $port = null
   ) {
-    if ($port == NULL)
+    if ($port == null) {
       $port = ini_get('mysqli.default_port');
+    }
 
-    $this->_mysqli = new mysqli($host, $username, $password, $db, $port) or die('There was a problem connecting to the database');
+    $this->_mysqli = new mysqli($host, $username, $password, $db, $port)
+    or die('There was a problem connecting to the database');
 
     $this->_mysqli->set_charset('utf8');
 
@@ -98,7 +102,8 @@ class MySQLiDBHelper {
    *
    * @return object Returns the current instance.
    */
-  public static function getInstance() {
+  public static function getInstance()
+  {
     return self::$_instance;
   }
 
@@ -107,7 +112,8 @@ class MySQLiDBHelper {
    *
    * @return object Returns the current instance.
    */
-  protected function reset() {
+  protected function reset()
+  {
     $this->_where         = array();
     $this->_bindParams    = array(''); // Create the empty 0 index
     $this->_paramTypeList = '';
@@ -118,13 +124,15 @@ class MySQLiDBHelper {
   /**
    * Pass in a raw query and an array containing the parameters to bind to the prepaird statement.
    *
-   * @param string $query      Contains a user-provided query.
-   * @param array  $bindParams All variables to bind to the SQL statment.
+   * @param string $query Contains a user-provided query.
+   * @param array $bindParams All variables to bind to the SQL statment.
    *
    * @return array Contains the returned rows from the query.
    */
-  public function rawQuery($query,
-                           $bindParams = null) {
+  public function rawQuery(
+      $query,
+      $bindParams = null
+  ) {
     $this->_query = $query;
     $stmt         = $this->_prepareQuery();
 
@@ -146,13 +154,15 @@ class MySQLiDBHelper {
 
   /**
    *
-   * @param string $query   Contains a user-provided select query.
-   * @param int    $numRows The number of rows total to return.
+   * @param string $query Contains a user-provided select query.
+   * @param int $numRows The number of rows total to return.
    *
    * @return array Contains the returned rows from the query.
    */
-  public function query($query,
-                        $numRows = null) {
+  public function query(
+      $query,
+      $numRows = null
+  ) {
     $this->_query = $query;
     $stmt         = $this->_buildQuery($numRows);
     $stmt->execute();
@@ -164,13 +174,15 @@ class MySQLiDBHelper {
   /**
    * A convenient SELECT * function.
    *
-   * @param string  $tableName The name of the database table to work with.
-   * @param integer $numRows   The number of rows total to return.
+   * @param string $tableName The name of the database table to work with.
+   * @param integer $numRows The number of rows total to return.
    *
    * @return array Contains the returned rows from the select query.
    */
-  public function get($tableName,
-                      $numRows = null) {
+  public function get(
+      $tableName,
+      $numRows = null
+  ) {
     $this->_query = "SELECT * FROM $tableName";
     $stmt         = $this->_buildQuery($numRows);
     $stmt->execute();
@@ -186,8 +198,10 @@ class MySQLiDBHelper {
    *
    * @return boolean Boolean indicating whether the insert query was completed succesfully.
    */
-  public function insert($tableName,
-                         $insertData) {
+  public function insert(
+      $tableName,
+      $insertData
+  ) {
     $this->_query = "INSERT into $tableName";
     $stmt         = $this->_buildQuery(null, $insertData);
     $stmt->execute();
@@ -202,7 +216,8 @@ class MySQLiDBHelper {
    *
    * @return boolean indicating whether the query was completed succesfully.
    */
-  public function ddlQuery($Query) {
+  public function ddlQuery($Query)
+  {
     $this->_query = $Query;
     $stmt         = $this->_buildQuery(null);
     $stmt->execute();
@@ -215,12 +230,14 @@ class MySQLiDBHelper {
    * Update query. Be sure to first call the "where" method.
    *
    * @param string $tableName The name of the database table to work with.
-   * @param array  $tableData Array of data to update the desired row.
+   * @param array $tableData Array of data to update the desired row.
    *
    * @return boolean
    */
-  public function update($tableName,
-                         $tableData) {
+  public function update(
+      $tableName,
+      $tableData
+  ) {
     $this->_query = "UPDATE $tableName SET ";
 
     $stmt = $this->_buildQuery(null, $tableData);
@@ -233,13 +250,15 @@ class MySQLiDBHelper {
   /**
    * Delete query. Call the "where" method first.
    *
-   * @param string  $tableName The name of the database table to work with.
-   * @param integer $numRows   The number of rows to delete.
+   * @param string $tableName The name of the database table to work with.
+   * @param integer $numRows The number of rows to delete.
    *
    * @return boolean Indicates success. 0 or 1.
    */
-  public function delete($tableName,
-                         $numRows = null) {
+  public function delete(
+      $tableName,
+      $numRows = null
+  ) {
     $this->_query = "DELETE FROM $tableName";
 
     $stmt = $this->_buildQuery($numRows);
@@ -250,17 +269,20 @@ class MySQLiDBHelper {
   }
 
   /**
-   * This method allows you to specify multipl (method chaining optional) WHERE statements for SQL queries.
+   * This method allows you to specify multiple (method chaining optional)
+   * WHERE statements for SQL queries.
    *
    * @uses $MySqliDb->where('id', 7)->where('title', 'MyTitle');
    *
-   * @param string $whereProp  The name of the database field.
-   * @param mixed  $whereValue The value of the database field.
+   * @param string $whereProp The name of the database field.
+   * @param mixed $whereValue The value of the database field.
    *
    * @return MysqliDb
    */
-  public function where($whereProp,
-                        $whereValue) {
+  public function where(
+      $whereProp,
+      $whereValue
+  ) {
     $this->_where[$whereProp] = $whereValue;
     return $this;
   }
@@ -270,7 +292,8 @@ class MySQLiDBHelper {
    *
    * @return integer The last inserted item ID.
    */
-  public function getInsertId() {
+  public function getInsertId()
+  {
     return $this->_mysqli->insert_id;
   }
 
@@ -281,7 +304,8 @@ class MySQLiDBHelper {
    *
    * @return string The escaped string.
    */
-  public function escape($str) {
+  public function escape($str)
+  {
     return $this->_mysqli->real_escape_string($str);
   }
 
@@ -295,21 +319,19 @@ class MySQLiDBHelper {
    *
    * @return string The joined parameter types.
    */
-  protected function _determineType($item) {
+  protected function _determineType($item)
+  {
     switch (gettype($item)) {
       case 'NULL':
       case 'string':
         return 's';
         break;
-
       case 'integer':
         return 'i';
         break;
-
       case 'blob':
         return 'b';
         break;
-
       case 'double':
         return 'd';
         break;
@@ -322,13 +344,15 @@ class MySQLiDBHelper {
    * any passed update data, and the desired rows.
    * It then builds the SQL query.
    *
-   * @param int   $numRows   The number of rows total to return.
+   * @param int $numRows The number of rows total to return.
    * @param array $tableData Should contain an array of data for updating the database.
    *
    * @return mysqli_stmt Returns the $stmt object.
    */
-  protected function _buildQuery($numRows = null,
-                                 $tableData = null) {
+  protected function _buildQuery(
+      $numRows = null,
+      $tableData = null
+  ) {
     $hasTableData   = is_array($tableData);
     $hasConditional = !empty($this->_where);
 
@@ -415,8 +439,10 @@ class MySQLiDBHelper {
     }
     // Bind parameters to statment
     if ($hasTableData || $hasConditional) {
-      call_user_func_array(array($stmt, 'bind_param'),
-                           $this->refValues($this->_bindParams));
+      call_user_func_array(
+          array($stmt, 'bind_param'),
+          $this->refValues($this->_bindParams)
+      );
     }
 
     return $stmt;
@@ -430,13 +456,14 @@ class MySQLiDBHelper {
    *
    * @return array The results of the SQL fetch.
    */
-  protected function _dynamicBindResults(mysqli_stmt $stmt) {
+  protected function _dynamicBindResults(mysqli_stmt $stmt)
+  {
     $parameters = array();
     $results    = array();
 
     $meta = $stmt->result_metadata();
 
-    $row   = array();
+    $row = array();
     while ($field = $meta->fetch_field()) {
       $row[$field->name] = null;
       $parameters[]      = & $row[$field->name];
@@ -460,10 +487,13 @@ class MySQLiDBHelper {
    *
    * @return mysqli_stmt
    */
-  protected function _prepareQuery() {
+  protected function _prepareQuery()
+  {
     if (!$stmt = $this->_mysqli->prepare($this->_query)) {
-      trigger_error("Problem preparing query ($this->_query) " . $this->_mysqli->error,
-                    E_USER_ERROR);
+      trigger_error(
+          "Problem preparing query ($this->_query) " . $this->_mysqli->error,
+          E_USER_ERROR
+      );
     }
     return $stmt;
   }
@@ -471,7 +501,8 @@ class MySQLiDBHelper {
   /**
    * Close connection
    */
-  public function __destruct() {
+  public function __destruct()
+  {
     $this->_mysqli->close();
   }
 
@@ -480,7 +511,8 @@ class MySQLiDBHelper {
    *
    * @return array
    */
-  protected function refValues($arr) {
+  protected function refValues($arr)
+  {
     //Reference is required for PHP 5.3+
     if (strnatcmp(phpversion(), '5.3') >= 0) {
       $refs = array();
@@ -491,7 +523,4 @@ class MySQLiDBHelper {
     }
     return $arr;
   }
-
 }
-
-// END class

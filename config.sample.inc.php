@@ -7,42 +7,42 @@
 /**
  * Defines MySQL Server Hostname
  */
-define('HOST_Name', 'localhost');
+const DB_HOST = 'localhost';
 
 /**
  * Defines MySQL Server Username
  */
-define('MySQL_User', 'root');
+const DB_USER = 'root';
 
 /**
  * Defines MySQL Server password
  */
-define('MySQL_Pass', 'mysql');
+const DB_PASS = 'mysql';
 
 /**
  * Defines MySQL Server Database Name
  */
-define('MySQL_DB', 'WebSite');
+const DB_NAME = 'WebSite';
 
 /**
  * Defines MySQL Database Table Prefix
  */
-define('MySQL_Pre', 'WebSite_');
+const TABLE_PREFIX = 'WebSite_';
 
 /**
  * Defines Session Timeout value in minutes
  */
-define('LifeTime', '20');
+const SESSION_LIFETIME_MINUTES = '20';
 
 /**
  * Defines District Code to display SRER Reports
  */
-define('DistCode', '16');
+const DIST_CODE = '16';
 
 /**
  * Defines Title of the page
  */
-define('AppTitle', 'Paschim Medinipur');
+const APP_NAME = 'Paschim Medinipur';
 
 /**
  * Defines Application's Unique Installation ID
@@ -50,26 +50,26 @@ define('AppTitle', 'Paschim Medinipur');
  * 1. Validates Against Multiple applications in the same domain
  * 2. Used to Encrypt Passwords in Database (kept at server side never sent to client)
  */
-define('AppKey', 'eKHQ5CP3798k7quyxGfR48vX');
+const APP_KEY = 'eKHQ5CP3798k7quyxGfR48vX';
 
 /**
  * Defines Existence of tables
  *
  * If set to TRUE then Database tables will be created
  */
-define('NeedsDB', true);
+const NEEDS_CREATE_DB = true;
 
 /**
  * Defines use of SMS Gateway
  *
  * If set to TRUE then SMSs will be Sent
  */
-define('UseSMSGW', false);
+const USE_SMS_GATEWAY = false;
 
 /**
  * Google API Credentials
  */
-define('CLIENT_ID','<YOUR_CLIENT_ID>');
-define('CLIENT_SECRET','<YOUR_CLIENT_SECRET>');
-define('REDIRECT_URI', '<YOUR_REDIRECT_URI>');
+const CLIENT_ID = '<YOUR_CLIENT_ID>';
+const CLIENT_SECRET = '<YOUR_CLIENT_SECRET>';
+const REDIRECT_URI = '<YOUR_REDIRECT_URI>';
 ?>

@@ -21,7 +21,7 @@ function SQLDefs($ObjectName) {
   $SqlDB = '';
   switch ($ObjectName) {
     case 'Visits':
-      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . 'Visits` ('
+      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . TABLE_PREFIX . 'Visits` ('
           . '`PageID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,'
           . '`PageURL` text NOT NULL,'
           . '`VisitCount` bigint(20) NOT NULL DEFAULT \'1\','
@@ -34,7 +34,7 @@ function SQLDefs($ObjectName) {
       break;
 
     case 'IntraNIC':
-      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . 'IntraNIC` ('
+      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . TABLE_PREFIX . 'IntraNIC` ('
           . '`RemoteIP` varchar(15) NOT NULL,'
           . '`LocationName` varchar(30) NOT NULL,'
           . ' PRIMARY KEY (`RemoteIP`)'
@@ -42,7 +42,7 @@ function SQLDefs($ObjectName) {
       break;
 
     case 'Logs':
-      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . 'Logs` ('
+      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . TABLE_PREFIX . 'Logs` ('
           . '`LogID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,'
           . '`SessionID` varchar(32) DEFAULT NULL,'
           . '`IP` varchar(15) DEFAULT NULL,'
@@ -59,7 +59,7 @@ function SQLDefs($ObjectName) {
       break;
 
     case 'VisitorLogs':
-      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . 'VisitorLogs` ('
+      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . TABLE_PREFIX . 'VisitorLogs` ('
           . '`LogID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,'
           . '`SessionID` varchar(32) DEFAULT NULL,'
           . '`IP` varchar(15) DEFAULT NULL,'
@@ -76,7 +76,7 @@ function SQLDefs($ObjectName) {
       break;
 
     case 'Uploads':
-      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . 'Uploads` ('
+      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . TABLE_PREFIX . 'Uploads` ('
           . '`UploadID` int(11) NOT NULL AUTO_INCREMENT,'
           . '`Dept` text NOT NULL,'
           . '`Subject` varchar(250) NOT NULL,'
@@ -96,7 +96,7 @@ function SQLDefs($ObjectName) {
       break;
 
     case 'Users':
-      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . 'Users` ('
+      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . TABLE_PREFIX . 'Users` ('
           . '`UserMapID` int(10) NOT NULL AUTO_INCREMENT,'
           . '`UserID` varchar(50) DEFAULT NULL,'
           . '`MobileNo` varchar(10) DEFAULT NULL,'
@@ -120,7 +120,7 @@ function SQLDefs($ObjectName) {
 
     case 'UsersData':
       // Super Admin Password 'test@123'
-      $SqlDB = 'INSERT INTO `' . MySQL_Pre . 'Users`'
+      $SqlDB = 'INSERT INTO `' . TABLE_PREFIX . 'Users`'
           . '(`UserID`, `UserName`, `UserPass`, `UserMapID`, `CtrlMapID`,'
           . '`Registered`, `Activated`) '
           . 'VALUES (\'Admin\',\'Super Administrator\','
@@ -128,7 +128,7 @@ function SQLDefs($ObjectName) {
       break;
 
     case 'MenuItems':
-      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . 'MenuItems` ('
+      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . TABLE_PREFIX . 'MenuItems` ('
           . '`MenuID` int(11) NOT NULL AUTO_INCREMENT,'
           . '`AppID` varchar(10) NOT NULL,'
           . '`MenuOrder` int(11) NOT NULL,'
@@ -142,7 +142,7 @@ function SQLDefs($ObjectName) {
       break;
 
     case 'MenuData':
-      $SqlDB = 'INSERT INTO `' . MySQL_Pre . 'MenuItems` '
+      $SqlDB = 'INSERT INTO `' . TABLE_PREFIX . 'MenuItems` '
           . '(`AppID`,`MenuOrder`,`AuthMenu`,`Caption`,`URL`,`Activated`) VALUES'
           . '(\'\', 1, 0, \'Home\', \'index.php\', 1),'
           . '(\'\', 2, 0, \'Registration\', \'users/Register.php\', 1),'
@@ -162,7 +162,7 @@ function SQLDefs($ObjectName) {
       break;
 
     case 'MenuACL':
-      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . 'MenuACL` ('
+      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . TABLE_PREFIX . 'MenuACL` ('
           . '`AclID` int(11) NOT NULL AUTO_INCREMENT,'
           . '`MenuID` int(11) NOT NULL,'
           . '`UserMapID` int(11) NOT NULL,'
@@ -174,15 +174,15 @@ function SQLDefs($ObjectName) {
       break;
 
     case 'RestrictedMenus':
-      $SqlDB = 'CREATE OR REPLACE VIEW `' . MySQL_Pre . 'RestrictedMenus` AS '
-          . ' SELECT `URL`,`UserMapID` FROM `' . MySQL_Pre . 'MenuItems` `M` '
-          . ' JOIN `' . MySQL_Pre . 'MenuACL` `U` ON `U`.`MenuID`=`M`.`MenuID`'
+      $SqlDB = 'CREATE OR REPLACE VIEW `' . TABLE_PREFIX . 'RestrictedMenus` AS '
+          . ' SELECT `URL`,`UserMapID` FROM `' . TABLE_PREFIX . 'MenuItems` `M` '
+          . ' JOIN `' . TABLE_PREFIX . 'MenuACL` `U` ON `U`.`MenuID`=`M`.`MenuID`'
           . ' WHERE `U`.`AllowOnly`=FALSE AND `M`.`Activated`=1 '
           . ' AND `U`.`Activated`=1';
       break;
 
     case 'Helpline':
-      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . MySQL_Pre . 'Helpline` ('
+      $SqlDB = 'CREATE TABLE IF NOT EXISTS `' . TABLE_PREFIX . 'Helpline` ('
           . '`HelpID` bigint(20) NOT NULL AUTO_INCREMENT,'
           . '`IP` varchar(15) NOT NULL,'
           . '`SessionID` varchar(32) NOT NULL,'

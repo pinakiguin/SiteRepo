@@ -25,7 +25,7 @@ WebLib::IncludeCSS();
   <div class="TopPanel">
     <div class="LeftPanelSide"></div>
     <div class="RightPanelSide"></div>
-    <h1><?php echo AppTitle; ?></h1>
+    <h1><?php echo APP_NAME; ?></h1>
   </div>
   <div class="Header">
   </div>
@@ -33,6 +33,9 @@ WebLib::IncludeCSS();
   WebLib::ShowMenuBar('WebSite');
   ?>
   <div class="content">
+    <pre>
+      <?php print_r($_SESSION); ?>
+    </pre>
   </div>
   <div class="pageinfo">
     <?php WebLib::PageInfo(); ?>
