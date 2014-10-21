@@ -2,6 +2,15 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/DataTables" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/FPDF" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Jcrop" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/PHPExcel" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/captcha" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/eRecruitment" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/google-api-php-client" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/js/jQuery-MD5" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/php-mailer" vcs="Git" />
   </component>
 </project>
 
