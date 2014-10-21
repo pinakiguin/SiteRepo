@@ -1,6 +1,9 @@
 <?php
 require_once __DIR__ . '/google-api-php-client/autoload.php';
 require_once __DIR__ . '/lib.inc.php';
+if (!isset($_SESSION)) {
+  session_start();
+}
 $client = new Google_Client();
 $client->setClientId(CLIENT_ID);
 $client->setClientSecret(CLIENT_SECRET);
@@ -23,8 +26,8 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
   if (WebLib::GetVal($_SESSION, 'email_verified') == 1) {
 
     $_SESSION['ET'] = microtime(true);
-    $Data = new MySQLiDBHelper();
-    $ID = WebLib::GetVal($_SESSION, 'ID');
+    $Data           = new MySQLiDBHelper();
+    $ID             = WebLib::GetVal($_SESSION, 'ID');
     $_SESSION['ID'] = session_id();
     if (WebLib::GetVal($_SESSION, 'LifeTime') === null) {
       $_SESSION['LifeTime'] = time();
@@ -46,6 +49,7 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
           md5($_SERVER['REMOTE_ADDR'] . $_SERVER['HTTP_USER_AGENT'] . "KeyLeft");
       $_SESSION['REFERER1']    = "http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
       $action                  = "JustLoggedIn";
+      $_SESSION['Msg']         = 'Welcome ' . $Row['UserName'];
 
       $Data->ddlQuery(
           "Update " . TABLE_PREFIX . "Users Set LoginCount=LoginCount+1"
@@ -67,9 +71,10 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 
       $Data->insert(TABLE_PREFIX . 'Logs', $QueryData);
       unset($QueryData);
-
+      $redirect = 'http://' . $_SERVER['HTTP_HOST'] . '/apps/index.php';
     } else {
-      $action = "NoAccess";
+      $action          = "NoAccess";
+      $_SESSION['Msg'] = "Sorry! Access Denied!";
 
       $QueryData['SessionID'] = WebLib::GetVal($_SESSION, 'ID');
       $QueryData['IP']        = $_SERVER['REMOTE_ADDR'];
@@ -83,12 +88,13 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 
       $Data->insert(TABLE_PREFIX . 'Logs', $QueryData);
       unset($QueryData);
+      unset($_SESSION['access_token']);
+      $redirect = 'http://' . $_SERVER['HTTP_HOST'] . '/apps/login.php';
     }
   } else {
     echo 'Unverified Email:' . WebLib::GetVal($_SESSION, 'email');
     exit();
   }
-  $redirect                 = 'http://' . $_SERVER['HTTP_HOST'] . '/apps/index.php';
   header('Location: ' . filter_var($redirect, FILTER_SANITIZE_URL));
 } else {
   $authUrl = $client->createAuthUrl();

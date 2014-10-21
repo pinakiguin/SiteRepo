@@ -18,7 +18,7 @@ $options = array('captchaId' => $captchaId,
     'database_user' => MySQL_User,
     'database_pass' => MySQL_Pass,
     'database_name' => MySQL_DB,
-    'database_table' => MySQL_Pre . "CaptchaCodes",
+    'database_table' => TABLE_PREFIX . "CaptchaCodes",
     'captcha_type' => Securimage::SI_CAPTCHA_MATHEMATIC,
     'no_session' => true);
 $captcha = new Securimage($options);

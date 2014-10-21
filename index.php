@@ -33,8 +33,14 @@ WebLib::IncludeCSS();
   WebLib::ShowMenuBar('WebSite');
   ?>
   <div class="content">
+    <?php WebLib::ShowMsg(); ?>
     <pre>
-      <?php print_r($_SESSION); ?>
+      <?php
+      $mSess=$_SESSION;
+      unset($mSess['MenuItems']);
+      print_r($mSess);
+      echo 'CheckAuth: '.$_SESSION['CheckAuth'];
+      ?>
     </pre>
   </div>
   <div class="pageinfo">

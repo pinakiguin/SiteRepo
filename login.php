@@ -124,6 +124,43 @@ WebLib::JQueryInclude();
 WebLib::IncludeJS('js/forms.js');
 WebLib::IncludeJS('js/jQuery-MD5/jquery.md5.js');
 ?>
+<link type="text/css" rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Roboto">
+<style type="text/css" media="all">
+  #gSignInWrapper {
+    display: inline-block;
+    background: #dd4b39;
+    color: white;
+    border-radius: 5px;
+    white-space: nowrap;
+  }
+
+  #gSignInWrapper:hover {
+    background: #e74b37;
+    cursor: hand;
+  }
+
+  #gSignInWrapper .icon {
+    background: url('img/btn_red_32.png') transparent 2px 50% no-repeat;
+    display: inline-block;
+    vertical-align: middle;
+    width: 35px;
+    height: 35px;
+    border-right: #bb3f30 1px solid;
+  }
+
+  #gSignInWrapper .buttonText {
+    color: white;
+    display: inline-block;
+    vertical-align: middle;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    font-family: 'Roboto', arial, sans-serif;
+    text-decoration: none;
+  }
+</style>
 </head>
 <body>
 <div class="TopPanel">
@@ -135,7 +172,7 @@ WebLib::IncludeJS('js/jQuery-MD5/jquery.md5.js');
 </div>
 <?php
 WebLib::ShowMenuBar('WebSite');
-$msgText="";
+$msgText = "";
 switch ($action) {
   case "LogOut":
     $msgText = "<h2>Thank You! You Have Successfully Logged Out!</h2>";
@@ -162,6 +199,12 @@ switch ($action) {
       echo '<h3 class="formWrapper-h3">Login</h3>';
       WebLib::ShowMsg();
       ?>
+      <?php include('googleAuth.php'); ?>
+      <div id="gSignInWrapper">
+        <span class="icon"></span>
+        <a class='buttonText' href='<?php echo $authUrl; ?>'>Sign in with Google</a>
+      </div>
+      <hr/>
       <form name="frmLogin" method="post"
             action="<?php $_SERVER['PHP_SELF'] ?>">
         <label for="UserID">
@@ -185,8 +228,6 @@ switch ($action) {
                  value="<?php
                  echo WebLib::GetVal($_SESSION, 'Token');
                  ?>"/>
-          <?php include('googleAuth.php'); ?>
-          <a class='login' href='<?php echo $authUrl; ?>'>Sign in with Google</a>
           <input type="submit" class="formButton" value="Login"/>
         </div>
       </form>
