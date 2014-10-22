@@ -133,6 +133,7 @@ WebLib::IncludeJS('js/jQuery-MD5/jquery.md5.js');
     color: white;
     border-radius: 5px;
     white-space: nowrap;
+    margin: auto;
   }
 
   #gSignInWrapper:hover {
@@ -200,9 +201,11 @@ switch ($action) {
       WebLib::ShowMsg();
       ?>
       <?php include('googleAuth.php'); ?>
-      <div id="gSignInWrapper">
-        <span class="icon"></span>
-        <a class='buttonText' href='<?php echo $authUrl; ?>'>Sign in with Google</a>
+      <div style="text-align: center;">
+        <div id="gSignInWrapper">
+          <span class="icon"></span>
+          <a class='buttonText' href='<?php echo $authUrl; ?>'>Sign in with Google</a>
+        </div>
       </div>
       <hr/>
       <form name="frmLogin" method="post"
