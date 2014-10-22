@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', '1');
+error_reporting(E_ALL);
+
 require_once __DIR__ . '/google-api-php-client/autoload.php';
 require_once __DIR__ . '/lib.inc.php';
 if (!isset($_SESSION)) {
@@ -7,7 +10,7 @@ if (!isset($_SESSION)) {
 $client = new Google_Client();
 $client->setClientId(CLIENT_ID);
 $client->setClientSecret(CLIENT_SECRET);
-$client->setRedirectUri(REDIRECT_URI);
+$client->setRedirectUri(WebLib::GetVal($_SESSION, 'BaseURL') . 'googleAuth.php');
 $client->addScope("email");
 
 if (isset($_GET['code'])) {
@@ -20,9 +23,14 @@ if (isset($_GET['code'])) {
 }
 if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
   $client->setAccessToken($_SESSION['access_token']);
-  $token_data                 = $client->verifyIdToken()->getAttributes();
-  $_SESSION['email']          = $token_data['payload']['email'];
-  $_SESSION['email_verified'] = $token_data['payload']['email_verified'];
+  try {
+    $token_data = $client->verifyIdToken()->getAttributes();
+    $_SESSION['email']          = $token_data['payload']['email'];
+    $_SESSION['email_verified'] = $token_data['payload']['email_verified'];
+  } catch (Google_IO_Exception $gAuthError) {
+    $_SESSION['Msg'] = $gAuthError->getMessage();
+  }
+
   if (WebLib::GetVal($_SESSION, 'email_verified') == 1) {
 
     $_SESSION['ET'] = microtime(true);
@@ -71,7 +79,7 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 
       $Data->insert(TABLE_PREFIX . 'Logs', $QueryData);
       unset($QueryData);
-      $redirect = 'http://' . $_SERVER['HTTP_HOST'] . '/apps/index.php';
+      $redirect = 'index.php';
     } else {
       $action          = "NoAccess";
       $_SESSION['Msg'] = "Sorry! Access Denied!";
@@ -89,12 +97,13 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
       $Data->insert(TABLE_PREFIX . 'Logs', $QueryData);
       unset($QueryData);
       unset($_SESSION['access_token']);
-      $redirect = 'http://' . $_SERVER['HTTP_HOST'] . '/apps/login.php';
+      $redirect = 'login.php';
     }
   } else {
     echo 'Unverified Email:' . WebLib::GetVal($_SESSION, 'email');
     exit();
   }
+  $redirect = WebLib::GetVal($_SESSION, 'BaseURL') . $redirect;
   header('Location: ' . filter_var($redirect, FILTER_SANITIZE_URL));
 } else {
   $authUrl = $client->createAuthUrl();
