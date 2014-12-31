@@ -71,7 +71,7 @@ switch (WebLib::GetVal($_POST, 'CallAPI')) {
           ?>
           <tr>
             <td><?php echo $i; ?></td>
-            <td><?php echo $Work['Work'] ?></td>
+            <td><?php echo $Work['WorkID'] . ' - ' . $Work['Work'] ?></td>
             <td><?php echo $Work['EstimatedCost'] ?></td>
             <td><?php echo $Work['Funds'] ?></td>
             <td><?php echo $Work['Expenses'] ?></td>
@@ -113,7 +113,7 @@ switch (WebLib::GetVal($_POST, 'CallAPI')) {
     $Works = $DB->get(MySQL_Pre . 'MPR_Works');
     echo '<option></option>';
     foreach ($Works as $Work) {
-      echo '<option value="' . $Work['WorkID'] . '">' . $Work['WorkDescription'] . '</option>';
+      echo '<option value="' . $Work['WorkID'] . '">' . $Work['WorkID'] . '-' . $Work['WorkDescription'] . '</option>';
     }
     //print_r($_POST);
     unset($DB);
