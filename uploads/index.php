@@ -76,7 +76,9 @@ WebLib::ShowMenuBar('WebSite');
     </form>
   </div>
   <?php
-  if (isset($_FILES['attachment']['name']) && ($_FILES['attachment']['error'] === 0) && !empty($_FILES['attachment']['name'])) {
+  if (isset($_FILES['attachment']['name'])
+    && ($_FILES['attachment']['error'] === 0)
+    && !empty($_FILES['attachment']['name'])) {
     $reg = new MySQLiDBHelper();
 
     $UploadData['Dept'] = WebLib::GetVal($_POST, 'Dept');
@@ -93,8 +95,7 @@ WebLib::ShowMenuBar('WebSite');
 
     if ($reg->insert(MySQL_Pre . 'Uploads', $UploadData)) {
       echo '<h3 style="color:#228b22;">Suuccessfully uploaded!</h3>';
-    }
-    else {
+    } else {
       echo '<h3 style="color:#ff0000;">Unable to upload!</h3>';
     }
   }
