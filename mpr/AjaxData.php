@@ -24,6 +24,10 @@ switch (WebLib::GetVal($_POST, 'CallAPI')) {
   case 'Reports_GetSchemeFunds':
     $DB = new MySQLiDBHelper();
     $DB->where('SchemeID', WebLib::GetVal($_POST, 'Scheme'));
+    WebLib::ShowTable($DB->query('Select `SchemeName`, `UserName`, `EstimatedCost`, `Funds`, `Expenses`, `Balance` '
+      . 'from ' . MySQL_Pre . 'MPR_ViewUserFunds'));
+
+    $DB->where('SchemeID', WebLib::GetVal($_POST, 'Scheme'));
     WebLib::ShowTable($DB->query('Select `Year`,`SchemeName`,`Funds`,`Expense`,`Balance` '
       . 'from ' . MySQL_Pre . 'MPR_ViewSchemeWiseFunds'));
     unset($DB);
@@ -113,7 +117,7 @@ switch (WebLib::GetVal($_POST, 'CallAPI')) {
     $Works = $DB->get(MySQL_Pre . 'MPR_Works');
     echo '<option></option>';
     foreach ($Works as $Work) {
-      echo '<option value="' . $Work['WorkID'] . '">' . $Work['WorkID'] . '-' . $Work['WorkDescription'] . '</option>';
+      echo '<option value="' . $Work['WorkID'] . '">'  . $Work['WorkID'] . '-' . $Work['WorkDescription'] . '</option>';
     }
     //print_r($_POST);
     unset($DB);
