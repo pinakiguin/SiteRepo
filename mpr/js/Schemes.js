@@ -47,5 +47,5 @@ $(function () {
             });
         }
     });
-    $(".datePicker").datepicker({dateFormat:"dd/mm/yy"}).css({"width": "80px"});
+    $(".datePicker").datepicker({dateFormat:"yy-mm-dd"}).css({"width": "80px"});
 });

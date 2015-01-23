@@ -24,11 +24,13 @@ switch (WebLib::GetVal($_POST, 'CallAPI')) {
   case 'Reports_GetSchemeFunds':
     $DB = new MySQLiDBHelper();
     $DB->where('SchemeID', WebLib::GetVal($_POST, 'Scheme'));
-    WebLib::ShowTable($DB->query('Select `SchemeName`, `UserName`, `EstimatedCost`, `Funds`, `Expenses`, `Balance` '
+    WebLib::ShowTable($DB->query('Select `UserName` as `Executing Agency`,'
+      . ' `EstimatedCost` as `Estimated Cost`, `Funds` as `Released`, `Expenses` as `Expenditure`, `Balance` '
       . 'from ' . MySQL_Pre . 'MPR_ViewUserFunds'));
 
     $DB->where('SchemeID', WebLib::GetVal($_POST, 'Scheme'));
-    WebLib::ShowTable($DB->query('Select `Year`,`SchemeName`,`Funds`,`Expense`,`Balance` '
+    WebLib::ShowTable($DB->query('Select `Year`,`SchemeName` as `Scheme`,'
+      . '`Funds` as `Released`,`Expense` as `Expenditure`,`Balance` '
       . 'from ' . MySQL_Pre . 'MPR_ViewSchemeWiseFunds'));
     unset($DB);
     break;
@@ -38,8 +40,9 @@ switch (WebLib::GetVal($_POST, 'CallAPI')) {
     $DB->where('SchemeID', WebLib::GetVal($_POST, 'Scheme'));
     $DB->where('CtrlMapID', $_SESSION['UserMapID']);
     $DB->where('UserMapID', WebLib::GetVal($_POST, 'User'));
-    WebLib::ShowTable($DB->query('Select `SchemeName`,`Work`,`EstimatedCost`,`Funds`, '
-      . ' `Expenses`,`Balance`,`Progress`,`Remarks` AS `Status`,`TenderDate`,`WorkOrderDate`,`WorkRemarks` AS `Remarks`'
+    WebLib::ShowTable($DB->query('Select `Work`,`EstimatedCost` as `Estimated Cost`,'
+      . '`Funds` as `Released`, `Expenses` as `Expenditure`,`Balance`,`Progress`,'
+      . '`Remarks` AS `Status`,`TenderDate`,`WorkOrderDate`,`WorkRemarks` AS `Remarks`'
       . 'from ' . MySQL_Pre . 'MPR_ViewUserWorks'));
     unset($DB);
     break;

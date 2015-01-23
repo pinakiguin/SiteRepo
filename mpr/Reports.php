@@ -33,7 +33,8 @@ WebLib::ShowMenuBar('MPR');
           $DB->where('UserMapID', $_SESSION['UserMapID']);
           $Schemes = $DB->get(MySQL_Pre . 'MPR_Schemes');
           foreach ($Schemes as $SchemeID) {
-            echo '<option value="' . $SchemeID['SchemeID'] . '">' . $SchemeID['SchemeName'] . '</option>';
+            echo '<option value="' . $SchemeID['SchemeID'] . '">'
+              . $SchemeID['SchemeID'] . ' - ' . $SchemeID['SchemeName'] . '</option>';
           } ?>
         </select>
       </div>
@@ -46,14 +47,24 @@ WebLib::ShowMenuBar('MPR');
           $DB->where('CtrlMapID', $_SESSION['UserMapID']);
           $Users = $DB->get(MySQL_Pre . 'MPR_ViewMappedUsers');
           foreach ($Users as $User) {
-            echo '<option value="' . $User['UserMapID'] . '">' . $User['UserName'] . '</option>';
+            echo '<option value="' . $User['UserMapID'] . '">'
+              . $User['UserMapID'] . ' - ' . $User['UserName'] . '</option>';
           } ?>
         </select>
       </div>
       <div style="clear: both;"></div>
       <hr/>
     </form>
-    <div id="DataTable"></div>
+    <div id="DataTable">
+      <?php
+      $DB = new MySQLiDBHelper();
+
+      WebLib::ShowTable($DB->query('Select `Year`,`SchemeName` as `Scheme`,'
+        .'`Funds` as `Sanctioned Funds`,`Expense` as `Expenditure`,`Balance` '
+        . 'from ' . MySQL_Pre . 'MPR_ViewSchemeWiseFunds'));
+      unset($DB);
+      ?>
+    </div>
   </div>
   <div class="formWrapper-Clear"></div>
 </div>
