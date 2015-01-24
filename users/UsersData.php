@@ -38,8 +38,8 @@ if (WebLib::GetVal($_POST, 'FormToken') !== null) {
           }
           $_SESSION['UserMapID'] = WebLib::GetVal($_POST, 'UserMapID');
 
-          $User = $DB->where("UserMapID", $_SESSION['UserMapID']);
-          $DB->query('Select UserName ' . ' From `' . MySQL_Pre . 'Users`');
+          $DB->where("UserMapID", $_SESSION['UserMapID']);
+          $User = $DB->query('Select UserName ' . ' From `' . MySQL_Pre . 'Users`');
           $_SESSION['UserName']    = 'Impersonated-' . $User[0]['UserName'];
           $_SESSION['Msg']         = $_SESSION['UserName'];
           $_SESSION['ReloadMenus'] = true;
@@ -79,19 +79,19 @@ if (WebLib::GetVal($_POST, 'FormToken') !== null) {
         break;
 
       case 'De-Activate':
-        $Query = 'Update `' . MySQL_Pre . 'Users` Set `Activated`=0'
-          . ' Where `Activated`=1 AND `CtrlMapID`='
-          . WebLib::GetVal($_SESSION, 'UserMapID', true)
-          . ' AND `UserMapID`=' . WebLib::GetVal($_POST, 'UserMapID');
+        $DB->where('Activated', 1);
+        $DB->where('CtrlMapID', WebLib::GetVal($_SESSION, 'UserMapID', true));
+        $DB->where('UserMapID', WebLib::GetVal($_POST, 'UserMapID'));
+        $Inserted = $DB->update(MySQL_Pre . 'Users', array('Activated' => 0));
+        
+        $DB->where("UserMapID", $_SESSION['UserMapID']);
+        $User = $DB->query('Select `UserName`,`UserID`' . ' From `' . MySQL_Pre . 'Users`');
 
-        $QueryUser = 'Select CONCAT(`UserName`,\'|\',`UserID`) '
-          . ' FROM `' . MySQL_Pre . 'Users`'
-          . ' Where UserMapID=' . WebLib::GetVal($_POST, 'UserMapID');
-        $User      = explode('|', $DB->do_max_query($QueryUser));
-
-        $Subject = 'User Account De-Activated - SRER 2014';
-        $Body    = '<span>Your UserID: <b>' . $User[1]
+        $Subject = 'User Account De-Activated - Paschim Medinipur District Portal';
+        $Body    = '<span>Your UserID: <b>' . $User[0]['UserID']
           . '</b> is now De-Activated</span>';
+
+        $RunQuery = false;
         break;
 
       case 'Reset Password':
