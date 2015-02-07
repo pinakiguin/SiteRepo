@@ -30,7 +30,7 @@ WebLib::ShowMenuBar('MPR');
           <option></option>
           <?php
           $DB = new MySQLiDBHelper();
-          $DB->where('UserMapID', $_SESSION['UserMapID']);
+          //$DB->where('UserMapID', $_SESSION['UserMapID']);
           $Schemes = $DB->get(MySQL_Pre . 'MPR_Schemes');
           foreach ($Schemes as $SchemeID) {
             echo '<option value="' . $SchemeID['SchemeID'] . '">'
@@ -44,7 +44,7 @@ WebLib::ShowMenuBar('MPR');
           <option></option>
           <?php
           $DB = new MySQLiDBHelper();
-          $DB->where('CtrlMapID', $_SESSION['UserMapID']);
+          $DB->where('CtrlMapID', 80); //$_SESSION['UserMapID']);
           $Users = $DB->get(MySQL_Pre . 'MPR_ViewMappedUsers');
           foreach ($Users as $User) {
             echo '<option value="' . $User['UserMapID'] . '">'
