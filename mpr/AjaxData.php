@@ -40,7 +40,8 @@ switch (WebLib::GetVal($_POST, 'CallAPI')) {
     $DB->where('SchemeID', WebLib::GetVal($_POST, 'Scheme'));
     $DB->where('CtrlMapID', 80); //$_SESSION['UserMapID']);
     $DB->where('UserMapID', WebLib::GetVal($_POST, 'User'));
-    WebLib::ShowTable($DB->query('Select `Work`,`EstimatedCost` as `Estimated Cost`,'
+    WebLib::ShowTable($DB->query('Select CONCAT(`WorkID`,\' - \',`Work`) as '
+      . '`Work Description`, `EstimatedCost` as `Estimated Cost`,'
       . '`Funds` as `Released`, `Expenses` as `Expenditure`,`Balance`,`Progress`,'
       . '`Remarks` AS `Status`,`TenderDate`,`WorkOrderDate`,`WorkRemarks` AS `Remarks`'
       . 'from ' . MySQL_Pre . 'MPR_ViewUserWorks'));
