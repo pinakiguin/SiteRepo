@@ -377,7 +377,7 @@ class WebLib {
       . 'Paschim Medinipur District Centre<br/>'
       . 'L. A. Building (2nd floor), Collectorate Compound, Midnapore<br/>'
       . 'West Bengal - 721101 , India Phone : +91-3222-263506, '
-      . 'Email: wbmdp(a)nic.in<br/>';
+      . 'Email: wbmdp(a)gov.in<br/>';
     echo $_SESSION['Version'];
     $_SESSION['ED']            = round(microtime(true) - self::GetVal($_SESSION,
         'ET'), 3);
@@ -792,7 +792,7 @@ class WebLib {
       $_SESSION['BaseURL'] = $Proto . $_SERVER['HTTP_HOST'] . $_SESSION['BaseDIR'];
       $_SESSION['AppKey']  = AppKey;
       //self::DeployInfo();
-      $_SESSION['Version'] = 'v1.1-258-g9c06f58 20140205';
+      $_SESSION['Version'] = 'v1.1-314-g6debe48 20150207';
     }
   }
 
