@@ -115,7 +115,7 @@ if (WebLib::GetVal($_POST, 'FormToken') !== null) {
         if ($Inserted > 0) {
           if (UseSMSGW === true) {
             SMSGW::SendSMS($TxtBody, $User['MobileNo']);
-            $_SESSION['Msg'] = 'Password Sent To: ' . $User['MobileNo'] . '<br/>' . $Query;
+            $_SESSION['Msg'] = 'Password Sent To: ' . $User['MobileNo'] . '<br/>';
           }
         }
 
