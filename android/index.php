@@ -30,10 +30,10 @@ $AuthOTP = new AuthOTP(1);
   // and the ability to create new ones. This isnt really in the scope of the
   // GA4PHP, but for this example, we need to be able to create users, so heres where
   // you do it.
-  $row["MobileNo"] = $_GET['mdn'];
+  $row["MobileNo"] = $_SESSION['MobileNo']; //$_GET['mdn'];
   if ($AuthOTP->hasToken($row["MobileNo"])) {
     $hastoken = "Yes";
-    $type = $AuthOTP->getTokenType($row["MobileNo"]);
+    $type     = $AuthOTP->getTokenType($row["MobileNo"]);
     if ($type == "HOTP") {
       $type = "- Counter Based";
     } else {
@@ -42,17 +42,17 @@ $AuthOTP = new AuthOTP(1);
     $hexkey = $AuthOTP->getKey($row["MobileNo"]);
     $b32key = $AuthOTP->helperhex2b32($hexkey);
 
-    $url = urlencode($AuthOTP->createURL($row["MobileNo"]));
-    $keyurl = "<img src=\"http://chart.apis.google.com/chart?cht=qr&chl=$url&chs=200x200\">";
+    $url        = urlencode($AuthOTP->createURL($row["MobileNo"]));
+    $keyurl     = "<img src=\"http://chart.apis.google.com/chart?cht=qr&chl=$url&chs=200x200\">";
     $CheckCodes = "<br/>1. " . $AuthOTP->oath_hotp($hexkey, 1)
-        . "<br/>2. " . $AuthOTP->oath_hotp($hexkey, 2)
-        . "<br/>3. " . $AuthOTP->oath_hotp($hexkey, 3);
+      . "<br/>2. " . $AuthOTP->oath_hotp($hexkey, 2)
+      . "<br/>3. " . $AuthOTP->oath_hotp($hexkey, 3);
   } else {
-    $b32key = "";
-    $hexkey = "";
-    $type = "";
+    $b32key   = "";
+    $hexkey   = "";
+    $type     = "";
     $hastoken = "no";
-    $keyurl = "";
+    $keyurl   = "";
   }
 
 

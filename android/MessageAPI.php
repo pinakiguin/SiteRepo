@@ -39,7 +39,7 @@ class MessageAPI {
 
   function __construct($jsonData) {
     $this->Resp['ET'] = time();
-    $this->Req = $jsonData;
+    $this->Req        = $jsonData;
   }
 
   function __unset($name) {
@@ -115,18 +115,18 @@ class MessageAPI {
           $DB = new MySQLiDBHelper();
 
           $this->Resp['DB']['KeyUpdated'] = $DB->where('MobileNo', $this->Req->MDN)
-              ->ddlQuery('Update ' . MySQL_Pre . 'SMS_Users Set UserData=TempData');
+            ->ddlQuery('Update ' . MySQL_Pre . 'SMS_Users Set UserData=TempData');
 
           $DB->where('MobileNo', $this->Req->MDN);
-          $Profile = $DB->query('Select UserName, Designation, eMailID FROM ' . MySQL_Pre . 'SMS_Users');
+          $Profile                  = $DB->query('Select UserName, Designation, eMailID FROM ' . MySQL_Pre . 'SMS_Users');
           $this->Resp['DB']['USER'] = $Profile[0];
 
           $this->Resp['API'] = true;
           $this->Resp['MSG'] = 'Mobile No. ' . $this->Req->MDN . ' is Registered Successfully!'
-              . ' Now you can start using NIC SMS Gateway for sending Group Messages.';
+            . ' Now you can start using NIC SMS Gateway for sending Group Messages.';
         } else {
           //$this->Resp['URL'] = $AuthUser->createURL($this->Req->MDN);
-          $this->Resp['DB'] = "Key: Not For Production"; //. $AuthUser->oath_hotp($AuthUser->getKey($this->Req->MDN), $this->Req->TC);
+          $this->Resp['DB']  = "Key: Not For Production"; //. $AuthUser->oath_hotp($AuthUser->getKey($this->Req->MDN), $this->Req->TC);
           $this->Resp['API'] = false;
           $this->Resp['MSG'] = 'Invalid OTP';
         }
@@ -150,7 +150,7 @@ class MessageAPI {
       case 'AG':
         $AuthUser = new AuthOTP();
         if ($AuthUser->authenticateUser($this->Req->MDN, $this->Req->OTP)) {
-          $this->Resp['DB'] = Group::getAllGroups();
+          $this->Resp['DB']  = Group::getAllGroups();
           $this->Resp['API'] = true;
           $this->Resp['MSG'] = 'All Groups Loaded';
         } else {
@@ -178,15 +178,15 @@ class MessageAPI {
       case 'SM':
         $AuthUser = new AuthOTP();
         if ($AuthUser->authenticateUser($this->Req->MDN, $this->Req->OTP)) {
-          $Msg = new Message();
-          $User = new User($this->Req->MDN);
-          $Mid = $Msg->createSMS($User, $this->Req->TXT, $this->Req->GRP);
-          $Contact = new Contact();
-          $count = $Contact->CountContactByGroup($this->Req->GRP);
-          $this->Resp['DB'] = $Mid;
+          $Msg               = new Message();
+          $User              = new User($this->Req->MDN);
+          $Mid               = $Msg->createSMS($User, $this->Req->TXT, $this->Req->GRP);
+          $Contact           = new Contact();
+          $count             = $Contact->CountContactByGroup($this->Req->GRP);
+          $this->Resp['DB']  = $Mid;
           $this->Resp['API'] = true;
           $this->Resp['MSG'] = 'Message Sent to ' . $count
-              . ' Contacts of ' . $this->Req->GRP . ' Group';
+            . ' Contacts of ' . $this->Req->GRP . ' Group';
         } else {
           $this->Resp['API'] = false;
           $this->Resp['MSG'] = 'Invalid OTP ' . $this->Req->OTP;
@@ -217,14 +217,14 @@ class MessageAPI {
         if ($AuthUser->authenticateUser($this->Req->MDN, $this->Req->OTP)) {
           $DB = new MySQLiDBHelper();
           $DB->where('MobileNo', $this->Req->MDN);
-          $Profile = $DB->query('Select UserName, Designation, eMailID FROM ' . MySQL_Pre . 'SMS_Users');
+          $Profile          = $DB->query('Select UserName, Designation, eMailID FROM ' . MySQL_Pre . 'SMS_Users');
           $this->Resp['DB'] = $Profile[0];
 
           $this->Resp['API'] = true;
           $this->Resp['MSG'] = 'Profile Downloaded Successfully.';
         } else {
           //$this->Resp['URL'] = $AuthUser->createURL($this->Req->MDN);
-          $this->Resp['DB'] = "Key: Not For Production"; //. $AuthUser->oath_hotp($AuthUser->getKey($this->Req->MDN), $this->Req->TC);
+          $this->Resp['DB']  = "Key: Not For Production"; //. $AuthUser->oath_hotp($AuthUser->getKey($this->Req->MDN), $this->Req->TC);
           $this->Resp['API'] = false;
           $this->Resp['MSG'] = 'Invalid OTP';
         }
@@ -243,7 +243,7 @@ class MessageAPI {
   protected function sendResponse() {
     //$this->Resp['json'] = $this->Req; //TODO: Remove for Production
     $this->Resp['ET'] = time() - $this->Resp['ET'];
-    $DateFormat = 'D d M g:i:s A';
+    $DateFormat       = 'D d M g:i:s A';
     $this->Resp['ST'] = date($DateFormat, time());
 
     $JsonResp = json_encode($this->Resp);

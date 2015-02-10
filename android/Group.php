@@ -19,7 +19,7 @@ class Group {
   public function setGroup($GroupName) {
     $DB = new MySQLiDBHelper();
     $DB->where('GroupName', $GroupName);
-    $Group = $DB->get(MySQL_Pre . 'SMS_Groups');
+    $Group         = $DB->get(MySQL_Pre . 'SMS_Groups');
     $this->GroupID = $Group[0]['GroupID'];
   }
 
@@ -28,15 +28,17 @@ class Group {
   }
 
   function CreateGroup($GName) {
-    $DB = new MySQLiDBHelper();
+    $DB                      = new MySQLiDBHelper();
     $insertData['GroupName'] = $GName;
-    $GroupID = $DB->insert(MySQL_Pre . 'SMS_Groups', $insertData);
+    $GroupID                 = $DB->insert(MySQL_Pre . 'SMS_Groups', $insertData);
+
     return $GroupID;
   }
 
   static function getAllGroups() {
-    $DB = new MySQLiDBHelper();
+    $DB     = new MySQLiDBHelper();
     $Groups = $DB->query('Select GroupName FROM ' . MySQL_Pre . 'SMS_Groups');
+
     return $Groups;
   }
 

@@ -24,7 +24,7 @@ class AuthOTP extends GoogleAuthenticator {
   function getData($UserID) {
     // TODO: Implement getData() method.
     $MySQLiDB = new MySQLiDBHelper();
-    $User = $MySQLiDB->where('MobileNo', $UserID)->get(MySQL_Pre . 'SMS_Users');
+    $User     = $MySQLiDB->where('MobileNo', $UserID)->get(MySQL_Pre . 'SMS_Users');
     if (count($User) > 0) {
       if ($this->Mode == 0) {
         return $User[0]['UserData'];
@@ -56,6 +56,7 @@ class AuthOTP extends GoogleAuthenticator {
       $MySQLiDB->insert(MySQL_Pre . 'SMS_Users', $Data);
     }
     $_SESSION['TokenOTP'] = $TokenData;
+
     return true;
   }
 
@@ -66,7 +67,8 @@ class AuthOTP extends GoogleAuthenticator {
   function getUsers() {
     // TODO: Implement getUsers() method.
     $MySQLiDB = new MySQLiDBHelper();
-    $UserIDs = $MySQLiDB->query('Select MobileNo from ' . MySQL_Pre . 'SMS_Users');
+    $UserIDs  = $MySQLiDB->query('Select MobileNo from ' . MySQL_Pre . 'SMS_Users');
+
     return $UserIDs;
   }
 
