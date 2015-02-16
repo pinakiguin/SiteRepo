@@ -20,6 +20,7 @@ function CreateSchemas() {
   $ObjDB->ddlQuery(SQLDefs('MPR_ViewSchemeWiseExpenditure'));
   $ObjDB->ddlQuery(SQLDefs('MPR_ViewSchemeWiseAllotments'));
   $ObjDB->ddlQuery(SQLDefs('MPR_ViewSchemeWiseFunds'));
+  $ObjDB->ddlQuery(SQLDefs('MPR_ViewUserFunds'));
   unset($ObjDB);
 }
 
@@ -246,6 +247,22 @@ function SQLDefs($ObjectName) {
         . ' LEFT JOIN `' . MySQL_Pre . 'MPR_ViewSchemeWiseExpenditure` `E` '
         . ' on((`A`.`SchemeID` = `E`.`SchemeID`) AND (`A`.`Year`=`E`.`Year`))'
         . ' GROUP BY `A`.`Year`,`A`.`SchemeID`,`A`.`SchemeName`;';
+      break;
+
+    case 'MPR_ViewUserFunds':
+      $SqlDB = 'CREATE OR REPLACE VIEW `' . MySQL_Pre . $ObjectName . '` AS '
+        . 'select `S`.`SchemeID` AS `SchemeID`,`S`.`SchemeName` AS `SchemeName`,'
+        . '`M`.`UserMapID` AS `UserMapID`,`U`.`UserName` AS `UserName`,'
+        . 'format(sum(`W`.`EstimatedCost`),0) AS `EstimatedCost`,'
+        . 'format(sum(`A`.`Funds`),0) AS `Funds`,format(sum(`E`.`Expenses`),0) AS `Expenses`,'
+        . 'format((sum(`A`.`Funds`) - sum(`E`.`Expenses`)),0) AS `Balance` '
+        . 'from (((((`WebSite_MPR_Works` `W` join `WebSite_MPR_Schemes` `S`'
+        . ' on((`S`.`SchemeID` = `W`.`SchemeID`))) left join `WebSite_MPR_UserMaps` `M`'
+        . ' on((`M`.`MprMapID` = `W`.`MprMapID`))) left join `WebSite_MPR_ViewWorkAllotments` `A`'
+        . ' on((`A`.`WorkID` = `W`.`WorkID`))) left join `WebSite_MPR_ViewWorkExpenses` `E`'
+        . ' on((`E`.`WorkID` = `W`.`WorkID`))) left join `WebSite_Users` `U`'
+        . ' on((`U`.`UserMapID` = `M`.`UserMapID`))) '
+        . 'group by `S`.`SchemeID`,`S`.`SchemeName`,`M`.`UserMapID`,`U`.`UserName`;';
       break;
 
   }
