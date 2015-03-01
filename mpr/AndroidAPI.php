@@ -2,7 +2,7 @@
 ini_set('display_errors', '1');
 error_reporting(E_ALL);
 
-require_once(__DIR__ . '/../lib.inc.php');
+require_once(__DIR__ . '/../android/AuthOTP.php');
 
 $RT       = time();
 $json     = file_get_contents('php://input');
@@ -87,33 +87,54 @@ class AndroidAPI {
        *
        * Request:
        *   JSONObject={"API":"US",
-       *               "MDN":"9876543210",
-       *               "UID":"35",
-       *               "OTP":"987654"}
+       *               "UID":"35"}
        *
        * Response:
        *    JSONObject={"API":true,
-       *               "DB":[{"GRP":"All BDOs"},{"GRP":"All SDOs"}],
-       *               "MSG":"Total Groups: 2",
+       *               "DB":[{"SN":"BRGF","ID":"1"},{"SN":"MPLADS","ID":"5"}],
+       *               "MSG":"All Schemes Loaded",
        *               "ET":2.0987,
        *               "ST":"Wed 20 Aug 08:31:23 PM"}
        */
       case 'US':
-        $AuthUser = new AuthOTP();
-        if ($AuthUser->authenticateUser($this->Req->MDN, $this->Req->OTP)) {
           $DB = new MySQLiDBHelper();
           $DB->where('UserMapID', $this->Req->UID);
-          $Schemes           = $DB->get(MySQL_Pre . 'MPR_ViewWorkerSchemes');
+          $Schemes           = $DB->query('Select `SchemeName` as `SN`, `SchemeID` as `ID` FROM '
+            . MySQL_Pre . 'MPR_ViewWorkerSchemes');
           $this->Resp['DB']  = $Schemes;
           $this->Resp['API'] = true;
           $this->Resp['MSG'] = 'All Schemes Loaded';
-          $this->setExpiry(3600);
+          //$this->setExpiry(3600);
           unset($DB);
           unset($Schemes);
-        } else {
-          $this->Resp['API'] = false;
-          $this->Resp['MSG'] = 'Invalid OTP ' . $this->Req->OTP;
-        }
+        break;
+
+      /**
+       * User Works: Retrieve all the Works for the User for a particular Scheme
+       *
+       * Request:
+       *   JSONObject={"API":"UW",
+       *               "UID":"35",
+       *               "SID":"5"}
+       *
+       * Response:
+       *    JSONObject={"API":true,
+       *               "DB":[{"SN":"BRGF","ID":"1"},{"SN":"MPLADS","ID":"5"}],
+       *               "MSG":"All Schemes Loaded",
+       *               "ET":2.0987,
+       *               "ST":"Wed 20 Aug 08:31:23 PM"}
+       */
+      case 'UW':
+        $DB = new MySQLiDBHelper();
+        $DB->where('UserMapID', $this->Req->UID);
+        $DB->where('SchemeID', $this->Req->SID);
+        $UserWorks = $DB->get(MySQL_Pre . 'MPR_ViewUserWorks');
+        $this->Resp['DB']  = $UserWorks;
+        $this->Resp['API'] = true;
+        $this->Resp['MSG'] = 'Total Works : ' . count($UserWorks);
+        //$this->setExpiry(3600);
+        unset($DB);
+        unset($UserWorks);
         break;
 
       /**
@@ -132,12 +153,12 @@ class AndroidAPI {
        *               "ST":"Wed 20 Aug 08:31:23 PM"}
        */
       case 'SP':
-        $AuthUser = new AuthOTP(1);
+        $AuthUser = new AuthOTP();
         if ($AuthUser->authenticateUser($this->Req->MDN, $this->Req->OTP)) {
           $DB = new MySQLiDBHelper();
           $DB->where('MobileNo', $this->Req->MDN);
           $Profile          = $DB->query('Select UserMapID FROM ' . MySQL_Pre . 'Users');
-          $this->Resp['DB'] = $Profile[0];
+          $this->Resp['DB'] = $Profile;
 
           $this->Resp['API'] = true;
           $this->Resp['MSG'] = 'Profile Downloaded Successfully.';
