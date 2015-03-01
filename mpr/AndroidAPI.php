@@ -138,6 +138,46 @@ class AndroidAPI {
         break;
 
       /**
+       * Update Progress: Update Progress of Works for the User for a particular Work
+       *
+       * Request:
+       *   JSONObject={"API":"UP",
+       *               "UID":"35",
+       *               "WID":"5",
+       *               "EA":"35",
+       *               "P":"10",
+       *               "B":"10029792",
+       *               "R":"Some Remarks"}
+       *
+       * Response:
+       *    JSONObject={"API":true,
+       *               "DB":298,
+       *               "MSG":"Updated Successfully!",
+       *               "ET":2.0987,
+       *               "ST":"Wed 20 Aug 08:31:23 PM"}
+       */
+      case 'UP':
+        $DB = new MySQLiDBHelper();
+        //$DB->where('UserMapID', $this->Req->UID); TODO: Validate User against WorkID before updating
+        //$DB->where('WorkID', $this->Req->WID); TODO: Authenticate User Before Update
+
+        $tableData['WorkID'] = $this->Req->WID;
+        $tableData['ExpenditureAmount'] = $this->Req->EA;
+        $tableData['Progress'] = $this->Req->P;
+        $tableData['Balance'] = $this->Req->B;
+        $tableData['ReportDate'] = date("Y-m-d",time());
+        $tableData['Remarks'] = $this->Req->R;
+        $ProgressID = $DB->insert(MySQL_Pre . 'MPR_Progress', $tableData);
+
+        $this->Resp['DB']  = $ProgressID;
+        $this->Resp['API'] = true;
+        $this->Resp['MSG'] = 'Updated Successfully!';
+        //$this->setExpiry(3600);
+        unset($DB);
+        unset($tableData);
+        break;
+
+      /**
        * Sync Profile: Sync User Profile from Registration Data on Server
        *
        * Request:
