@@ -155,7 +155,7 @@ class MessageAPI {
           $this->Resp['DB']  = Group::getAllGroups();
           $this->Resp['API'] = true;
           $this->Resp['MSG'] = 'All Groups Loaded';
-          $this->Expiry=3600; // 60 Minutes
+          //$this->Expiry=3600; // 60 Minutes
         } else {
           $this->Resp['API'] = false;
           $this->Resp['MSG'] = 'Invalid OTP ' . $this->Req->OTP;
