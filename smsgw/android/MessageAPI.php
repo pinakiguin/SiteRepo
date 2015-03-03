@@ -27,7 +27,7 @@
  *
  */
 
-require_once(__DIR__ . '/AuthOTP.php');
+require_once(__DIR__ . '/../../android/AuthOTP.php');
 require_once(__DIR__ . '/Message.php');
 require_once(__DIR__ . '/Group.php');
 require_once(__DIR__ . '/Contact.php');
@@ -40,7 +40,7 @@ class MessageAPI {
 
   function __construct($jsonData) {
     $this->Resp['ET'] = time();
-    $this->Expiry=null;
+    $this->Expiry     = null;
     $this->Req        = $jsonData;
   }
 
@@ -150,16 +150,10 @@ class MessageAPI {
        *               "ST":"Wed 20 Aug 08:31:23 PM"}
        */
       case 'AG':
-        $AuthUser = new AuthOTP();
-        if ($AuthUser->authenticateUser($this->Req->MDN, $this->Req->OTP)) {
-          $this->Resp['DB']  = Group::getAllGroups();
-          $this->Resp['API'] = true;
-          $this->Resp['MSG'] = 'All Groups Loaded';
-          //$this->Expiry=3600; // 60 Minutes
-        } else {
-          $this->Resp['API'] = false;
-          $this->Resp['MSG'] = 'Invalid OTP ' . $this->Req->OTP;
-        }
+        $this->Resp['DB']  = Group::getAllGroups();
+        $this->Resp['API'] = true;
+        $this->Resp['MSG'] = 'All Groups Loaded';
+        //$this->Expiry=3600; // 60 Minutes
         break;
 
       /**
@@ -256,10 +250,10 @@ class MessageAPI {
     /**
      * Important: Tells volley not to cache the response
      */
-    if($this->Expiry==null){
-      $Expires=time() - 3600;
+    if ($this->Expiry == null) {
+      $Expires = time() - 3600;
     } else {
-      $Expires=time() + $this->Expiry;
+      $Expires = time() + $this->Expiry;
     }
     header('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', $Expires));
     echo $JsonResp;

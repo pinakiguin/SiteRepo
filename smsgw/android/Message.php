@@ -1,23 +1,5 @@
 <?php
 
-require_once __DIR__ . '/../lib.inc.php';
-require_once __DIR__ . '/User.php';
-require_once __DIR__ . '/Contact.php';
-
-require_once __DIR__ . '/Group.php';
-require_once(__DIR__ . '/../smsgw/smsgw.inc.php');
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- * Description of Message
- *
- * @author Abu Salam
- */
 class Message {
 
   protected $User;

@@ -214,7 +214,8 @@ function SQLDefs($ObjectName) {
         . ' from (`' . MySQL_Pre . 'MPR_UserMaps` `M` join `' . MySQL_Pre . 'MPR_Works` `W`'
         . ' on(`M`.`MprMapID` = `W`.`MprMapID`)) join `' . MySQL_Pre . 'MPR_Schemes` `S`'
         . ' on(`S`.`SchemeID`=`W`.`SchemeID`) '
-        . 'Group By `S`.`SchemeID`,`S`.`SchemeName`,`M`.`UserMapID`;';
+        . 'Group By `S`.`SchemeID`,`S`.`SchemeName`,`M`.`UserMapID` '
+        . 'Order By `S`.`SchemeName`;';
       break;
 
     case 'MPR_ViewSchemeWiseExpenditure':

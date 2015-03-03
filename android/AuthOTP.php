@@ -1,6 +1,7 @@
 <?php
 require_once(__DIR__ . '/../lib.inc.php');
 require_once(__DIR__ . '/ga4php.php');
+require_once(__DIR__ . '/../smsgw/smsgw.inc.php');
 
 class AuthOTP extends GoogleAuthenticator {
 
@@ -24,7 +25,7 @@ class AuthOTP extends GoogleAuthenticator {
   function getData($UserID) {
     // TODO: Implement getData() method.
     $MySQLiDB = new MySQLiDBHelper();
-    $User     = $MySQLiDB->where('MobileNo', $UserID)->get(MySQL_Pre . 'SMS_Users');
+    $User     = $MySQLiDB->where('MobileNo', $UserID)->get(MySQL_Pre . 'APP_Users');
     if (count($User) > 0) {
       if ($this->Mode == 0) {
         return $User[0]['UserData'];
@@ -52,8 +53,8 @@ class AuthOTP extends GoogleAuthenticator {
     } else {
       $Data['TempData'] = $TokenData;
     }
-    if ($MySQLiDB->where('MobileNo', $UserID)->update(MySQL_Pre . 'SMS_Users', $Data) == 0) {
-      $MySQLiDB->insert(MySQL_Pre . 'SMS_Users', $Data);
+    if ($MySQLiDB->where('MobileNo', $UserID)->update(MySQL_Pre . 'APP_Users', $Data) == 0) {
+      $MySQLiDB->insert(MySQL_Pre . 'APP_Users', $Data);
     }
     $_SESSION['TokenOTP'] = $TokenData;
 
@@ -67,7 +68,7 @@ class AuthOTP extends GoogleAuthenticator {
   function getUsers() {
     // TODO: Implement getUsers() method.
     $MySQLiDB = new MySQLiDBHelper();
-    $UserIDs  = $MySQLiDB->query('Select MobileNo from ' . MySQL_Pre . 'SMS_Users');
+    $UserIDs  = $MySQLiDB->query('Select MobileNo from ' . MySQL_Pre . 'APP_Users');
 
     return $UserIDs;
   }

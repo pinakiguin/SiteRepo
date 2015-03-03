@@ -8,7 +8,7 @@ session_start();
 
 WebLib::CreateDB();
 
-$AuthOTP = new AuthOTP();
+$AuthOTP = new AuthOTP(1);
 
 //$AuthOTP->setUser('1', 'TOTP');
 

@@ -1,17 +1,5 @@
 <?php
-ini_set('display_errors', '1');
-error_reporting(E_ALL);
-
-require_once(__DIR__ . '/../android/AuthOTP.php');
-
-$RT       = time();
-$json     = file_get_contents('php://input');
-$jsonData = json_decode($json);
-
-$mAPI = new AndroidAPI($jsonData);
-$mAPI->executeAPI();
-exit();
-
+require_once(__DIR__ . '/../../android/AuthOTP.php');
 /**
  * API Calls from a valid user from an Android System.
  *
@@ -39,7 +27,7 @@ exit();
  *               "ST":"Wed 20 Aug 08:31:23 PM"}
  *
  */
-class AndroidAPI {
+class MprAPI {
   private $Req;
   private $Resp;
   private $Expiry;
