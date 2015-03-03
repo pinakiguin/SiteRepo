@@ -11,5 +11,5 @@ $json     = file_get_contents('php://input');
 $jsonData = json_decode($json);
 
 $mAPI = new AndroidAPI($jsonData);
-$mAPI->executeAPI();
+$mAPI();
 exit();

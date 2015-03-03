@@ -11,5 +11,5 @@ $json     = file_get_contents('php://input');
 $jsonData = json_decode($json);
 
 $mAPI = new MprAPI($jsonData);
-$mAPI->executeAPI();
+$mAPI();
 exit();
