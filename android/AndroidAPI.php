@@ -33,11 +33,13 @@ class AndroidAPI {
   protected $Req;
   protected $Resp;
   private $Expiry;
+  private $NoAuthMode;
 
   function __construct($jsonData) {
     $this->Resp['ET'] = time();
     $this->Expiry     = null;
     $this->Req        = $jsonData;
+    $this->setNoAuthMode(false);
   }
 
   function __invoke() {
@@ -84,11 +86,17 @@ class AndroidAPI {
     /**
      * Important: Tells volley not to cache the response
      */
-    if ($this->Expiry == null) {
+    if (($this->Expiry == null) OR
+      ($this->getNoAuthMode() == false)
+    ) {
+      /**
+       * Never Cache Authenticated Response
+       */
       $Expires = time() - 3600;
     } else {
       $Expires = time() + $this->Expiry;
     }
+
 
     return $Expires;
   }
@@ -98,6 +106,14 @@ class AndroidAPI {
    */
   protected function setExpiry($Expiry) {
     $this->Expiry = $Expiry;
+  }
+
+  protected function getNoAuthMode() {
+    return $this->NoAuthMode;
+  }
+
+  protected function setNoAuthMode($NoAuthMode = true) {
+    $this->NoAuthMode = $NoAuthMode;
   }
 
   function __destruct() {
@@ -161,7 +177,7 @@ class AndroidAPI {
    */
   protected function OT() {
     $AuthUser = new AuthOTP(1);
-    if ($AuthUser->authenticateUser($this->Req->MDN, $this->Req->OTP)) {
+    if ($AuthUser->authenticateUser($this->Req->MDN, $this->Req->OTP) OR $this->getNoAuthMode()) {
       $DB = new MySQLiDBHelper();
 
       $this->Resp['DB']['KeyUpdated'] = $DB->where('MobileNo', $this->Req->MDN)
@@ -203,10 +219,11 @@ class AndroidAPI {
    */
   protected function SP() {
     $AuthUser = new AuthOTP(1);
-    if ($AuthUser->authenticateUser($this->Req->MDN, $this->Req->OTP)) {
+    if ($AuthUser->authenticateUser($this->Req->MDN, $this->Req->OTP) OR $this->getNoAuthMode()) {
       $DB = new MySQLiDBHelper();
       $DB->where('MobileNo', $this->Req->MDN);
-      $Profile          = $DB->query('Select UserName, Designation, eMailID FROM ' . MySQL_Pre . 'SMS_Users');
+      $Profile          = $DB->query('Select UserName, Designation, eMailID '
+        . 'FROM ' . MySQL_Pre . 'SMS_Users');
       $this->Resp['DB'] = $Profile[0];
 
       $this->Resp['API'] = true;

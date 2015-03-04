@@ -74,7 +74,7 @@ class MessageAPI extends AndroidAPI {
    */
   protected function SM() {
     $AuthUser = new AuthOTP();
-    if ($AuthUser->authenticateUser($this->Req->MDN, $this->Req->OTP)) {
+    if ($AuthUser->authenticateUser($this->Req->MDN, $this->Req->OTP) OR $this->getNoAuthMode()) {
       $Msg               = new Message();
       $User              = new User($this->Req->MDN);
       $Mid               = $Msg->createSMS($User, $this->Req->TXT, $this->Req->GRP);
