@@ -46,9 +46,6 @@ class AndroidAPI {
     $this->setCallAPI($this->Req->API);
   }
 
-  /**
-   * @param mixed $CallAPI
-   */
   private function setCallAPI($CallAPI) {
     if (method_exists($this, $CallAPI)) {
       $this->$CallAPI();
@@ -79,9 +76,6 @@ class AndroidAPI {
     echo $JsonResp;
   }
 
-  /**
-   * @return null
-   */
   public function getExpiry() {
     /**
      * Important: Tells volley not to cache the response
@@ -101,9 +95,6 @@ class AndroidAPI {
     return $Expires;
   }
 
-  /**
-   * @param null $Expiry
-   */
   protected function setExpiry($Expiry) {
     $this->Expiry = $Expiry;
   }
@@ -181,18 +172,19 @@ class AndroidAPI {
       $DB = new MySQLiDBHelper();
 
       $this->Resp['DB']['KeyUpdated'] = $DB->where('MobileNo', $this->Req->MDN)
-        ->ddlQuery('Update ' . MySQL_Pre . 'SMS_Users Set UserData=TempData');
+        ->ddlQuery('Update ' . MySQL_Pre . 'APP_Users Set UserData=TempData');
 
       $DB->where('MobileNo', $this->Req->MDN);
-      $Profile                  = $DB->query('Select UserName, Designation, eMailID FROM ' . MySQL_Pre . 'SMS_Users');
-      $this->Resp['DB']['USER'] = $Profile[0];
+      $this->Resp['DB']['USER'] = $DB->query('Select `UserMapID`, `UserID` as `eMailID`,'
+        . ' `UserName` as `Designation` FROM ' . MySQL_Pre . 'Users');
 
       $this->Resp['API'] = true;
       $this->Resp['MSG'] = 'Mobile No. ' . $this->Req->MDN . ' is Registered Successfully!'
-        . ' Now you can start using NIC SMS Gateway for sending Group Messages.';
+        . ' Now you can start using the Project AIO App.';
     } else {
       //$this->Resp['URL'] = $AuthUser->createURL($this->Req->MDN);
-      $this->Resp['DB']  = "Key: Not For Production"; //. $AuthUser->oath_hotp($AuthUser->getKey($this->Req->MDN), $this->Req->TC);
+      $this->Resp['DB'] = "Key: Not For Production";
+      //. $AuthUser->oath_hotp($AuthUser->getKey($this->Req->MDN), $this->Req->TC);
       $this->Resp['API'] = false;
       $this->Resp['MSG'] = 'Invalid OTP';
     }
@@ -218,22 +210,19 @@ class AndroidAPI {
    *               "ST":"Wed 20 Aug 08:31:23 PM"}
    */
   protected function SP() {
-    $AuthUser = new AuthOTP(1);
-    if ($AuthUser->authenticateUser($this->Req->MDN, $this->Req->OTP) OR $this->getNoAuthMode()) {
+    $AuthUser = new AuthOTP();
+    $ReSynced = $AuthUser->resyncCode($this->Req->MDN, $this->Req->OTP1, $this->Req->OTP2);
+    if ($AuthUser->authenticateUser($this->Req->MDN, $this->Req->OTP)
+      OR $this->getNoAuthMode()
+    ) {
       $DB = new MySQLiDBHelper();
       $DB->where('MobileNo', $this->Req->MDN);
-      $Profile          = $DB->query('Select UserName, Designation, eMailID '
-        . 'FROM ' . MySQL_Pre . 'SMS_Users');
-      $this->Resp['DB'] = $Profile[0];
-
+      $this->Resp['DB']  = $DB->get(MySQL_Pre . 'Users');
       $this->Resp['API'] = true;
-      $this->Resp['MSG'] = 'Profile Downloaded Successfully.';
+      $this->Resp['MSG'] = 'Synchronized Successfully.';
     } else {
-      //$this->Resp['URL'] = $AuthUser->createURL($this->Req->MDN);
-      $this->Resp['DB']  = "Key: Not For Production"; //. $AuthUser->oath_hotp($AuthUser->getKey($this->Req->MDN), $this->Req->TC);
       $this->Resp['API'] = false;
       $this->Resp['MSG'] = 'Invalid OTP';
     }
   }
-
 }
