@@ -176,7 +176,7 @@ class AndroidAPI {
 
       $DB->where('MobileNo', $this->Req->MDN);
       $this->Resp['DB']['USER'] = $DB->query('Select `UserMapID`, `UserID` as `eMailID`,'
-        . ' `UserName` as `Designation` FROM ' . MySQL_Pre . 'Users');
+        . ' `UserName` as `Designation`, `DisplayName` FROM ' . MySQL_Pre . 'Users');
 
       $this->Resp['API'] = true;
       $this->Resp['MSG'] = 'Mobile No. ' . $this->Req->MDN . ' is Registered Successfully!'
