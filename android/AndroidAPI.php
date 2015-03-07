@@ -35,11 +35,11 @@ class AndroidAPI {
   private $Expiry;
   private $NoAuthMode;
 
-  function __construct($jsonData) {
+  function __construct($jsonData,$mNoAuthMode=false) {
     $this->Resp['ET'] = time();
     $this->Expiry     = null;
     $this->Req        = $jsonData;
-    $this->setNoAuthMode(false);
+    $this->setNoAuthMode($mNoAuthMode);
   }
 
   function __invoke() {

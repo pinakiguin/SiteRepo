@@ -47,11 +47,16 @@ class MprAPI extends AndroidAPI {
   protected function US() {
     $DB = new MySQLiDBHelper();
     $DB->where('UserMapID', $this->Req->UID);
-    $Schemes           = $DB->query('Select `SchemeName` as `SN`, `SchemeID` as `ID` FROM '
+    $Schemes = $DB->query('Select `SchemeName` as `SN`, `SchemeID` as `ID` FROM '
       . MySQL_Pre . 'MPR_ViewWorkerSchemes');
+    if (count($Schemes) == 0) {
+      $DB->where('UserMapID', $this->Req->UID);
+      $Schemes = $DB->query('Select `SchemeName` as `SN`, `SchemeID` as `ID` FROM '
+        . MySQL_Pre . 'MPR_Schemes');
+    }
     $this->Resp['DB']  = $Schemes;
     $this->Resp['API'] = true;
-    $this->Resp['MSG'] = 'All Schemes Loaded';
+    $this->Resp['MSG'] = 'Total Schemes: ' . count($Schemes);
     //$this->setExpiry(3600);
     unset($DB);
     unset($Schemes);
@@ -76,7 +81,12 @@ class MprAPI extends AndroidAPI {
     $DB = new MySQLiDBHelper();
     $DB->where('UserMapID', $this->Req->UID);
     $DB->where('SchemeID', $this->Req->SID);
-    $UserWorks         = $DB->get(MySQL_Pre . 'MPR_ViewUserWorks');
+    $UserWorks = $DB->get(MySQL_Pre . 'MPR_ViewUserWorks');
+    if (count($UserWorks) == 0) {
+      $DB->where('CtrlMapID', $this->Req->UID);
+      $DB->where('SchemeID', $this->Req->SID);
+      $UserWorks = $DB->get(MySQL_Pre . 'MPR_ViewUserWorks');
+    }
     $this->Resp['DB']  = $UserWorks;
     $this->Resp['API'] = true;
     $this->Resp['MSG'] = 'Total Works : ' . count($UserWorks);
@@ -105,22 +115,32 @@ class MprAPI extends AndroidAPI {
    *               "ST":"Wed 20 Aug 08:31:23 PM"}
    */
   protected function UP() {
-    $DB = new MySQLiDBHelper();
-    //$DB->where('UserMapID', $this->Req->UID); TODO: Validate User against WorkID before updating
-    //$DB->where('WorkID', $this->Req->WID); TODO: Authenticate User Before Update
+    $AuthUser = new AuthOTP();
+    if ($AuthUser->authenticateUser($this->Req->MDN, $this->Req->OTP)
+      OR $this->getNoAuthMode()
+    ) {
+      $DB = new MySQLiDBHelper();
+      $DB->where('UserMapID', $this->Req->UID); //TODO: Validate User against WorkID before updating
+      $DB->where('WorkID', $this->Req->WID);
+      $UserWorks = $DB->get(MySQL_Pre . 'MPR_ViewUserWorks');
 
-    $tableData['WorkID']            = $this->Req->WID;
-    $tableData['ExpenditureAmount'] = $this->Req->EA;
-    $tableData['Progress']          = $this->Req->P;
-    $tableData['Balance']           = $this->Req->B;
-    $tableData['ReportDate']        = date("Y-m-d", time());
-    $tableData['Remarks']           = $this->Req->R;
-    $ProgressID                     = $DB->insert(MySQL_Pre . 'MPR_Progress', $tableData);
+      if (count($UserWorks) > 0) {
+        $tableData['WorkID']            = $this->Req->WID;
+        $tableData['ExpenditureAmount'] = $this->Req->EA;
+        $tableData['Progress']          = $this->Req->P;
+        $tableData['ReportDate']        = date("Y-m-d", time());
+        $tableData['Remarks']           = $this->Req->R;
 
-    $this->Resp['DB']  = $ProgressID;
-    $this->Resp['API'] = true;
-    $this->Resp['MSG'] = 'Updated Successfully!';
-    //$this->setExpiry(3600);
+        $ProgressID = $DB->insert(MySQL_Pre . 'MPR_Progress', $tableData);
+
+        $this->Resp['DB']  = $ProgressID;
+        $this->Resp['API'] = true;
+        $this->Resp['MSG'] = 'Updated Successfully!';
+      }
+    } else {
+      $this->Resp['API'] = false;
+      $this->Resp['MSG'] = 'Invalid OTP';
+    }
     unset($DB);
     unset($tableData);
   }
