@@ -13,12 +13,28 @@ require_once __DIR__ . '/../lib.inc.php';
  */
 class Contact {
 
-  function CreateContact($Mobile, $Name, $Gid) {
+  function CreateContact($Cid,$CName,$Mobile,$Designation)
+  {
+
+    $DB                         = new MySQLiDBHelper();
+    $insertData['ContactID']    =$Cid;
+    $insertData['ContactName']  =$CName;
+    $insertData['Designation']  =$Designation;
+    $insertData['MobileNo']     =$Mobile;
+    $ContactID                  =$DB->insert(MySQL_Pre . 'SMS_Contacts',$insertData);
+
+   // print_r($ContactID);
+
+    return true;
+
+      }
+
+  function CreateGroup($Mobile,$Name, $Gid) {
     $DB                     = new MySQLiDBHelper();
     $insertData['GroupID']  = $Gid;
     $insertData['Name']     = $Name;
     $insertData['MobileNo'] = $Mobile;
-    $ContactID              = $DB->insert(MySQL_Pre . 'SMS_ViewContacts', $insertData);
+    $GroupID                = $DB->insert(MySQL_Pre . 'SMS_ViewContacts', $insertData);
 
     return true;
   }
@@ -26,7 +42,7 @@ class Contact {
   function getAllContacts() {
     $DB       = new MySQLiDBHelper();
     $Contacts = $DB->get(MySQL_Pre . 'SMS_ViewContacts');
-    print_r($Contacts);
+   // print_r($Contacts);
 
     return $Contacts;
   }
@@ -36,7 +52,7 @@ class Contact {
     $DB->where('GroupID', $Gid);
     $Contacts = $DB->get(MySQL_Pre . 'SMS_ViewContacts');
 
-    //print_r($Contacts);
+    print_r($Contacts);
     return $Contacts;
   }
 
@@ -53,3 +69,7 @@ class Contact {
   }
 
 }
+$br= new Contact();
+print_r($br->$Contacts);
+
+
