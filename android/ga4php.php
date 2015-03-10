@@ -200,7 +200,7 @@ abstract class GoogleAuthenticator {
 		// for keys
 		
 		//		$this->dbConnector->query('CREATE TABLE "tokens" ("token_id" INTEGER PRIMARY KEY AUTOINCREMENT,"token_key" TEXT NOT NULL, "token_type" TEXT NOT NULL, "token_lastid" INTEGER NOT NULL)');
-		$tokendata = internalGetData($username);
+		$tokendata = $this->internalGetData($username);
 		
 		// TODO: check return value
 		$ttype = $tokendata["tokentype"];
@@ -223,7 +223,7 @@ abstract class GoogleAuthenticator {
 						$stest2 = $this->oath_hotp($tkey, $i+1);
 						if($code2 == $stest2) {
 							$tokendata["tokencounter"] = $i+1;
-							internalPutData($username, $tokendata);						
+							$this->internalPutData($username, $tokendata);
 							return true;
 						}
 					}

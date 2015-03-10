@@ -36,9 +36,11 @@ require_once(__DIR__ . '/Contact.php');
 class MessageAPI {
   private $Req;
   private $Resp;
+  private $Expiry;
 
   function __construct($jsonData) {
     $this->Resp['ET'] = time();
+    $this->Expiry=null;
     $this->Req        = $jsonData;
   }
 
@@ -153,6 +155,7 @@ class MessageAPI {
           $this->Resp['DB']  = Group::getAllGroups();
           $this->Resp['API'] = true;
           $this->Resp['MSG'] = 'All Groups Loaded';
+          $this->Expiry=3600; // 60 Minutes
         } else {
           $this->Resp['API'] = false;
           $this->Resp['MSG'] = 'Invalid OTP ' . $this->Req->OTP;
@@ -253,7 +256,12 @@ class MessageAPI {
     /**
      * Important: Tells volley not to cache the response
      */
-    header('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() - 3600));
+    if($this->Expiry==null){
+      $Expires=time() - 3600;
+    } else {
+      $Expires=time() + $this->Expiry;
+    }
+    header('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', $Expires));
     echo $JsonResp;
   }
 

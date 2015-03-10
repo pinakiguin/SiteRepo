@@ -1,0 +1,17 @@
+# .travis.yml for Travis CI Integration
+
+language: php
+
+php:
+- 5.3
+- 5.4
+
+env:
+- DB=mysql
+
+before_script:
+- composer install
+- if [[ "$DB" == "mysql" ]]; then mysql -e "create database IF NOT EXISTS WebSite;USE mysql;UPDATE user SET password=PASSWORD('mysql') WHERE user='root';FLUSH PRIVILEGES;" -uroot; fi
+
+script: phpunit test
+
